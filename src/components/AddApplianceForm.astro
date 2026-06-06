@@ -12,12 +12,12 @@ const { category } = Astro.props;
 <div class="add-appliance-wrapper px-4 py-3 border-t border-border border-dashed">
   <button
     type="button"
-    class="add-toggle-btn flex items-center gap-2 text-sm text-text-muted hover:text-accent transition-colors focus:outline-none group"
+    class="add-toggle-btn flex items-center gap-2 text-sm text-text-muted hover:text-accent active:text-accent transition-colors focus:outline-none group"
     data-category={category}
     aria-expanded="false"
     aria-label={`Add custom appliance to ${category}`}
   >
-    <span class="w-6 h-6 rounded-full border border-dashed border-accent text-accent group-hover:bg-accent group-hover:text-accent-text flex items-center justify-center text-base leading-none transition-colors">+</span>
+    <span class="w-6 h-6 rounded-full border border-dashed border-accent text-accent group-hover:bg-accent group-hover:text-accent-text group-active:bg-accent group-active:text-accent-text flex items-center justify-center text-base leading-none transition-colors">+</span>
     <span>Add custom appliance</span>
   </button>
 

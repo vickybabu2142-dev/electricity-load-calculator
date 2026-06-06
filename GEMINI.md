@@ -49,6 +49,20 @@
 - **Branding Sync:** The report header follows the Hero branding ("Home Load **Report**") and utilizes theme-based accent colors (Industrial Amber for Dark Mode users, Stormy Blue for Light Mode users).
 - **Ink Efficiency:** Background colors are enabled via `print-color-adjust: exact` but restricted to subtle accents and borders.
 
+## Testing & Verification
+
+### Calculation Logic
+- **Utility:** `src/utils/calculations.ts` contains pure functions for all math operations.
+- **Verification:** Run `node scripts/verify-logic.cjs` to execute the standalone calculation test suite.
+
+### Missing UI Tests (Recommended)
+The following UI interactions are currently verified manually but should ideally be automated using a tool like **Playwright** or **Cypress**:
+1. **Appliance Toggles:** Verify inclusion/exclusion updates totals.
+2. **Custom Addition:** Verify form validation and dynamic row injection.
+3. **Theme Switching:** Verify persistence and CSS variable updates.
+4. **Region/Currency Logic:** Verify tariff updates and currency formatting.
+5. **Reset All:** Verify restoration of default state.
+
 ## Commands
 - `npm run dev`: Start local development server
 - `npm run build`: Build for production

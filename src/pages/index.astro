@@ -83,6 +83,7 @@ const grouped = CATEGORIES.map(cat => ({
 
 import { DEFAULT_APPLIANCES, CATEGORIES } from '@/data/appliances';
 import type { Appliance, ApplianceCategory } from '@/types';
+import { calculateRowKWh, calculateTotals } from '@/utils/calculations';
 
 // ── State & Settings ──────────────────────────────────────
 const REGION_SETTINGS: Record<string, { locale: string, symbol: string, defaultTariff: number, step: number, defaultMaxKW: number }> = {
@@ -103,10 +104,6 @@ let customIdCounter = 1000;
 // ── Helpers ───────────────────────────────────────────────
 function getAppliance(id: string): Appliance | undefined {
   return appliances.find(a => a.id === id);
-}
-
-function rowKWh(a: Appliance): number {
-  return (a.watts * a.qty * a.hours) / 1000;
 }
 
 function formatCurrency(amount: number): string {
@@ -132,31 +129,19 @@ function formatNumber(val: number, decimals = 0): string {
 
 // ── Calculation ───────────────────────────────────────────
 function calculate() {
-  const included = appliances.filter(a => a.included && a.qty > 0);
+  const result = calculateTotals(appliances, tariff, maxCapacityKW);
   const settings = REGION_SETTINGS[currentCurrency];
 
-  const totalWatts = included.reduce((s, a) => s + a.watts * a.qty, 0);
-  const dailyKWh   = included.reduce((s, a) => s + rowKWh(a), 0);
-  const monthlyKWh = dailyKWh * 30;
-  const monthlyBill = monthlyKWh * tariff;
-  const maxWatts = maxCapacityKW * 1000;
-  const loadPercent = Math.min((totalWatts / maxWatts) * 100, 100);
-
-  const top = included.reduce<Appliance | null>((best, a) => {
-    if (!best) return a;
-    return a.watts * a.qty > best.watts * best.qty ? a : best;
-  }, null);
-
   // ── Update Results Panel ──
-  animateCounter('total-kw', totalWatts / 1000, 2);
-  animateCounter('total-watts', totalWatts, 0);
-  animateCounter('daily-kwh', dailyKWh, 2);
-  animateCounter('monthly-kwh', monthlyKWh, 0);
+  animateCounter('total-kw', result.totalWatts / 1000, 2);
+  animateCounter('total-watts', result.totalWatts, 0);
+  animateCounter('daily-kwh', result.dailyKWh, 2);
+  animateCounter('monthly-kwh', result.monthlyKWh, 0);
   
-  setText('monthly-bill', formatCurrency(monthlyBill));
-  setText('top-consumer-name', top ? top.name : '—');
-  setText('top-consumer-watts', top ? formatNumber(top.watts * top.qty) : '0');
-  setText('load-percent', `${Math.round(loadPercent)}%`);
+  setText('monthly-bill', formatCurrency(result.monthlyBill));
+  setText('top-consumer-name', result.topConsumer ? result.topConsumer.name : '—');
+  setText('top-consumer-watts', result.topConsumer ? formatNumber(result.topConsumer.watts * result.topConsumer.qty) : '0');
+  setText('load-percent', `${Math.round(result.loadPercent)}%`);
   setText('max-kw-label', `${maxCapacityKW} kW max`);
 
   // Update all currency symbol spans
@@ -167,26 +152,26 @@ function calculate() {
   // Progress bar
   const bar = document.getElementById('load-bar');
   if (bar) {
-    bar.style.width = `${Math.min(loadPercent, 100)}%`;
-    if (totalWatts > maxWatts) {
+    bar.style.width = `${Math.min(result.loadPercent, 100)}%`;
+    if (result.totalWatts > (maxCapacityKW * 1000)) {
       bar.style.background = '#ef4444';
-    } else if (loadPercent > 70) {
+    } else if (result.loadPercent > 70) {
       bar.style.background = 'linear-gradient(90deg, #f5a623, #ef4444)';
     } else {
       bar.style.background = 'linear-gradient(90deg, #22c55e, #f5a623)';
     }
   }
   const progress = document.getElementById('load-progress');
-  if (progress) progress.setAttribute('aria-valuenow', String(Math.round(loadPercent)));
+  if (progress) progress.setAttribute('aria-valuenow', String(Math.round(result.loadPercent)));
 
   // Load level badge
   const badge = document.getElementById('load-level-badge');
   if (badge) {
-    if (loadPercent < 30) {
+    if (result.loadPercent < 30) {
       badge.textContent = 'Light Load';
       badge.style.borderColor = 'var(--success)';
       badge.style.color = 'var(--success)';
-    } else if (loadPercent < 70) {
+    } else if (result.loadPercent < 70) {
       badge.textContent = 'Moderate Load';
       badge.style.borderColor = 'var(--warning)';
       badge.style.color = 'var(--warning)';
@@ -207,7 +192,7 @@ function calculate() {
   CATEGORIES.forEach(cat => {
     const catAppliances = appliances.filter(a => a.category === cat && a.included && a.qty > 0);
     const catWatts = catAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
-    const catKWh   = catAppliances.reduce((s, a) => s + rowKWh(a), 0);
+    const catKWh   = catAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
     const catCount = appliances.filter(a => a.category === cat).length;
 
     const wattEl = document.querySelector(`[data-category-watts="${cat}"]`);
@@ -222,16 +207,17 @@ function calculate() {
   });
 
   // ── Update Print Layout (Hidden in UI, visible in Print) ──
-  setText('print-total-kw', (totalWatts / 1000).toFixed(2));
-  setText('print-total-watts', formatNumber(totalWatts));
-  setText('print-daily-kwh', formatNumber(dailyKWh, 2));
-  setText('print-monthly-bill', formatCurrency(monthlyBill));
+  setText('print-total-kw', (result.totalWatts / 1000).toFixed(2));
+  setText('print-total-watts', formatNumber(result.totalWatts));
+  setText('print-daily-kwh', formatNumber(result.dailyKWh, 2));
+  setText('print-monthly-bill', formatCurrency(result.monthlyBill));
   setText('print-tariff', `${formatCurrency(tariff)}/kWh`);
   setText('print-date', `Generated on: ${new Date().toLocaleDateString(REGION_SETTINGS[currentCurrency].locale, { dateStyle: 'long' })}`);
 
   const printList = document.getElementById('print-appliances-list');
   if (printList) {
     let html = '';
+    const included = appliances.filter(a => a.included && a.qty > 0);
     CATEGORIES.forEach(cat => {
       const catItems = included.filter(a => a.category === cat);
       if (catItems.length > 0) {
@@ -246,7 +232,7 @@ function calculate() {
                     <span class="text-text-muted ml-2 text-xs">${a.qty} × ${a.watts}W</span>
                   </div>
                   <div class="text-right font-mono font-medium text-text-primary">
-                    ${rowKWh(a).toFixed(2)} <span class="text-[10px] text-text-muted">kWh/d</span>
+                    ${calculateRowKWh(a).toFixed(2)} <span class="text-[10px] text-text-muted">kWh/d</span>
                   </div>
                 </div>
               `).join('')}
@@ -286,7 +272,7 @@ function setText(id: string, value: string) {
 // ── kWh display update for a single row ──────────────────
 function updateRowKWh(a: Appliance) {
   const kwhEl = document.querySelector(`[data-kwh-display="${a.id}"]`);
-  if (kwhEl) kwhEl.textContent = formatNumber(rowKWh(a), 2);
+  if (kwhEl) kwhEl.textContent = formatNumber(calculateRowKWh(a), 2);
 }
 
 function updateRowQtyDisplay(a: Appliance) {
@@ -532,57 +518,64 @@ document.querySelectorAll<HTMLFormElement>('.add-appliance-form').forEach(form =
 
 // ── Build row HTML dynamically (mirrors ApplianceRow.astro) ──
 function buildRowHTML(a: Appliance): string {
-  const kwh = formatNumber(rowKWh(a), 2);
+  const kwh = formatNumber(calculateRowKWh(a), 2);
   const isIncluded = a.included;
   const nameColor = isIncluded ? 'var(--text-primary)' : 'var(--text-muted)';
   const toggleBg  = isIncluded ? 'background-color: var(--accent);' : '';
 
   return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-3 px-4 py-3 border-b border-border hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-3 border-b border-border hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
       data-id="${a.id}" 
       data-included="${isIncluded}">
-      <div class="flex-shrink-0">
-        <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
-          <span class="sr-only">Toggle ${a.name}</span>
-          <input type="checkbox" class="toggle-checkbox sr-only" ${isIncluded ? 'checked' : ''} data-action="toggle-include" data-id="${a.id}" aria-label="Include ${a.name} in calculation" />
-          <span class="toggle-label absolute inset-0 rounded-full cursor-pointer" style="${toggleBg}"></span>
-        </label>
+      <!-- Row 1: Toggle + Name -->
+      <div class="flex items-center gap-3 flex-1 min-w-[200px]">
+        <div class="flex-shrink-0">
+          <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
+            <span class="sr-only">Toggle ${a.name}</span>
+            <input type="checkbox" class="toggle-checkbox sr-only" ${isIncluded ? 'checked' : ''} data-action="toggle-include" data-id="${a.id}" aria-label="Include ${a.name} in calculation" />
+            <span class="toggle-label absolute inset-0 rounded-full bg-border cursor-pointer" style="${toggleBg}"></span>
+          </label>
+        </div>
+        <div class="flex-1">
+          <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
+          ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
+        </div>
       </div>
-      <div class="flex-1 min-w-[140px]">
-        <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
-        ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
-      </div>
-      <div class="flex items-center gap-1.5">
-        <input type="number" value="${a.watts}" min="1" max="99999"
-          class="w-20 bg-base border border-border rounded-lg px-2 py-1.5 text-center font-mono text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
-          data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
-        <span class="text-[11px] text-text-muted font-mono">W</span>
-      </div>
-      <div class="flex items-center gap-1">
-        <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-base hover:bg-accent hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
-        <span class="w-8 text-center font-mono text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
-        <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-base hover:bg-accent hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
-      </div>
-      <div class="flex items-center gap-1.5">
-        <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
-          class="w-16 bg-base border border-border rounded-lg px-2 py-1.5 text-center font-mono text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
-          data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
-        <span class="text-[11px] text-text-muted font-mono">h/d</span>
-      </div>
-      <div class="flex-shrink-0 text-right min-w-[80px]">
-        <span class="font-mono text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
-        <span class="text-[10px] text-text-muted ml-0.5">kWh/d</span>
-      </div>
-      <div class="flex-shrink-0 w-7 h-7">
-        ${a.custom ? `
-          <button type="button"
-            class="w-7 h-7 rounded-md text-text-muted hover:text-danger hover:bg-border transition-colors focus:outline-none"
-            data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
-              <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
-            </svg>
-          </button>
-        ` : ''}
+
+      <!-- Row 2: Metrics + Actions -->
+      <div class="flex items-center justify-between gap-1 w-full lg:w-auto lg:contents lg:gap-3">
+        <div class="flex items-center gap-1">
+          <input type="number" value="${a.watts}" min="1" max="99999"
+            class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+            data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
+          <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">W</span>
+        </div>
+        <div class="flex items-center">
+          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
+          <span class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
+          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
+        </div>
+        <div class="flex items-center gap-1">
+          <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
+            class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+            data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
+          <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
+        </div>
+        <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px]">
+          <span class="font-mono text-xs sm:text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
+          <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh</span>
+        </div>
+        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+          ${a.custom ? `
+            <button type="button"
+              class="w-8 h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
+              data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
+                <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          ` : ''}
+        </div>
       </div>
     </div>`;
 }
@@ -629,7 +622,7 @@ document.getElementById('reset-all-btn')?.addEventListener('click', () => {
 document.getElementById('download-report-btn')?.addEventListener('click', () => {
   const included = appliances.filter(a => a.included && a.qty > 0);
   const totalWatts  = included.reduce((s, a) => s + a.watts * a.qty, 0);
-  const dailyKWh    = included.reduce((s, a) => s + rowKWh(a), 0);
+  const dailyKWh    = included.reduce((s, a) => s + calculateRowKWh(a), 0);
   const monthlyKWh  = dailyKWh * 30;
   const monthlyBill = monthlyKWh * tariff;
   const locale = REGION_SETTINGS[currentCurrency].locale;
@@ -655,7 +648,7 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
     if (!catItems.length) return;
     report += `  ${cat.toUpperCase()}\n`;
     catItems.forEach(a => {
-      report += `    ${a.name.padEnd(28)} ${String(a.qty).padStart(2)}× ${String(a.watts).padStart(5)}W  ${rowKWh(a).toFixed(2)} kWh/d\n`;
+      report += `    ${a.name.padEnd(28)} ${String(a.qty).padStart(2)}× ${String(a.watts).padStart(5)}W  ${calculateRowKWh(a).toFixed(2)} kWh/d\n`;
     });
     report += '\n';
   });

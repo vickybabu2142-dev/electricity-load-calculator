@@ -1,5 +1,6 @@
 ---
 import type { Appliance } from '@/types';
+import { calculateRowKWh } from '@/utils/calculations';
 
 interface Props {
   appliance: Appliance;
@@ -7,131 +8,137 @@ interface Props {
 }
 
 const { appliance: a, index } = Astro.props;
-const kwh = ((a.watts * a.qty * a.hours) / 1000).toFixed(2);
+const kwh = calculateRowKWh(a).toFixed(2);
 ---
 
 <div
-  class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-3 px-4 py-3 border-b border-border hover:bg-card-hover transition-colors duration-150 animate-slide-up"
+  class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-3 border-b border-border hover:bg-card-hover transition-colors duration-150 animate-slide-up"
   data-id={a.id}
   data-included={a.included.toString()}
   style={`animation-delay: ${index * 0.03}s;`}
 >
-  <!-- Toggle -->
-  <div class="flex-shrink-0">
-    <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
-      <span class="sr-only">Toggle {a.name}</span>
-      <input
-        type="checkbox"
-        class="toggle-checkbox sr-only"
-        checked={a.included}
-        data-action="toggle-include"
-        data-id={a.id}
-        aria-label={`Include ${a.name} in calculation`}
-      />
+  <!-- Row 1: Toggle + Name -->
+  <div class="flex items-center gap-3 flex-1 min-w-[200px]">
+    <!-- Toggle -->
+    <div class="flex-shrink-0">
+      <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
+        <span class="sr-only">Toggle {a.name}</span>
+        <input
+          type="checkbox"
+          class="toggle-checkbox sr-only"
+          checked={a.included}
+          data-action="toggle-include"
+          data-id={a.id}
+          aria-label={`Include ${a.name} in calculation`}
+        />
+        <span
+          class="toggle-label absolute inset-0 rounded-full bg-border cursor-pointer"
+          style={a.included ? 'background-color: var(--accent);' : ''}
+        ></span>
+      </label>
+    </div>
+
+    <!-- Name -->
+    <div class="flex-1">
       <span
-        class="toggle-label absolute inset-0 rounded-full bg-border cursor-pointer"
-        style={a.included ? 'background-color: var(--accent);' : ''}
-      ></span>
-    </label>
-  </div>
-
-  <!-- Name -->
-  <div class="flex-1 min-w-[140px]">
-    <span
-      class="text-sm font-normal transition-colors duration-150"
-      style={a.included ? 'color: var(--text-primary);' : 'color: var(--text-muted);'}
-    >
-      {a.name}
-    </span>
-    {a.custom && (
-      <span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">
-        CUSTOM
+        class="text-sm font-normal transition-colors duration-150"
+        style={a.included ? 'color: var(--text-primary);' : 'color: var(--text-muted);'}
+      >
+        {a.name}
       </span>
-    )}
+      {a.custom && (
+        <span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">
+          CUSTOM
+        </span>
+      )}
+    </div>
   </div>
 
-  <!-- Watts -->
-  <div class="flex items-center gap-1.5">
-    <label class="sr-only" for={`watts-${a.id}`}>Watts</label>
-    <input
-      id={`watts-${a.id}`}
-      type="number"
-      value={a.watts}
-      min="1"
-      max="99999"
-      class="w-20 bg-base border border-border rounded-lg px-2 py-1.5 text-center font-mono text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
-      data-action="update-watts"
-      data-id={a.id}
-      aria-label={`Watts for ${a.name}`}
-    />
-    <span class="text-[11px] text-text-muted font-mono">W</span>
-  </div>
+  <!-- Row 2: Metrics (Watts, Qty, Hours, kWh) + Actions -->
+  <div class="flex items-center justify-between gap-1 w-full lg:w-auto lg:contents lg:gap-3">
+    <!-- Watts -->
+    <div class="flex items-center gap-1">
+      <label class="sr-only" for={`watts-${a.id}`}>Watts</label>
+      <input
+        id={`watts-${a.id}`}
+        type="number"
+        value={a.watts}
+        min="1"
+        max="99999"
+        class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+        data-action="update-watts"
+        data-id={a.id}
+        aria-label={`Watts for ${a.name}`}
+      />
+      <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">W</span>
+    </div>
 
-  <!-- Qty stepper -->
-  <div class="flex items-center gap-1" role="group" aria-label={`Quantity for ${a.name}`}>
-    <button
-      type="button"
-      class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-base hover:bg-accent hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
-      data-action="decrement-qty"
-      data-id={a.id}
-      aria-label={`Decrease quantity of ${a.name}`}
-    >−</button>
-    <span
-      class="w-8 text-center font-mono text-sm font-semibold tabular-nums"
-      data-qty-display={a.id}
-    >{a.qty}</span>
-    <button
-      type="button"
-      class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-base hover:bg-accent hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
-      data-action="increment-qty"
-      data-id={a.id}
-      aria-label={`Increase quantity of ${a.name}`}
-    >+</button>
-  </div>
-
-  <!-- Hours -->
-  <div class="flex items-center gap-1.5">
-    <label class="sr-only" for={`hours-${a.id}`}>Hours per day</label>
-    <input
-      id={`hours-${a.id}`}
-      type="number"
-      value={a.hours}
-      min="0"
-      max="24"
-      step="0.25"
-      class="w-16 bg-base border border-border rounded-lg px-2 py-1.5 text-center font-mono text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
-      data-action="update-hours"
-      data-id={a.id}
-      aria-label={`Hours per day for ${a.name}`}
-    />
-    <span class="text-[11px] text-text-muted font-mono">h/d</span>
-  </div>
-
-  <!-- kWh/day result -->
-  <div class="flex-shrink-0 text-right min-w-[80px]">
-    <span
-      class="font-mono text-sm font-semibold tabular-nums"
-      style="color: var(--accent);"
-      data-kwh-display={a.id}
-    >{kwh}</span>
-    <span class="text-[10px] text-text-muted ml-0.5">kWh/d</span>
-  </div>
-
-  <!-- Actions Column (Ensures alignment with custom appliance delete buttons) -->
-  <div class="flex-shrink-0 w-7 h-7">
-    {a.custom && (
+    <!-- Qty stepper -->
+    <div class="flex items-center" role="group" aria-label={`Quantity for ${a.name}`}>
       <button
         type="button"
-        class="w-7 h-7 rounded-md text-text-muted hover:text-danger hover:bg-border transition-colors focus:outline-none"
-        data-action="delete-appliance"
+        class="stepper-btn w-8 h-8 rounded-md bg-border text-text-primary font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none"
+        data-action="decrement-qty"
         data-id={a.id}
-        aria-label={`Remove ${a.name}`}
-        title="Remove appliance"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
-          <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
-        </svg>
-      </button>
-    )}
+        aria-label={`Decrease quantity of ${a.name}`}
+      >−</button>
+      <span
+        class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums"
+        data-qty-display={a.id}
+      >{a.qty}</span>
+      <button
+        type="button"
+        class="stepper-btn w-8 h-8 rounded-md bg-border text-text-primary font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none"
+        data-action="increment-qty"
+        data-id={a.id}
+        aria-label={`Increase quantity of ${a.name}`}
+      >+</button>
+    </div>
+
+    <!-- Hours -->
+    <div class="flex items-center gap-1">
+      <label class="sr-only" for={`hours-${a.id}`}>Hours per day</label>
+      <input
+        id={`hours-${a.id}`}
+        type="number"
+        value={a.hours}
+        min="0"
+        max="24"
+        step="0.25"
+        class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+        data-action="update-hours"
+        data-id={a.id}
+        aria-label={`Hours per day for ${a.name}`}
+      />
+      <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
+    </div>
+
+    <!-- kWh/day result -->
+    <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px]">
+      <span
+        class="font-mono text-xs sm:text-sm font-semibold tabular-nums"
+        style="color: var(--accent);"
+        data-kwh-display={a.id}
+      >{kwh}</span>
+      <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh</span>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+      {a.custom && (
+        <button
+          type="button"
+          class="w-8 h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
+          data-action="delete-appliance"
+          data-id={a.id}
+          aria-label={`Remove ${a.name}`}
+          title="Remove appliance"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
+            <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+      )}
+    </div>
   </div>
 </div>
