@@ -57,6 +57,8 @@
   --accent-text: #FFFFFF;
   --text-primary: #1D2939; /* Dark Charcoal Blue */
   --text-muted: #4B5565;
+  --text-faint: #9CA3AF;
+  --text-ghost: #D1D5DB;
   --border: #B9CCE3; /* Soft Sky Blue */
 
   /* Toggle specifics (Light) */
@@ -82,6 +84,8 @@
   --color-border: var(--border);
   --color-text-primary: var(--text-primary);
   --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint, var(--text-faint-raw));
+  --color-text-ghost: var(--text-ghost, var(--text-ghost-raw));
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-success: var(--success);
@@ -133,6 +137,17 @@ input[type='number'] {
 ::-webkit-scrollbar-track { background: var(--bg-base); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+
+/* Form elements theme alignment */
+select, input, button {
+  accent-color: var(--accent);
+}
+
+/* Ensure native dropdowns respect theme colors where supported */
+select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
 
 /* Toggle switch (Vercel Style: Improved Visibility) */
 .toggle-label {
