@@ -24,9 +24,9 @@
   --bg-card: #fafafa;
   --bg-card-hover: #f5f5f5;
   --accent: #000000;
-  --accent-dim: #666666;
+  --accent-dim: #444444;    /* Darkened for better contrast — was #666666 */
   --text-primary: #171717;
-  --text-muted: #666666;
+  --text-muted: #525252;     /* Darkened for better readability — was #666666 */
   --border: #eaeaea;
 
   /* Grid dots for light mode */
@@ -36,7 +36,7 @@
 @theme {
   --font-display: "Inter", "system-ui", sans-serif;
   --font-body: "Inter", "system-ui", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono: "Geist Mono", monospace;
 
   --color-base: var(--bg-base);
   --color-card: var(--bg-card);
@@ -69,7 +69,7 @@ html {
 }
 
 body {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: var(--bg-base);
   color: var(--text-primary);
   min-height: 100vh;
@@ -95,28 +95,54 @@ input[type='number'] {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
 
-/* Toggle switch (Vercel Style: Dynamic) */
+/* Toggle switch (Vercel Style: Improved Visibility) */
+.toggle-label {
+  background-color: #3a3d4a;   /* lighter off-state track */
+  transition: background-color 0.2s ease;
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 1px solid #4a4d5a;  /* subtle border so it's always visible */
+}
+
+.toggle-label::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #f0f0ee;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+}
+
 .toggle-checkbox:checked + .toggle-label {
   background-color: var(--accent);
+  border-color: var(--accent-dim);
 }
+
 .toggle-checkbox:checked + .toggle-label::after {
   transform: translateX(20px);
   background-color: var(--bg-base);
 }
-.toggle-label {
-  background-color: var(--border);
-  transition: background-color 0.2s ease;
+
+/* Focus ring for keyboard users */
+.toggle-checkbox:focus-visible + .toggle-label {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
-.toggle-label::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--text-muted);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+
+/* Alternating row backgrounds for better readability */
+.appliance-row:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.018);
+}
+
+.light .appliance-row:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.012);
 }
 
 /* Print styles */

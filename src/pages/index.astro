@@ -17,7 +17,7 @@ const grouped = CATEGORIES.map(cat => ({
 <BaseLayout>
   <PageHero />
 
-  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-24">
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-24 print:hidden">
     <div class="flex flex-col lg:flex-row gap-6 items-start">
 
       <!-- Left: appliance categories -->
@@ -38,6 +38,38 @@ const grouped = CATEGORIES.map(cat => ({
 
     </div>
   </main>
+
+  <!-- PRINT ONLY LAYOUT -->
+  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto p-8 text-black bg-white">
+    <div class="border-b-2 border-black pb-6 mb-6 flex justify-between items-end">
+      <div>
+        <h1 class="text-3xl font-display font-bold">Home Load Report</h1>
+        <p class="text-sm text-gray-500 mt-1" id="print-date"></p>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-mono uppercase tracking-widest text-gray-500">Tariff</p>
+        <p class="text-lg font-semibold" id="print-tariff">₹8/kWh</p>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-8 mb-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+      <div>
+        <h2 class="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2">Total Load</h2>
+        <p class="text-4xl font-bold font-display mb-1"><span id="print-total-kw">0.00</span> kW</p>
+        <p class="text-sm text-gray-500"><span id="print-total-watts">0</span> W</p>
+      </div>
+      <div>
+        <h2 class="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2">Energy & Est. Bill</h2>
+        <p class="text-lg font-semibold mb-1"><span id="print-daily-kwh">0.00</span> kWh/day</p>
+        <p class="text-xl font-bold text-black mt-2 border-t border-gray-200 pt-2">₹<span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-gray-500">/ month</span></p>
+      </div>
+    </div>
+
+    <h2 class="text-sm font-bold uppercase tracking-wider text-black mb-4 border-b border-black pb-2">Active Appliances Breakdown</h2>
+    <div id="print-appliances-list" class="space-y-6">
+      <!-- Populated by JS -->
+    </div>
+  </div>
 
   <ReportModal />
 </BaseLayout>
@@ -80,8 +112,8 @@ function calculate() {
   }, null);
 
   // ── Update Results Panel ──
-  animateCounter('total-watts', totalWatts, 0);
-  setText('total-kw', (totalWatts / 1000).toFixed(2));
+  animateCounter('total-kw', totalWatts / 1000, 2);   // kW is now the primary big number
+  animateCounter('total-watts', totalWatts, 0);        // W is now secondary
   animateCounter('daily-kwh', dailyKWh, 2);
   animateCounter('monthly-kwh', monthlyKWh, 0);
   setText('monthly-bill', `₹${Math.round(monthlyBill).toLocaleString('en-IN')}`);
@@ -91,7 +123,16 @@ function calculate() {
 
   // Progress bar
   const bar = document.getElementById('load-bar');
-  if (bar) bar.style.width = `${loadPercent}%`;
+  if (bar) {
+    bar.style.width = `${Math.min(loadPercent, 100)}%`;  // cap at 100%
+    if (totalWatts > 5000) {
+      bar.style.background = '#ef4444';  // solid red when over limit
+    } else if (totalWatts > 3000) {
+      bar.style.background = 'linear-gradient(90deg, #f5a623, #ef4444)';
+    } else {
+      bar.style.background = 'linear-gradient(90deg, #22c55e, #f5a623)';
+    }
+  }
   const progress = document.getElementById('load-progress');
   if (progress) progress.setAttribute('aria-valuenow', String(Math.round(loadPercent)));
 
@@ -113,6 +154,12 @@ function calculate() {
     }
   }
 
+  // Active Appliances Counter
+  const activeCount = appliances.filter(a => a.included && a.qty > 0).length;
+  const totalCount  = appliances.length;
+  setText('active-count', String(activeCount));
+  setText('total-count',  String(totalCount));
+
   // ── Update Category Badges ──
   CATEGORIES.forEach(cat => {
     const catAppliances = appliances.filter(a => a.category === cat && a.included && a.qty > 0);
@@ -124,10 +171,49 @@ function calculate() {
     const kwhEl  = document.querySelector(`[data-category-kwh="${cat}"]`);
     const cntEl  = document.querySelector(`[data-category-count="${cat}"]`);
 
-    if (wattEl) wattEl.textContent = `⚡ ${catWatts.toLocaleString()} W`;
-    if (kwhEl)  kwhEl.textContent  = `📊 ${catKWh.toFixed(2)} kWh/d`;
+    const wattTextEl = wattEl?.querySelector('span:last-child');
+    const kwhTextEl  = kwhEl?.querySelector('span:last-child');
+    if (wattTextEl) wattTextEl.textContent = `${catWatts.toLocaleString()} W`;
+    if (kwhTextEl)  kwhTextEl.textContent  = `${catKWh.toFixed(2)} kWh/d`;
     if (cntEl)  cntEl.textContent  = String(catCount);
   });
+
+  // ── Update Print Layout (Hidden in UI, visible in Print) ──
+  setText('print-total-kw', (totalWatts / 1000).toFixed(2));
+  setText('print-total-watts', totalWatts.toLocaleString());
+  setText('print-daily-kwh', dailyKWh.toFixed(2));
+  setText('print-monthly-bill', Math.round(monthlyBill).toLocaleString('en-IN'));
+  setText('print-tariff', `₹${tariff}/kWh`);
+  setText('print-date', `Generated on: ${new Date().toLocaleDateString('en-IN', { dateStyle: 'long' })}`);
+
+  const printList = document.getElementById('print-appliances-list');
+  if (printList) {
+    let html = '';
+    CATEGORIES.forEach(cat => {
+      const catItems = included.filter(a => a.category === cat);
+      if (catItems.length > 0) {
+        html += `
+          <div>
+            <h3 class="text-xs font-mono uppercase tracking-widest text-gray-400 mb-3 border-b border-gray-100 pb-1">${cat}</h3>
+            <div class="space-y-2">
+              ${catItems.map(a => `
+                <div class="flex justify-between items-center text-sm">
+                  <div class="flex-1">
+                    <span class="font-medium text-black">${a.name}</span>
+                    <span class="text-gray-400 ml-2 text-xs">${a.qty} × ${a.watts}W</span>
+                  </div>
+                  <div class="text-right font-mono font-medium">
+                    ${rowKWh(a).toFixed(2)} <span class="text-[10px] text-gray-400">kWh/d</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+    });
+    printList.innerHTML = html || '<p class="text-gray-400 italic">No active appliances selected.</p>';
+  }
 }
 
 // ── Animated Counter ──────────────────────────────────────
@@ -234,8 +320,8 @@ document.addEventListener('click', (e) => {
   if ((action === 'increment-qty' || action === 'decrement-qty') && id) {
     const a = getAppliance(id);
     if (!a) return;
-    if (action === 'increment-qty') a.qty = Math.min(a.qty + 1, 20);
-    if (action === 'decrement-qty') a.qty = Math.max(a.qty - 0, 0); // Corrected min 0
+    if (action === 'increment-qty') a.qty = Math.min(a.qty + 1, 500);
+    if (action === 'decrement-qty') a.qty = Math.max(a.qty - 1, 0);
     updateRowQtyDisplay(a);
     updateRowKWh(a);
     calculate();
@@ -369,17 +455,24 @@ document.querySelectorAll<HTMLFormElement>('.add-appliance-form').forEach(form =
 // ── Build row HTML dynamically (mirrors ApplianceRow.astro - Vercel Styled) ──
 function buildRowHTML(a: Appliance): string {
   const kwh = rowKWh(a).toFixed(2);
+  const isIncluded = a.included;
+  const nameColor = isIncluded ? 'var(--text-primary)' : 'var(--text-muted)';
+  const toggleBg  = isIncluded ? 'background-color: var(--accent);' : '';
+
   return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-3 px-4 py-3 border-b border-border hover:bg-card-hover transition-colors duration-150 animate-slide-up" data-id="${a.id}" data-included="true">
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-3 px-4 py-3 border-b border-[#2a2d3a] hover:bg-[#20232f] transition-colors duration-150 animate-slide-up" 
+      data-id="${a.id}" 
+      data-included="${isIncluded}">
       <div class="flex-shrink-0">
         <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
-          <input type="checkbox" class="toggle-checkbox sr-only" checked data-action="toggle-include" data-id="${a.id}" aria-label="Include ${a.name} in calculation" />
-          <span class="toggle-label absolute inset-0 rounded-full cursor-pointer" style="background-color: var(--accent);"></span>
+          <span class="sr-only">Toggle ${a.name}</span>
+          <input type="checkbox" class="toggle-checkbox sr-only" ${isIncluded ? 'checked' : ''} data-action="toggle-include" data-id="${a.id}" aria-label="Include ${a.name} in calculation" />
+          <span class="toggle-label absolute inset-0 rounded-full cursor-pointer" style="${toggleBg}"></span>
         </label>
       </div>
       <div class="flex-1 min-w-[140px]">
-        <span class="text-sm font-medium" style="color: var(--text-primary);">${a.name}</span>
-        <span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>
+        <span class="text-sm font-medium transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
+        ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
       </div>
       <div class="flex items-center gap-1.5">
         <input type="number" value="${a.watts}" min="1" max="99999"
@@ -388,9 +481,9 @@ function buildRowHTML(a: Appliance): string {
         <span class="text-[11px] text-text-muted font-mono">W</span>
       </div>
       <div class="flex items-center gap-1">
-        <button type="button" class="stepper-btn w-8 h-8 rounded-md bg-border text-accent font-bold text-base hover:bg-accent hover:text-base transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
+        <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-[#2a2d3a] text-[#f0f0ee] font-bold text-base hover:bg-[#f5a623] hover:text-[#0f1117] transition-colors focus:outline-none focus:ring-2 focus:ring-[#f5a623]" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
         <span class="w-8 text-center font-mono text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
-        <button type="button" class="stepper-btn w-8 h-8 rounded-md bg-border text-accent font-bold text-base hover:bg-accent hover:text-base transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
+        <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-[#2a2d3a] text-[#f0f0ee] font-bold text-base hover:bg-[#f5a623] hover:text-[#0f1117] transition-colors focus:outline-none focus:ring-2 focus:ring-[#f5a623]" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
       </div>
       <div class="flex items-center gap-1.5">
         <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
@@ -402,13 +495,17 @@ function buildRowHTML(a: Appliance): string {
         <span class="font-mono text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
         <span class="text-[10px] text-text-muted ml-0.5">kWh/d</span>
       </div>
-      <button type="button"
-        class="flex-shrink-0 w-7 h-7 rounded-md text-text-muted hover:text-danger hover:bg-border transition-colors focus:outline-none"
-        data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
-          <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
-        </svg>
-      </button>
+      <div class="flex-shrink-0 w-7 h-7">
+        ${a.custom ? `
+          <button type="button"
+            class="w-7 h-7 rounded-md text-text-muted hover:text-danger hover:bg-border transition-colors focus:outline-none"
+            data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
+              <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
+            </svg>
+          </button>
+        ` : ''}
+      </div>
     </div>`;
 }
 

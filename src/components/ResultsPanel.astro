@@ -26,25 +26,34 @@
     <!-- Total Load -->
     <div>
       <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Total Load</p>
-      <div class="flex items-end gap-2">
-        <span id="total-watts" class="font-display font-bold text-4xl tabular-nums text-text-primary">0</span>
-        <span class="font-mono text-sm text-text-muted mb-1">W</span>
-        <span class="font-mono text-base text-text-muted mb-1">/</span>
-        <span id="total-kw" class="font-mono font-semibold text-xl tabular-nums text-text-primary mb-0.5">0.00</span>
-        <span class="font-mono text-sm text-text-muted mb-1">kW</span>
+
+      <!-- Primary: kW (more useful unit) — large -->
+      <div class="flex items-end gap-1.5 mb-0.5">
+        <span id="total-kw" class="font-display font-bold text-5xl tabular-nums leading-none" style="color: var(--accent);">0.00</span>
+        <span class="font-mono text-lg text-text-muted mb-1">kW</span>
       </div>
+
+      <!-- Secondary: Watts — smaller, muted -->
+      <div class="flex items-center gap-1">
+        <span id="total-watts" class="font-mono text-sm tabular-nums text-text-muted">0</span>
+        <span class="font-mono text-xs text-text-muted">watts</span>
+      </div>
+
       <!-- Progress bar -->
-      <div class="mt-2 h-2 rounded-full bg-border overflow-hidden" role="progressbar" aria-label="Load percentage" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="load-progress">
+      <div class="mt-2 relative h-2.5 rounded-full bg-border overflow-hidden"
+        role="progressbar" aria-label="Load percentage"
+        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="load-progress">
         <div
           id="load-bar"
           class="h-full rounded-full transition-all duration-500 ease-out"
-          style="width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-dim));"
+          style="width: 0%; background: linear-gradient(90deg, #22c55e 0%, #f5a623 60%, #ef4444 100%);"
         ></div>
       </div>
-      <div class="flex justify-between mt-1">
+      <!-- Threshold labels -->
+      <div class="flex justify-between mt-1.5">
         <span class="font-mono text-[10px] text-text-muted">0 W</span>
-        <span id="load-percent" class="font-mono text-[10px] tabular-nums text-text-primary">0%</span>
-        <span class="font-mono text-[10px] text-text-muted">5,000 W</span>
+        <span id="load-percent" class="font-mono text-[10px] tabular-nums" style="color: var(--accent);">0%</span>
+        <span class="font-mono text-[10px] text-text-muted">5 kW max</span>
       </div>
     </div>
 
@@ -107,6 +116,19 @@
           <span id="top-consumer-watts" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
           <span class="font-mono text-xs text-text-muted ml-1">W</span>
         </div>
+      </div>
+    </div>
+
+    <!-- Active Appliances Stat -->
+    <hr class="border-border" />
+
+    <div class="flex items-center justify-between">
+      <span class="text-sm text-text-muted">Active Appliances</span>
+      <div class="flex items-center gap-1.5">
+        <span id="active-count" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
+        <span class="font-mono text-xs text-text-muted">/</span>
+        <span id="total-count" class="font-mono text-xs tabular-nums text-text-muted">0</span>
+        <span class="font-mono text-xs text-text-muted">appliances</span>
       </div>
     </div>
 

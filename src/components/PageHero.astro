@@ -2,13 +2,7 @@
 // No props needed
 ---
 
-<header class="relative pt-10 pb-6 px-6 text-center overflow-hidden no-print">
-  <!-- Glow blob behind heading (Dynamic Glow) -->
-  <div
-    class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full opacity-[0.05] dark:opacity-10 blur-3xl pointer-events-none"
-    style="background: radial-gradient(ellipse, var(--accent) 0%, transparent 70%);"
-  ></div>
-
+<header class="relative pt-8 pb-6 px-6 text-center overflow-hidden no-print">
   <p class="font-mono text-[10px] tracking-[0.25em] text-text-muted uppercase mb-2 animate-fade-in">
     ⚡ Electrical Load Calculator
   </p>
@@ -22,7 +16,7 @@
   </h1>
 
   <p
-    class="max-w-xl mx-auto text-text-muted text-sm sm:text-base leading-relaxed animate-slide-up"
+    class="max-w-xl mx-auto text-text-muted text-sm leading-relaxed animate-slide-up"
     style="animation-delay: 0.12s"
   >
     Add your appliances and instantly see your home's total electrical load,
@@ -31,7 +25,7 @@
 
   <!-- Stats strip -->
   <div
-    class="mt-6 inline-flex flex-wrap justify-center gap-6 text-xs animate-slide-up"
+    class="mt-4 inline-flex flex-wrap justify-center gap-6 text-xs animate-slide-up"
     style="animation-delay: 0.2s"
   >
     {[

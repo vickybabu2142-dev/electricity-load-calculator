@@ -45,20 +45,31 @@ const icon = CATEGORY_ICONS[name];
     </span>
 
     <!-- Live badges -->
-    <span class="hidden sm:flex items-center gap-2 mr-2">
+    <div class="hidden sm:flex items-center gap-2 mr-2">
       <span
-        class="font-mono text-xs px-2 py-1 rounded-md bg-base border border-border tabular-nums"
+        class="hidden sm:inline-flex items-center gap-1.5 font-mono text-xs px-2.5 py-1 rounded-full bg-base border border-border tabular-nums text-text-primary"
         data-category-watts={name}
       >
-        ⚡ {totalWatts.toLocaleString()} W
+        <!-- Lightning bolt SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="#f5a623" class="w-3 h-3 flex-shrink-0">
+          <path d="M9.5 1.5 L4 9 H8 L6.5 14.5 L13 7 H9 Z"/>
+        </svg>
+        <span>{totalWatts.toLocaleString()} W</span>
       </span>
+
       <span
-        class="font-mono text-xs px-2 py-1 rounded-md bg-base border border-border tabular-nums"
+        class="hidden sm:inline-flex items-center gap-1.5 font-mono text-xs px-2.5 py-1 rounded-full bg-base border border-border tabular-nums text-text-primary"
         data-category-kwh={name}
       >
-        📊 {dailyKWh.toFixed(2)} kWh/d
+        <!-- Bar chart SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="#7a7f96" class="w-3 h-3 flex-shrink-0">
+          <rect x="1" y="8" width="3" height="7" rx="0.5"/>
+          <rect x="6" y="5" width="3" height="10" rx="0.5"/>
+          <rect x="11" y="2" width="3" height="13" rx="0.5"/>
+        </svg>
+        <span>{dailyKWh.toFixed(2)} kWh/d</span>
       </span>
-    </span>
+    </div>
 
     <!-- Appliance count -->
     <span class="text-xs text-text-muted mr-3 flex-shrink-0">

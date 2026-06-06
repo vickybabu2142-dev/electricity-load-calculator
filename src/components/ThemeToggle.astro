@@ -35,16 +35,11 @@
   const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
   const themeToggleBtn = document.getElementById('theme-toggle');
 
-  // Set initial icon
-  if (
-    localStorage.getItem('color-theme') === 'light' ||
-    (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)
-  ) {
+  // Set initial icon based on actual class
+  if (document.documentElement.classList.contains('light')) {
     themeToggleDarkIcon?.classList.remove('hidden');
-    document.documentElement.classList.add('light');
   } else {
     themeToggleLightIcon?.classList.remove('hidden');
-    document.documentElement.classList.remove('light');
   }
 
   themeToggleBtn?.addEventListener('click', function () {
@@ -52,25 +47,13 @@
     themeToggleDarkIcon?.classList.toggle('hidden');
     themeToggleLightIcon?.classList.toggle('hidden');
 
-    // if set via local storage previously
-    if (localStorage.getItem('color-theme')) {
-      if (localStorage.getItem('color-theme') === 'dark') {
-        document.documentElement.classList.add('light');
-        localStorage.setItem('color-theme', 'light');
-      } else {
-        document.documentElement.classList.remove('light');
-        localStorage.setItem('color-theme', 'dark');
-      }
-
-      // if NOT set via local storage previously
+    // toggle theme
+    if (document.documentElement.classList.contains('light')) {
+      document.documentElement.classList.remove('light');
+      localStorage.setItem('color-theme', 'dark');
     } else {
-      if (document.documentElement.classList.contains('light')) {
-        document.documentElement.classList.remove('light');
-        localStorage.setItem('color-theme', 'dark');
-      } else {
-        document.documentElement.classList.add('light');
-        localStorage.setItem('color-theme', 'light');
-      }
+      document.documentElement.classList.add('light');
+      localStorage.setItem('color-theme', 'light');
     }
   });
 </script>
