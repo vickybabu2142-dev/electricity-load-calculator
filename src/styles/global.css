@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  /* Dark Theme (Default) */
+  --bg-base: #000000;
+  --bg-card: #0a0a0a;
+  --bg-card-hover: #111111;
+  --accent: #ffffff;
+  --accent-dim: #a1a1aa;
+  --text-primary: #ededed;
+  --text-muted: #a1a1aa;
+  --border: #262626;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #22c55e;
+
+  /* Grid dots for dark mode */
+  --grid-color: #1a1a1a;
+}
+
+.light {
+  /* Light Theme */
+  --bg-base: #ffffff;
+  --bg-card: #fafafa;
+  --bg-card-hover: #f5f5f5;
+  --accent: #000000;
+  --accent-dim: #666666;
+  --text-primary: #171717;
+  --text-muted: #666666;
+  --border: #eaeaea;
+
+  /* Grid dots for light mode */
+  --grid-color: #f0f0f0;
+}
+
+@theme {
+  --font-display: "Inter", "system-ui", sans-serif;
+  --font-body: "Inter", "system-ui", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-base: var(--bg-base);
+  --color-card: var(--bg-card);
+  --color-card-hover: var(--bg-card-hover);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-border: var(--border);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+
+  --animate-slide-up: slide-up 0.4s ease both;
+  --animate-fade-in: fade-in 0.3s ease both;
+
+  @keyframes slide-up {
+    0% { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  /* Vercel-like subtle dot grid */
+  background-image: radial-gradient(circle, var(--grid-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Remove number input arrows */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+
+/* Toggle switch (Vercel Style: Dynamic) */
+.toggle-checkbox:checked + .toggle-label {
+  background-color: var(--accent);
+}
+.toggle-checkbox:checked + .toggle-label::after {
+  transform: translateX(20px);
+  background-color: var(--bg-base);
+}
+.toggle-label {
+  background-color: var(--border);
+  transition: background-color 0.2s ease;
+}
+.toggle-label::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* Print styles */
+@media print {
+  body { background: white !important; color: black !important; background-image: none !important; }
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+}
+

@@ -1,0 +1,102 @@
+---
+import type { ApplianceCategory } from '@/types';
+import { CATEGORIES } from '@/data/appliances';
+
+interface Props {
+  category: ApplianceCategory;
+}
+
+const { category } = Astro.props;
+---
+
+<div class="add-appliance-wrapper px-4 py-3 border-t border-border border-dashed">
+  <button
+    type="button"
+    class="add-toggle-btn flex items-center gap-2 text-sm text-text-muted hover:text-accent transition-colors focus:outline-none group"
+    data-category={category}
+    aria-expanded="false"
+    aria-label={`Add custom appliance to ${category}`}
+  >
+    <span class="w-6 h-6 rounded-full border border-dashed border-text-muted group-hover:border-accent flex items-center justify-center text-base leading-none transition-colors">+</span>
+    <span>Add custom appliance</span>
+  </button>
+
+  <form
+    class="add-appliance-form hidden mt-3 flex flex-wrap gap-3 items-end"
+    data-category={category}
+    novalidate
+  >
+    <div class="flex flex-col gap-1">
+      <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-name-${category}`}>Name</label>
+      <input
+        id={`new-name-${category}`}
+        type="text"
+        placeholder="e.g. Hair Dryer"
+        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-text-primary w-44 focus:border-accent focus:outline-none placeholder:text-text-muted"
+        data-field="name"
+        required
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-watts-${category}`}>Watts</label>
+      <input
+        id={`new-watts-${category}`}
+        type="number"
+        placeholder="1000"
+        min="1"
+        max="99999"
+        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-center font-mono text-text-primary w-24 focus:border-accent focus:outline-none"
+        data-field="watts"
+        required
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-hours-${category}`}>Hrs/Day</label>
+      <input
+        id={`new-hours-${category}`}
+        type="number"
+        placeholder="2"
+        min="0"
+        max="24"
+        step="0.25"
+        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-center font-mono text-text-primary w-20 focus:border-accent focus:outline-none"
+        data-field="hours"
+        required
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-category-${category}`}>Category</label>
+      <select
+        id={`new-category-${category}`}
+        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-text-primary focus:border-accent focus:outline-none"
+        data-field="category"
+      >
+        {CATEGORIES.map(c => (
+          <option value={c} selected={c === category}>{c}</option>
+        ))}
+      </select>
+    </div>
+
+    <div class="flex gap-2">
+      <button
+        type="submit"
+        class="px-4 py-1.5 rounded-lg bg-accent text-base text-sm font-semibold hover:bg-accent-dim transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card"
+      >
+        Add
+      </button>
+      <button
+        type="button"
+        class="add-cancel-btn px-4 py-1.5 rounded-lg border border-border text-text-muted text-sm hover:border-accent-dim transition-colors focus:outline-none"
+        data-category={category}
+      >
+        Cancel
+      </button>
+    </div>
+
+    <!-- Validation error -->
+    <p class="form-error hidden w-full text-xs text-danger font-mono"></p>
+  </form>
+</div>

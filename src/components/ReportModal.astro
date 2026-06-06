@@ -1,0 +1,55 @@
+---
+// No props — content populated via JS
+---
+
+<div
+  id="report-modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-4 no-print"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+>
+  <!-- Backdrop -->
+  <div id="modal-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+  <!-- Modal box -->
+  <div class="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-border">
+      <h3 id="modal-title" class="font-display font-bold text-xl text-text-primary">Load Report</h3>
+      <button
+        id="modal-close"
+        type="button"
+        class="w-8 h-8 rounded-lg text-text-muted hover:text-accent hover:bg-card-hover transition-colors focus:outline-none"
+        aria-label="Close report"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mx-auto">
+          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="px-6 py-5">
+      <pre
+        id="report-content"
+        class="font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto"
+      ></pre>
+    </div>
+
+    <div class="px-6 py-4 border-t border-border flex gap-3">
+      <button
+        id="print-btn"
+        type="button"
+        class="flex-1 px-4 py-2.5 rounded-lg bg-accent text-base text-sm font-semibold hover:bg-accent-dim transition-colors focus:outline-none"
+      >
+        Print / Save PDF
+      </button>
+      <button
+        id="copy-report-btn"
+        type="button"
+        class="px-4 py-2.5 rounded-lg border border-border text-text-muted text-sm hover:border-accent-dim transition-colors focus:outline-none"
+      >
+        Copy Text
+      </button>
+    </div>
+  </div>
+</div>

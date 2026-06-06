@@ -1,0 +1,513 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import ApplianceCategory from '@/components/ApplianceCategory.astro';
+import ResultsPanel from '@/components/ResultsPanel.astro';
+import ReportModal from '@/components/ReportModal.astro';
+import { DEFAULT_APPLIANCES, CATEGORIES } from '@/data/appliances';
+import type { ApplianceCategory as CategoryType } from '@/types';
+
+// Group appliances by category for SSR rendering
+const grouped = CATEGORIES.map(cat => ({
+  name: cat as CategoryType,
+  appliances: DEFAULT_APPLIANCES.filter(a => a.category === cat),
+}));
+---
+
+<BaseLayout>
+  <PageHero />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-24">
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+
+      <!-- Left: appliance categories -->
+      <div class="flex-1 min-w-0 space-y-4">
+        {grouped.map((group, i) => (
+          <ApplianceCategory
+            name={group.name}
+            appliances={group.appliances}
+            index={i}
+          />
+        ))}
+      </div>
+
+      <!-- Right: results panel -->
+      <div class="w-full lg:w-80 xl:w-96 flex-shrink-0">
+        <ResultsPanel />
+      </div>
+
+    </div>
+  </main>
+
+  <ReportModal />
+</BaseLayout>
+
+<script>
+// ─────────────────────────────────────────────────────────
+// HOME LOAD CALCULATOR — CLIENT-SIDE LOGIC
+// ─────────────────────────────────────────────────────────
+
+import { DEFAULT_APPLIANCES, CATEGORIES } from '@/data/appliances';
+import type { Appliance, ApplianceCategory } from '@/types';
+
+// ── State ─────────────────────────────────────────────────
+let appliances: Appliance[] = structuredClone(DEFAULT_APPLIANCES);
+let tariff = 8; // ₹/kWh
+let customIdCounter = 1000;
+
+// ── Helpers ───────────────────────────────────────────────
+function getAppliance(id: string): Appliance | undefined {
+  return appliances.find(a => a.id === id);
+}
+
+function rowKWh(a: Appliance): number {
+  return (a.watts * a.qty * a.hours) / 1000;
+}
+
+// ── Calculation ───────────────────────────────────────────
+function calculate() {
+  const included = appliances.filter(a => a.included && a.qty > 0);
+
+  const totalWatts = included.reduce((s, a) => s + a.watts * a.qty, 0);
+  const dailyKWh   = included.reduce((s, a) => s + rowKWh(a), 0);
+  const monthlyKWh = dailyKWh * 30;
+  const monthlyBill = monthlyKWh * tariff;
+  const loadPercent = Math.min((totalWatts / 5000) * 100, 100);
+
+  const top = included.reduce<Appliance | null>((best, a) => {
+    if (!best) return a;
+    return a.watts * a.qty > best.watts * best.qty ? a : best;
+  }, null);
+
+  // ── Update Results Panel ──
+  animateCounter('total-watts', totalWatts, 0);
+  setText('total-kw', (totalWatts / 1000).toFixed(2));
+  animateCounter('daily-kwh', dailyKWh, 2);
+  animateCounter('monthly-kwh', monthlyKWh, 0);
+  setText('monthly-bill', `₹${Math.round(monthlyBill).toLocaleString('en-IN')}`);
+  setText('top-consumer-name', top ? top.name : '—');
+  setText('top-consumer-watts', top ? (top.watts * top.qty).toLocaleString() : '0');
+  setText('load-percent', `${Math.round(loadPercent)}%`);
+
+  // Progress bar
+  const bar = document.getElementById('load-bar');
+  if (bar) bar.style.width = `${loadPercent}%`;
+  const progress = document.getElementById('load-progress');
+  if (progress) progress.setAttribute('aria-valuenow', String(Math.round(loadPercent)));
+
+  // Load level badge
+  const badge = document.getElementById('load-level-badge');
+  if (badge) {
+    if (totalWatts < 1000) {
+      badge.textContent = 'Light Load';
+      badge.style.borderColor = 'var(--success)';
+      badge.style.color = 'var(--success)';
+    } else if (totalWatts < 3000) {
+      badge.textContent = 'Moderate Load';
+      badge.style.borderColor = 'var(--warning)';
+      badge.style.color = 'var(--warning)';
+    } else {
+      badge.textContent = 'Heavy Load';
+      badge.style.borderColor = 'var(--danger)';
+      badge.style.color = 'var(--danger)';
+    }
+  }
+
+  // ── Update Category Badges ──
+  CATEGORIES.forEach(cat => {
+    const catAppliances = appliances.filter(a => a.category === cat && a.included && a.qty > 0);
+    const catWatts = catAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
+    const catKWh   = catAppliances.reduce((s, a) => s + rowKWh(a), 0);
+    const catCount = appliances.filter(a => a.category === cat).length;
+
+    const wattEl = document.querySelector(`[data-category-watts="${cat}"]`);
+    const kwhEl  = document.querySelector(`[data-category-kwh="${cat}"]`);
+    const cntEl  = document.querySelector(`[data-category-count="${cat}"]`);
+
+    if (wattEl) wattEl.textContent = `⚡ ${catWatts.toLocaleString()} W`;
+    if (kwhEl)  kwhEl.textContent  = `📊 ${catKWh.toFixed(2)} kWh/d`;
+    if (cntEl)  cntEl.textContent  = String(catCount);
+  });
+}
+
+// ── Animated Counter ──────────────────────────────────────
+function animateCounter(id: string, target: number, decimals: number) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const startText = el.textContent?.replace(/[^0-9.]/g, '') || '0';
+  const start = parseFloat(startText) || 0;
+  const duration = 350;
+  const startTime = performance.now();
+
+  function step(now: number) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3); // ease-out-cubic
+    const value = start + (target - start) * ease;
+    el.textContent = decimals > 0 ? value.toFixed(decimals) : Math.round(value).toLocaleString('en-IN');
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function setText(id: string, value: string) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+// ── kWh display update for a single row ──────────────────
+function updateRowKWh(a: Appliance) {
+  const kwhEl = document.querySelector(`[data-kwh-display="${a.id}"]`);
+  if (kwhEl) kwhEl.textContent = rowKWh(a).toFixed(2);
+}
+
+function updateRowQtyDisplay(a: Appliance) {
+  const el = document.querySelector(`[data-qty-display="${a.id}"]`);
+  if (el) el.textContent = String(a.qty);
+}
+
+function updateRowNameStyle(a: Appliance) {
+  const row = document.querySelector<HTMLElement>(`[data-id="${a.id}"]`);
+  if (!row) return;
+  const nameEl = row.querySelector<HTMLElement>('.flex-1 span');
+  if (nameEl) nameEl.style.color = a.included ? 'var(--text-primary)' : 'var(--text-muted)';
+  const toggle = row.querySelector<HTMLElement>('.toggle-label');
+  if (toggle) toggle.style.backgroundColor = a.included ? 'var(--accent)' : '';
+}
+
+// ── Debounce ──────────────────────────────────────────────
+function debounce<T extends (...args: any[]) => void>(fn: T, ms: number): T {
+  let timer: any;
+  return ((...args: any[]) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  }) as T;
+}
+
+const debouncedCalculate = debounce(calculate, 80);
+
+// ── DOM Event Delegation ──────────────────────────────────
+document.addEventListener('change', (e) => {
+  const target = e.target as HTMLElement;
+  const action = target.dataset.action;
+  const id     = target.dataset.id;
+
+  if (!action || !id) return;
+  const a = getAppliance(id);
+  if (!a) return;
+
+  if (action === 'toggle-include') {
+    a.included = (target as HTMLInputElement).checked;
+    updateRowNameStyle(a);
+    calculate();
+  }
+
+  if (action === 'update-watts') {
+    const val = parseFloat((target as HTMLInputElement).value);
+    if (!isNaN(val) && val >= 1) {
+      a.watts = val;
+      updateRowKWh(a);
+      debouncedCalculate();
+    }
+  }
+
+  if (action === 'update-hours') {
+    const val = parseFloat((target as HTMLInputElement).value);
+    if (!isNaN(val) && val >= 0 && val <= 24) {
+      a.hours = val;
+      updateRowKWh(a);
+      debouncedCalculate();
+    }
+  }
+});
+
+document.addEventListener('click', (e) => {
+  const target = e.target as HTMLElement;
+  const btn = target.closest<HTMLElement>('[data-action]');
+  if (!btn) return;
+
+  const action = btn.dataset.action;
+  const id     = btn.dataset.id;
+
+  if (!action) return;
+
+  // Stepper buttons
+  if ((action === 'increment-qty' || action === 'decrement-qty') && id) {
+    const a = getAppliance(id);
+    if (!a) return;
+    if (action === 'increment-qty') a.qty = Math.min(a.qty + 1, 20);
+    if (action === 'decrement-qty') a.qty = Math.max(a.qty - 0, 0); // Corrected min 0
+    updateRowQtyDisplay(a);
+    updateRowKWh(a);
+    calculate();
+  }
+
+  // Delete custom appliance
+  if (action === 'delete-appliance' && id) {
+    appliances = appliances.filter(a => a.id !== id);
+    const row = document.querySelector(`[data-id="${id}"]`);
+    row?.remove();
+    calculate();
+  }
+});
+
+// ── Tariff input ──────────────────────────────────────────
+document.getElementById('tariff-input')?.addEventListener('input', (e) => {
+  const val = parseFloat((e.target as HTMLInputElement).value);
+  if (!isNaN(val) && val > 0) {
+    tariff = val;
+    debouncedCalculate();
+  }
+});
+
+// ── Category collapse/expand ──────────────────────────────
+document.querySelectorAll<HTMLButtonElement>('.category-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const category = btn.dataset.category!;
+    const bodyId   = `category-body-${category.replace(/\s/g, '-')}`;
+    const body     = document.getElementById(bodyId);
+    const chevron  = btn.querySelector<SVGElement>('.chevron');
+    if (!body) return;
+
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+    body.style.display = isOpen ? 'none' : '';
+    if (chevron) chevron.style.transform = isOpen ? 'rotate(-90deg)' : '';
+  });
+});
+
+// ── Add custom appliance forms ────────────────────────────
+document.querySelectorAll<HTMLButtonElement>('.add-toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const category = btn.dataset.category!;
+    const wrapper  = btn.closest('.add-appliance-wrapper');
+    const form     = wrapper?.querySelector<HTMLFormElement>('.add-appliance-form');
+    if (!form) return;
+    const isHidden = form.classList.contains('hidden');
+    form.classList.toggle('hidden', !isHidden);
+    btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+  });
+});
+
+document.querySelectorAll<HTMLButtonElement>('.add-cancel-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const wrapper = btn.closest('.add-appliance-wrapper');
+    const form = wrapper?.querySelector<HTMLFormElement>('.add-appliance-form');
+    const toggleBtn = wrapper?.querySelector<HTMLButtonElement>('.add-toggle-btn');
+    form?.classList.add('hidden');
+    form?.reset();
+    toggleBtn?.setAttribute('aria-expanded', 'false');
+  });
+});
+
+document.querySelectorAll<HTMLFormElement>('.add-appliance-form').forEach(form => {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nameInput  = form.querySelector<HTMLInputElement>('[data-field="name"]');
+    const wattsInput = form.querySelector<HTMLInputElement>('[data-field="watts"]');
+    const hoursInput = form.querySelector<HTMLInputElement>('[data-field="hours"]');
+    const catSelect  = form.querySelector<HTMLSelectElement>('[data-field="category"]');
+    const errorEl    = form.querySelector<HTMLParagraphElement>('.form-error');
+
+    const name  = nameInput?.value.trim();
+    const watts = parseFloat(wattsInput?.value || '0');
+    const hours = parseFloat(hoursInput?.value || '0');
+    const cat   = (catSelect?.value || 'Other') as ApplianceCategory;
+
+    // Validate
+    if (!name) {
+      if (errorEl) { errorEl.textContent = 'Please enter an appliance name.'; errorEl.classList.remove('hidden'); }
+      nameInput?.focus();
+      return;
+    }
+    if (!watts || watts < 1) {
+      if (errorEl) { errorEl.textContent = 'Watts must be at least 1.'; errorEl.classList.remove('hidden'); }
+      wattsInput?.focus();
+      return;
+    }
+    if (hours < 0 || hours > 24) {
+      if (errorEl) { errorEl.textContent = 'Hours must be between 0 and 24.'; errorEl.classList.remove('hidden'); }
+      hoursInput?.focus();
+      return;
+    }
+
+    errorEl?.classList.add('hidden');
+
+    const newAppliance: Appliance = {
+      id: `custom-${++customIdCounter}`,
+      category: cat,
+      name,
+      defaultWatts: watts,
+      defaultQty: 1,
+      defaultHours: hours,
+      watts,
+      qty: 1,
+      hours,
+      included: true,
+      custom: true,
+    };
+
+    appliances.push(newAppliance);
+
+    // Inject row into the correct category DOM section
+    const container = document.querySelector(`[data-rows-container="${cat}"]`);
+    if (container) {
+      const rowHtml = buildRowHTML(newAppliance);
+      container.insertAdjacentHTML('beforeend', rowHtml);
+    }
+
+    // Reset form and hide
+    form.reset();
+    form.classList.add('hidden');
+    const toggleBtn = form.closest('.add-appliance-wrapper')?.querySelector<HTMLButtonElement>('.add-toggle-btn');
+    toggleBtn?.setAttribute('aria-expanded', 'false');
+
+    calculate();
+  });
+});
+
+// ── Build row HTML dynamically (mirrors ApplianceRow.astro - Vercel Styled) ──
+function buildRowHTML(a: Appliance): string {
+  const kwh = rowKWh(a).toFixed(2);
+  return `
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-3 px-4 py-3 border-b border-border hover:bg-card-hover transition-colors duration-150 animate-slide-up" data-id="${a.id}" data-included="true">
+      <div class="flex-shrink-0">
+        <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
+          <input type="checkbox" class="toggle-checkbox sr-only" checked data-action="toggle-include" data-id="${a.id}" aria-label="Include ${a.name} in calculation" />
+          <span class="toggle-label absolute inset-0 rounded-full cursor-pointer" style="background-color: var(--accent);"></span>
+        </label>
+      </div>
+      <div class="flex-1 min-w-[140px]">
+        <span class="text-sm font-medium" style="color: var(--text-primary);">${a.name}</span>
+        <span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <input type="number" value="${a.watts}" min="1" max="99999"
+          class="w-20 bg-base border border-border rounded-lg px-2 py-1.5 text-center font-mono text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+          data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
+        <span class="text-[11px] text-text-muted font-mono">W</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <button type="button" class="stepper-btn w-8 h-8 rounded-md bg-border text-accent font-bold text-base hover:bg-accent hover:text-base transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
+        <span class="w-8 text-center font-mono text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
+        <button type="button" class="stepper-btn w-8 h-8 rounded-md bg-border text-accent font-bold text-base hover:bg-accent hover:text-base transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
+          class="w-16 bg-base border border-border rounded-lg px-2 py-1.5 text-center font-mono text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+          data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
+        <span class="text-[11px] text-text-muted font-mono">h/d</span>
+      </div>
+      <div class="flex-shrink-0 text-right min-w-[80px]">
+        <span class="font-mono text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
+        <span class="text-[10px] text-text-muted ml-0.5">kWh/d</span>
+      </div>
+      <button type="button"
+        class="flex-shrink-0 w-7 h-7 rounded-md text-text-muted hover:text-danger hover:bg-border transition-colors focus:outline-none"
+        data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
+          <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </div>`;
+}
+
+// ── Reset All ─────────────────────────────────────────────
+document.getElementById('reset-all-btn')?.addEventListener('click', () => {
+  if (!confirm('Reset all appliances to their default values?')) return;
+
+  appliances = structuredClone(DEFAULT_APPLIANCES);
+
+  // Re-render all rows
+  CATEGORIES.forEach(cat => {
+    const container = document.querySelector(`[data-rows-container="${cat}"]`);
+    if (!container) return;
+
+    // Remove all rows
+    container.innerHTML = '';
+
+    // Re-insert default rows
+    const catAppliances = appliances.filter(a => a.category === cat);
+    catAppliances.forEach(a => {
+      container.insertAdjacentHTML('beforeend', buildRowHTML(a));
+    });
+  });
+
+  // Re-sync toggle visual state
+  appliances.forEach(a => updateRowNameStyle(a));
+
+  // Reset tariff
+  tariff = 8;
+  const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
+  if (tariffInput) tariffInput.value = '8';
+
+  calculate();
+});
+
+// ── Download / Print Report ───────────────────────────────
+document.getElementById('download-report-btn')?.addEventListener('click', () => {
+  const included = appliances.filter(a => a.included && a.qty > 0);
+  const totalWatts  = included.reduce((s, a) => s + a.watts * a.qty, 0);
+  const dailyKWh    = included.reduce((s, a) => s + rowKWh(a), 0);
+  const monthlyKWh  = dailyKWh * 30;
+  const monthlyBill = monthlyKWh * tariff;
+
+  const date = new Date().toLocaleDateString('en-IN', { dateStyle: 'long' });
+
+  let report = `HOME LOAD CALCULATOR — REPORT\n`;
+  report += `Generated: ${date}\n`;
+  report += `${'─'.repeat(48)}\n\n`;
+  report += `SUMMARY\n`;
+  report += `  Total Load          : ${totalWatts.toLocaleString('en-IN')} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
+  report += `  Daily Consumption   : ${dailyKWh.toFixed(2)} kWh/day\n`;
+  report += `  Monthly Estimate    : ${Math.round(monthlyKWh).toLocaleString('en-IN')} kWh/month\n`;
+  report += `  Estimated Bill      : ₹${Math.round(monthlyBill).toLocaleString('en-IN')} / month\n`;
+  report += `  Tariff Used         : ₹${tariff}/kWh\n\n`;
+  report += `${'─'.repeat(48)}\n\n`;
+  report += `APPLIANCE BREAKDOWN\n\n`;
+
+  CATEGORIES.forEach(cat => {
+    const catItems = included.filter(a => a.category === cat);
+    if (!catItems.length) return;
+    report += `  ${cat.toUpperCase()}\n`;
+    catItems.forEach(a => {
+      report += `    ${a.name.padEnd(28)} ${String(a.qty).padStart(2)}× ${String(a.watts).padStart(5)}W  ${rowKWh(a).toFixed(2)} kWh/d\n`;
+    });
+    report += '\n';
+  });
+
+  const modal   = document.getElementById('report-modal');
+  const content = document.getElementById('report-content');
+  if (modal && content) {
+    content.textContent = report;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+});
+
+document.getElementById('modal-close')?.addEventListener('click', closeModal);
+document.getElementById('modal-backdrop')?.addEventListener('click', closeModal);
+document.getElementById('print-btn')?.addEventListener('click', () => window.print());
+document.getElementById('copy-report-btn')?.addEventListener('click', async () => {
+  const content = document.getElementById('report-content')?.textContent || '';
+  try {
+    await navigator.clipboard.writeText(content);
+    const btn = document.getElementById('copy-report-btn');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Text'; }, 2000); }
+  } catch { /* silent fail */ }
+});
+
+function closeModal() {
+  const modal = document.getElementById('report-modal');
+  modal?.classList.add('hidden');
+  modal?.classList.remove('flex');
+}
+
+// Close modal on Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ── Init ──────────────────────────────────────────────────
+calculate();
+</script>

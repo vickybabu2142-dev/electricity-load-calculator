@@ -1,0 +1,144 @@
+---
+// No props — all values updated via JS
+---
+
+<aside
+  id="results-panel"
+  class="sticky top-6 h-fit rounded-xl border border-border bg-card overflow-hidden animate-slide-up no-print"
+  style="animation-delay: 0.1s"
+  aria-label="Calculation results"
+>
+  <!-- Panel header -->
+  <div class="px-5 py-4 border-b border-border flex items-center justify-between">
+    <h2 class="font-display font-bold text-lg tracking-wide text-text-primary">Your Load Summary</h2>
+    <!-- Load level badge -->
+    <span
+      id="load-level-badge"
+      class="text-xs font-mono px-2.5 py-1 rounded-full border font-semibold"
+      style="border-color: var(--success); color: var(--success);"
+    >
+      Light Load
+    </span>
+  </div>
+
+  <div class="px-5 py-5 space-y-5">
+
+    <!-- Total Load -->
+    <div>
+      <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Total Load</p>
+      <div class="flex items-end gap-2">
+        <span id="total-watts" class="font-display font-bold text-4xl tabular-nums text-text-primary">0</span>
+        <span class="font-mono text-sm text-text-muted mb-1">W</span>
+        <span class="font-mono text-base text-text-muted mb-1">/</span>
+        <span id="total-kw" class="font-mono font-semibold text-xl tabular-nums text-text-primary mb-0.5">0.00</span>
+        <span class="font-mono text-sm text-text-muted mb-1">kW</span>
+      </div>
+      <!-- Progress bar -->
+      <div class="mt-2 h-2 rounded-full bg-border overflow-hidden" role="progressbar" aria-label="Load percentage" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="load-progress">
+        <div
+          id="load-bar"
+          class="h-full rounded-full transition-all duration-500 ease-out"
+          style="width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-dim));"
+        ></div>
+      </div>
+      <div class="flex justify-between mt-1">
+        <span class="font-mono text-[10px] text-text-muted">0 W</span>
+        <span id="load-percent" class="font-mono text-[10px] tabular-nums text-text-primary">0%</span>
+        <span class="font-mono text-[10px] text-text-muted">5,000 W</span>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-border" />
+
+    <!-- Energy stats -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-text-muted">Daily Consumption</span>
+        <div>
+          <span id="daily-kwh" class="font-mono font-semibold tabular-nums text-text-primary">0.00</span>
+          <span class="font-mono text-xs text-text-muted ml-1">kWh/day</span>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-text-muted">Monthly Estimate</span>
+        <div>
+          <span id="monthly-kwh" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
+          <span class="font-mono text-xs text-text-muted ml-1">kWh/mo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-border" />
+
+    <!-- Bill estimate -->
+    <div class="rounded-lg bg-base border border-border px-4 py-3">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-text-muted">Est. Monthly Bill</span>
+        <span id="monthly-bill" class="font-display font-bold text-2xl tabular-nums text-text-primary">₹0</span>
+      </div>
+      <div class="flex items-center gap-2 text-xs text-text-muted">
+        <span>Tariff:</span>
+        <span class="font-mono">₹</span>
+        <input
+          id="tariff-input"
+          type="number"
+          value="8"
+          min="1"
+          max="50"
+          step="0.5"
+          class="w-14 bg-card border border-border rounded px-2 py-0.5 font-mono text-xs text-text-primary text-center focus:border-accent focus:outline-none"
+          aria-label="Electricity tariff in rupees per kWh"
+        />
+        <span class="font-mono">/ kWh</span>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-border" />
+
+    <!-- Top consumer -->
+    <div>
+      <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Top Consumer</p>
+      <div class="flex items-center justify-between">
+        <span id="top-consumer-name" class="text-sm font-medium text-text-primary">—</span>
+        <div>
+          <span id="top-consumer-watts" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
+          <span class="font-mono text-xs text-text-muted ml-1">W</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-border" />
+
+    <!-- Actions -->
+    <div class="flex gap-3">
+      <button
+        id="download-report-btn"
+        type="button"
+        class="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-border text-sm text-text-muted hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+        aria-label="Download report"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+          <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z"/>
+          <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z"/>
+        </svg>
+        Report
+      </button>
+      <button
+        id="reset-all-btn"
+        type="button"
+        class="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-border text-sm text-text-muted hover:border-danger hover:text-danger transition-colors focus:outline-none focus:ring-2 focus:ring-danger"
+        aria-label="Reset all appliances to defaults"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+          <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd"/>
+        </svg>
+        Reset
+      </button>
+    </div>
+
+  </div>
+</aside>
