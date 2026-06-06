@@ -5,7 +5,7 @@ const makeId = () => `app-${idCounter++}`;
 
 export const DEFAULT_APPLIANCES: Appliance[] = [
   // Lighting
-  { id: makeId(), category: 'Lighting',      name: 'LED Bulb',               defaultWatts: 9,    defaultQty: 1, defaultHours: 8,    watts: 9,    qty: 1, hours: 8,    included: false, custom: false },
+  { id: makeId(), category: 'Lighting',      name: 'LED Bulb',               defaultWatts: 9,    defaultQty: 1, defaultHours: 8,    watts: 9,    qty: 1, hours: 8,    included: true,  custom: false },
   { id: makeId(), category: 'Lighting',      name: 'Tube Light',             defaultWatts: 36,   defaultQty: 1, defaultHours: 6,    watts: 36,   qty: 1, hours: 6,    included: false, custom: false },
   { id: makeId(), category: 'Lighting',      name: 'CFL',                    defaultWatts: 15,   defaultQty: 1, defaultHours: 5,    watts: 15,   qty: 1, hours: 5,    included: false, custom: false },
   { id: makeId(), category: 'Lighting',      name: 'Spotlight / Downlight',  defaultWatts: 12,   defaultQty: 1, defaultHours: 4,    watts: 12,   qty: 1, hours: 4,    included: false, custom: false },

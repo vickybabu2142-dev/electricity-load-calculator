@@ -40,32 +40,34 @@ const grouped = CATEGORIES.map(cat => ({
   </main>
 
   <!-- PRINT ONLY LAYOUT -->
-  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto p-8 text-black bg-white">
-    <div class="border-b-2 border-black pb-6 mb-6 flex justify-between items-end">
+  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto p-8 text-text-primary bg-base">
+    <div class="border-b-2 border-text-primary pb-6 mb-6 flex justify-between items-end">
       <div>
-        <h1 class="text-3xl font-display font-bold">Home Load Report</h1>
-        <p class="text-sm text-gray-500 mt-1" id="print-date"></p>
+        <h1 class="text-3xl font-display font-bold text-text-primary">
+          Home Load <span class="text-accent">Report</span>
+        </h1>
+        <p class="text-sm text-text-muted mt-1" id="print-date"></p>
       </div>
       <div class="text-right">
-        <p class="text-xs font-mono uppercase tracking-widest text-gray-500">Tariff</p>
-        <p class="text-lg font-semibold" id="print-tariff">₹8/kWh</p>
+        <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Tariff</p>
+        <p class="text-lg font-semibold" id="print-tariff">0</p>
       </div>
     </div>
     
-    <div class="grid grid-cols-2 gap-8 mb-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+    <div class="grid grid-cols-2 gap-8 mb-8 bg-card p-6 rounded-xl border border-border">
       <div>
-        <h2 class="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2">Total Load</h2>
-        <p class="text-4xl font-bold font-display mb-1"><span id="print-total-kw">0.00</span> kW</p>
-        <p class="text-sm text-gray-500"><span id="print-total-watts">0</span> W</p>
+        <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Total Load</h2>
+        <p class="text-4xl font-bold font-display mb-1" style="color: var(--accent);"><span id="print-total-kw">0.00</span> kW</p>
+        <p class="text-sm text-text-muted"><span id="print-total-watts">0</span> W</p>
       </div>
       <div>
-        <h2 class="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2">Energy & Est. Bill</h2>
-        <p class="text-lg font-semibold mb-1"><span id="print-daily-kwh">0.00</span> kWh/day</p>
-        <p class="text-xl font-bold text-black mt-2 border-t border-gray-200 pt-2">₹<span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-gray-500">/ month</span></p>
+        <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Energy & Est. Bill</h2>
+        <p class="text-lg font-semibold mb-1 text-text-primary"><span id="print-daily-kwh">0.00</span> kWh/day</p>
+        <p class="text-xl font-bold mt-2 border-t border-border pt-2" style="color: var(--accent);"><span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-text-muted">/ month</span></p>
       </div>
     </div>
 
-    <h2 class="text-sm font-bold uppercase tracking-wider text-black mb-4 border-b border-black pb-2">Active Appliances Breakdown</h2>
+    <h2 class="text-sm font-bold uppercase tracking-wider text-text-primary mb-4 border-b border-text-primary pb-2">Active Appliances Breakdown</h2>
     <div id="print-appliances-list" class="space-y-6">
       <!-- Populated by JS -->
     </div>
@@ -81,10 +83,22 @@ const grouped = CATEGORIES.map(cat => ({
 
 import { DEFAULT_APPLIANCES, CATEGORIES } from '@/data/appliances';
 import type { Appliance, ApplianceCategory } from '@/types';
+import { calculateRowKWh, calculateTotals } from '@/utils/calculations';
 
-// ── State ─────────────────────────────────────────────────
+// ── State & Settings ──────────────────────────────────────
+const REGION_SETTINGS: Record<string, { locale: string, symbol: string, defaultTariff: number, step: number, defaultMaxKW: number }> = {
+  INR: { locale: 'en-IN', symbol: '₹', defaultTariff: 8,    step: 0.5,  defaultMaxKW: 5  },
+  USD: { locale: 'en-US', symbol: '$', defaultTariff: 0.15, step: 0.01, defaultMaxKW: 20 },
+  EUR: { locale: 'de-DE', symbol: '€', defaultTariff: 0.35, step: 0.01, defaultMaxKW: 15 },
+  GBP: { locale: 'en-GB', symbol: '£', defaultTariff: 0.28, step: 0.01, defaultMaxKW: 15 },
+  CAD: { locale: 'en-CA', symbol: '$', defaultTariff: 0.14, step: 0.01, defaultMaxKW: 20 },
+  AUD: { locale: 'en-AU', symbol: '$', defaultTariff: 0.30, step: 0.01, defaultMaxKW: 20 },
+};
+
 let appliances: Appliance[] = structuredClone(DEFAULT_APPLIANCES);
-let tariff = 8; // ₹/kWh
+let tariff = 8;
+let currentCurrency = 'INR';
+let maxCapacityKW = 5;
 let customIdCounter = 1000;
 
 // ── Helpers ───────────────────────────────────────────────
@@ -92,58 +106,72 @@ function getAppliance(id: string): Appliance | undefined {
   return appliances.find(a => a.id === id);
 }
 
-function rowKWh(a: Appliance): number {
-  return (a.watts * a.qty * a.hours) / 1000;
+function formatCurrency(amount: number): string {
+  const { locale, symbol } = REGION_SETTINGS[currentCurrency];
+  // For currencies like USD/EUR, we want 2 decimals. For INR, 0 decimals is usually fine for bills.
+  const decimals = currentCurrency === 'INR' ? 0 : 2;
+  
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currentCurrency,
+    maximumFractionDigits: decimals,
+    minimumFractionDigits: decimals,
+  }).format(amount);
+}
+
+function formatNumber(val: number, decimals = 0): string {
+  const { locale } = REGION_SETTINGS[currentCurrency];
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(val);
 }
 
 // ── Calculation ───────────────────────────────────────────
 function calculate() {
-  const included = appliances.filter(a => a.included && a.qty > 0);
-
-  const totalWatts = included.reduce((s, a) => s + a.watts * a.qty, 0);
-  const dailyKWh   = included.reduce((s, a) => s + rowKWh(a), 0);
-  const monthlyKWh = dailyKWh * 30;
-  const monthlyBill = monthlyKWh * tariff;
-  const loadPercent = Math.min((totalWatts / 5000) * 100, 100);
-
-  const top = included.reduce<Appliance | null>((best, a) => {
-    if (!best) return a;
-    return a.watts * a.qty > best.watts * best.qty ? a : best;
-  }, null);
+  const result = calculateTotals(appliances, tariff, maxCapacityKW);
+  const settings = REGION_SETTINGS[currentCurrency];
 
   // ── Update Results Panel ──
-  animateCounter('total-kw', totalWatts / 1000, 2);   // kW is now the primary big number
-  animateCounter('total-watts', totalWatts, 0);        // W is now secondary
-  animateCounter('daily-kwh', dailyKWh, 2);
-  animateCounter('monthly-kwh', monthlyKWh, 0);
-  setText('monthly-bill', `₹${Math.round(monthlyBill).toLocaleString('en-IN')}`);
-  setText('top-consumer-name', top ? top.name : '—');
-  setText('top-consumer-watts', top ? (top.watts * top.qty).toLocaleString() : '0');
-  setText('load-percent', `${Math.round(loadPercent)}%`);
+  animateCounter('total-kw', result.totalWatts / 1000, 2);
+  animateCounter('total-watts', result.totalWatts, 0);
+  animateCounter('daily-kwh', result.dailyKWh, 2);
+  animateCounter('monthly-kwh', result.monthlyKWh, 0);
+  
+  setText('monthly-bill', formatCurrency(result.monthlyBill));
+  setText('top-consumer-name', result.topConsumer ? result.topConsumer.name : '—');
+  setText('top-consumer-watts', result.topConsumer ? formatNumber(result.topConsumer.watts * result.topConsumer.qty) : '0');
+  setText('load-percent', `${Math.round(result.loadPercent)}%`);
+  setText('max-kw-label', `${maxCapacityKW} kW max`);
+
+  // Update all currency symbol spans
+  document.querySelectorAll('.currency-symbol').forEach(el => {
+    el.textContent = settings.symbol;
+  });
 
   // Progress bar
   const bar = document.getElementById('load-bar');
   if (bar) {
-    bar.style.width = `${Math.min(loadPercent, 100)}%`;  // cap at 100%
-    if (totalWatts > 5000) {
-      bar.style.background = '#ef4444';  // solid red when over limit
-    } else if (totalWatts > 3000) {
+    bar.style.width = `${Math.min(result.loadPercent, 100)}%`;
+    if (result.totalWatts > (maxCapacityKW * 1000)) {
+      bar.style.background = '#ef4444';
+    } else if (result.loadPercent > 70) {
       bar.style.background = 'linear-gradient(90deg, #f5a623, #ef4444)';
     } else {
       bar.style.background = 'linear-gradient(90deg, #22c55e, #f5a623)';
     }
   }
   const progress = document.getElementById('load-progress');
-  if (progress) progress.setAttribute('aria-valuenow', String(Math.round(loadPercent)));
+  if (progress) progress.setAttribute('aria-valuenow', String(Math.round(result.loadPercent)));
 
   // Load level badge
   const badge = document.getElementById('load-level-badge');
   if (badge) {
-    if (totalWatts < 1000) {
+    if (result.loadPercent < 30) {
       badge.textContent = 'Light Load';
       badge.style.borderColor = 'var(--success)';
       badge.style.color = 'var(--success)';
-    } else if (totalWatts < 3000) {
+    } else if (result.loadPercent < 70) {
       badge.textContent = 'Moderate Load';
       badge.style.borderColor = 'var(--warning)';
       badge.style.color = 'var(--warning)';
@@ -164,7 +192,7 @@ function calculate() {
   CATEGORIES.forEach(cat => {
     const catAppliances = appliances.filter(a => a.category === cat && a.included && a.qty > 0);
     const catWatts = catAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
-    const catKWh   = catAppliances.reduce((s, a) => s + rowKWh(a), 0);
+    const catKWh   = catAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
     const catCount = appliances.filter(a => a.category === cat).length;
 
     const wattEl = document.querySelector(`[data-category-watts="${cat}"]`);
@@ -179,31 +207,32 @@ function calculate() {
   });
 
   // ── Update Print Layout (Hidden in UI, visible in Print) ──
-  setText('print-total-kw', (totalWatts / 1000).toFixed(2));
-  setText('print-total-watts', totalWatts.toLocaleString());
-  setText('print-daily-kwh', dailyKWh.toFixed(2));
-  setText('print-monthly-bill', Math.round(monthlyBill).toLocaleString('en-IN'));
-  setText('print-tariff', `₹${tariff}/kWh`);
-  setText('print-date', `Generated on: ${new Date().toLocaleDateString('en-IN', { dateStyle: 'long' })}`);
+  setText('print-total-kw', (result.totalWatts / 1000).toFixed(2));
+  setText('print-total-watts', formatNumber(result.totalWatts));
+  setText('print-daily-kwh', formatNumber(result.dailyKWh, 2));
+  setText('print-monthly-bill', formatCurrency(result.monthlyBill));
+  setText('print-tariff', `${formatCurrency(tariff)}/kWh`);
+  setText('print-date', `Generated on: ${new Date().toLocaleDateString(REGION_SETTINGS[currentCurrency].locale, { dateStyle: 'long' })}`);
 
   const printList = document.getElementById('print-appliances-list');
   if (printList) {
     let html = '';
+    const included = appliances.filter(a => a.included && a.qty > 0);
     CATEGORIES.forEach(cat => {
       const catItems = included.filter(a => a.category === cat);
       if (catItems.length > 0) {
         html += `
           <div>
-            <h3 class="text-xs font-mono uppercase tracking-widest text-gray-400 mb-3 border-b border-gray-100 pb-1">${cat}</h3>
+            <h3 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-3 border-b border-border pb-1">${cat}</h3>
             <div class="space-y-2">
               ${catItems.map(a => `
                 <div class="flex justify-between items-center text-sm">
                   <div class="flex-1">
-                    <span class="font-medium text-black">${a.name}</span>
-                    <span class="text-gray-400 ml-2 text-xs">${a.qty} × ${a.watts}W</span>
+                    <span class="font-medium text-text-primary">${a.name}</span>
+                    <span class="text-text-muted ml-2 text-xs">${a.qty} × ${a.watts}W</span>
                   </div>
-                  <div class="text-right font-mono font-medium">
-                    ${rowKWh(a).toFixed(2)} <span class="text-[10px] text-gray-400">kWh/d</span>
+                  <div class="text-right font-mono font-medium text-text-primary">
+                    ${calculateRowKWh(a).toFixed(2)} <span class="text-[10px] text-text-muted">kWh/d</span>
                   </div>
                 </div>
               `).join('')}
@@ -212,7 +241,7 @@ function calculate() {
         `;
       }
     });
-    printList.innerHTML = html || '<p class="text-gray-400 italic">No active appliances selected.</p>';
+    printList.innerHTML = html || '<p class="text-text-muted italic">No active appliances selected.</p>';
   }
 }
 
@@ -227,9 +256,9 @@ function animateCounter(id: string, target: number, decimals: number) {
 
   function step(now: number) {
     const progress = Math.min((now - startTime) / duration, 1);
-    const ease = 1 - Math.pow(1 - progress, 3); // ease-out-cubic
+    const ease = 1 - Math.pow(1 - progress, 3);
     const value = start + (target - start) * ease;
-    el.textContent = decimals > 0 ? value.toFixed(decimals) : Math.round(value).toLocaleString('en-IN');
+    el.textContent = formatNumber(value, decimals);
     if (progress < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
@@ -243,7 +272,7 @@ function setText(id: string, value: string) {
 // ── kWh display update for a single row ──────────────────
 function updateRowKWh(a: Appliance) {
   const kwhEl = document.querySelector(`[data-kwh-display="${a.id}"]`);
-  if (kwhEl) kwhEl.textContent = rowKWh(a).toFixed(2);
+  if (kwhEl) kwhEl.textContent = formatNumber(calculateRowKWh(a), 2);
 }
 
 function updateRowQtyDisplay(a: Appliance) {
@@ -332,6 +361,41 @@ document.addEventListener('click', (e) => {
     appliances = appliances.filter(a => a.id !== id);
     const row = document.querySelector(`[data-id="${id}"]`);
     row?.remove();
+    calculate();
+  }
+});
+
+// ── Settings listeners ────────────────────────────────────
+document.getElementById('currency-select')?.addEventListener('change', (e) => {
+  const val = (e.target as HTMLSelectElement).value;
+  currentCurrency = val;
+  const settings = REGION_SETTINGS[val];
+  
+  // Update tariff to regional default
+  tariff = settings.defaultTariff;
+  const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
+  if (tariffInput) {
+    tariffInput.value = String(tariff);
+    tariffInput.step = String(settings.step);
+  }
+
+  // Update max capacity to regional default
+  maxCapacityKW = settings.defaultMaxKW;
+  const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
+  if (maxKWInput) {
+    maxKWInput.value = String(maxCapacityKW);
+  }
+
+  // Update all existing rows to the new locale's formatting
+  appliances.forEach(a => updateRowKWh(a));
+
+  calculate();
+});
+
+document.getElementById('max-kw-input')?.addEventListener('input', (e) => {
+  const val = parseFloat((e.target as HTMLInputElement).value);
+  if (!isNaN(val) && val > 0) {
+    maxCapacityKW = val;
     calculate();
   }
 });
@@ -452,59 +516,66 @@ document.querySelectorAll<HTMLFormElement>('.add-appliance-form').forEach(form =
   });
 });
 
-// ── Build row HTML dynamically (mirrors ApplianceRow.astro - Vercel Styled) ──
+// ── Build row HTML dynamically (mirrors ApplianceRow.astro) ──
 function buildRowHTML(a: Appliance): string {
-  const kwh = rowKWh(a).toFixed(2);
+  const kwh = formatNumber(calculateRowKWh(a), 2);
   const isIncluded = a.included;
   const nameColor = isIncluded ? 'var(--text-primary)' : 'var(--text-muted)';
   const toggleBg  = isIncluded ? 'background-color: var(--accent);' : '';
 
   return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-3 px-4 py-3 border-b border-[#2a2d3a] hover:bg-[#20232f] transition-colors duration-150 animate-slide-up" 
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-3 border-b border-border hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
       data-id="${a.id}" 
       data-included="${isIncluded}">
-      <div class="flex-shrink-0">
-        <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
-          <span class="sr-only">Toggle ${a.name}</span>
-          <input type="checkbox" class="toggle-checkbox sr-only" ${isIncluded ? 'checked' : ''} data-action="toggle-include" data-id="${a.id}" aria-label="Include ${a.name} in calculation" />
-          <span class="toggle-label absolute inset-0 rounded-full cursor-pointer" style="${toggleBg}"></span>
-        </label>
+      <!-- Row 1: Toggle + Name -->
+      <div class="flex items-center gap-3 flex-1 min-w-[200px]">
+        <div class="flex-shrink-0">
+          <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
+            <span class="sr-only">Toggle ${a.name}</span>
+            <input type="checkbox" class="toggle-checkbox sr-only" ${isIncluded ? 'checked' : ''} data-action="toggle-include" data-id="${a.id}" aria-label="Include ${a.name} in calculation" />
+            <span class="toggle-label absolute inset-0 rounded-full bg-border cursor-pointer" style="${toggleBg}"></span>
+          </label>
+        </div>
+        <div class="flex-1">
+          <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
+          ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
+        </div>
       </div>
-      <div class="flex-1 min-w-[140px]">
-        <span class="text-sm font-medium transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
-        ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
-      </div>
-      <div class="flex items-center gap-1.5">
-        <input type="number" value="${a.watts}" min="1" max="99999"
-          class="w-20 bg-base border border-border rounded-lg px-2 py-1.5 text-center font-mono text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
-          data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
-        <span class="text-[11px] text-text-muted font-mono">W</span>
-      </div>
-      <div class="flex items-center gap-1">
-        <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-[#2a2d3a] text-[#f0f0ee] font-bold text-base hover:bg-[#f5a623] hover:text-[#0f1117] transition-colors focus:outline-none focus:ring-2 focus:ring-[#f5a623]" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
-        <span class="w-8 text-center font-mono text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
-        <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-[#2a2d3a] text-[#f0f0ee] font-bold text-base hover:bg-[#f5a623] hover:text-[#0f1117] transition-colors focus:outline-none focus:ring-2 focus:ring-[#f5a623]" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
-      </div>
-      <div class="flex items-center gap-1.5">
-        <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
-          class="w-16 bg-base border border-border rounded-lg px-2 py-1.5 text-center font-mono text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
-          data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
-        <span class="text-[11px] text-text-muted font-mono">h/d</span>
-      </div>
-      <div class="flex-shrink-0 text-right min-w-[80px]">
-        <span class="font-mono text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
-        <span class="text-[10px] text-text-muted ml-0.5">kWh/d</span>
-      </div>
-      <div class="flex-shrink-0 w-7 h-7">
-        ${a.custom ? `
-          <button type="button"
-            class="w-7 h-7 rounded-md text-text-muted hover:text-danger hover:bg-border transition-colors focus:outline-none"
-            data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
-              <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
-            </svg>
-          </button>
-        ` : ''}
+
+      <!-- Row 2: Metrics + Actions -->
+      <div class="flex items-center justify-between gap-1 w-full lg:w-auto lg:contents lg:gap-3">
+        <div class="flex items-center gap-1">
+          <input type="number" value="${a.watts}" min="1" max="99999"
+            class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+            data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
+          <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">W</span>
+        </div>
+        <div class="flex items-center">
+          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
+          <span class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
+          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
+        </div>
+        <div class="flex items-center gap-1">
+          <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
+            class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+            data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
+          <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
+        </div>
+        <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px]">
+          <span class="font-mono text-xs sm:text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
+          <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh</span>
+        </div>
+        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+          ${a.custom ? `
+            <button type="button"
+              class="w-8 h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
+              data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
+                <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          ` : ''}
+        </div>
       </div>
     </div>`;
 }
@@ -519,24 +590,30 @@ document.getElementById('reset-all-btn')?.addEventListener('click', () => {
   CATEGORIES.forEach(cat => {
     const container = document.querySelector(`[data-rows-container="${cat}"]`);
     if (!container) return;
-
-    // Remove all rows
     container.innerHTML = '';
-
-    // Re-insert default rows
     const catAppliances = appliances.filter(a => a.category === cat);
     catAppliances.forEach(a => {
       container.insertAdjacentHTML('beforeend', buildRowHTML(a));
     });
   });
 
-  // Re-sync toggle visual state
   appliances.forEach(a => updateRowNameStyle(a));
 
-  // Reset tariff
-  tariff = 8;
+  // Reset to INR defaults
+  currentCurrency = 'INR';
+  const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
+  if (currencySelect) currencySelect.value = 'INR';
+
+  tariff = REGION_SETTINGS.INR.defaultTariff;
   const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
-  if (tariffInput) tariffInput.value = '8';
+  if (tariffInput) {
+    tariffInput.value = String(tariff);
+    tariffInput.step = String(REGION_SETTINGS.INR.step);
+  }
+
+  maxCapacityKW = REGION_SETTINGS.INR.defaultMaxKW;
+  const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
+  if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
 
   calculate();
 });
@@ -545,22 +622,25 @@ document.getElementById('reset-all-btn')?.addEventListener('click', () => {
 document.getElementById('download-report-btn')?.addEventListener('click', () => {
   const included = appliances.filter(a => a.included && a.qty > 0);
   const totalWatts  = included.reduce((s, a) => s + a.watts * a.qty, 0);
-  const dailyKWh    = included.reduce((s, a) => s + rowKWh(a), 0);
+  const dailyKWh    = included.reduce((s, a) => s + calculateRowKWh(a), 0);
   const monthlyKWh  = dailyKWh * 30;
   const monthlyBill = monthlyKWh * tariff;
+  const locale = REGION_SETTINGS[currentCurrency].locale;
+  const date = new Date().toLocaleDateString(locale, { dateStyle: 'long' });
 
-  const date = new Date().toLocaleDateString('en-IN', { dateStyle: 'long' });
-
-  let report = `HOME LOAD CALCULATOR — REPORT\n`;
+  let report = `HOME LOAD CALCULATOR REPORT\n`;
   report += `Generated: ${date}\n`;
   report += `${'─'.repeat(48)}\n\n`;
+  
   report += `SUMMARY\n`;
-  report += `  Total Load          : ${totalWatts.toLocaleString('en-IN')} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
-  report += `  Daily Consumption   : ${dailyKWh.toFixed(2)} kWh/day\n`;
-  report += `  Monthly Estimate    : ${Math.round(monthlyKWh).toLocaleString('en-IN')} kWh/month\n`;
-  report += `  Estimated Bill      : ₹${Math.round(monthlyBill).toLocaleString('en-IN')} / month\n`;
-  report += `  Tariff Used         : ₹${tariff}/kWh\n\n`;
+  report += `  Total Load          : ${formatNumber(totalWatts)} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
+  report += `  Daily Consumption   : ${formatNumber(dailyKWh, 2)} kWh/day\n`;
+  report += `  Monthly Estimate    : ${formatNumber(monthlyKWh)} kWh/month\n`;
+  report += `  Estimated Bill      : ${formatCurrency(monthlyBill)} / month\n`;
+  report += `  Tariff Used         : ${formatCurrency(tariff)}/kWh\n`;
+  report += `  Max Home Capacity   : ${maxCapacityKW} kW\n\n`;
   report += `${'─'.repeat(48)}\n\n`;
+  
   report += `APPLIANCE BREAKDOWN\n\n`;
 
   CATEGORIES.forEach(cat => {
@@ -568,7 +648,7 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
     if (!catItems.length) return;
     report += `  ${cat.toUpperCase()}\n`;
     catItems.forEach(a => {
-      report += `    ${a.name.padEnd(28)} ${String(a.qty).padStart(2)}× ${String(a.watts).padStart(5)}W  ${rowKWh(a).toFixed(2)} kWh/d\n`;
+      report += `    ${a.name.padEnd(28)} ${String(a.qty).padStart(2)}× ${String(a.watts).padStart(5)}W  ${calculateRowKWh(a).toFixed(2)} kWh/d\n`;
     });
     report += '\n';
   });
@@ -585,6 +665,20 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
 document.getElementById('modal-close')?.addEventListener('click', closeModal);
 document.getElementById('modal-backdrop')?.addEventListener('click', closeModal);
 document.getElementById('print-btn')?.addEventListener('click', () => window.print());
+
+document.getElementById('download-txt-btn')?.addEventListener('click', () => {
+  const content = document.getElementById('report-content')?.textContent || '';
+  if (!content) return;
+  
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `home-load-report-${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
 document.getElementById('copy-report-btn')?.addEventListener('click', async () => {
   const content = document.getElementById('report-content')?.textContent || '';
   try {

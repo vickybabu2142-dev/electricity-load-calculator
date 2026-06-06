@@ -32,7 +32,7 @@ const icon = CATEGORY_ICONS[name];
   <button
     type="button"
     class="category-toggle w-full flex items-center gap-3 px-5 py-4 hover:bg-card-hover transition-colors text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
-    aria-expanded="true"
+    aria-expanded={name === 'Lighting' ? "true" : "false"}
     aria-controls={`category-body-${name.replace(/\s/g, '-')}`}
     data-category={name}
   >
@@ -82,6 +82,7 @@ const icon = CATEGORY_ICONS[name];
       viewBox="0 0 20 20"
       fill="currentColor"
       class="chevron w-5 h-5 text-text-muted flex-shrink-0 transition-transform duration-200"
+      style={name === 'Lighting' ? '' : 'transform: rotate(-90deg)'}
     >
       <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
     </svg>
@@ -91,6 +92,7 @@ const icon = CATEGORY_ICONS[name];
   <div
     id={`category-body-${name.replace(/\s/g, '-')}`}
     class="category-body"
+    style={name === 'Lighting' ? '' : 'display: none'}
   >
     <!-- Column headers (desktop only) -->
     <div class="hidden lg:flex items-center gap-3 px-4 py-2 bg-base/50 border-b border-border text-[10px] font-mono uppercase tracking-widest text-text-muted">

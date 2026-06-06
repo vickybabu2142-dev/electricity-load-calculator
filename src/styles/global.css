@@ -1,41 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Khand:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Dark Theme (Default) */
-  --bg-base: #000000;
-  --bg-card: #0a0a0a;
-  --bg-card-hover: #111111;
-  --accent: #ffffff;
-  --accent-dim: #a1a1aa;
-  --text-primary: #ededed;
-  --text-muted: #a1a1aa;
-  --border: #262626;
+  /* Industrial Dark Palette Variables */
+  --bg-base-raw: #0f0f0f;
+  --bg-surface-raw: #111111;
+  --bg-elevated-raw: #141414;
+  --bg-subtle-raw: #1a1a1a;
+
+  --border-default-raw: #1e1e1e;
+  --border-hover-raw: #2a2a2a;
+  --border-strong-raw: #333333;
+
+  --text-primary-raw: #f0ebe2;
+  --text-secondary-raw: #d4cfc8;
+  --text-muted-raw: #a1a1aa;
+  --text-faint-raw: #71717a;
+  --text-ghost-raw: #3f3f46;
+
+  --accent-raw: #F4A826;
+  --accent-text-raw: #0f0f0f;
+
+  --status-green-raw: #3ecf6e;
+  --status-green-glow-raw: #3ecf6e88;
+
+  /* Theme mappings for compatibility with existing HTML classes */
+  --bg-base: var(--bg-base-raw);
+  --bg-card: var(--bg-surface-raw);
+  --bg-card-hover: var(--bg-elevated-raw);
+  --accent: var(--accent-raw);
+  --accent-dim: color-mix(in srgb, var(--accent), black 20%);
+  --accent-text: var(--accent-text-raw);
+  --text-primary: var(--text-primary-raw);
+  --text-muted: var(--text-secondary-raw);
+  --border: var(--border-default-raw);
   --danger: #ef4444;
   --warning: #f59e0b;
-  --success: #22c55e;
+  --success: var(--status-green-raw);
+
+  /* Toggle specifics (Dark) */
+  --toggle-off: var(--bg-subtle-raw);
+  --toggle-off-border: var(--border-strong-raw);
+  --toggle-knob: var(--text-primary-raw);
 
   /* Grid dots for dark mode */
-  --grid-color: #1a1a1a;
+  --grid-color: var(--border-hover-raw);
 }
 
 .light {
-  /* Light Theme */
-  --bg-base: #ffffff;
-  --bg-card: #fafafa;
-  --bg-card-hover: #f5f5f5;
-  --accent: #000000;
-  --accent-dim: #444444;    /* Darkened for better contrast — was #666666 */
-  --text-primary: #171717;
-  --text-muted: #525252;     /* Darkened for better readability — was #666666 */
-  --border: #eaeaea;
+  /* Industrial Light Theme (Stormy Morning) */
+  --bg-base: #F2F5F8;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #E8EDF2;
+  --accent: #4A76A8; /* Sharper Steel Blue */
+  --accent-dim: #2D4F7A; /* Deeper Navy Gray */
+  --accent-text: #FFFFFF;
+  --text-primary: #1D2939; /* Dark Charcoal Blue */
+  --text-muted: #4B5565;
+  --text-faint: #9CA3AF;
+  --text-ghost: #D1D5DB;
+  --border: #B9CCE3; /* Soft Sky Blue */
+
+  /* Toggle specifics (Light) */
+  --toggle-off: #D1D5DB;
+  --toggle-off-border: #9CA3AF;
+  --toggle-knob: #F9FAF9;
 
   /* Grid dots for light mode */
-  --grid-color: #f0f0f0;
+  --grid-color: #DDE3E9;
 }
 
 @theme {
-  --font-display: "Inter", "system-ui", sans-serif;
-  --font-body: "Inter", "system-ui", sans-serif;
+  --font-display: "Khand", "system-ui", sans-serif;
+  --font-body: "Hind", "system-ui", sans-serif;
   --font-mono: "Geist Mono", monospace;
 
   --color-base: var(--bg-base);
@@ -43,9 +80,15 @@
   --color-card-hover: var(--bg-card-hover);
   --color-accent: var(--accent);
   --color-accent-dim: var(--accent-dim);
+  --color-accent-text: var(--accent-text);
   --color-border: var(--border);
   --color-text-primary: var(--text-primary);
   --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint, var(--text-faint-raw));
+  --color-text-ghost: var(--text-ghost, var(--text-ghost-raw));
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
 
   --animate-slide-up: slide-up 0.4s ease both;
   --animate-fade-in: fade-in 0.3s ease both;
@@ -69,11 +112,11 @@ html {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Hind', sans-serif;
   background-color: var(--bg-base);
   color: var(--text-primary);
   min-height: 100vh;
-  /* Vercel-like subtle dot grid */
+  /* Industrial dot grid */
   background-image: radial-gradient(circle, var(--grid-color) 1px, transparent 1px);
   background-size: 32px 32px;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -95,16 +138,27 @@ input[type='number'] {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
 
+/* Form elements theme alignment */
+select, input, button {
+  accent-color: var(--accent);
+}
+
+/* Ensure native dropdowns respect theme colors where supported */
+select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
 /* Toggle switch (Vercel Style: Improved Visibility) */
 .toggle-label {
-  background-color: #3a3d4a;   /* lighter off-state track */
+  background-color: var(--toggle-off);
   transition: background-color 0.2s ease;
   display: block;
   position: absolute;
   inset: 0;
   border-radius: 9999px;
   cursor: pointer;
-  border: 1px solid #4a4d5a;  /* subtle border so it's always visible */
+  border: 1px solid var(--toggle-off-border);
 }
 
 .toggle-label::after {
@@ -115,8 +169,8 @@ input[type='number'] {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #f0f0ee;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  background: var(--toggle-knob);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   transition: transform 0.2s ease;
 }
 
@@ -138,17 +192,75 @@ input[type='number'] {
 
 /* Alternating row backgrounds for better readability */
 .appliance-row:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.018);
+  background-color: var(--bg-subtle-raw);
 }
 
 .light .appliance-row:nth-child(even) {
-  background-color: rgba(0, 0, 0, 0.012);
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 /* Print styles */
 @media print {
-  body { background: white !important; color: black !important; background-image: none !important; }
+  html, body { 
+    background-color: white !important; 
+    color: #0f0f0f !important;
+    background-image: none !important; 
+    color-scheme: light !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #print-layout {
+    display: block !important;
+    background-color: white !important;
+    color: #0f0f0f !important;
+  }
+
+  /* Force white background for all containers */
+  #print-layout,
+  #print-layout .bg-base,
+  #print-layout .bg-card {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Force primary text to be dark for readability on white */
+  #print-layout,
+  #print-layout *,
+  #print-layout .text-text-primary {
+    color: #0f0f0f !important;
+  }
+
+  #print-layout .text-text-muted {
+    color: #4b5563 !important;
+  }
+
+  /* THEME-BASED ACCENTS FOR PRINT */
+  /* Dark Mode users get Amber accents in report */
+  #print-layout [style*="color: var(--accent)"],
+  #print-layout .text-accent,
+  #print-layout h1 span,
+  #print-layout #print-total-kw,
+  #print-layout #print-monthly-bill {
+    color: #F4A826 !important; /* Industrial Amber */
+  }
+
+  /* Light Mode users get Stormy Blue accents in report */
+  .light #print-layout [style*="color: var(--accent)"],
+  .light #print-layout .text-accent,
+  .light #print-layout h1 span,
+  .light #print-layout #print-total-kw,
+  .light #print-layout #print-monthly-bill {
+    color: #4A76A8 !important; /* Stormy Steel Blue */
+  }
+
+  #print-layout .border,
+  #print-layout .border-border,
+  #print-layout .border-t,
+  #print-layout .border-b {
+    border-color: #e5e7eb !important;
+  }
+
   .no-print { display: none !important; }
   .print-only { display: block !important; }
 }
-

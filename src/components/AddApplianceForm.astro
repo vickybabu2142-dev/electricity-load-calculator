@@ -12,12 +12,12 @@ const { category } = Astro.props;
 <div class="add-appliance-wrapper px-4 py-3 border-t border-border border-dashed">
   <button
     type="button"
-    class="add-toggle-btn flex items-center gap-2 text-sm text-text-muted hover:text-accent transition-colors focus:outline-none group"
+    class="add-toggle-btn flex items-center gap-2 text-sm text-text-faint hover:text-accent active:text-accent transition-colors focus:outline-none group"
     data-category={category}
     aria-expanded="false"
     aria-label={`Add custom appliance to ${category}`}
   >
-    <span class="w-6 h-6 rounded-full border border-dashed border-text-muted group-hover:border-accent flex items-center justify-center text-base leading-none transition-colors">+</span>
+    <span class="w-6 h-6 rounded-full border border-dashed border-accent text-accent group-hover:bg-accent group-hover:text-accent-text group-active:bg-accent group-active:text-accent-text flex items-center justify-center text-base leading-none transition-colors">+</span>
     <span>Add custom appliance</span>
   </button>
 
@@ -32,7 +32,7 @@ const { category } = Astro.props;
         id={`new-name-${category}`}
         type="text"
         placeholder="e.g. Hair Dryer"
-        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-text-primary w-44 focus:border-accent focus:outline-none placeholder:text-text-muted/40"
+        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-text-primary w-44 focus:border-accent focus:outline-none placeholder:text-text-faint/10"
         data-field="name"
         required
       />
@@ -46,7 +46,7 @@ const { category } = Astro.props;
         placeholder="1000"
         min="1"
         max="99999"
-        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-center font-mono text-text-primary w-24 focus:border-accent focus:outline-none placeholder:text-text-muted/40"
+        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-center font-mono text-text-primary w-24 focus:border-accent focus:outline-none placeholder:text-text-faint/10"
         data-field="watts"
         required
       />
@@ -61,7 +61,7 @@ const { category } = Astro.props;
         min="0"
         max="24"
         step="0.25"
-        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-center font-mono text-text-primary w-20 focus:border-accent focus:outline-none placeholder:text-text-muted/40"
+        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-center font-mono text-text-primary w-20 focus:border-accent focus:outline-none placeholder:text-text-faint/10"
         data-field="hours"
         required
       />
@@ -69,27 +69,34 @@ const { category } = Astro.props;
 
     <div class="flex flex-col gap-1">
       <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-category-${category}`}>Category</label>
-      <select
-        id={`new-category-${category}`}
-        class="bg-base border border-border rounded-lg px-3 py-1.5 text-sm text-text-primary focus:border-accent focus:outline-none appearance-none cursor-pointer hover:bg-card-hover transition-colors"
-        data-field="category"
-      >
-        {CATEGORIES.map(c => (
-          <option value={c} selected={c === category} class="bg-card text-text-primary">{c}</option>
-        ))}
-      </select>
+      <div class="relative group">
+        <select
+          id={`new-category-${category}`}
+          class="w-full appearance-none bg-base border border-border rounded-lg pl-3 pr-8 py-1.5 text-sm text-text-primary cursor-pointer transition-all duration-200 hover:bg-card-hover hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+          data-field="category"
+        >
+          {CATEGORIES.map(c => (
+            <option value={c} selected={c === category} class="bg-card text-text-primary">{c}</option>
+          ))}
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted group-hover:text-accent transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      </div>
     </div>
 
     <div class="flex gap-2">
       <button
         type="submit"
-        class="px-4 py-1.5 rounded-lg bg-accent text-base text-sm font-semibold hover:bg-accent-dim transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card"
+        class="px-4 py-1.5 rounded-lg bg-accent text-base text-sm font-display font-medium hover:bg-accent-dim transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card"
       >
         Add
       </button>
       <button
         type="button"
-        class="add-cancel-btn px-4 py-1.5 rounded-lg border border-border text-text-muted text-sm hover:border-accent-dim transition-colors focus:outline-none"
+        class="add-cancel-btn px-4 py-1.5 rounded-lg border border-border text-text-muted text-sm font-display font-medium hover:border-accent-dim transition-colors focus:outline-none"
         data-category={category}
       >
         Cancel
