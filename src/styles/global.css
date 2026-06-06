@@ -14,6 +14,11 @@
   --warning: #f59e0b;
   --success: #22c55e;
 
+  /* Toggle specifics (Dark) */
+  --toggle-off: #2a2d3a;
+  --toggle-off-border: #3a3d4a;
+  --toggle-knob: #f0f0ee;
+
   /* Grid dots for dark mode */
   --grid-color: #1a1a1a;
 }
@@ -28,6 +33,11 @@
   --text-primary: #171717;
   --text-muted: #525252;     /* Darkened for better readability — was #666666 */
   --border: #eaeaea;
+
+  /* Toggle specifics (Light) */
+  --toggle-off: #e5e7eb;
+  --toggle-off-border: #d1d5db;
+  --toggle-knob: #ffffff;
 
   /* Grid dots for light mode */
   --grid-color: #f0f0f0;
@@ -97,14 +107,14 @@ input[type='number'] {
 
 /* Toggle switch (Vercel Style: Improved Visibility) */
 .toggle-label {
-  background-color: #3a3d4a;   /* lighter off-state track */
+  background-color: var(--toggle-off);
   transition: background-color 0.2s ease;
   display: block;
   position: absolute;
   inset: 0;
   border-radius: 9999px;
   cursor: pointer;
-  border: 1px solid #4a4d5a;  /* subtle border so it's always visible */
+  border: 1px solid var(--toggle-off-border);
 }
 
 .toggle-label::after {
@@ -115,8 +125,8 @@ input[type='number'] {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #f0f0ee;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  background: var(--toggle-knob);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   transition: transform 0.2s ease;
 }
 

@@ -48,7 +48,7 @@ const grouped = CATEGORIES.map(cat => ({
       </div>
       <div class="text-right">
         <p class="text-xs font-mono uppercase tracking-widest text-gray-500">Tariff</p>
-        <p class="text-lg font-semibold" id="print-tariff">₹8/kWh</p>
+        <p class="text-lg font-semibold" id="print-tariff">0</p>
       </div>
     </div>
     
@@ -61,7 +61,7 @@ const grouped = CATEGORIES.map(cat => ({
       <div>
         <h2 class="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2">Energy & Est. Bill</h2>
         <p class="text-lg font-semibold mb-1"><span id="print-daily-kwh">0.00</span> kWh/day</p>
-        <p class="text-xl font-bold text-black mt-2 border-t border-gray-200 pt-2">₹<span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-gray-500">/ month</span></p>
+        <p class="text-xl font-bold text-black mt-2 border-t border-gray-200 pt-2"><span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-gray-500">/ month</span></p>
       </div>
     </div>
 
@@ -82,9 +82,20 @@ const grouped = CATEGORIES.map(cat => ({
 import { DEFAULT_APPLIANCES, CATEGORIES } from '@/data/appliances';
 import type { Appliance, ApplianceCategory } from '@/types';
 
-// ── State ─────────────────────────────────────────────────
+// ── State & Settings ──────────────────────────────────────
+const REGION_SETTINGS: Record<string, { locale: string, symbol: string, defaultTariff: number, step: number, defaultMaxKW: number }> = {
+  INR: { locale: 'en-IN', symbol: '₹', defaultTariff: 8,    step: 0.5,  defaultMaxKW: 5  },
+  USD: { locale: 'en-US', symbol: '$', defaultTariff: 0.15, step: 0.01, defaultMaxKW: 20 },
+  EUR: { locale: 'de-DE', symbol: '€', defaultTariff: 0.35, step: 0.01, defaultMaxKW: 15 },
+  GBP: { locale: 'en-GB', symbol: '£', defaultTariff: 0.28, step: 0.01, defaultMaxKW: 15 },
+  CAD: { locale: 'en-CA', symbol: '$', defaultTariff: 0.14, step: 0.01, defaultMaxKW: 20 },
+  AUD: { locale: 'en-AU', symbol: '$', defaultTariff: 0.30, step: 0.01, defaultMaxKW: 20 },
+};
+
 let appliances: Appliance[] = structuredClone(DEFAULT_APPLIANCES);
-let tariff = 8; // ₹/kWh
+let tariff = 8;
+let currentCurrency = 'INR';
+let maxCapacityKW = 5;
 let customIdCounter = 1000;
 
 // ── Helpers ───────────────────────────────────────────────
@@ -96,15 +107,38 @@ function rowKWh(a: Appliance): number {
   return (a.watts * a.qty * a.hours) / 1000;
 }
 
+function formatCurrency(amount: number): string {
+  const { locale, symbol } = REGION_SETTINGS[currentCurrency];
+  // For currencies like USD/EUR, we want 2 decimals. For INR, 0 decimals is usually fine for bills.
+  const decimals = currentCurrency === 'INR' ? 0 : 2;
+  
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currentCurrency,
+    maximumFractionDigits: decimals,
+    minimumFractionDigits: decimals,
+  }).format(amount);
+}
+
+function formatNumber(val: number, decimals = 0): string {
+  const { locale } = REGION_SETTINGS[currentCurrency];
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(val);
+}
+
 // ── Calculation ───────────────────────────────────────────
 function calculate() {
   const included = appliances.filter(a => a.included && a.qty > 0);
+  const settings = REGION_SETTINGS[currentCurrency];
 
   const totalWatts = included.reduce((s, a) => s + a.watts * a.qty, 0);
   const dailyKWh   = included.reduce((s, a) => s + rowKWh(a), 0);
   const monthlyKWh = dailyKWh * 30;
   const monthlyBill = monthlyKWh * tariff;
-  const loadPercent = Math.min((totalWatts / 5000) * 100, 100);
+  const maxWatts = maxCapacityKW * 1000;
+  const loadPercent = Math.min((totalWatts / maxWatts) * 100, 100);
 
   const top = included.reduce<Appliance | null>((best, a) => {
     if (!best) return a;
@@ -112,22 +146,29 @@ function calculate() {
   }, null);
 
   // ── Update Results Panel ──
-  animateCounter('total-kw', totalWatts / 1000, 2);   // kW is now the primary big number
-  animateCounter('total-watts', totalWatts, 0);        // W is now secondary
+  animateCounter('total-kw', totalWatts / 1000, 2);
+  animateCounter('total-watts', totalWatts, 0);
   animateCounter('daily-kwh', dailyKWh, 2);
   animateCounter('monthly-kwh', monthlyKWh, 0);
-  setText('monthly-bill', `₹${Math.round(monthlyBill).toLocaleString('en-IN')}`);
+  
+  setText('monthly-bill', formatCurrency(monthlyBill));
   setText('top-consumer-name', top ? top.name : '—');
-  setText('top-consumer-watts', top ? (top.watts * top.qty).toLocaleString() : '0');
+  setText('top-consumer-watts', top ? formatNumber(top.watts * top.qty) : '0');
   setText('load-percent', `${Math.round(loadPercent)}%`);
+  setText('max-kw-label', `${maxCapacityKW} kW max`);
+
+  // Update all currency symbol spans
+  document.querySelectorAll('.currency-symbol').forEach(el => {
+    el.textContent = settings.symbol;
+  });
 
   // Progress bar
   const bar = document.getElementById('load-bar');
   if (bar) {
-    bar.style.width = `${Math.min(loadPercent, 100)}%`;  // cap at 100%
-    if (totalWatts > 5000) {
-      bar.style.background = '#ef4444';  // solid red when over limit
-    } else if (totalWatts > 3000) {
+    bar.style.width = `${Math.min(loadPercent, 100)}%`;
+    if (totalWatts > maxWatts) {
+      bar.style.background = '#ef4444';
+    } else if (loadPercent > 70) {
       bar.style.background = 'linear-gradient(90deg, #f5a623, #ef4444)';
     } else {
       bar.style.background = 'linear-gradient(90deg, #22c55e, #f5a623)';
@@ -139,11 +180,11 @@ function calculate() {
   // Load level badge
   const badge = document.getElementById('load-level-badge');
   if (badge) {
-    if (totalWatts < 1000) {
+    if (loadPercent < 30) {
       badge.textContent = 'Light Load';
       badge.style.borderColor = 'var(--success)';
       badge.style.color = 'var(--success)';
-    } else if (totalWatts < 3000) {
+    } else if (loadPercent < 70) {
       badge.textContent = 'Moderate Load';
       badge.style.borderColor = 'var(--warning)';
       badge.style.color = 'var(--warning)';
@@ -180,11 +221,11 @@ function calculate() {
 
   // ── Update Print Layout (Hidden in UI, visible in Print) ──
   setText('print-total-kw', (totalWatts / 1000).toFixed(2));
-  setText('print-total-watts', totalWatts.toLocaleString());
-  setText('print-daily-kwh', dailyKWh.toFixed(2));
-  setText('print-monthly-bill', Math.round(monthlyBill).toLocaleString('en-IN'));
-  setText('print-tariff', `₹${tariff}/kWh`);
-  setText('print-date', `Generated on: ${new Date().toLocaleDateString('en-IN', { dateStyle: 'long' })}`);
+  setText('print-total-watts', formatNumber(totalWatts));
+  setText('print-daily-kwh', formatNumber(dailyKWh, 2));
+  setText('print-monthly-bill', formatCurrency(monthlyBill));
+  setText('print-tariff', `${formatCurrency(tariff)}/kWh`);
+  setText('print-date', `Generated on: ${new Date().toLocaleDateString(REGION_SETTINGS[currentCurrency].locale, { dateStyle: 'long' })}`);
 
   const printList = document.getElementById('print-appliances-list');
   if (printList) {
@@ -227,9 +268,9 @@ function animateCounter(id: string, target: number, decimals: number) {
 
   function step(now: number) {
     const progress = Math.min((now - startTime) / duration, 1);
-    const ease = 1 - Math.pow(1 - progress, 3); // ease-out-cubic
+    const ease = 1 - Math.pow(1 - progress, 3);
     const value = start + (target - start) * ease;
-    el.textContent = decimals > 0 ? value.toFixed(decimals) : Math.round(value).toLocaleString('en-IN');
+    el.textContent = formatNumber(value, decimals);
     if (progress < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
@@ -243,7 +284,7 @@ function setText(id: string, value: string) {
 // ── kWh display update for a single row ──────────────────
 function updateRowKWh(a: Appliance) {
   const kwhEl = document.querySelector(`[data-kwh-display="${a.id}"]`);
-  if (kwhEl) kwhEl.textContent = rowKWh(a).toFixed(2);
+  if (kwhEl) kwhEl.textContent = formatNumber(rowKWh(a), 2);
 }
 
 function updateRowQtyDisplay(a: Appliance) {
@@ -332,6 +373,41 @@ document.addEventListener('click', (e) => {
     appliances = appliances.filter(a => a.id !== id);
     const row = document.querySelector(`[data-id="${id}"]`);
     row?.remove();
+    calculate();
+  }
+});
+
+// ── Settings listeners ────────────────────────────────────
+document.getElementById('currency-select')?.addEventListener('change', (e) => {
+  const val = (e.target as HTMLSelectElement).value;
+  currentCurrency = val;
+  const settings = REGION_SETTINGS[val];
+  
+  // Update tariff to regional default
+  tariff = settings.defaultTariff;
+  const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
+  if (tariffInput) {
+    tariffInput.value = String(tariff);
+    tariffInput.step = String(settings.step);
+  }
+
+  // Update max capacity to regional default
+  maxCapacityKW = settings.defaultMaxKW;
+  const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
+  if (maxKWInput) {
+    maxKWInput.value = String(maxCapacityKW);
+  }
+
+  // Update all existing rows to the new locale's formatting
+  appliances.forEach(a => updateRowKWh(a));
+
+  calculate();
+});
+
+document.getElementById('max-kw-input')?.addEventListener('input', (e) => {
+  const val = parseFloat((e.target as HTMLInputElement).value);
+  if (!isNaN(val) && val > 0) {
+    maxCapacityKW = val;
     calculate();
   }
 });
@@ -452,9 +528,9 @@ document.querySelectorAll<HTMLFormElement>('.add-appliance-form').forEach(form =
   });
 });
 
-// ── Build row HTML dynamically (mirrors ApplianceRow.astro - Vercel Styled) ──
+// ── Build row HTML dynamically (mirrors ApplianceRow.astro) ──
 function buildRowHTML(a: Appliance): string {
-  const kwh = rowKWh(a).toFixed(2);
+  const kwh = formatNumber(rowKWh(a), 2);
   const isIncluded = a.included;
   const nameColor = isIncluded ? 'var(--text-primary)' : 'var(--text-muted)';
   const toggleBg  = isIncluded ? 'background-color: var(--accent);' : '';
@@ -519,24 +595,30 @@ document.getElementById('reset-all-btn')?.addEventListener('click', () => {
   CATEGORIES.forEach(cat => {
     const container = document.querySelector(`[data-rows-container="${cat}"]`);
     if (!container) return;
-
-    // Remove all rows
     container.innerHTML = '';
-
-    // Re-insert default rows
     const catAppliances = appliances.filter(a => a.category === cat);
     catAppliances.forEach(a => {
       container.insertAdjacentHTML('beforeend', buildRowHTML(a));
     });
   });
 
-  // Re-sync toggle visual state
   appliances.forEach(a => updateRowNameStyle(a));
 
-  // Reset tariff
-  tariff = 8;
+  // Reset to INR defaults
+  currentCurrency = 'INR';
+  const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
+  if (currencySelect) currencySelect.value = 'INR';
+
+  tariff = REGION_SETTINGS.INR.defaultTariff;
   const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
-  if (tariffInput) tariffInput.value = '8';
+  if (tariffInput) {
+    tariffInput.value = String(tariff);
+    tariffInput.step = String(REGION_SETTINGS.INR.step);
+  }
+
+  maxCapacityKW = REGION_SETTINGS.INR.defaultMaxKW;
+  const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
+  if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
 
   calculate();
 });
@@ -548,19 +630,22 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
   const dailyKWh    = included.reduce((s, a) => s + rowKWh(a), 0);
   const monthlyKWh  = dailyKWh * 30;
   const monthlyBill = monthlyKWh * tariff;
+  const locale = REGION_SETTINGS[currentCurrency].locale;
+  const date = new Date().toLocaleDateString(locale, { dateStyle: 'long' });
 
-  const date = new Date().toLocaleDateString('en-IN', { dateStyle: 'long' });
-
-  let report = `HOME LOAD CALCULATOR — REPORT\n`;
+  let report = `HOME LOAD CALCULATOR REPORT\n`;
   report += `Generated: ${date}\n`;
   report += `${'─'.repeat(48)}\n\n`;
+  
   report += `SUMMARY\n`;
-  report += `  Total Load          : ${totalWatts.toLocaleString('en-IN')} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
-  report += `  Daily Consumption   : ${dailyKWh.toFixed(2)} kWh/day\n`;
-  report += `  Monthly Estimate    : ${Math.round(monthlyKWh).toLocaleString('en-IN')} kWh/month\n`;
-  report += `  Estimated Bill      : ₹${Math.round(monthlyBill).toLocaleString('en-IN')} / month\n`;
-  report += `  Tariff Used         : ₹${tariff}/kWh\n\n`;
+  report += `  Total Load          : ${formatNumber(totalWatts)} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
+  report += `  Daily Consumption   : ${formatNumber(dailyKWh, 2)} kWh/day\n`;
+  report += `  Monthly Estimate    : ${formatNumber(monthlyKWh)} kWh/month\n`;
+  report += `  Estimated Bill      : ${formatCurrency(monthlyBill)} / month\n`;
+  report += `  Tariff Used         : ${formatCurrency(tariff)}/kWh\n`;
+  report += `  Max Home Capacity   : ${maxCapacityKW} kW\n\n`;
   report += `${'─'.repeat(48)}\n\n`;
+  
   report += `APPLIANCE BREAKDOWN\n\n`;
 
   CATEGORIES.forEach(cat => {
@@ -585,6 +670,20 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
 document.getElementById('modal-close')?.addEventListener('click', closeModal);
 document.getElementById('modal-backdrop')?.addEventListener('click', closeModal);
 document.getElementById('print-btn')?.addEventListener('click', () => window.print());
+
+document.getElementById('download-txt-btn')?.addEventListener('click', () => {
+  const content = document.getElementById('report-content')?.textContent || '';
+  if (!content) return;
+  
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `home-load-report-${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
 document.getElementById('copy-report-btn')?.addEventListener('click', async () => {
   const content = document.getElementById('report-content')?.textContent || '';
   try {
