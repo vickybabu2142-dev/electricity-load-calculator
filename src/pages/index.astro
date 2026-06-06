@@ -40,32 +40,34 @@ const grouped = CATEGORIES.map(cat => ({
   </main>
 
   <!-- PRINT ONLY LAYOUT -->
-  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto p-8 text-black bg-white">
-    <div class="border-b-2 border-black pb-6 mb-6 flex justify-between items-end">
+  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto p-8 text-text-primary bg-base">
+    <div class="border-b-2 border-text-primary pb-6 mb-6 flex justify-between items-end">
       <div>
-        <h1 class="text-3xl font-display font-bold">Home Load Report</h1>
-        <p class="text-sm text-gray-500 mt-1" id="print-date"></p>
+        <h1 class="text-3xl font-display font-bold text-text-primary">
+          Home Load <span class="text-accent">Report</span>
+        </h1>
+        <p class="text-sm text-text-muted mt-1" id="print-date"></p>
       </div>
       <div class="text-right">
-        <p class="text-xs font-mono uppercase tracking-widest text-gray-500">Tariff</p>
+        <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Tariff</p>
         <p class="text-lg font-semibold" id="print-tariff">0</p>
       </div>
     </div>
     
-    <div class="grid grid-cols-2 gap-8 mb-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+    <div class="grid grid-cols-2 gap-8 mb-8 bg-card p-6 rounded-xl border border-border">
       <div>
-        <h2 class="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2">Total Load</h2>
-        <p class="text-4xl font-bold font-display mb-1"><span id="print-total-kw">0.00</span> kW</p>
-        <p class="text-sm text-gray-500"><span id="print-total-watts">0</span> W</p>
+        <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Total Load</h2>
+        <p class="text-4xl font-bold font-display mb-1" style="color: var(--accent);"><span id="print-total-kw">0.00</span> kW</p>
+        <p class="text-sm text-text-muted"><span id="print-total-watts">0</span> W</p>
       </div>
       <div>
-        <h2 class="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2">Energy & Est. Bill</h2>
-        <p class="text-lg font-semibold mb-1"><span id="print-daily-kwh">0.00</span> kWh/day</p>
-        <p class="text-xl font-bold text-black mt-2 border-t border-gray-200 pt-2"><span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-gray-500">/ month</span></p>
+        <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Energy & Est. Bill</h2>
+        <p class="text-lg font-semibold mb-1 text-text-primary"><span id="print-daily-kwh">0.00</span> kWh/day</p>
+        <p class="text-xl font-bold mt-2 border-t border-border pt-2" style="color: var(--accent);"><span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-text-muted">/ month</span></p>
       </div>
     </div>
 
-    <h2 class="text-sm font-bold uppercase tracking-wider text-black mb-4 border-b border-black pb-2">Active Appliances Breakdown</h2>
+    <h2 class="text-sm font-bold uppercase tracking-wider text-text-primary mb-4 border-b border-text-primary pb-2">Active Appliances Breakdown</h2>
     <div id="print-appliances-list" class="space-y-6">
       <!-- Populated by JS -->
     </div>
@@ -235,16 +237,16 @@ function calculate() {
       if (catItems.length > 0) {
         html += `
           <div>
-            <h3 class="text-xs font-mono uppercase tracking-widest text-gray-400 mb-3 border-b border-gray-100 pb-1">${cat}</h3>
+            <h3 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-3 border-b border-border pb-1">${cat}</h3>
             <div class="space-y-2">
               ${catItems.map(a => `
                 <div class="flex justify-between items-center text-sm">
                   <div class="flex-1">
-                    <span class="font-medium text-black">${a.name}</span>
-                    <span class="text-gray-400 ml-2 text-xs">${a.qty} × ${a.watts}W</span>
+                    <span class="font-medium text-text-primary">${a.name}</span>
+                    <span class="text-text-muted ml-2 text-xs">${a.qty} × ${a.watts}W</span>
                   </div>
-                  <div class="text-right font-mono font-medium">
-                    ${rowKWh(a).toFixed(2)} <span class="text-[10px] text-gray-400">kWh/d</span>
+                  <div class="text-right font-mono font-medium text-text-primary">
+                    ${rowKWh(a).toFixed(2)} <span class="text-[10px] text-text-muted">kWh/d</span>
                   </div>
                 </div>
               `).join('')}
@@ -253,7 +255,7 @@ function calculate() {
         `;
       }
     });
-    printList.innerHTML = html || '<p class="text-gray-400 italic">No active appliances selected.</p>';
+    printList.innerHTML = html || '<p class="text-text-muted italic">No active appliances selected.</p>';
   }
 }
 
@@ -547,7 +549,7 @@ function buildRowHTML(a: Appliance): string {
         </label>
       </div>
       <div class="flex-1 min-w-[140px]">
-        <span class="text-sm font-medium transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
+        <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
         ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
       </div>
       <div class="flex items-center gap-1.5">

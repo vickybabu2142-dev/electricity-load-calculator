@@ -1,4 +1,4 @@
-@import url('https://api.fontshare.com/v2/css?f[]=khand@300,400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Khand:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -69,8 +69,8 @@
 }
 
 @theme {
-  --font-display: "Khand", "Inter", "system-ui", sans-serif;
-  --font-body: "Inter", "system-ui", sans-serif;
+  --font-display: "Khand", "system-ui", sans-serif;
+  --font-body: "Hind", "system-ui", sans-serif;
   --font-mono: "Geist Mono", monospace;
 
   --color-base: var(--bg-base);
@@ -108,7 +108,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Hind', sans-serif;
   background-color: var(--bg-base);
   color: var(--text-primary);
   min-height: 100vh;
@@ -186,7 +186,66 @@ input[type='number'] {
 
 /* Print styles */
 @media print {
-  body { background: white !important; color: black !important; background-image: none !important; }
+  html, body { 
+    background-color: white !important; 
+    color: #0f0f0f !important;
+    background-image: none !important; 
+    color-scheme: light !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #print-layout {
+    display: block !important;
+    background-color: white !important;
+    color: #0f0f0f !important;
+  }
+
+  /* Force white background for all containers */
+  #print-layout,
+  #print-layout .bg-base,
+  #print-layout .bg-card {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Force primary text to be dark for readability on white */
+  #print-layout,
+  #print-layout *,
+  #print-layout .text-text-primary {
+    color: #0f0f0f !important;
+  }
+
+  #print-layout .text-text-muted {
+    color: #4b5563 !important;
+  }
+
+  /* THEME-BASED ACCENTS FOR PRINT */
+  /* Dark Mode users get Amber accents in report */
+  #print-layout [style*="color: var(--accent)"],
+  #print-layout .text-accent,
+  #print-layout h1 span,
+  #print-layout #print-total-kw,
+  #print-layout #print-monthly-bill {
+    color: #F4A826 !important; /* Industrial Amber */
+  }
+
+  /* Light Mode users get Stormy Blue accents in report */
+  .light #print-layout [style*="color: var(--accent)"],
+  .light #print-layout .text-accent,
+  .light #print-layout h1 span,
+  .light #print-layout #print-total-kw,
+  .light #print-layout #print-monthly-bill {
+    color: #4A76A8 !important; /* Stormy Steel Blue */
+  }
+
+  #print-layout .border,
+  #print-layout .border-border,
+  #print-layout .border-t,
+  #print-layout .border-b {
+    border-color: #e5e7eb !important;
+  }
+
   .no-print { display: none !important; }
   .print-only { display: block !important; }
 }
