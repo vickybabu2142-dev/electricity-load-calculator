@@ -1,4 +1,4 @@
-# Home Load Calculator
+# Electricity Load Calculator
 
 ## Architecture & Tech Stack
 - **Framework:** Astro (Minimal template, strict TypeScript)
@@ -46,7 +46,7 @@
 ### Advanced Print Optimization
 - The report layout (`#print-layout`) is engineered for professional physical and PDF output.
 - **Document Integrity:** Forces a pure white background and high-contrast dark text (`#0f0f0f`) regardless of the UI's active theme.
-- **Branding Sync:** The report header follows the Hero branding ("Home Load **Report**") and utilizes theme-based accent colors (Industrial Amber for Dark Mode users, Stormy Blue for Light Mode users).
+- **Branding Sync:** The report header follows the Hero branding ("Electricity Load **Report**") and utilizes theme-based accent colors (Industrial Amber for Dark Mode users, Stormy Blue for Light Mode users).
 - **Ink Efficiency:** Background colors are enabled via `print-color-adjust: exact` but restricted to subtle accents and borders.
 
 ## Testing & Verification

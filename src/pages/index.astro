@@ -44,7 +44,7 @@ const grouped = CATEGORIES.map(cat => ({
     <div class="border-b-2 border-text-primary pb-6 mb-6 flex justify-between items-end">
       <div>
         <h1 class="text-3xl font-display font-bold text-text-primary">
-          Home Load <span class="text-accent">Report</span>
+          Electricity Load <span class="text-accent">Report</span>
         </h1>
         <p class="text-sm text-text-muted mt-1" id="print-date"></p>
       </div>
@@ -78,7 +78,7 @@ const grouped = CATEGORIES.map(cat => ({
 
 <script>
 // ─────────────────────────────────────────────────────────
-// HOME LOAD CALCULATOR — CLIENT-SIDE LOGIC
+// ELECTRICITY LOAD CALCULATOR — CLIENT-SIDE LOGIC
 // ─────────────────────────────────────────────────────────
 
 import { DEFAULT_APPLIANCES, CATEGORIES } from '@/data/appliances';
@@ -628,7 +628,7 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
   const locale = REGION_SETTINGS[currentCurrency].locale;
   const date = new Date().toLocaleDateString(locale, { dateStyle: 'long' });
 
-  let report = `HOME LOAD CALCULATOR REPORT\n`;
+  let report = `ELECTRICITY LOAD CALCULATOR REPORT\n`;
   report += `Generated: ${date}\n`;
   report += `${'─'.repeat(48)}\n\n`;
   
@@ -638,7 +638,7 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
   report += `  Monthly Estimate    : ${formatNumber(monthlyKWh)} kWh/month\n`;
   report += `  Estimated Bill      : ${formatCurrency(monthlyBill)} / month\n`;
   report += `  Tariff Used         : ${formatCurrency(tariff)}/kWh\n`;
-  report += `  Max Home Capacity   : ${maxCapacityKW} kW\n\n`;
+  report += `  Max Load Capacity   : ${maxCapacityKW} kW\n\n`;
   report += `${'─'.repeat(48)}\n\n`;
   
   report += `APPLIANCE BREAKDOWN\n\n`;
@@ -674,7 +674,7 @@ document.getElementById('download-txt-btn')?.addEventListener('click', () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `home-load-report-${new Date().toISOString().split('T')[0]}.txt`;
+  a.download = `electricity-load-report-${new Date().toISOString().split('T')[0]}.txt`;
   a.click();
   URL.revokeObjectURL(url);
 });

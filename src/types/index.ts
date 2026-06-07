@@ -17,6 +17,8 @@ export type ApplianceCategory =
   | 'Fans & Cooling'
   | 'Kitchen'
   | 'Entertainment'
+  | 'Office & IT'
+  | 'Industrial'
   | 'Other';
 
 export interface CategorySummary {

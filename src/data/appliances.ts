@@ -39,6 +39,20 @@ export const DEFAULT_APPLIANCES: Appliance[] = [
   { id: makeId(), category: 'Other',         name: 'Laptop / Charger',      defaultWatts: 65,   defaultQty: 1, defaultHours: 6,    watts: 65,   qty: 1, hours: 6,    included: false, custom: false },
   { id: makeId(), category: 'Other',         name: 'Desktop PC + Monitor',  defaultWatts: 300,  defaultQty: 1, defaultHours: 4,    watts: 300,  qty: 1, hours: 4,    included: false, custom: false },
   { id: makeId(), category: 'Other',         name: 'Geyser / Water Heater', defaultWatts: 2000, defaultQty: 1, defaultHours: 0.5,  watts: 2000, qty: 1, hours: 0.5,  included: false, custom: false },
+
+  // Office & IT
+  { id: makeId(), category: 'Office & IT',   name: 'Workstation PC',        defaultWatts: 450,  defaultQty: 1, defaultHours: 8,    watts: 450,  qty: 1, hours: 8,    included: false, custom: false },
+  { id: makeId(), category: 'Office & IT',   name: 'Server (Small)',        defaultWatts: 300,  defaultQty: 1, defaultHours: 24,   watts: 300,  qty: 1, hours: 24,   included: false, custom: false },
+  { id: makeId(), category: 'Office & IT',   name: 'Network Switch',        defaultWatts: 50,   defaultQty: 1, defaultHours: 24,   watts: 50,   qty: 1, hours: 24,   included: false, custom: false },
+  { id: makeId(), category: 'Office & IT',   name: 'Laser Printer',         defaultWatts: 600,  defaultQty: 1, defaultHours: 1,    watts: 600,  qty: 1, hours: 1,    included: false, custom: false },
+  { id: makeId(), category: 'Office & IT',   name: 'Photocopier',           defaultWatts: 1500, defaultQty: 1, defaultHours: 2,    watts: 1500, qty: 1, hours: 2,    included: false, custom: false },
+
+  // Industrial
+  { id: makeId(), category: 'Industrial',    name: 'Air Compressor (2HP)',  defaultWatts: 1500, defaultQty: 1, defaultHours: 4,    watts: 1500, qty: 1, hours: 4,    included: false, custom: false },
+  { id: makeId(), category: 'Industrial',    name: 'Bench Grinder',         defaultWatts: 750,  defaultQty: 1, defaultHours: 1,    watts: 750,  qty: 1, hours: 1,    included: false, custom: false },
+  { id: makeId(), category: 'Industrial',    name: 'Welding Machine',       defaultWatts: 3000, defaultQty: 1, defaultHours: 2,    watts: 3000, qty: 1, hours: 2,    included: false, custom: false },
+  { id: makeId(), category: 'Industrial',    name: 'Drill Press',           defaultWatts: 500,  defaultQty: 1, defaultHours: 2,    watts: 500,  qty: 1, hours: 2,    included: false, custom: false },
+  { id: makeId(), category: 'Industrial',    name: 'Industrial Exhaust',    defaultWatts: 750,  defaultQty: 1, defaultHours: 12,   watts: 750,  qty: 1, hours: 12,   included: false, custom: false },
 ];
 
 export const CATEGORIES: Appliance['category'][] = [
@@ -46,6 +60,8 @@ export const CATEGORIES: Appliance['category'][] = [
   'Fans & Cooling',
   'Kitchen',
   'Entertainment',
+  'Office & IT',
+  'Industrial',
   'Other',
 ];
 
@@ -54,5 +70,7 @@ export const CATEGORY_ICONS: Record<Appliance['category'], string> = {
   'Fans & Cooling':`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0"/><path d="M12 2l0 2"/><path d="M12 20l0 2"/><path d="M2 12l2 0"/><path d="M20 12l2 0"/></svg>`,
   'Kitchen':       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M6 2v20"/><path d="M18 2v4"/><path d="M18 10v12"/><path d="M6 13h12"/><path d="M18 6a2 2 0 0 0-2-2H8"/></svg>`,
   'Entertainment': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M17 2l-5 5-5-5"/></svg>`,
+  'Office & IT':   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+  'Industrial':   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
   'Other':         `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>`,
 };
