@@ -72,7 +72,7 @@ const { category } = Astro.props;
       <div class="relative group">
         <select
           id={`new-category-${category}`}
-          class="w-full appearance-none bg-base border border-border rounded-lg pl-3 pr-8 py-1.5 text-sm text-text-primary cursor-pointer transition-all duration-200 hover:bg-card-hover hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+          class="custom-select w-full appearance-none pl-3 pr-8 py-1.5 text-sm cursor-pointer transition-all duration-200 hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
           data-field="category"
         >
           {CATEGORIES.map(c => (

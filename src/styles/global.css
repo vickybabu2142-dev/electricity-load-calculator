@@ -2,6 +2,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: dark;
   /* Industrial Dark Palette Variables */
   --bg-base-raw: #0f0f0f;
   --bg-surface-raw: #111111;
@@ -38,6 +39,21 @@
   --warning: #f59e0b;
   --success: var(--status-green-raw);
 
+  /* New variables for UI enhancements */
+  --panel-shadow: none;
+  --row-border: rgba(255, 255, 255, 0.05);
+  --badge-bg: rgba(20, 20, 20, 0.8);
+  --badge-border: rgba(255, 255, 255, 0.05);
+  --progress-gradient: linear-gradient(90deg, #eab308 0%, #f97316 50%, #ef4444 100%);
+  --danger-glow: 0 0 8px rgba(255, 50, 50, 0.4);
+  --hero-gradient-from: var(--text-primary-raw);
+  --hero-gradient-to: var(--text-primary-raw);
+
+  /* Select specific variables */
+  --select-bg: #1e1e1e;
+  --select-border: rgba(255, 255, 255, 0.15);
+  --select-text: #ffffff;
+
   /* Toggle specifics (Dark) */
   --toggle-off: var(--bg-subtle-raw);
   --toggle-off-border: var(--border-strong-raw);
@@ -49,17 +65,32 @@
 
 .light {
   /* Industrial Light Theme (Stormy Morning) */
-  --bg-base: #F2F5F8;
+  --bg-base: #EDF1F5; /* Slightly deeper for contrast */
   --bg-card: #FFFFFF;
   --bg-card-hover: #E8EDF2;
-  --accent: #4A76A8; /* Sharper Steel Blue */
+  --accent: #2563EB; /* Electric Blue for hierarchy */
   --accent-dim: #2D4F7A; /* Deeper Navy Gray */
   --accent-text: #FFFFFF;
   --text-primary: #1D2939; /* Dark Charcoal Blue */
   --text-muted: #4B5565;
   --text-faint: #9CA3AF;
   --text-ghost: #D1D5DB;
-  --border: #B9CCE3; /* Soft Sky Blue */
+  --border: #E5E7EB; /* Softer border */
+
+  /* New variables for UI enhancements (Light Mode) */
+  --panel-shadow: 0 10px 40px -10px rgba(0,0,0,0.15), 0 4px 20px -5px rgba(0,0,0,0.10);
+  --row-border: rgba(0, 0, 0, 0.05);
+  --badge-bg: rgba(37, 99, 235, 0.08);
+  --badge-border: rgba(37, 99, 235, 0.3);
+  --progress-gradient: linear-gradient(90deg, #3B82F6 0%, #F59E0B 50%, #EF4444 100%);
+  --danger-glow: 0 0 8px rgba(239, 68, 68, 0.35);
+  --hero-gradient-from: #1D2939;
+  --hero-gradient-to: #2563EB;
+
+  /* Select specific variables (Light) */
+  --select-bg: #FFFFFF;
+  --select-border: #D1D5DB;
+  --select-text: #1D2939;
 
   /* Toggle specifics (Light) */
   --toggle-off: #D1D5DB;
@@ -191,12 +222,38 @@ select option {
 }
 
 /* Alternating row backgrounds for better readability */
+.appliance-row {
+  border-bottom: 1px solid var(--row-border);
+}
+
 .appliance-row:nth-child(even) {
   background-color: var(--bg-subtle-raw);
 }
 
 .light .appliance-row:nth-child(even) {
   background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* UI Enhancements Utility Classes */
+.custom-select {
+  background-color: var(--select-bg) !important;
+  border: 1px solid var(--select-border) !important;
+  color: var(--select-text) !important;
+  border-radius: 6px !important;
+}
+
+.hero-text-gradient {
+  background: linear-gradient(135deg, var(--hero-gradient-from) 0%, var(--hero-gradient-to) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-badge {
+  background-color: var(--badge-bg);
+  border: 1px solid var(--badge-border);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* Print styles */
@@ -264,3 +321,4 @@ select option {
   .no-print { display: none !important; }
   .print-only { display: block !important; }
 }
+

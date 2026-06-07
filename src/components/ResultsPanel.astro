@@ -5,7 +5,7 @@
 <aside
   id="results-panel"
   class="sticky top-6 h-fit rounded-xl border border-border bg-card overflow-hidden animate-slide-up no-print"
-  style="animation-delay: 0.1s"
+  style="animation-delay: 0.1s; box-shadow: var(--panel-shadow);"
   aria-label="Calculation results"
 >
   <!-- Panel header -->
@@ -40,13 +40,14 @@
       </div>
 
       <!-- Progress bar -->
-      <div class="mt-2 relative h-2.5 rounded-full bg-border overflow-hidden"
+      <div class="mt-2 relative h-2.5 rounded-full overflow-hidden"
+        style="background-color: var(--toggle-off);"
         role="progressbar" aria-label="Load percentage"
         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="load-progress">
         <div
           id="load-bar"
           class="h-full rounded-full transition-all duration-500 ease-out"
-          style="width: 0%; background: linear-gradient(90deg, #22c55e 0%, #f5a623 60%, #ef4444 100%);"
+          style="width: max(4px, 0%); background: var(--progress-gradient); border-radius: 999px;"
         ></div>
       </div>
       <!-- Threshold labels -->
@@ -67,7 +68,7 @@
         <div class="relative group">
           <select
             id="currency-select"
-            class="w-full appearance-none bg-base border border-border rounded-lg pl-3 pr-8 py-1.5 text-xs text-text-primary cursor-pointer transition-all duration-200 hover:bg-card-hover hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+            class="custom-select w-full appearance-none pl-3 pr-8 py-1.5 text-xs cursor-pointer transition-all duration-200 hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
           >
             <option value="INR">INR (₹)</option>
             <option value="USD">USD ($)</option>

@@ -2,21 +2,24 @@
 // No props needed
 ---
 
-<header class="relative pt-8 pb-6 px-6 text-center overflow-hidden no-print">
-  <p class="font-mono text-[10px] tracking-[0.25em] text-text-muted uppercase mb-2 animate-fade-in">
+<header class="relative pt-4 pb-4 px-6 text-center overflow-hidden no-print">
+  <!-- Subtle Dot Grid Background -->
+  <div class="absolute inset-0 pointer-events-none opacity-[0.15]" style="background-image: radial-gradient(circle, var(--text-muted) 1px, transparent 1px); background-size: 24px 24px; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 40%, transparent 100%);"></div>
+
+  <p class="relative font-mono text-[10px] tracking-[0.25em] text-text-muted uppercase mb-2 animate-fade-in">
     ⚡ Electrical Load Calculator
   </p>
 
   <h1
-    class="font-display font-bold text-5xl sm:text-6xl lg:text-7xl text-text-primary leading-none tracking-tight mb-4 animate-slide-up"
+    class="relative font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-text-primary leading-none tracking-tight mb-4 animate-slide-up"
     style="animation-delay: 0.05s"
   >
-    Electricity Load
-    <span class="inline-block sm:block text-accent-dim">Calculator</span>
+    <span class="hero-text-gradient">Electricity Load</span>
+    <span class="inline-block sm:block text-accent">Calculator</span>
   </h1>
 
   <p
-    class="max-w-xl mx-auto text-text-muted text-sm leading-relaxed animate-slide-up"
+    class="relative max-w-xl mx-auto text-text-muted text-sm leading-relaxed animate-slide-up"
     style="animation-delay: 0.12s"
   >
     Add your appliances and equipment to instantly see the total electrical load,
@@ -25,7 +28,7 @@
 
   <!-- Stats strip -->
   <div
-    class="mt-4 inline-flex flex-wrap justify-center gap-6 text-xs animate-slide-up"
+    class="relative mt-5 inline-flex flex-wrap justify-center gap-3 text-xs animate-slide-up"
     style="animation-delay: 0.2s"
   >
     {[
@@ -33,9 +36,9 @@
       { label: '7 Categories',  icon: '📂' },
       { label: 'Real-time Calc',icon: '⚡' },
     ].map(s => (
-      <span class="flex items-center gap-1.5 text-text-muted">
-        <span>{s.icon}</span>
-        <span>{s.label}</span>
+      <span class="stat-badge flex items-center gap-1.5 text-text-primary px-3.5 py-1.5 rounded-full">
+        <span class="text-sm filter saturate-[1.2]">{s.icon}</span>
+        <span class="font-medium">{s.label}</span>
       </span>
     ))}
   </div>

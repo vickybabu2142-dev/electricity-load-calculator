@@ -169,14 +169,7 @@ function calculate() {
   // Progress bar
   const bar = document.getElementById('load-bar');
   if (bar) {
-    bar.style.width = `${Math.min(result.loadPercent, 100)}%`;
-    if (result.totalWatts > (maxCapacityKW * 1000)) {
-      bar.style.background = '#ef4444';
-    } else if (result.loadPercent > 70) {
-      bar.style.background = 'linear-gradient(90deg, #f5a623, #ef4444)';
-    } else {
-      bar.style.background = 'linear-gradient(90deg, #22c55e, #f5a623)';
-    }
+    bar.style.width = `max(4px, ${Math.min(result.loadPercent, 100)}%)`;
   }
   const progress = document.getElementById('load-progress');
   if (progress) progress.setAttribute('aria-valuenow', String(Math.round(result.loadPercent)));
@@ -184,6 +177,9 @@ function calculate() {
   // Load level badge
   const badge = document.getElementById('load-level-badge');
   if (badge) {
+    // Reset glow by default
+    badge.style.boxShadow = 'none';
+
     if (result.loadPercent < 30) {
       badge.textContent = 'Light Load';
       badge.style.borderColor = 'var(--success)';
@@ -194,8 +190,9 @@ function calculate() {
       badge.style.color = 'var(--warning)';
     } else {
       badge.textContent = 'Heavy Load';
-      badge.style.borderColor = 'var(--danger)';
+      badge.style.borderColor = 'transparent';
       badge.style.color = 'var(--danger)';
+      badge.style.boxShadow = 'var(--danger-glow)';
     }
   }
 
@@ -552,7 +549,7 @@ function buildRowHTML(a: Appliance): string {
   const toggleBg  = isIncluded ? 'background-color: var(--accent);' : '';
 
   return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-3 border-b border-border hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
       data-id="${a.id}" 
       data-included="${isIncluded}">
       <!-- Row 1: Toggle + Name -->
@@ -579,9 +576,9 @@ function buildRowHTML(a: Appliance): string {
           <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">W</span>
         </div>
         <div class="flex items-center">
-          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
+          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
           <span class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
-          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
+          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
         </div>
         <div class="flex items-center gap-1">
           <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
