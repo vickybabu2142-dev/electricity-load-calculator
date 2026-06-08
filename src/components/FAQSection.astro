@@ -1,0 +1,87 @@
+---
+const faqs = [
+  {
+    question: "How to calculate electricity load?",
+    answer: "To calculate your total electricity load, sum the wattage of all appliances you intend to run simultaneously. The formula is: Total Load (Watts) = Σ (Appliance Wattage × Quantity). To find energy consumption in units (kWh), use: (Total Watts × Hours of Usage) / 1000."
+  },
+  {
+    question: "How much kWh is in 1 unit?",
+    answer: "In the context of electricity billing, 1 unit is exactly equal to 1 kilowatt-hour (kWh). If an appliance with a 1,000-watt (1 kW) rating runs for one hour, it consumes exactly 1 unit of electricity."
+  },
+  {
+    question: "What is 1 kW load?",
+    answer: "A 1 kW load represents a power demand of 1,000 watts. This is a measure of instantaneous power. For example, running a 1,000W heater or ten 100W bulbs simultaneously creates a 1 kW load on your electrical system."
+  },
+  {
+    question: "How much unit does 3000 watts consume in 1 hour?",
+    answer: "A 3,000-watt load is equivalent to 3 kW. Running this load for 1 hour results in a consumption of 3 units (3 kWh) of electricity. Formula: (3000W × 1h) / 1000 = 3 kWh."
+  },
+  {
+    question: "What is the load capacity of a 5 kW meter?",
+    answer: "A 5 kW meter is designed to handle a maximum simultaneous demand of 5,000 watts. This capacity allows you to run multiple appliances like an AC (1.5 kW), a refrigerator (0.5 kW), and several lights/fans, provided their combined instantaneous wattage stays below 5 kW."
+  },
+  {
+    question: "How much is 1 kWh per hour?",
+    answer: "1 kWh per hour describes a continuous power draw of 1 kilowatt (1,000 watts). If you consume 1 kWh every hour, your steady-state load is 1,000 watts."
+  },
+  {
+    question: "How many watts is 1.5 ton AC?",
+    answer: "A 1.5 ton air conditioner typically consumes between 1,200 to 1,800 watts. Modern 5-star inverter ACs are more efficient and may consume around 1,200-1,400W at peak, while older or non-inverter models can exceed 1,800W."
+  },
+  {
+    question: "How many watts to run a house for 24 hours?",
+    answer: "Wattage is instantaneous, so you don't 'run watts for 24 hours'—you consume energy (kWh). An average energy-conscious home might consume 12-15 kWh per day. This equates to an average continuous load of approximately 500-600 watts over a 24-hour period."
+  },
+  {
+    question: "What runs up your electric bill the most?",
+    answer: "The biggest contributors to high electric bills are typically heating and cooling appliances: Air Conditioners, Electric Geysers (Water Heaters), Space Heaters, and old, inefficient Refrigerators that run 24/7."
+  },
+  {
+    question: "What is the 3 formula of electricity?",
+    answer: "The three fundamental electrical formulas are: 1. Power (P) = Voltage (V) × Current (I); 2. Voltage (V) = Current (I) × Resistance (R) [Ohm's Law]; 3. Energy (E) = Power (P) × Time (T)."
+  }
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+};
+---
+
+<section class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-24 print:hidden">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-12 uppercase tracking-wider border-l-4 border-accent pl-4">
+      Frequently Asked <span class="text-accent">Questions</span>
+    </h2>
+    
+    <div class="grid gap-4">
+      {faqs.map((faq) => (
+        <details class="bg-card border border-border rounded-xl group transition-all duration-300 open:border-accent/40">
+          <summary class="flex items-center justify-between p-5 cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-xl">
+            <h3 class="text-lg font-display font-medium text-text-secondary group-hover:text-accent transition-colors pr-8">
+              {faq.question}
+            </h3>
+            <span class="flex-shrink-0 text-text-muted group-hover:text-accent group-open:rotate-180 transition-transform duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 pt-0 border-t border-border/50 mt-1 animate-fade-in">
+            <p class="text-sm text-text-muted leading-relaxed mt-4">
+              {faq.answer}
+            </p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

@@ -4,6 +4,7 @@ import PageHero from '@/components/PageHero.astro';
 import ApplianceCategory from '@/components/ApplianceCategory.astro';
 import ResultsPanel from '@/components/ResultsPanel.astro';
 import ReportModal from '@/components/ReportModal.astro';
+import FAQSection from '@/components/FAQSection.astro';
 import { DEFAULT_APPLIANCES, CATEGORIES, SECTIONS } from '@/data/appliances';
 import type { ApplianceCategory as CategoryType } from '@/types';
 
@@ -139,6 +140,8 @@ const sectionedData = SECTIONS.map(section => ({
       </p>
     </div>
   </section>
+
+  <FAQSection />
 </BaseLayout>
 
 <script>

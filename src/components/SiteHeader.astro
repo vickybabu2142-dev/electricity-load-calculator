@@ -11,7 +11,7 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
         Electricity Load <span class="text-accent">Calculator</span>
       </span>
       <span class="font-display font-bold text-lg text-text-primary tracking-tight sm:hidden">
-        Electric<span class="text-accent">Load</span>
+        Electricity <span class="text-accent">Load</span>
       </span>
     </a>
 
@@ -75,13 +75,6 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
       
       // Update ARIA
       toggleBtn.setAttribute('aria-expanded', isOpen.toString());
-      
-      // Prevent scrolling when menu is open
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
     }
 
     toggleBtn.addEventListener('click', (e) => {

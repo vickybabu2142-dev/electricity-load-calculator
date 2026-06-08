@@ -72,6 +72,7 @@
   --accent-dim: #2D4F7A; /* Deeper Navy Gray */
   --accent-text: #FFFFFF;
   --text-primary: #1D2939; /* Dark Charcoal Blue */
+  --text-secondary: #334155;
   --text-muted: #4B5565;
   --text-faint: #9CA3AF;
   --text-ghost: #D1D5DB;
@@ -114,6 +115,7 @@
   --color-accent-text: var(--accent-text);
   --color-border: var(--border);
   --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary, var(--text-secondary-raw));
   --color-text-muted: var(--text-muted);
   --color-text-faint: var(--text-faint, var(--text-faint-raw));
   --color-text-ghost: var(--text-ghost, var(--text-ghost-raw));
