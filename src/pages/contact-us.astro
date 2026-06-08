@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Contact Us | Electricity Load Calculator">
-  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-12 md:pb-16">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-12 md:pb-16 animate-slide-up">
     <div class="max-w-3xl mx-auto text-text-primary">
       <div class="mb-12">
         <h1 class="text-4xl sm:text-5xl font-display font-bold mb-4 uppercase tracking-tight">Contact Us</h1>
@@ -18,21 +18,23 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
           </p>
 
           <div class="bg-card border border-border rounded-xl p-6 sm:p-8">
-            <!-- 
-              Note: To make this form functional, add your form handler URL to the action attribute. 
-              Services like Formspree, Netlify Forms, or a serverless function work perfectly here.
-            -->
-            <form class="space-y-6" action="#" method="POST" onsubmit="alert('Please connect this form to a backend service like Formspree to enable submissions.'); event.preventDefault();">
+            <form id="contact-form" class="space-y-6" novalidate>
               
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label for="name" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted mb-2">Name</label>
+                  <div class="flex items-center justify-between mb-2">
+                    <label for="name" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted">Name</label>
+                    <span id="error-name" class="hidden text-[10px] text-danger font-mono uppercase">Required</span>
+                  </div>
                   <input type="text" id="name" name="name" required
                     class="w-full bg-base border border-border rounded-lg px-4 py-3 text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
                     placeholder="Your name" />
                 </div>
                 <div>
-                  <label for="email" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted mb-2">Email</label>
+                  <div class="flex items-center justify-between mb-2">
+                    <label for="email" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted">Email</label>
+                    <span id="error-email" class="hidden text-[10px] text-danger font-mono uppercase">Invalid Email</span>
+                  </div>
                   <input type="email" id="email" name="email" required
                     class="w-full bg-base border border-border rounded-lg px-4 py-3 text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
                     placeholder="your@email.com" />
@@ -40,8 +42,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
               </div>
 
               <div>
-                <label for="subject" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted mb-2">Subject</label>
-                <!-- Custom styling for select to match the theme -->
+                <div class="flex items-center justify-between mb-2">
+                  <label for="subject" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted">Subject</label>
+                  <span id="error-subject" class="hidden text-[10px] text-danger font-mono uppercase">Required</span>
+                </div>
                 <div class="relative">
                   <select id="subject" name="subject" required
                     class="w-full bg-base border border-border rounded-lg px-4 py-3 text-sm text-text-primary focus:border-accent focus:outline-none transition-colors appearance-none cursor-pointer">
@@ -58,7 +62,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
               </div>
 
               <div>
-                <label for="message" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted mb-2">Message</label>
+                <div class="flex items-center justify-between mb-2">
+                  <label for="message" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted">Message</label>
+                  <span id="error-message" class="hidden text-[10px] text-danger font-mono uppercase">Required</span>
+                </div>
                 <textarea id="message" name="message" rows="5" required
                   class="w-full bg-base border border-border rounded-lg px-4 py-3 text-sm text-text-primary focus:border-accent focus:outline-none transition-colors resize-y"
                   placeholder="How can we help you?"></textarea>
@@ -86,3 +93,85 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  function setupContactForm() {
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    if (!form) return;
+
+    const fields = {
+      name: {
+        input: document.getElementById('name') as HTMLInputElement,
+        error: document.getElementById('error-name')
+      },
+      email: {
+        input: document.getElementById('email') as HTMLInputElement,
+        error: document.getElementById('error-email')
+      },
+      subject: {
+        input: document.getElementById('subject') as HTMLSelectElement,
+        error: document.getElementById('error-subject')
+      },
+      message: {
+        input: document.getElementById('message') as HTMLTextAreaElement,
+        error: document.getElementById('error-message')
+      }
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Clear all previous errors
+      Object.values(fields).forEach(f => f.error?.classList.add('hidden'));
+
+      let isValid = true;
+
+      // Validation logic
+      if (!fields.name.input.value.trim()) {
+        showError('name', 'Required');
+        isValid = false;
+      }
+      
+      const emailVal = fields.email.input.value.trim();
+      if (!emailVal) {
+        showError('email', 'Required');
+        isValid = false;
+      } else if (!/^\S+@\S+\.\S+$/.test(emailVal)) {
+        showError('email', 'Invalid Email');
+        isValid = false;
+      }
+
+      if (!fields.subject.input.value) {
+        showError('subject', 'Required');
+        isValid = false;
+      }
+
+      if (!fields.message.input.value.trim()) {
+        showError('message', 'Required');
+        isValid = false;
+      }
+
+      if (isValid) {
+        alert('This is a demo form. Please connect it to a backend service like Formspree or Netlify Forms to receive submissions.');
+        form.reset();
+      }
+    });
+
+    function showError(fieldId: keyof typeof fields, msg: string) {
+      const field = fields[fieldId];
+      if (field.error) {
+        field.error.textContent = msg;
+        field.error.classList.remove('hidden');
+        field.input.classList.add('border-danger');
+        // Remove red border when user starts typing
+        field.input.addEventListener('input', () => {
+          field.input.classList.remove('border-danger');
+          field.error?.classList.add('hidden');
+        }, { once: true });
+      }
+    }
+  }
+
+  setupContactForm();
+  document.addEventListener('astro:after-swap', setupContactForm);
+</script>
