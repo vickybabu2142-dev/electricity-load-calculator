@@ -7,8 +7,8 @@ interface Props {
 }
 
 const {
-  title = 'Electricity Load Calculator — Know Your Power',
-  description = "Calculate total electrical load, daily energy consumption, and estimated monthly electricity bills for your home, office, or industry.",
+  title = 'Electricity Load Calculator | kW, kVA & House Load Calculator',
+  description = "Calculate your house electricity load in kW/kVA for home, office, or commercial use. Use our accurate bijli load calculator with monthly bill estimation.",
 } = Astro.props;
 ---
 
@@ -18,7 +18,39 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="keywords" content="electricity load calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, bijli bill calculator, electricity load calculator in kw for home pdf, electricity load calculator in kw for office, electricity load calculator in kw for commercial, electrical load calculation for industrial building" />
     <title>{title}</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL('/site-image.png', Astro.url)} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL('/site-image.png', Astro.url)} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Electricity Load Calculator",
+        "operatingSystem": "Web",
+        "applicationCategory": "UtilitiesApplication",
+        "description": "Calculate total electrical load in kW and kVA for residential, commercial, and industrial buildings with bill estimation.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
 
     <!-- Inline script to apply theme immediately -->
     <script is:inline>
