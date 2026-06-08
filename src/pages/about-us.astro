@@ -1,0 +1,61 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About Us | Electricity Load Calculator">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-12 md:pb-16">
+    <div class="max-w-3xl mx-auto text-text-primary">
+      <div class="mb-12">
+        <h1 class="text-4xl sm:text-5xl font-display font-bold mb-4 uppercase tracking-tight">About Us</h1>
+      </div>
+
+      <div class="space-y-12 text-base leading-relaxed">
+        
+        <section>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-widest text-accent mb-4 border-b border-border pb-2">Overview</h2>
+          <p class="text-text-muted">
+            Welcome to Electricity Load Calculator, a specialized, free online utility designed to help homeowners, business managers, and technicians estimate their electrical power consumption quickly and accurately.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-widest text-accent mb-4 border-b border-border pb-2">1. Our Mission</h2>
+          <p class="text-text-muted mb-4">
+            Our mission is to simplify energy management. Calculating electrical load shouldn't require complex spreadsheets or expensive software. We believe that understanding your power needs is the fundamental first step towards energy efficiency, cost savings, and safe electrical installations.
+          </p>
+          <p class="text-text-muted">
+            Whether you are sizing a solar panel system, planning for a new backup generator, or simply trying to estimate your monthly electricity bill, our tool provides the insights you need instantly through an intuitive, modern interface.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-widest text-accent mb-4 border-b border-border pb-2">2. How It Works</h2>
+          <p class="text-text-muted mb-4">
+            The calculator works by aggregating the power consumption (in Watts) of various appliances. We have compiled a comprehensive default database of common household, office, and industrial equipment based on standard industry averages.
+          </p>
+          <ul class="list-disc list-inside text-text-muted space-y-2 ml-4">
+            <li><strong>Accuracy:</strong> Toggle appliances on or off, adjust quantities, and tweak the daily usage hours to match your specific reality.</li>
+            <li><strong>Flexibility:</strong> Add custom appliances that aren't in our default list to ensure your final calculation is comprehensive.</li>
+            <li><strong>Financial Insights:</strong> By inputting your local electricity tariff, the tool estimates your monthly billing costs.</li>
+            <li><strong>Reporting:</strong> Generate a clean, professional summary report for your records or to share with your electrician.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-widest text-accent mb-4 border-b border-border pb-2">3. Privacy First</h2>
+          <p class="text-text-muted">
+            We built this tool with speed and privacy in mind. The core calculation logic runs entirely within your web browser. This means that your specific appliance data, usage habits, and load configurations are never uploaded to our servers. What you calculate stays on your device.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-widest text-accent mb-4 border-b border-border pb-2">4. Support & Feedback</h2>
+          <p class="text-text-muted">
+            We are constantly looking to improve the accuracy and usability of our tool. If you have suggestions for new default appliances, feature requests, or notice any issues, please don't hesitate to reach out via our <a href="/contact-us" class="text-text-primary hover:text-accent underline decoration-border underline-offset-4">Contact page</a>.
+          </p>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</BaseLayout>

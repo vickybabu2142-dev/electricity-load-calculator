@@ -1,5 +1,6 @@
 ---
-import ThemeToggle from '@/components/ThemeToggle.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
 
 interface Props {
   title?: string;
@@ -82,7 +83,8 @@ const {
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body>
-    <ThemeToggle />
+    <SiteHeader />
     <slot />
+    <SiteFooter />
   </body>
 </html>
