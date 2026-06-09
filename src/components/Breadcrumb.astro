@@ -1,0 +1,46 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const siteBase = Astro.site ?? new URL('/', Astro.url);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": items.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.label,
+    ...(item.href ? { "item": new URL(item.href, siteBase).href } : {}),
+  })),
+};
+---
+
+<nav aria-label="Breadcrumb" class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-6 print:hidden">
+  <ol class="flex items-center gap-1.5 text-xs font-mono text-text-muted">
+    {items.map((item, i) => (
+      <li class="flex items-center gap-1.5">
+        {i > 0 && (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 flex-shrink-0 text-border">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        )}
+        {item.href && i < items.length - 1 ? (
+          <a href={item.href} class="hover:text-accent transition-colors">{item.label}</a>
+        ) : (
+          <span class="text-text-primary">{item.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

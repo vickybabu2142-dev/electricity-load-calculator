@@ -1,9 +1,15 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
 ---
 
-<BaseLayout title="Contact Us | Electricity Load Calculator">
-  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-12 md:pb-16 animate-slide-up">
+<BaseLayout
+  title="Contact Us | Electricity Load Calculator"
+  description="Get in touch with the Electricity Load Calculator team. Report a bug, suggest a new appliance, or ask a question — we'd love to hear from you."
+  keywords="contact electricity load calculator, feedback, bug report, feature request"
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Contact Us' }]} />
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 md:pt-12 pb-12 md:pb-16 animate-slide-up">
     <div class="max-w-3xl mx-auto text-text-primary">
       <div class="mb-12">
         <h1 class="text-4xl sm:text-5xl font-display font-bold mb-4 uppercase tracking-tight">Contact Us</h1>
@@ -19,6 +25,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
           <div class="bg-card border border-border rounded-xl p-6 sm:p-8">
             <form id="contact-form" class="space-y-6" novalidate>
+              <!-- Web3Forms honeypot — keeps spam bots out, invisible to real users -->
+              <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
               
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
@@ -72,10 +80,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
               </div>
 
               <div class="pt-2">
-                <button type="submit"
-                  class="w-full sm:w-auto px-8 py-3 bg-accent text-accent-text font-bold rounded-lg hover:opacity-90 active:opacity-100 transition-opacity focus:outline-none">
+                <button type="submit" id="submit-btn"
+                  class="w-full sm:w-auto px-8 py-3 bg-accent text-accent-text font-bold rounded-lg hover:opacity-90 active:opacity-100 transition-opacity focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
                   Send Message
                 </button>
+                <p id="submit-error" class="hidden mt-3 text-sm text-danger font-mono"></p>
               </div>
               
             </form>
@@ -95,81 +104,94 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 </BaseLayout>
 
 <script>
+  // TODO: Get your free access key from https://web3forms.com (enter your email → copy key)
+  const WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+
   function setupContactForm() {
     const form = document.getElementById('contact-form') as HTMLFormElement;
     if (!form) return;
 
     const fields = {
-      name: {
-        input: document.getElementById('name') as HTMLInputElement,
-        error: document.getElementById('error-name')
-      },
-      email: {
-        input: document.getElementById('email') as HTMLInputElement,
-        error: document.getElementById('error-email')
-      },
-      subject: {
-        input: document.getElementById('subject') as HTMLSelectElement,
-        error: document.getElementById('error-subject')
-      },
-      message: {
-        input: document.getElementById('message') as HTMLTextAreaElement,
-        error: document.getElementById('error-message')
-      }
+      name:    { input: document.getElementById('name')    as HTMLInputElement,     error: document.getElementById('error-name')    },
+      email:   { input: document.getElementById('email')   as HTMLInputElement,     error: document.getElementById('error-email')   },
+      subject: { input: document.getElementById('subject') as HTMLSelectElement,    error: document.getElementById('error-subject') },
+      message: { input: document.getElementById('message') as HTMLTextAreaElement,  error: document.getElementById('error-message') },
     };
 
-    form.addEventListener('submit', (e) => {
+    function showError(fieldId: keyof typeof fields, msg: string) {
+      const field = fields[fieldId];
+      if (!field.error) return;
+      field.error.textContent = msg;
+      field.error.classList.remove('hidden');
+      field.input.classList.add('border-danger');
+      field.input.addEventListener('input', () => {
+        field.input.classList.remove('border-danger');
+        field.error?.classList.add('hidden');
+      }, { once: true });
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      // Clear all previous errors
+
       Object.values(fields).forEach(f => f.error?.classList.add('hidden'));
 
       let isValid = true;
 
-      // Validation logic
-      if (!fields.name.input.value.trim()) {
-        showError('name', 'Required');
-        isValid = false;
-      }
-      
+      if (!fields.name.input.value.trim()) { showError('name', 'Required'); isValid = false; }
+
       const emailVal = fields.email.input.value.trim();
       if (!emailVal) {
-        showError('email', 'Required');
-        isValid = false;
+        showError('email', 'Required'); isValid = false;
       } else if (!/^\S+@\S+\.\S+$/.test(emailVal)) {
-        showError('email', 'Invalid Email');
-        isValid = false;
+        showError('email', 'Invalid Email'); isValid = false;
       }
 
-      if (!fields.subject.input.value) {
-        showError('subject', 'Required');
-        isValid = false;
-      }
+      if (!fields.subject.input.value) { showError('subject', 'Required'); isValid = false; }
+      if (!fields.message.input.value.trim()) { showError('message', 'Required'); isValid = false; }
 
-      if (!fields.message.input.value.trim()) {
-        showError('message', 'Required');
-        isValid = false;
-      }
+      if (!isValid) return;
 
-      if (isValid) {
-        alert('This is a demo form. Please connect it to a backend service like Formspree or Netlify Forms to receive submissions.');
-        form.reset();
+      const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+      const submitError = document.getElementById('submit-error') as HTMLElement;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      submitError.classList.add('hidden');
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            botcheck: '',
+            name:    fields.name.input.value.trim(),
+            email:   fields.email.input.value.trim(),
+            subject: `[Contact] ${fields.subject.input.value}`,
+            message: fields.message.input.value.trim(),
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          form.innerHTML = `
+            <div class="flex flex-col items-center justify-center gap-4 py-12 text-center">
+              <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background:rgba(62,207,110,0.12)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" style="color:var(--success)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <p class="text-lg font-semibold text-text-primary">Message sent!</p>
+              <p class="text-sm text-text-muted">Thanks for reaching out. We'll get back to you as soon as possible.</p>
+            </div>`;
+        } else {
+          throw new Error(data.message ?? 'Submission failed');
+        }
+      } catch {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        submitError.textContent = 'Failed to send. Please try again later.';
+        submitError.classList.remove('hidden');
       }
     });
-
-    function showError(fieldId: keyof typeof fields, msg: string) {
-      const field = fields[fieldId];
-      if (field.error) {
-        field.error.textContent = msg;
-        field.error.classList.remove('hidden');
-        field.input.classList.add('border-danger');
-        // Remove red border when user starts typing
-        field.input.addEventListener('input', () => {
-          field.input.classList.remove('border-danger');
-          field.error?.classList.add('hidden');
-        }, { once: true });
-      }
-    }
   }
 
   setupContactForm();
