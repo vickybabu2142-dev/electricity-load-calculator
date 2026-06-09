@@ -5,8 +5,16 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
 <header class="sticky top-0 z-50 bg-base/80 backdrop-blur-md border-b border-border print:hidden">
   <div class="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
     
-    <a href="/" class="flex items-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent group-hover:scale-110 transition-transform"><path d="m13 2-2 2.5h3L11 22l2-2.5h-3L13 2z"/></svg>
+    <a href="/" class="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="w-7 h-7 text-accent flex-shrink-0 group-hover:scale-110 transition-transform"
+        aria-hidden="true"
+      >
+        <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+      </svg>
       <span class="font-display font-bold text-lg text-text-primary tracking-tight hidden sm:block">
         Electricity Load <span class="text-accent">Calculator</span>
       </span>
