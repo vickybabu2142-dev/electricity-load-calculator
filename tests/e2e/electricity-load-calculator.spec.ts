@@ -270,7 +270,8 @@ test.describe('Electricity Load Calculator', () => {
     await page.locator('#download-report-btn').click();
     await expect(page.locator('#report-modal')).toBeVisible();
 
-    await page.locator('#modal-backdrop').click({ force: true });
+    // Click at the top-left corner of the backdrop to avoid hitting the centered modal box
+    await page.locator('#modal-backdrop').click({ position: { x: 5, y: 5 } });
     await expect(page.locator('#report-modal')).not.toBeVisible();
   });
 
@@ -343,5 +344,30 @@ test.describe('Electricity Load Calculator', () => {
     await wattsInput.dispatchEvent('change');
 
     await expect(page.locator('#load-level-badge')).toHaveText('Heavy Load');
+  });
+
+  // ── Mobile Layout ─────────────────────────────────────────
+
+  test('categories container maintains full width on mobile when collapsed', async ({ page }) => {
+    // Set to a typical mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+    
+    // Collapse the default expanded "Lighting" category
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
+
+    // The categories container is the first child of the main layout div
+    // In our fix, we added 'w-full' to it.
+    const categoriesContainer = page.locator('main > div > div').first();
+    const mainContainer = page.locator('main > div');
+
+    const containerBox = await categoriesContainer.boundingBox();
+    const mainBox = await mainContainer.boundingBox();
+
+    if (containerBox && mainBox) {
+      // The categories container should be approximately the same width as the main container
+      // (allowing for minor rounding or flex gap variations if any, but in flex-col it should match)
+      expect(containerBox.width).toBeCloseTo(mainBox.width, 0);
+    }
   });
 });

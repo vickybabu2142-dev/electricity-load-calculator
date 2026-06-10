@@ -25,10 +25,10 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
 
     <div class="flex items-center gap-2 sm:gap-6">
       <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-text-primary">
-        <a href="/about-us" class="hover:text-accent transition-colors">About</a>
-        <a href="/contact-us" class="hover:text-accent transition-colors">Contact</a>
-        <a href="/privacy-policy" class="hover:text-accent transition-colors">Privacy</a>
-        <a href="/terms-conditions" class="hover:text-accent transition-colors">Terms</a>
+        <a href="/about-us" class="hover:text-accent transition-colors" data-astro-prefetch>About</a>
+        <a href="/contact-us" class="hover:text-accent transition-colors" data-astro-prefetch>Contact</a>
+        <a href="/privacy-policy" class="hover:text-accent transition-colors" data-astro-prefetch>Privacy</a>
+        <a href="/terms-conditions" class="hover:text-accent transition-colors" data-astro-prefetch>Terms</a>
       </nav>
       <div class="w-px h-5 bg-border hidden md:block"></div>
       <ThemeToggle />
@@ -37,7 +37,7 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
       <button 
         id="mobile-menu-toggle"
         type="button" 
-        class="md:hidden p-2 text-text-primary hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent rounded-md transition-colors"
+        class="md:hidden p-2 text-text-primary hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent rounded-md transition-colors touch-manipulation"
         aria-label="Toggle mobile menu"
         aria-expanded="false"
       >
@@ -54,10 +54,10 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
     class="hidden md:hidden border-t border-border bg-base/95 backdrop-blur-md overflow-hidden transition-all duration-300 ease-in-out"
   >
     <nav class="flex flex-col p-4 gap-1">
-      <a href="/about-us" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors">About Us</a>
-      <a href="/contact-us" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors">Contact Us</a>
-      <a href="/privacy-policy" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors">Privacy Policy</a>
-      <a href="/terms-conditions" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors">Terms & Conditions</a>
+      <a href="/about-us" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>About Us</a>
+      <a href="/contact-us" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>Contact Us</a>
+      <a href="/privacy-policy" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>Privacy Policy</a>
+      <a href="/terms-conditions" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>Terms & Conditions</a>
     </nav>
   </div>
 </header>
@@ -85,10 +85,12 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
       toggleBtn.setAttribute('aria-expanded', isOpen.toString());
     }
 
-    toggleBtn.addEventListener('click', (e) => {
+    // Use pointerdown for faster response on touch devices (no 300ms delay)
+    toggleBtn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       toggleMenu();
-    });
+    }, { passive: false });
 
     // Close menu when clicking a link
     mobileMenu.querySelectorAll('a').forEach(link => {
@@ -98,7 +100,7 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
     });
 
     // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
+    document.addEventListener('pointerdown', (e) => {
       if (isOpen && !mobileMenu.contains(e.target as Node) && !toggleBtn.contains(e.target as Node)) {
         toggleMenu();
       }

@@ -25,7 +25,7 @@ const sectionedData = SECTIONS.map(section => ({
     <div class="flex flex-col lg:flex-row gap-6 items-start">
 
       <!-- Left: appliance categories -->
-      <div class="flex-1 min-w-0 space-y-10">
+      <div class="flex-1 w-full min-w-0 space-y-10">
         {sectionedData.map((section) => (
           <div class="space-y-4">
             <h2 class="text-xl font-display font-bold text-text-primary uppercase tracking-wider border-l-4 border-accent pl-3 flex items-center gap-2">
@@ -58,7 +58,7 @@ const sectionedData = SECTIONS.map(section => ({
   </main>
 
   <!-- MOBILE STICKY SUMMARY -->
-  <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-40 lg:hidden shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.3)] flex justify-between items-center pb-[max(1rem,env(safe-area-inset-bottom))]">
+  <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-40 lg:hidden shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.3)] flex justify-between items-center pb-[max(1rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
     <div class="flex flex-col">
       <span class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Total Load</span>
       <div class="flex items-baseline gap-1">
@@ -105,7 +105,7 @@ const sectionedData = SECTIONS.map(section => ({
       </div>
       <div>
         <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Energy & Est. Bill</h2>
-        <p class="text-lg font-semibold mb-1 text-text-primary"><span id="print-daily-kwh">0.00</span> kWh/day</p>
+        <p class="text-lg font-semibold mb-1 text-text-primary"><span id="print-daily-kwh">0.00</span> kWh(unit)/day</p>
         <p class="text-xl font-bold mt-2 border-t border-border pt-2" style="color: var(--accent);"><span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-text-muted">/ month</span></p>
       </div>
     </div>
@@ -294,7 +294,7 @@ function calculate() {
     const wattTextEl = wattEl?.querySelector('span:last-child');
     const kwhTextEl  = kwhEl?.querySelector('span:last-child');
     if (wattTextEl) wattTextEl.textContent = `${catWatts.toLocaleString()} W`;
-    if (kwhTextEl)  kwhTextEl.textContent  = `${catKWh.toFixed(2)} kWh/d`;
+    if (kwhTextEl)  kwhTextEl.textContent  = `${catKWh.toFixed(2)} kWh(unit)/d`;
     if (cntEl)  cntEl.textContent  = String(catCount);
   });
 
@@ -303,7 +303,7 @@ function calculate() {
   setText('print-total-watts', formatNumber(result.totalWatts));
   setText('print-daily-kwh', formatNumber(result.dailyKWh, 2));
   setText('print-monthly-bill', formatCurrency(result.monthlyBill));
-  setText('print-tariff', `${formatCurrency(tariff)}/kWh`);
+  setText('print-tariff', `${formatCurrency(tariff)}/kWh(unit)`);
   setText('print-date', `Generated on: ${new Date().toLocaleDateString(REGION_SETTINGS[currentCurrency].locale, { dateStyle: 'long' })}`);
 
   const printList = document.getElementById('print-appliances-list');
@@ -440,6 +440,13 @@ document.addEventListener('change', (e) => {
 
 document.addEventListener('click', (e) => {
   const target = e.target as HTMLElement;
+
+  // Modal closing logic
+  if (target.dataset.action === 'close-modal' || target.closest('[data-action="close-modal"]')) {
+    closeModal();
+    return;
+  }
+
   const btn = target.closest<HTMLElement>('[data-action]');
   if (!btn) return;
 
@@ -654,9 +661,9 @@ function buildRowHTML(a: Appliance): string {
           <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">W</span>
         </div>
         <div class="flex items-center">
-          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
+          <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
           <span class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
-          <button type="button" class="stepper-btn w-8 h-8 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
+          <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
         </div>
         <div class="flex items-center gap-1">
           <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
@@ -666,12 +673,12 @@ function buildRowHTML(a: Appliance): string {
         </div>
         <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px]">
           <span class="font-mono text-xs sm:text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
-          <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh</span>
+          <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh(unit)</span>
         </div>
-        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+        <div class="flex-shrink-0 w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center">
           ${a.custom ? `
             <button type="button"
-              class="w-8 h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
+              class="w-10 h-10 sm:w-8 sm:h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
               data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mx-auto">
                 <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
@@ -737,10 +744,10 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
   
   report += `SUMMARY\n`;
   report += `  Total Load          : ${formatNumber(totalWatts)} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
-  report += `  Daily Consumption   : ${formatNumber(dailyKWh, 2)} kWh/day\n`;
-  report += `  Monthly Estimate    : ${formatNumber(monthlyKWh)} kWh/month\n`;
+  report += `  Daily Consumption   : ${formatNumber(dailyKWh, 2)} kWh(unit)/day\n`;
+  report += `  Monthly Estimate    : ${formatNumber(monthlyKWh)} kWh(unit)/month\n`;
   report += `  Estimated Bill      : ${formatCurrency(monthlyBill)} / month\n`;
-  report += `  Tariff Used         : ${formatCurrency(tariff)}/kWh\n`;
+  report += `  Tariff Used         : ${formatCurrency(tariff)}/kWh(unit)\n`;
   report += `  Max Load Capacity   : ${maxCapacityKW} kW\n\n`;
   report += `${'─'.repeat(48)}\n\n`;
   
@@ -756,7 +763,7 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
       if (!catItems.length) return;
       report += `  ${cat.toUpperCase()}\n`;
       catItems.forEach(a => {
-        report += `    ${a.name.padEnd(28)} ${String(a.qty).padStart(2)}× ${String(a.watts).padStart(5)}W  ${calculateRowKWh(a).toFixed(2)} kWh/d\n`;
+        report += `    ${a.name.padEnd(28)} ${String(a.qty).padStart(2)}× ${String(a.watts).padStart(5)}W  ${calculateRowKWh(a).toFixed(2)} kWh(unit)/d\n`;
       });
       report += '\n';
     });
@@ -772,8 +779,6 @@ document.getElementById('download-report-btn')?.addEventListener('click', () => 
   }
 });
 
-document.getElementById('modal-close')?.addEventListener('click', closeModal);
-document.getElementById('modal-backdrop')?.addEventListener('click', closeModal);
 document.getElementById('print-btn')?.addEventListener('click', () => window.print());
 
 document.getElementById('download-txt-btn')?.addEventListener('click', () => {
@@ -810,7 +815,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ── Init ──────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+function initCalculator() {
   calculate();
 
   // Smooth scroll for sticky details link
@@ -818,5 +823,8 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     document.getElementById('results-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-});
+}
+
+document.addEventListener('DOMContentLoaded', initCalculator);
+document.addEventListener('astro:after-swap', initCalculator);
 </script>
