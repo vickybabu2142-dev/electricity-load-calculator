@@ -8,8 +8,8 @@ export interface Appliance {
   watts: number;
   qty: number;
   hours: number;
-  included: boolean;
   custom: boolean;
+  hidden?: boolean;
 }
 
 export type ApplianceCategory =

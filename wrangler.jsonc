@@ -1,0 +1,19 @@
+{
+	"compatibility_date": "2026-06-10",
+	"compatibility_flags": ["global_fetch_strictly_public"],
+	"name": "electricityloadcalculator",
+	"main": "@astrojs/cloudflare/entrypoints/server",
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS"
+	},
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "22a847c41103497ca88ed5212fb961fd"
+		}
+	],
+	"observability": {
+		"enabled": true
+	}
+}
