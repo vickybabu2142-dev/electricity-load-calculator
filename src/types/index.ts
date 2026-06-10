@@ -9,6 +9,7 @@ export interface Appliance {
   qty: number;
   hours: number;
   custom: boolean;
+  hidden?: boolean;
 }
 
 export type ApplianceCategory =

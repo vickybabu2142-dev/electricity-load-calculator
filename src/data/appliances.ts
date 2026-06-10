@@ -7,7 +7,7 @@ export const DEFAULT_APPLIANCES: Appliance[] = [
   // Lighting
   { id: makeId(), category: 'Lighting',      name: 'LED Bulb',               defaultWatts: 9,    defaultQty: 1, defaultHours: 8,    watts: 9,    qty: 0, hours: 8,    custom: false },
   { id: makeId(), category: 'Lighting',      name: 'Tube Light',             defaultWatts: 36,   defaultQty: 1, defaultHours: 6,    watts: 36,   qty: 0, hours: 6,    custom: false },
-  { id: makeId(), category: 'Lighting',      name: 'CFL',                    defaultWatts: 15,   defaultQty: 1, defaultHours: 5,    watts: 15,   qty: 0, hours: 5,    custom: false },
+  { id: makeId(), category: 'Lighting',      name: 'CFL',                    defaultWatts: 15,   defaultQty: 1, defaultHours: 5,    watts: 15,   qty: 0, hours: 5,    custom: false, hidden: true },
   { id: makeId(), category: 'Lighting',      name: 'Spotlight / Downlight',  defaultWatts: 12,   defaultQty: 1, defaultHours: 4,    watts: 12,   qty: 0, hours: 4,    custom: false },
 
   // Fans & Cooling
@@ -21,9 +21,9 @@ export const DEFAULT_APPLIANCES: Appliance[] = [
   { id: makeId(), category: 'Kitchen',       name: 'Refrigerator',          defaultWatts: 150,  defaultQty: 1, defaultHours: 24,   watts: 150,  qty: 0, hours: 24,   custom: false },
   { id: makeId(), category: 'Kitchen',       name: 'Microwave Oven',        defaultWatts: 1200, defaultQty: 1, defaultHours: 0.5,  watts: 1200, qty: 0, hours: 0.5,  custom: false },
   { id: makeId(), category: 'Kitchen',       name: 'Mixer / Grinder',       defaultWatts: 750,  defaultQty: 1, defaultHours: 0.5,  watts: 750,  qty: 0, hours: 0.5,  custom: false },
-  { id: makeId(), category: 'Kitchen',       name: 'Electric Kettle',       defaultWatts: 1500, defaultQty: 1, defaultHours: 0.25, watts: 1500, qty: 0, hours: 0.25, custom: false },
+  { id: makeId(), category: 'Kitchen',       name: 'Electric Kettle',       defaultWatts: 1500, defaultQty: 1, defaultHours: 0.25, watts: 1500, qty: 0, hours: 0.25, custom: false, hidden: true },
   { id: makeId(), category: 'Kitchen',       name: 'Induction Cooktop',     defaultWatts: 2000, defaultQty: 1, defaultHours: 1,    watts: 2000, qty: 0, hours: 1,    custom: false },
-  { id: makeId(), category: 'Kitchen',       name: 'Dishwasher',            defaultWatts: 1200, defaultQty: 1, defaultHours: 1,    watts: 1200, qty: 0, hours: 1,    custom: false },
+  { id: makeId(), category: 'Kitchen',       name: 'Dishwasher',            defaultWatts: 1200, defaultQty: 1, defaultHours: 1,    watts: 1200, qty: 0, hours: 1,    custom: false, hidden: true },
 
   // Entertainment
   { id: makeId(), category: 'Entertainment', name: 'LED TV (32")',          defaultWatts: 60,   defaultQty: 1, defaultHours: 6,    watts: 60,   qty: 0, hours: 6,    custom: false },

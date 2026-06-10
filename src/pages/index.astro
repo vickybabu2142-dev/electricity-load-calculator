@@ -13,7 +13,7 @@ const sectionedData = SECTIONS.map(section => ({
   title: section.title,
   groups: section.categories.map(cat => ({
     name: cat as CategoryType,
-    appliances: DEFAULT_APPLIANCES.filter(a => a.category === cat),
+    appliances: DEFAULT_APPLIANCES.filter(a => a.category === cat && !a.hidden),
   }))
 }));
 ---
@@ -72,14 +72,14 @@ const sectionedData = SECTIONS.map(section => ({
     <a
       href="#results-panel"
       id="sticky-details-link"
-      class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-border text-text-secondary hover:border-accent hover:text-accent bg-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent"
+      class="flex items-center justify-center gap-2 px-6 h-12 rounded-xl border-2 border-border text-text-primary hover:border-accent hover:text-accent bg-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent shadow-sm active:scale-95"
       aria-label="View Details"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
         <circle cx="12" cy="12" r="3" />
       </svg>
-      <span class="text-xs font-display font-bold uppercase tracking-wider">View</span>
+      <span class="text-sm font-display font-bold uppercase tracking-widest">View</span>
     </a>
   </div>
 
@@ -189,7 +189,7 @@ const REGION_SETTINGS: Record<string, { locale: string, symbol: string, defaultT
   AUD: { locale: 'en-AU', symbol: '$', defaultTariff: 0.30, step: 0.01, defaultMaxKW: 20 },
 };
 
-let appliances: Appliance[] = structuredClone(DEFAULT_APPLIANCES);
+let appliances: Appliance[] = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
 let tariff = 8;
 let currentCurrency = 'INR';
 let maxCapacityKW = 5;
@@ -504,7 +504,7 @@ document.addEventListener('click', (e) => {
 
   if (action === 'reset-all') {
     if (!confirm('Reset all appliances to their default values?')) return;
-    appliances = structuredClone(DEFAULT_APPLIANCES);
+    appliances = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
     CATEGORIES.forEach(cat => {
       const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
       const container = document.getElementById(bodyId)?.querySelector('[data-rows-container]');
