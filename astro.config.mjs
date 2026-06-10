@@ -9,6 +9,7 @@ const SITE_URL = 'https://electricityloadcalculator.com';
 // https://astro.build/config
 export default defineConfig({
   site: SITE_URL,
+  output: 'server',
 
   vite: {
     plugins: [tailwindcss()],
