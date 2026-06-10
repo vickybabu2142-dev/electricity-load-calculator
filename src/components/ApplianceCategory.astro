@@ -52,8 +52,14 @@ const icon = CATEGORY_ICONS[name];
         data-category-watts={name}
       >
         <!-- Lightning bolt SVG -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="#f5a623" class="w-3 h-3 flex-shrink-0">
-          <path d="M9.5 1.5 L4 9 H8 L6.5 14.5 L13 7 H9 Z"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-3 h-3 text-accent flex-shrink-0"
+          aria-hidden="true"
+        >
+          <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
         </svg>
         <span>{totalWatts.toLocaleString()} W</span>
       </span>
