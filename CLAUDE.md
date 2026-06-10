@@ -61,3 +61,13 @@ Theme is stored in `localStorage` as `'light'` or absent (dark). `BaseLayout.ast
 
 ### Logic Verification (`scripts/verify-logic.cjs`)
 Four test cases covering: single appliance math, excluded appliance filtering, load percent capping at 100%, and top-consumer identification by `watts × qty`.
+
+## Security & Safeguards
+
+### Never Commit Sensitive Files
+To prevent accidental exposure of credentials or local state, the following files MUST NEVER be pushed to version control:
+- `.dev.vars`: Local secrets for Cloudflare Workers (API keys, etc.).
+- `.env` / `.env.*`: Standard environment variables.
+- `.wrangler/`: Local development data and state.
+
+These are ignored in `.gitignore` by default. Always verify your staged changes before committing.

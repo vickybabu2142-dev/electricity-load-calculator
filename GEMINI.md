@@ -49,6 +49,16 @@
 - **Branding Sync:** The report header follows the Hero branding ("Electricity Load **Report**") and utilizes theme-based accent colors (Industrial Amber for Dark Mode users, Stormy Blue for Light Mode users).
 - **Ink Efficiency:** Background colors are enabled via `print-color-adjust: exact` but restricted to subtle accents and borders.
 
+## Security & Safeguards
+
+### Never Commit Sensitive Files
+To prevent accidental exposure of credentials or local state, the following files MUST NEVER be pushed to version control:
+- `.dev.vars`: Local secrets for Cloudflare Workers (API keys, etc.).
+- `.env` / `.env.*`: Standard environment variables.
+- `.wrangler/`: Local development data and state.
+
+These are ignored in `.gitignore` by default. Always verify your staged changes before committing.
+
 ## Testing & Verification
 
 ### Calculation Logic
