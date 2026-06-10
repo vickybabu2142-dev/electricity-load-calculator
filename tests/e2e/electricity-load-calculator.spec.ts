@@ -7,63 +7,58 @@ test.describe('Electricity Load Calculator', () => {
 
   // ── Initial State ─────────────────────────────────────────
 
-  test('displays initial totals with only LED Bulb active', async ({ page }) => {
-    // Only LED Bulb (9W × 1 × 8h) is included → 0.009 kW → displays as "0.01"
-    await expect(page.locator('#total-kw')).toHaveText('0.01');
-    await expect(page.locator('#monthly-bill')).toContainText('₹');
+  test('displays initial totals as zero', async ({ page }) => {
+    // All appliances start with 0 quantity
+    await expect(page.locator('#total-kw')).toHaveText('0.00');
+    await expect(page.locator('#monthly-bill')).toContainText('₹0');
     await expect(page.locator('#load-level-badge')).toHaveText('Light Load');
   });
 
   test('shows correct active and total appliance counts on load', async ({ page }) => {
-    // 1 active (LED Bulb) out of 36 total default appliances
-    await expect(page.locator('#active-count')).toHaveText('1');
-    await expect(page.locator('#total-count')).toHaveText('36');
+    // 0 active out of 33 total visible default appliances
+    await expect(page.locator('#active-count')).toHaveText('0');
+    await expect(page.locator('#total-count')).toHaveText('33');
   });
 
   test('starts in dark mode by default', async ({ page }) => {
     await expect(page.locator('html')).not.toHaveClass(/light/);
   });
 
-  // ── Appliance Toggle ──────────────────────────────────────
+  // ── Appliance Interaction ─────────────────────────────────
 
-  test('unchecking an active appliance decreases total kW to zero', async ({ page }) => {
+  test('incrementing an appliance increases total kW', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+    await expect(page.locator('#total-kw')).toHaveText('0.01');
+    await expect(page.locator('#active-count')).toHaveText('1');
+  });
+
+  test('decrementing an active appliance decreases total kW to zero', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
 
-    const toggle = page.locator('input[aria-label="Include LED Bulb in calculation"]');
-    await toggle.uncheck({ force: true });
-
+    await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.00');
     await expect(page.locator('#active-count')).toHaveText('0');
   });
 
-  test('checking an inactive appliance increases total kW', async ({ page }) => {
-    const initialKW = parseFloat((await page.locator('#total-kw').textContent()) || '0');
-
-    // Tube Light (36W) is in the already-expanded Lighting category
-    const toggle = page.locator('input[aria-label="Include Tube Light in calculation"]');
-    await toggle.check({ force: true });
-
-    await expect(async () => {
-      const kw = parseFloat((await page.locator('#total-kw').textContent()) || '0');
-      expect(kw).toBeGreaterThan(initialKW);
-    }).toPass();
-  });
-
   // ── Quantity Stepper ──────────────────────────────────────
 
-  test('incrementing quantity increases total kW', async ({ page }) => {
+  test('incrementing quantity multiple times increases total kW', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    
     // LED Bulb: 9W × 2qty = 18W → 0.018 kW → "0.02"
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.02');
   });
 
-  test('decrementing quantity to zero removes appliance from totals', async ({ page }) => {
-    await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
-    await expect(page.locator('#total-kw')).toHaveText('0.00');
-  });
-
   test('decrement button does not go below zero', async ({ page }) => {
-    await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    
     await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
 
     const qtyDisplay = page.locator('[data-qty-display]').first();
@@ -73,6 +68,9 @@ test.describe('Electricity Load Calculator', () => {
   // ── Watts & Hours Editing ─────────────────────────────────
 
   test('editing watts updates the row kWh display and total load', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+
     const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
     await wattsInput.fill('100');
     await wattsInput.dispatchEvent('change');
@@ -84,6 +82,9 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('editing hours updates the row kWh display', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+
     const hoursInput = page.locator('input[aria-label="Hours per day for LED Bulb"]');
     await hoursInput.fill('10');
     await hoursInput.dispatchEvent('change');
@@ -110,6 +111,9 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('changing tariff updates the monthly bill', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+    
     const initialBill = await page.locator('#monthly-bill').textContent();
 
     // Double the tariff: 8 → 16
@@ -249,6 +253,9 @@ test.describe('Electricity Load Calculator', () => {
   // ── Report Modal ──────────────────────────────────────────
 
   test('opens report modal with report content', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+
     await page.locator('#download-report-btn').click();
 
     const modal = page.locator('#report-modal');
@@ -286,6 +293,8 @@ test.describe('Electricity Load Calculator', () => {
   // ── Reset ─────────────────────────────────────────────────
 
   test('reset button restores all defaults', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    
     // Make several changes first
     await page.locator('#currency-select').selectOption('USD');
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
@@ -295,17 +304,14 @@ test.describe('Electricity Load Calculator', () => {
 
     await expect(page.locator('#currency-select')).toHaveValue('INR');
     await expect(page.locator('#tariff-input')).toHaveValue('8');
-    await expect(page.locator('#monthly-bill')).toContainText('₹');
-    await expect(page.locator('#total-kw')).toHaveText('0.01');
+    await expect(page.locator('#monthly-bill')).toContainText('₹0');
+    await expect(page.locator('#total-kw')).toHaveText('0.00');
   });
 
   // ── Category Collapse / Expand ────────────────────────────
 
-  test('Lighting category is expanded by default', async ({ page }) => {
-    await expect(page.locator('#category-body-Lighting')).toBeVisible();
-  });
-
-  test('non-Lighting categories start collapsed', async ({ page }) => {
+  test('categories start collapsed', async ({ page }) => {
+    await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
     await expect(page.locator('#category-body-Kitchen')).not.toBeVisible();
     await expect(page.locator('[id="category-body-Office-&-IT"]')).not.toBeVisible();
   });
@@ -328,7 +334,9 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('shows Moderate Load badge when load is between 30–70%', async ({ page }) => {
-    // LED Bulb 9W / default 5000W max = 0.18% — far too low
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+
     // Change watts to 2000W: 2000/5000 = 40% → Moderate
     const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
     await wattsInput.fill('2000');
@@ -338,6 +346,9 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('shows Heavy Load badge when load exceeds 70% of capacity', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+
     // Change watts to 5000W: 5000/5000 = 100% → Heavy
     const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
     await wattsInput.fill('5000');
@@ -352,12 +363,10 @@ test.describe('Electricity Load Calculator', () => {
     // Set to a typical mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     
-    // Collapse the default expanded "Lighting" category
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    // Check if collapsed
     await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
 
     // The categories container is the first child of the main layout div
-    // In our fix, we added 'w-full' to it.
     const categoriesContainer = page.locator('main > div > div').first();
     const mainContainer = page.locator('main > div');
 
@@ -365,8 +374,6 @@ test.describe('Electricity Load Calculator', () => {
     const mainBox = await mainContainer.boundingBox();
 
     if (containerBox && mainBox) {
-      // The categories container should be approximately the same width as the main container
-      // (allowing for minor rounding or flex gap variations if any, but in flex-col it should match)
       expect(containerBox.width).toBeCloseTo(mainBox.width, 0);
     }
   });
