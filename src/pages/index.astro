@@ -674,35 +674,49 @@ function buildRowHTML(a: Appliance): string {
   return `
     <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
       data-id="${a.id}">
-      <div class="flex items-center gap-3 flex-1 min-w-[200px]">
-        <div class="flex-1">
+      
+      <!-- Name & Reading Row -->
+      <div class="flex items-center justify-between gap-3 flex-1 min-w-[200px] lg:min-w-0 lg:contents">
+        <!-- Name -->
+        <div class="flex-1 lg:order-1">
           <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
           ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
         </div>
+
+        <!-- kWh display (Shown on mobile line 1, on desktop after hours) -->
+        <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px] lg:order-5">
+          <span class="font-mono text-xs sm:text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
+          <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh(unit)</span>
+        </div>
       </div>
-      <div class="flex items-center justify-between gap-1 w-full lg:w-auto lg:contents lg:gap-3">
-        <div class="flex items-center gap-1">
+
+      <!-- Controls Row -->
+      <div class="flex items-center justify-between gap-1 w-full lg:w-auto lg:contents lg:gap-3 order-3">
+        <!-- Watts -->
+        <div class="flex items-center gap-1 lg:order-2">
           <input type="number" value="${a.watts}" min="1" max="99999"
-            class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+            class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
             data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
           <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">W</span>
         </div>
-        <div class="flex items-center">
+        
+        <!-- Qty stepper -->
+        <div class="flex items-center lg:order-3">
           <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
           <span class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
           <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
         </div>
-        <div class="flex items-center gap-1">
+
+        <!-- Hours -->
+        <div class="flex items-center gap-1 lg:order-4">
           <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
-            class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+            class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
             data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
           <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
         </div>
-        <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px]">
-          <span class="font-mono text-xs sm:text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
-          <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh(unit)</span>
-        </div>
-        <div class="flex-shrink-0 w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center">
+
+        <!-- Actions -->
+        <div class="flex-shrink-0 w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center lg:order-6">
           ${a.custom ? `
             <button type="button"
               class="w-10 h-10 sm:w-8 sm:h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"

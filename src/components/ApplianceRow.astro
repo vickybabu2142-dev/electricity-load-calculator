@@ -16,10 +16,10 @@ const kwh = calculateRowKWh(a).toFixed(2);
   data-id={a.id}
   style={`animation-delay: ${index * 0.03}s;`}
 >
-  <!-- Row 1: Name -->
-  <div class="flex items-center gap-3 flex-1 min-w-[200px]">
+  <!-- Name & Reading Row -->
+  <div class="flex items-center justify-between gap-3 flex-1 min-w-[200px] lg:min-w-0 lg:contents">
     <!-- Name -->
-    <div class="flex-1">
+    <div class="flex-1 lg:order-1">
       <span
         class="text-sm font-normal transition-colors duration-150"
         style={a.qty > 0 ? 'color: var(--text-primary);' : 'color: var(--text-muted);'}
@@ -32,12 +32,22 @@ const kwh = calculateRowKWh(a).toFixed(2);
         </span>
       )}
     </div>
+
+    <!-- kWh display (Shown on mobile line 1, on desktop after hours) -->
+    <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px] lg:order-5">
+      <span
+        class="font-mono text-xs sm:text-sm font-semibold tabular-nums"
+        style="color: var(--accent);"
+        data-kwh-display={a.id}
+      >{kwh}</span>
+      <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh(unit)</span>
+    </div>
   </div>
 
-  <!-- Row 2: Metrics (Watts, Qty, Hours, kWh) + Actions -->
-  <div class="flex items-center justify-between gap-1 w-full lg:w-auto lg:contents lg:gap-3">
+  <!-- Controls Row -->
+  <div class="flex items-center justify-between gap-1 w-full lg:w-auto lg:contents lg:gap-3 order-3">
     <!-- Watts -->
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-1 lg:order-2">
       <label class="sr-only" for={`watts-${a.id}`}>Watts</label>
       <input
         id={`watts-${a.id}`}
@@ -45,7 +55,7 @@ const kwh = calculateRowKWh(a).toFixed(2);
         value={a.watts}
         min="1"
         max="99999"
-        class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+        class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
         data-action="update-watts"
         data-id={a.id}
         aria-label={`Watts for ${a.name}`}
@@ -54,7 +64,7 @@ const kwh = calculateRowKWh(a).toFixed(2);
     </div>
 
     <!-- Qty stepper -->
-    <div class="flex items-center" role="group" aria-label={`Quantity for ${a.name}`}>
+    <div class="flex items-center lg:order-3" role="group" aria-label={`Quantity for ${a.name}`}>
       <button
         type="button"
         class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none"
@@ -76,7 +86,7 @@ const kwh = calculateRowKWh(a).toFixed(2);
     </div>
 
     <!-- Hours -->
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-1 lg:order-4">
       <label class="sr-only" for={`hours-${a.id}`}>Hours per day</label>
       <input
         id={`hours-${a.id}`}
@@ -85,7 +95,7 @@ const kwh = calculateRowKWh(a).toFixed(2);
         min="0"
         max="24"
         step="0.25"
-        class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 py-1 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+        class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
         data-action="update-hours"
         data-id={a.id}
         aria-label={`Hours per day for ${a.name}`}
@@ -93,18 +103,8 @@ const kwh = calculateRowKWh(a).toFixed(2);
       <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
     </div>
 
-    <!-- kWh/day result -->
-    <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px]">
-      <span
-        class="font-mono text-xs sm:text-sm font-semibold tabular-nums"
-        style="color: var(--accent);"
-        data-kwh-display={a.id}
-      >{kwh}</span>
-      <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh(unit)</span>
-    </div>
-
     <!-- Actions -->
-    <div class="flex-shrink-0 w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center">
+    <div class="flex-shrink-0 w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center lg:order-6">
       {a.custom && (
         <button
           type="button"
