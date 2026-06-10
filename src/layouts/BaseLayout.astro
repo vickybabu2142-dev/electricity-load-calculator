@@ -1,15 +1,78 @@
 ---
-import ThemeToggle from '@/components/ThemeToggle.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import { ClientRouter } from 'astro:transitions';
+import '@/styles/global.css';
+
+// Self-host fonts for performance
+import '@fontsource/khand/400.css';
+import '@fontsource/khand/500.css';
+import '@fontsource/khand/600.css';
+import '@fontsource/khand/700.css';
+import '@fontsource/hind/400.css';
+import '@fontsource/hind/500.css';
+import '@fontsource/hind/600.css';
+import '@fontsource/geist-mono/400.css';
+import '@fontsource/geist-mono/600.css';
 
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string;
+  breadcrumbSchema?: any;
 }
 
 const {
-  title = 'Electricity Load Calculator — Know Your Power',
-  description = "Calculate total electrical load, daily energy consumption, and estimated monthly electricity bills for your home, office, or industry.",
+  title = 'Electricity Load Calculator | kW, kVA & House Load Calculator',
+  description = "Calculate your house electricity load in kW/kVA for home, office, or commercial use. Use our accurate bijli load calculator with monthly bill estimation.",
+  keywords = "electricity load calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, bijli bill calculator, electricity load calculator in kw for home pdf, electricity load calculator in kw for office, electricity load calculator in kw for commercial, electrical load calculation for industrial building",
+  breadcrumbSchema,
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const ogImage = new URL('/site-image.png', Astro.site ?? Astro.url).href;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Electricity Load Calculator",
+      "url": canonicalURL.origin,
+      "operatingSystem": "Web",
+      "applicationCategory": "UtilitiesApplication",
+      "applicationSubCategory": "Finance/Utility",
+      "description": "Calculate total electrical load in kW and kVA for residential, commercial, and industrial buildings with bill estimation.",
+      "screenshot": ogImage,
+      "softwareVersion": "1.0.0",
+      "author": {
+        "@type": "Organization",
+        "name": "Electricity Load Calculator",
+        "url": canonicalURL.origin,
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+      },
+      "featureList": [
+        "Real-time load calculation in Watts and kW",
+        "Daily energy consumption estimation (kWh)",
+        "Monthly electricity bill calculator",
+        "Professional PDF report generation",
+        "Custom appliance support",
+        "Multi-currency support (INR, USD, EUR, GBP, etc.)"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "name": "Electricity Load Calculator",
+      "url": canonicalURL.origin,
+      "description": "Free online electricity load calculator for home, office, and industrial use.",
+    },
+    ...(breadcrumbSchema ? [breadcrumbSchema] : []),
+  ],
+};
 ---
 
 <!doctype html>
@@ -18,38 +81,55 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
     <title>{title}</title>
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL.href} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url.href} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImage} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
     <!-- Inline script to apply theme immediately -->
     <script is:inline>
-      if (localStorage.getItem('color-theme') === 'light') {
-        document.documentElement.classList.add('light');
-      } else {
-        document.documentElement.classList.remove('light');
-      }
+      const applyTheme = () => {
+        if (localStorage.getItem('color-theme') === 'light') {
+          document.documentElement.classList.add('light');
+        } else {
+          document.documentElement.classList.remove('light');
+        }
+      };
+
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
     </script>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="LoadCalc" />
-    <link rel="manifest" href="/site.webmanifest" />
-
-    <!-- Google Fonts: Geist Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Global styles -->
-    <link rel="stylesheet" href="/src/styles/global.css" />
+   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+   <link rel="shortcut icon" href="/favicon.ico" />
+   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+   <meta name="apple-mobile-web-app-title" content="ElectricLoad" />
+   <link rel="manifest" href="/site.webmanifest" />
+    <ClientRouter />
   </head>
   <body>
-    <ThemeToggle />
+    <SiteHeader />
     <slot />
+    <SiteFooter />
   </body>
 </html>

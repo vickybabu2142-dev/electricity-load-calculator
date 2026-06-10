@@ -1,6 +1,6 @@
 {
   "name": "Electricity Load Calculator",
-  "short_name": "LoadCalc",
+  "short_name": "ElectricLoad",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

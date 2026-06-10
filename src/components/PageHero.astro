@@ -1,13 +1,25 @@
 ---
-// No props needed
+import { DEFAULT_APPLIANCES, CATEGORIES } from '@/data/appliances';
+
+const applianceCount = DEFAULT_APPLIANCES.length;
+const categoryCount  = CATEGORIES.length;
 ---
 
-<header class="relative pt-4 pb-4 px-6 text-center overflow-hidden no-print">
+<section class="relative pt-4 pb-4 px-6 text-center overflow-hidden no-print">
   <!-- Subtle Dot Grid Background -->
   <div class="absolute inset-0 pointer-events-none opacity-[0.15]" style="background-image: radial-gradient(circle, var(--text-muted) 1px, transparent 1px); background-size: 24px 24px; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 40%, transparent 100%);"></div>
 
-  <p class="relative font-mono text-[10px] tracking-[0.25em] text-text-muted uppercase mb-2 animate-fade-in">
-    ⚡ Electrical Load Calculator
+  <p class="relative font-mono text-[10px] tracking-[0.25em] text-text-muted uppercase mb-2 animate-fade-in flex items-center justify-center gap-1.5">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      class="w-3 h-3 text-accent"
+      aria-hidden="true"
+    >
+      <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+    </svg>
+    Electrical Load Calculator
   </p>
 
   <h1
@@ -31,15 +43,25 @@
     class="relative mt-5 inline-flex flex-wrap justify-center gap-3 text-xs animate-slide-up"
     style="animation-delay: 0.2s"
   >
-    {[
-      { label: '36 Appliances', icon: '🔌' },
-      { label: '7 Categories',  icon: '📂' },
-      { label: 'Real-time Calc',icon: '⚡' },
-    ].map(s => (
-      <span class="stat-badge flex items-center gap-1.5 text-text-primary px-3.5 py-1.5 rounded-full">
-        <span class="text-sm filter saturate-[1.2]">{s.icon}</span>
-        <span class="font-medium">{s.label}</span>
-      </span>
-    ))}
+    <span class="stat-badge flex items-center gap-1.5 text-text-primary px-3.5 py-1.5 rounded-full">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-accent flex-shrink-0"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      <span class="font-medium">{applianceCount} Appliances</span>
+    </span>
+    <span class="stat-badge flex items-center gap-1.5 text-text-primary px-3.5 py-1.5 rounded-full">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-accent flex-shrink-0"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span class="font-medium">{categoryCount} Categories</span>
+    </span>
+    <span class="stat-badge flex items-center gap-1.5 text-text-primary px-3.5 py-1.5 rounded-full">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="w-4 h-4 text-accent flex-shrink-0"
+        aria-hidden="true"
+      >
+        <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+      </svg>
+      <span class="font-medium">Real-time Calc</span>
+    </span>
   </div>
-</header>
+</section>

@@ -1,0 +1,216 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": Astro.site?.origin || "https://electricityloadcalculator.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Contact Us"
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Contact Us | Electricity Load Calculator"
+  description="Get in touch with the Electricity Load Calculator team. Report a bug, suggest a new appliance, or ask a question — we'd love to hear from you."
+  keywords="contact electricity load calculator, feedback, bug report, feature request"
+  breadcrumbSchema={breadcrumbSchema}
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Contact Us' }]} />
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 md:pt-12 pb-12 md:pb-16 animate-slide-up">
+    <div class="max-w-3xl mx-auto text-text-primary">
+      <div class="mb-12">
+        <h1 class="text-4xl sm:text-5xl font-display font-bold mb-4 uppercase tracking-tight">Contact Us</h1>
+      </div>
+
+      <div class="space-y-12 text-base leading-relaxed">
+        
+        <section>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-widest text-accent mb-4 border-b border-border pb-2">Get In Touch</h2>
+          <p class="text-text-muted mb-8">
+            We value your feedback and are here to help. Whether you have a question about the calculator, want to suggest a new feature, or need to report an issue, please fill out the form below and we will get back to you as soon as possible.
+          </p>
+
+          <div class="bg-card border border-border rounded-xl p-6 sm:p-8">
+            <form id="contact-form" class="space-y-6" novalidate>
+              <!-- Web3Forms honeypot — keeps spam bots out, invisible to real users -->
+              <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <label for="name" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted">Name</label>
+                    <span id="error-name" class="hidden text-[10px] text-danger font-mono uppercase">Required</span>
+                  </div>
+                  <input type="text" id="name" name="name" required
+                    class="w-full bg-base border border-border rounded-lg px-4 py-3 text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+                    placeholder="Your name" />
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <label for="email" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted">Email</label>
+                    <span id="error-email" class="hidden text-[10px] text-danger font-mono uppercase">Invalid Email</span>
+                  </div>
+                  <input type="email" id="email" name="email" required
+                    class="w-full bg-base border border-border rounded-lg px-4 py-3 text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+                    placeholder="your@email.com" />
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label for="subject" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted">Subject</label>
+                  <span id="error-subject" class="hidden text-[10px] text-danger font-mono uppercase">Required</span>
+                </div>
+                <div class="relative">
+                  <select id="subject" name="subject" required
+                    class="w-full bg-base border border-border rounded-lg px-4 py-3 text-sm text-text-primary focus:border-accent focus:outline-none transition-colors appearance-none cursor-pointer">
+                    <option value="" disabled selected>Select a subject</option>
+                    <option value="bug">Bug Report</option>
+                    <option value="feature">Feature Request</option>
+                    <option value="business">Business Inquiry</option>
+                    <option value="other">General Question</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-text-muted">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label for="message" class="block text-xs font-mono font-bold uppercase tracking-widest text-text-muted">Message</label>
+                  <span id="error-message" class="hidden text-[10px] text-danger font-mono uppercase">Required</span>
+                </div>
+                <textarea id="message" name="message" rows="5" required
+                  class="w-full bg-base border border-border rounded-lg px-4 py-3 text-sm text-text-primary focus:border-accent focus:outline-none transition-colors resize-y"
+                  placeholder="How can we help you?"></textarea>
+              </div>
+
+              <div class="pt-2">
+                <button type="submit" id="submit-btn"
+                  class="w-full sm:w-auto px-8 py-3 rounded-lg border border-border text-lg text-text-secondary font-display font-medium hover:border-accent hover:text-accent transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed">
+                  Send Message
+                </button>
+                <p id="submit-error" class="hidden mt-3 text-sm text-danger font-mono"></p>
+              </div>
+              
+            </form>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-sm font-mono font-bold uppercase tracking-widest text-accent mb-4 border-b border-border pb-2">Important Notice</h2>
+          <p class="text-text-muted">
+            Please note that we provide software tools for estimation purposes only. <strong>We do not provide specific technical support or consulting for physical electrical installations.</strong> For your safety, always consult a certified electrician or electrical engineer for wiring, installation planning, or hardware troubleshooting.
+          </p>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // TODO: Get your free access key from https://web3forms.com (enter your email → copy key)
+  const WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+
+  function setupContactForm() {
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    if (!form) return;
+
+    const fields = {
+      name:    { input: document.getElementById('name')    as HTMLInputElement,     error: document.getElementById('error-name')    },
+      email:   { input: document.getElementById('email')   as HTMLInputElement,     error: document.getElementById('error-email')   },
+      subject: { input: document.getElementById('subject') as HTMLSelectElement,    error: document.getElementById('error-subject') },
+      message: { input: document.getElementById('message') as HTMLTextAreaElement,  error: document.getElementById('error-message') },
+    };
+
+    function showError(fieldId: keyof typeof fields, msg: string) {
+      const field = fields[fieldId];
+      if (!field.error) return;
+      field.error.textContent = msg;
+      field.error.classList.remove('hidden');
+      field.input.classList.add('border-danger');
+      field.input.addEventListener('input', () => {
+        field.input.classList.remove('border-danger');
+        field.error?.classList.add('hidden');
+      }, { once: true });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      Object.values(fields).forEach(f => f.error?.classList.add('hidden'));
+
+      let isValid = true;
+
+      if (!fields.name.input.value.trim()) { showError('name', 'Required'); isValid = false; }
+
+      const emailVal = fields.email.input.value.trim();
+      if (!emailVal) {
+        showError('email', 'Required'); isValid = false;
+      } else if (!/^\S+@\S+\.\S+$/.test(emailVal)) {
+        showError('email', 'Invalid Email'); isValid = false;
+      }
+
+      if (!fields.subject.input.value) { showError('subject', 'Required'); isValid = false; }
+      if (!fields.message.input.value.trim()) { showError('message', 'Required'); isValid = false; }
+
+      if (!isValid) return;
+
+      const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+      const submitError = document.getElementById('submit-error') as HTMLElement;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      submitError.classList.add('hidden');
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            botcheck: '',
+            name:    fields.name.input.value.trim(),
+            email:   fields.email.input.value.trim(),
+            subject: `[Contact] ${fields.subject.input.value}`,
+            message: fields.message.input.value.trim(),
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          form.innerHTML = `
+            <div class="flex flex-col items-center justify-center gap-4 py-12 text-center">
+              <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background:rgba(62,207,110,0.12)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" style="color:var(--success)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <p class="text-lg font-semibold text-text-primary">Message sent!</p>
+              <p class="text-sm text-text-muted">Thanks for reaching out. We'll get back to you as soon as possible.</p>
+            </div>`;
+        } else {
+          throw new Error(data.message ?? 'Submission failed');
+        }
+      } catch {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        submitError.textContent = 'Failed to send. Please try again later.';
+        submitError.classList.remove('hidden');
+      }
+    });
+  }
+
+  setupContactForm();
+  document.addEventListener('astro:after-swap', setupContactForm);
+</script>

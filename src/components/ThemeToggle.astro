@@ -5,7 +5,7 @@
 <button
   id="theme-toggle"
   type="button"
-  class="fixed top-4 right-4 z-50 p-2.5 rounded-full border border-border bg-card text-text-primary hover:border-accent transition-all duration-200 no-print"
+  class="p-2.5 rounded-full border border-border bg-card text-text-primary hover:border-accent transition-all duration-200 no-print focus:outline-none"
   aria-label="Toggle theme"
 >
   <!-- Sun Icon (shown in dark mode) -->
@@ -31,29 +31,43 @@
 </button>
 
 <script>
-  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-  const themeToggleBtn = document.getElementById('theme-toggle');
+  function initThemeToggle() {
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const themeToggleBtn = document.getElementById('theme-toggle');
 
-  // Set initial icon based on actual class
-  if (document.documentElement.classList.contains('light')) {
-    themeToggleDarkIcon?.classList.remove('hidden');
-  } else {
-    themeToggleLightIcon?.classList.remove('hidden');
+    if (!themeToggleBtn) return;
+
+    // Reset icons
+    themeToggleDarkIcon?.classList.add('hidden');
+    themeToggleLightIcon?.classList.add('hidden');
+
+    // Set initial icon based on actual class
+    if (document.documentElement.classList.contains('light')) {
+      themeToggleDarkIcon?.classList.remove('hidden');
+    } else {
+      themeToggleLightIcon?.classList.remove('hidden');
+    }
+
+    // Remove old listener if any (though astro:after-swap handles fresh script execution in most cases)
+    themeToggleBtn.onclick = () => {
+      // toggle icons
+      themeToggleDarkIcon?.classList.toggle('hidden');
+      themeToggleLightIcon?.classList.toggle('hidden');
+
+      // toggle theme
+      if (document.documentElement.classList.contains('light')) {
+        document.documentElement.classList.remove('light');
+        localStorage.setItem('color-theme', 'dark');
+      } else {
+        document.documentElement.classList.add('light');
+        localStorage.setItem('color-theme', 'light');
+      }
+    };
   }
 
-  themeToggleBtn?.addEventListener('click', function () {
-    // toggle icons
-    themeToggleDarkIcon?.classList.toggle('hidden');
-    themeToggleLightIcon?.classList.toggle('hidden');
-
-    // toggle theme
-    if (document.documentElement.classList.contains('light')) {
-      document.documentElement.classList.remove('light');
-      localStorage.setItem('color-theme', 'dark');
-    } else {
-      document.documentElement.classList.add('light');
-      localStorage.setItem('color-theme', 'light');
-    }
-  });
+  // Run on initial load
+  initThemeToggle();
+  // Re-run on View Transitions navigation
+  document.addEventListener('astro:after-swap', initThemeToggle);
 </script>

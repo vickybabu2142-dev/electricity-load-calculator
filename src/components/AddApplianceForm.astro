@@ -13,6 +13,7 @@ const { category } = Astro.props;
   <button
     type="button"
     class="add-toggle-btn flex items-center gap-2 text-sm text-text-faint hover:text-accent active:text-accent transition-colors focus:outline-none group"
+    data-action="toggle-add-form"
     data-category={category}
     aria-expanded="false"
     aria-label={`Add custom appliance to ${category}`}
@@ -97,6 +98,7 @@ const { category } = Astro.props;
       <button
         type="button"
         class="add-cancel-btn px-4 py-1.5 rounded-lg border border-border text-text-muted text-sm font-display font-medium hover:border-accent-dim transition-colors focus:outline-none"
+        data-action="cancel-add-form"
         data-category={category}
       >
         Cancel
