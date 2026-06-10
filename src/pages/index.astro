@@ -58,7 +58,7 @@ const sectionedData = SECTIONS.map(section => ({
   </main>
 
   <!-- MOBILE STICKY SUMMARY -->
-  <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-40 lg:hidden shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.3)] flex justify-between items-center pb-[max(1rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
+  <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-40 lg:hidden print:hidden no-print shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.3)] flex justify-between items-center pb-[max(1rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
     <div class="flex flex-col">
       <span class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Total Load</span>
       <div class="flex items-baseline gap-1">
@@ -72,10 +72,14 @@ const sectionedData = SECTIONS.map(section => ({
     <a
       href="#results-panel"
       id="sticky-details-link"
-      class="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-border text-sm text-text-secondary font-display font-medium hover:border-accent hover:text-accent bg-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent"
-      aria-label="Go to details"
+      class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-border text-text-secondary hover:border-accent hover:text-accent bg-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent"
+      aria-label="View Details"
     >
-      Details
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+      <span class="text-xs font-display font-bold uppercase tracking-wider">View</span>
     </a>
   </div>
 
@@ -261,16 +265,16 @@ function calculate() {
   const result = calculateTotals(appliances, tariff, maxCapacityKW);
   const settings = REGION_SETTINGS[currentCurrency];
 
-  animateCounter('total-kw', result.totalWatts / 1000, 2);
-  animateCounter('sticky-total-kw', result.totalWatts / 1000, 2);
+  animateCounter('total-kw', result.totalKW, 2);
+  animateCounter('sticky-total-kw', result.totalKW, 2);
   animateCounter('total-watts', result.totalWatts, 0);
   animateCounter('daily-kwh', result.dailyKWh, 2);
   animateCounter('monthly-kwh', result.monthlyKWh, 0);
   
   setText('monthly-bill', formatCurrency(result.monthlyBill));
   setText('sticky-monthly-bill', formatCurrency(result.monthlyBill));
-  setText('top-consumer-name', result.topConsumer ? result.topConsumer.name : '—');
-  setText('top-consumer-watts', result.topConsumer ? formatNumber(result.topConsumer.watts * result.topConsumer.qty) : '0');
+  setText('top-consumer-name', result.topConsumerName);
+  setText('top-consumer-watts', formatNumber(result.topConsumerWatts));
   setText('load-percent', `${Math.round(result.loadPercent)}%`);
   setText('max-kw-label', `${maxCapacityKW} kW max`);
 
@@ -408,8 +412,21 @@ document.addEventListener('change', (e) => {
 
   if (action === 'update-hours') {
     const val = parseFloat((target as HTMLInputElement).value);
-    if (!isNaN(val) && val >= 0 && val <= 24) {
-      a.hours = val;
+    const errorEl = document.querySelector(`[data-error-id="${id}"]`);
+    
+    if (!isNaN(val)) {
+      if (val > 24) {
+        target.classList.add('border-danger');
+        target.classList.remove('border-border');
+        errorEl?.classList.remove('hidden');
+      } else {
+        target.classList.remove('border-danger');
+        target.classList.add('border-border');
+        errorEl?.classList.add('hidden');
+      }
+      
+      // Still update the state but cap at 24 for calculation safety
+      a.hours = Math.min(24, val);
       updateRowKWh(a);
       debouncedCalculate();
     }
@@ -708,11 +725,14 @@ function buildRowHTML(a: Appliance): string {
         </div>
 
         <!-- Hours -->
-        <div class="flex items-center gap-1 lg:order-4">
-          <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
-            class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
-            data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
-          <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
+        <div class="flex flex-col items-center gap-1 lg:order-4">
+          <div class="flex items-center gap-1">
+            <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
+              class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+              data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
+            <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
+          </div>
+          <span class="hours-error hidden text-[8px] sm:text-[9px] text-danger font-mono font-bold uppercase" data-error-id="${a.id}">Max 24h</span>
         </div>
 
         <!-- Actions -->

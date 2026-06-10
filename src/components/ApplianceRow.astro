@@ -86,21 +86,24 @@ const kwh = calculateRowKWh(a).toFixed(2);
     </div>
 
     <!-- Hours -->
-    <div class="flex items-center gap-1 lg:order-4">
-      <label class="sr-only" for={`hours-${a.id}`}>Hours per day</label>
-      <input
-        id={`hours-${a.id}`}
-        type="number"
-        value={a.hours}
-        min="0"
-        max="24"
-        step="0.25"
-        class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
-        data-action="update-hours"
-        data-id={a.id}
-        aria-label={`Hours per day for ${a.name}`}
-      />
-      <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
+    <div class="flex flex-col items-center gap-1 lg:order-4">
+      <div class="flex items-center gap-1">
+        <label class="sr-only" for={`hours-${a.id}`}>Hours per day</label>
+        <input
+          id={`hours-${a.id}`}
+          type="number"
+          value={a.hours}
+          min="0"
+          max="24"
+          step="0.25"
+          class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+          data-action="update-hours"
+          data-id={a.id}
+          aria-label={`Hours per day for ${a.name}`}
+        />
+        <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
+      </div>
+      <span class="hours-error hidden text-[8px] sm:text-[9px] text-danger font-mono font-bold uppercase" data-error-id={a.id}>Max 24h</span>
     </div>
 
     <!-- Actions -->
