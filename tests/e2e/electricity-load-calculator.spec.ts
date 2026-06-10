@@ -5,135 +5,343 @@ test.describe('Electricity Load Calculator', () => {
     await page.goto('/');
   });
 
-  test('should display initial calculation results', async ({ page }) => {
-    const totalKW = page.locator('#total-kw');
-    await expect(totalKW).not.toHaveText('0.00');
-    
-    const monthlyBill = page.locator('#monthly-bill');
-    await expect(monthlyBill).toContainText('₹');
+  // ── Initial State ─────────────────────────────────────────
+
+  test('displays initial totals with only LED Bulb active', async ({ page }) => {
+    // Only LED Bulb (9W × 1 × 8h) is included → 0.009 kW → displays as "0.01"
+    await expect(page.locator('#total-kw')).toHaveText('0.01');
+    await expect(page.locator('#monthly-bill')).toContainText('₹');
+    await expect(page.locator('#load-level-badge')).toHaveText('Light Load');
   });
 
-  test('should update totals when toggling an appliance', async ({ page }) => {
-    const initialKWText = await page.locator('#total-kw').textContent();
-    const initialKW = parseFloat(initialKWText || '0');
+  test('shows correct active and total appliance counts on load', async ({ page }) => {
+    // 1 active (LED Bulb) out of 36 total default appliances
+    await expect(page.locator('#active-count')).toHaveText('1');
+    await expect(page.locator('#total-count')).toHaveText('36');
+  });
 
-    // Find first appliance toggle and uncheck it
-    // Use force: true because the actual checkbox is sr-only
-    const firstToggle = page.locator('input[data-action="toggle-include"]').first();
-    await firstToggle.uncheck({ force: true });
+  test('starts in dark mode by default', async ({ page }) => {
+    await expect(page.locator('html')).not.toHaveClass(/light/);
+  });
 
-    // Wait for animation/debounce
+  // ── Appliance Toggle ──────────────────────────────────────
+
+  test('unchecking an active appliance decreases total kW to zero', async ({ page }) => {
+    await expect(page.locator('#total-kw')).toHaveText('0.01');
+
+    const toggle = page.locator('input[aria-label="Include LED Bulb in calculation"]');
+    await toggle.uncheck({ force: true });
+
+    await expect(page.locator('#total-kw')).toHaveText('0.00');
+    await expect(page.locator('#active-count')).toHaveText('0');
+  });
+
+  test('checking an inactive appliance increases total kW', async ({ page }) => {
+    const initialKW = parseFloat((await page.locator('#total-kw').textContent()) || '0');
+
+    // Tube Light (36W) is in the already-expanded Lighting category
+    const toggle = page.locator('input[aria-label="Include Tube Light in calculation"]');
+    await toggle.check({ force: true });
+
     await expect(async () => {
-      const currentKWText = await page.locator('#total-kw').textContent();
-      const currentKW = parseFloat(currentKWText || '0');
-      expect(currentKW).toBeLessThan(initialKW);
+      const kw = parseFloat((await page.locator('#total-kw').textContent()) || '0');
+      expect(kw).toBeGreaterThan(initialKW);
     }).toPass();
   });
 
-  test('should update totals when changing quantity', async ({ page }) => {
-    const initialKWText = await page.locator('#total-kw').textContent();
-    const initialKW = parseFloat(initialKWText || '0');
+  // ── Quantity Stepper ──────────────────────────────────────
 
-    // Find first increment button
-    const firstIncrement = page.locator('button[data-action="increment-qty"]').first();
-    await firstIncrement.click();
+  test('incrementing quantity increases total kW', async ({ page }) => {
+    // LED Bulb: 9W × 2qty = 18W → 0.018 kW → "0.02"
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+    await expect(page.locator('#total-kw')).toHaveText('0.02');
+  });
 
-    // Wait for animation
+  test('decrementing quantity to zero removes appliance from totals', async ({ page }) => {
+    await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
+    await expect(page.locator('#total-kw')).toHaveText('0.00');
+  });
+
+  test('decrement button does not go below zero', async ({ page }) => {
+    await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
+    await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
+
+    const qtyDisplay = page.locator('[data-qty-display]').first();
+    await expect(qtyDisplay).toHaveText('0');
+  });
+
+  // ── Watts & Hours Editing ─────────────────────────────────
+
+  test('editing watts updates the row kWh display and total load', async ({ page }) => {
+    const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
+    await wattsInput.fill('100');
+    await wattsInput.dispatchEvent('change');
+
+    // kWh: 100W × 1qty × 8h / 1000 = 0.80 kWh/d
+    await expect(page.locator('[data-kwh-display]').first()).toHaveText('0.80');
+    // total kW: 100W / 1000 = 0.10 kW
+    await expect(page.locator('#total-kw')).toHaveText('0.10');
+  });
+
+  test('editing hours updates the row kWh display', async ({ page }) => {
+    const hoursInput = page.locator('input[aria-label="Hours per day for LED Bulb"]');
+    await hoursInput.fill('10');
+    await hoursInput.dispatchEvent('change');
+
+    // kWh: 9W × 1qty × 10h / 1000 = 0.09 kWh/d
+    await expect(page.locator('[data-kwh-display]').first()).toHaveText('0.09');
+  });
+
+  // ── Currency, Tariff & Capacity ───────────────────────────
+
+  test('switching to USD updates currency symbol and default tariff', async ({ page }) => {
+    await page.locator('#currency-select').selectOption('USD');
+
+    await expect(page.locator('#monthly-bill')).toContainText('$');
+    await expect(page.locator('#tariff-input')).toHaveValue('0.15');
+    await expect(page.locator('#max-kw-input')).toHaveValue('20');
+  });
+
+  test('switching to EUR updates currency symbol and default tariff', async ({ page }) => {
+    await page.locator('#currency-select').selectOption('EUR');
+
+    await expect(page.locator('#monthly-bill')).toContainText('€');
+    await expect(page.locator('#tariff-input')).toHaveValue('0.35');
+  });
+
+  test('changing tariff updates the monthly bill', async ({ page }) => {
+    const initialBill = await page.locator('#monthly-bill').textContent();
+
+    // Double the tariff: 8 → 16
+    await page.locator('#tariff-input').fill('16');
+    await page.locator('#tariff-input').dispatchEvent('input');
+
     await expect(async () => {
-      const currentKWText = await page.locator('#total-kw').textContent();
-      const currentKW = parseFloat(currentKWText || '0');
-      expect(currentKW).toBeGreaterThan(initialKW);
+      const newBill = await page.locator('#monthly-bill').textContent();
+      expect(newBill).not.toBe(initialBill);
     }).toPass();
   });
 
-  test('should add a custom appliance and update totals', async ({ page }) => {
-    const initialKWText = await page.locator('#total-kw').textContent();
-    const initialKW = parseFloat(initialKWText || '0');
+  test('changing max capacity updates the load percentage label', async ({ page }) => {
+    await page.locator('#max-kw-input').fill('10');
+    await page.locator('#max-kw-input').dispatchEvent('input');
 
-    // Open the "Other" category first (it's collapsed by default)
-    const otherCategoryToggle = page.locator('button.category-toggle[data-category="Other"]');
-    await otherCategoryToggle.click();
+    await expect(page.locator('#max-kw-label')).toHaveText('10 kW max');
+  });
 
-    // Open "Add Custom" in "Other" category
-    const addToggle = page.locator('.add-toggle-btn').last();
-    await addToggle.click();
+  // ── Custom Appliance ──────────────────────────────────────
 
-    const form = page.locator('.add-appliance-form').last();
+  test('adds a custom appliance and reflects it in totals', async ({ page }) => {
+    const initialKW = parseFloat((await page.locator('#total-kw').textContent()) || '0');
+
+    await page.locator('button.category-toggle[data-category="Other"]').click();
+    await page.locator('button.add-toggle-btn[data-category="Other"]').click();
+
+    const form = page.locator('.add-appliance-form[data-category="Other"]');
     await expect(form).toBeVisible();
 
     await form.locator('[data-field="name"]').fill('Gaming PC High End');
     await form.locator('[data-field="watts"]').fill('800');
     await form.locator('[data-field="hours"]').fill('4');
-    
     await form.locator('button[type="submit"]').click();
 
-    // Check if new row is added (use specific locator to avoid strict mode violation)
-    const newRow = page.locator('#category-body-Other').getByText('Gaming PC High End', { exact: true });
-    await expect(newRow).toBeVisible();
+    await expect(
+      page.locator('#category-body-Other').getByText('Gaming PC High End', { exact: true })
+    ).toBeVisible();
 
-    // Check if totals increased
     await expect(async () => {
-      const currentKWText = await page.locator('#total-kw').textContent();
-      const currentKW = parseFloat(currentKWText || '0');
-      expect(currentKW).toBeGreaterThan(initialKW);
+      const kw = parseFloat((await page.locator('#total-kw').textContent()) || '0');
+      expect(kw).toBeGreaterThan(initialKW);
     }).toPass();
   });
 
-  test('should switch themes', async ({ page }) => {
+  test('custom appliance shows CUSTOM badge', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Other"]').click();
+    await page.locator('button.add-toggle-btn[data-category="Other"]').click();
+
+    const form = page.locator('.add-appliance-form[data-category="Other"]');
+    await form.locator('[data-field="name"]').fill('My Device');
+    await form.locator('[data-field="watts"]').fill('50');
+    await form.locator('[data-field="hours"]').fill('1');
+    await form.locator('button[type="submit"]').click();
+
+    const newRow = page.locator('#category-body-Other').locator('[data-id]').filter({ hasText: 'My Device' });
+    await expect(newRow.getByText('CUSTOM')).toBeVisible();
+  });
+
+  test('deletes a custom appliance and removes it from the list', async ({ page }) => {
+    // First add a custom appliance
+    await page.locator('button.category-toggle[data-category="Other"]').click();
+    await page.locator('button.add-toggle-btn[data-category="Other"]').click();
+    const form = page.locator('.add-appliance-form[data-category="Other"]');
+    await form.locator('[data-field="name"]').fill('Temp Appliance');
+    await form.locator('[data-field="watts"]').fill('200');
+    await form.locator('[data-field="hours"]').fill('2');
+    await form.locator('button[type="submit"]').click();
+
+    const newRow = page.locator('#category-body-Other').getByText('Temp Appliance', { exact: true });
+    await expect(newRow).toBeVisible();
+
+    // Delete it
+    await page.locator('button[aria-label="Remove Temp Appliance"]').click();
+    await expect(newRow).not.toBeVisible();
+  });
+
+  test('cancel button closes the add form without adding', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Other"]').click();
+    await page.locator('button.add-toggle-btn[data-category="Other"]').click();
+
+    const form = page.locator('.add-appliance-form[data-category="Other"]');
+    await expect(form).toBeVisible();
+
+    await form.locator('.add-cancel-btn').click();
+    await expect(form).not.toBeVisible();
+  });
+
+  test('shows validation error when appliance name is empty', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Other"]').click();
+    await page.locator('button.add-toggle-btn[data-category="Other"]').click();
+
+    const form = page.locator('.add-appliance-form[data-category="Other"]');
+    await form.locator('[data-field="watts"]').fill('100');
+    await form.locator('[data-field="hours"]').fill('2');
+    await form.locator('button[type="submit"]').click();
+
+    await expect(form.locator('.form-error')).toBeVisible();
+    await expect(form.locator('.form-error')).toContainText('Please enter an appliance name');
+  });
+
+  test('shows validation error when watts value is missing', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Other"]').click();
+    await page.locator('button.add-toggle-btn[data-category="Other"]').click();
+
+    const form = page.locator('.add-appliance-form[data-category="Other"]');
+    await form.locator('[data-field="name"]').fill('Test Appliance');
+    // Leave watts empty
+    await form.locator('button[type="submit"]').click();
+
+    await expect(form.locator('.form-error')).toBeVisible();
+    await expect(form.locator('.form-error')).toContainText('Watts must be at least 1');
+  });
+
+  // ── Theme Toggle ──────────────────────────────────────────
+
+  test('toggles between dark and light themes', async ({ page }) => {
     const html = page.locator('html');
-    
-    // Default should be dark (no .light class)
+
     await expect(html).not.toHaveClass(/light/);
 
-    const themeToggle = page.locator('#theme-toggle');
-    await themeToggle.click();
-
-    // Should now have .light class
+    await page.locator('#theme-toggle').click();
     await expect(html).toHaveClass(/light/);
 
-    // Refresh and check persistence
+    await page.locator('#theme-toggle').click();
+    await expect(html).not.toHaveClass(/light/);
+  });
+
+  test('theme preference persists across page reload', async ({ page }) => {
+    await page.locator('#theme-toggle').click();
+    await expect(page.locator('html')).toHaveClass(/light/);
+
     await page.reload();
-    await expect(html).toHaveClass(/light/);
+    await expect(page.locator('html')).toHaveClass(/light/);
   });
 
-  test('should change region and currency', async ({ page }) => {
-    const currencySelect = page.locator('#currency-select');
-    await currencySelect.selectOption('USD');
+  // ── Report Modal ──────────────────────────────────────────
 
-    // Check if currency symbol changed in ResultsPanel
-    const monthlyBill = page.locator('#monthly-bill');
-    await expect(monthlyBill).toContainText('$');
-
-    // Check if tariff input updated
-    const tariffInput = page.locator('#tariff-input');
-    await expect(tariffInput).toHaveValue('0.15');
-  });
-
-  test('should open and close the report modal', async ({ page }) => {
-    const downloadBtn = page.locator('#download-report-btn');
-    await downloadBtn.click();
+  test('opens report modal with report content', async ({ page }) => {
+    await page.locator('#download-report-btn').click();
 
     const modal = page.locator('#report-modal');
     await expect(modal).toBeVisible();
     await expect(modal).toContainText('ELECTRICITY LOAD CALCULATOR REPORT');
-
-    const closeBtn = page.locator('#modal-close');
-    await closeBtn.click();
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toContainText('SUMMARY');
+    await expect(modal).toContainText('LED Bulb');
   });
 
-  test('should reset all to defaults', async ({ page }) => {
-    // First make some changes
-    await page.locator('#currency-select').selectOption('USD');
-    await page.locator('button[data-action="increment-qty"]').first().click();
+  test('closes report modal with the close button', async ({ page }) => {
+    await page.locator('#download-report-btn').click();
+    await expect(page.locator('#report-modal')).toBeVisible();
 
-    // Click reset
-    page.on('dialog', dialog => dialog.accept()); // Handle confirmation dialog
+    await page.locator('#modal-close').click();
+    await expect(page.locator('#report-modal')).not.toBeVisible();
+  });
+
+  test('closes report modal by clicking the backdrop', async ({ page }) => {
+    await page.locator('#download-report-btn').click();
+    await expect(page.locator('#report-modal')).toBeVisible();
+
+    await page.locator('#modal-backdrop').click({ force: true });
+    await expect(page.locator('#report-modal')).not.toBeVisible();
+  });
+
+  test('closes report modal with the Escape key', async ({ page }) => {
+    await page.locator('#download-report-btn').click();
+    await expect(page.locator('#report-modal')).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#report-modal')).not.toBeVisible();
+  });
+
+  // ── Reset ─────────────────────────────────────────────────
+
+  test('reset button restores all defaults', async ({ page }) => {
+    // Make several changes first
+    await page.locator('#currency-select').selectOption('USD');
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+
+    page.on('dialog', dialog => dialog.accept());
     await page.locator('#reset-all-btn').click();
 
-    // Check if back to INR/Default
     await expect(page.locator('#currency-select')).toHaveValue('INR');
-    const monthlyBill = page.locator('#monthly-bill');
-    await expect(monthlyBill).toContainText('₹');
+    await expect(page.locator('#tariff-input')).toHaveValue('8');
+    await expect(page.locator('#monthly-bill')).toContainText('₹');
+    await expect(page.locator('#total-kw')).toHaveText('0.01');
+  });
+
+  // ── Category Collapse / Expand ────────────────────────────
+
+  test('Lighting category is expanded by default', async ({ page }) => {
+    await expect(page.locator('#category-body-Lighting')).toBeVisible();
+  });
+
+  test('non-Lighting categories start collapsed', async ({ page }) => {
+    await expect(page.locator('#category-body-Kitchen')).not.toBeVisible();
+    await expect(page.locator('[id="category-body-Office-&-IT"]')).not.toBeVisible();
+  });
+
+  test('clicking a category header expands then collapses it', async ({ page }) => {
+    const kitchenToggle = page.locator('button.category-toggle[data-category="Kitchen"]');
+    const kitchenBody = page.locator('#category-body-Kitchen');
+
+    await expect(kitchenBody).not.toBeVisible();
+    await kitchenToggle.click();
+    await expect(kitchenBody).toBeVisible();
+    await kitchenToggle.click();
+    await expect(kitchenBody).not.toBeVisible();
+  });
+
+  // ── Load Level Badge ──────────────────────────────────────
+
+  test('shows Light Load badge when load is minimal', async ({ page }) => {
+    await expect(page.locator('#load-level-badge')).toHaveText('Light Load');
+  });
+
+  test('shows Moderate Load badge when load is between 30–70%', async ({ page }) => {
+    // LED Bulb 9W / default 5000W max = 0.18% — far too low
+    // Change watts to 2000W: 2000/5000 = 40% → Moderate
+    const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
+    await wattsInput.fill('2000');
+    await wattsInput.dispatchEvent('change');
+
+    await expect(page.locator('#load-level-badge')).toHaveText('Moderate Load');
+  });
+
+  test('shows Heavy Load badge when load exceeds 70% of capacity', async ({ page }) => {
+    // Change watts to 5000W: 5000/5000 = 100% → Heavy
+    const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
+    await wattsInput.fill('5000');
+    await wattsInput.dispatchEvent('change');
+
+    await expect(page.locator('#load-level-badge')).toHaveText('Heavy Load');
   });
 });
