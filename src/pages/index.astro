@@ -312,6 +312,7 @@ function calculate() {
   const totalCount  = appliances.length;
   setText('active-count', String(activeCount));
   setText('total-count',  String(totalCount));
+  setText('hero-total-count', String(totalCount));
 
   CATEGORIES.forEach(cat => {
     const catAppliances = appliances.filter(a => a.category === cat && a.qty > 0);
