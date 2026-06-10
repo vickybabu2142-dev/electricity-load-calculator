@@ -130,6 +130,21 @@ try {
   assert.strictEqual(lighting.applianceCount, 2, 'Lighting appliance count should be 2');
   console.log('✓ Test Case 5 passed');
 
+  // Test Case 6: Edge Case - 24h Cap and Negative Inputs
+  const testAppliances6 = [
+    { name: 'Impossible Fan', watts: -100, qty: 1, hours: 25, category: 'Fans & Cooling' }, // Watts -100 -> 0, Hours 25 -> 24
+    { name: 'Ghost TV', watts: 500, qty: -2, hours: 5, category: 'Entertainment' } // Qty -2 -> 0
+  ];
+  const res6 = calculateTotals(testAppliances6, 10, 5);
+  assert.strictEqual(res6.totalWatts, 0, 'Negative inputs should result in 0 watts');
+  assert.strictEqual(res6.dailyKWh, 0, 'Negative inputs should result in 0 kWh');
+  
+  // Verify row-level clamping directly
+  const clampedKWh = calculateRowKWh({ watts: 100, qty: 1, hours: 30 }); // 100W * 1 * 24h / 1000 = 2.4
+  assert.strictEqual(clampedKWh, 2.4, 'Hours should be capped at 24 for row calculation');
+  
+  console.log('✓ Test Case 6 (Edge Cases) passed');
+
   console.log('\nALL CALCULATION TESTS PASSED SUCCESSFULLY! ⚡');
 } catch (err) {
   console.error('\n❌ TEST FAILED:');
