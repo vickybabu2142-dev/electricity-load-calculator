@@ -23,7 +23,7 @@ A professional, industrial-grade web application for calculating household elect
 | Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
 | Language | TypeScript (strict) |
 | Typography | Khand · Hind · Geist Mono |
-| Deployment | [Vercel](https://vercel.com/) |
+| Deployment | [Cloudflare Pages](https://pages.cloudflare.com/) |
 | E2E Testing | [Playwright](https://playwright.dev/) |
 
 ## Project Structure
@@ -51,7 +51,8 @@ Run from the project root:
 | `npm install` | Install dependencies |
 | `npm run dev` | Start local dev server at `localhost:4321` |
 | `npm run build` | Build for production |
-| `npm run preview` | Preview the production build locally |
+| `npm run preview` | Preview the production build locally (using Wrangler) |
+| `npm run generate-types` | Generate Cloudflare types |
 | `node scripts/verify-logic.cjs` | Run calculation logic verification |
 | `npx playwright test` | Run Playwright E2E tests |
 
