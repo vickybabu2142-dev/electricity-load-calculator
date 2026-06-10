@@ -14,35 +14,15 @@ const kwh = calculateRowKWh(a).toFixed(2);
 <div
   class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up"
   data-id={a.id}
-  data-included={a.included.toString()}
   style={`animation-delay: ${index * 0.03}s;`}
 >
-  <!-- Row 1: Toggle + Name -->
+  <!-- Row 1: Name -->
   <div class="flex items-center gap-3 flex-1 min-w-[200px]">
-    <!-- Toggle -->
-    <div class="flex-shrink-0">
-      <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
-        <span class="sr-only">Toggle {a.name}</span>
-        <input
-          type="checkbox"
-          class="toggle-checkbox sr-only"
-          checked={a.included}
-          data-action="toggle-include"
-          data-id={a.id}
-          aria-label={`Include ${a.name} in calculation`}
-        />
-        <span
-          class="toggle-label absolute inset-0 rounded-full bg-border cursor-pointer"
-          style={a.included ? 'background-color: var(--accent);' : ''}
-        ></span>
-      </label>
-    </div>
-
     <!-- Name -->
     <div class="flex-1">
       <span
         class="text-sm font-normal transition-colors duration-150"
-        style={a.included ? 'color: var(--text-primary);' : 'color: var(--text-muted);'}
+        style={a.qty > 0 ? 'color: var(--text-primary);' : 'color: var(--text-muted);'}
       >
         {a.name}
       </span>

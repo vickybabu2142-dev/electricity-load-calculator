@@ -18,7 +18,7 @@ export function calculateTotals(
   tariff: number,
   maxCapacityKW: number
 ): CalculationResult {
-  const included = appliances.filter((a) => a.included && a.qty > 0);
+  const included = appliances.filter((a) => a.qty > 0);
 
   const totalWatts = included.reduce((s, a) => s + a.watts * a.qty, 0);
   const dailyKWh = included.reduce((s, a) => s + calculateRowKWh(a), 0);

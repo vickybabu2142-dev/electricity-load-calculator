@@ -253,9 +253,7 @@ function updateRowNameStyle(a: Appliance) {
   const row = document.querySelector<HTMLElement>(`[data-id="${a.id}"]`);
   if (!row) return;
   const nameEl = row.querySelector<HTMLElement>('.flex-1 span');
-  if (nameEl) nameEl.style.color = a.included ? 'var(--text-primary)' : 'var(--text-muted)';
-  const toggle = row.querySelector<HTMLElement>('.toggle-label');
-  if (toggle) toggle.style.backgroundColor = a.included ? 'var(--accent)' : '';
+  if (nameEl) nameEl.style.color = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
 }
 
 // ── Calculation ───────────────────────────────────────────
@@ -306,13 +304,13 @@ function calculate() {
     }
   }
 
-  const activeCount = appliances.filter(a => a.included && a.qty > 0).length;
+  const activeCount = appliances.filter(a => a.qty > 0).length;
   const totalCount  = appliances.length;
   setText('active-count', String(activeCount));
   setText('total-count',  String(totalCount));
 
   CATEGORIES.forEach(cat => {
-    const catAppliances = appliances.filter(a => a.category === cat && a.included && a.qty > 0);
+    const catAppliances = appliances.filter(a => a.category === cat && a.qty > 0);
     const catWatts = catAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
     const catKWh   = catAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
     const catCount = appliances.filter(a => a.category === cat).length;
@@ -343,7 +341,7 @@ function calculate() {
   const printList = document.getElementById('print-appliances-list');
   if (printList) {
     let html = '';
-    const included = appliances.filter(a => a.included && a.qty > 0);
+    const included = appliances.filter(a => a.qty > 0);
     SECTIONS.forEach(section => {
       const sectionItems = included.filter(a => section.categories.includes(a.category));
       if (sectionItems.length > 0) {
@@ -398,12 +396,6 @@ document.addEventListener('change', (e) => {
   if (!action || !id) return;
   const a = getAppliance(id);
   if (!a) return;
-
-  if (action === 'toggle-include') {
-    a.included = (target as HTMLInputElement).checked;
-    updateRowNameStyle(a);
-    calculate();
-  }
 
   if (action === 'update-watts') {
     const val = parseFloat((target as HTMLInputElement).value);
@@ -480,6 +472,7 @@ document.addEventListener('click', (e) => {
     if (action === 'decrement-qty') a.qty = Math.max(a.qty - 1, 0);
     updateRowQtyDisplay(a);
     updateRowKWh(a);
+    updateRowNameStyle(a);
     calculate();
     return;
   }
@@ -523,7 +516,7 @@ document.addEventListener('click', (e) => {
   }
 
   if (action === 'download-report') {
-    const included = appliances.filter(a => a.included && a.qty > 0);
+    const included = appliances.filter(a => a.qty > 0);
     const totalWatts  = included.reduce((s, a) => s + a.watts * a.qty, 0);
     const dailyKWh    = included.reduce((s, a) => s + calculateRowKWh(a), 0);
     const monthlyKWh  = dailyKWh * 30;
@@ -644,7 +637,6 @@ document.addEventListener('submit', (e) => {
     watts,
     qty: 1,
     hours,
-    included: true,
     custom: true,
   };
   appliances.push(newAppliance);
@@ -678,21 +670,11 @@ document.addEventListener('submit', (e) => {
 
 function buildRowHTML(a: Appliance): string {
   const kwh = formatNumber(calculateRowKWh(a), 2);
-  const isIncluded = a.included;
-  const nameColor = isIncluded ? 'var(--text-primary)' : 'var(--text-muted)';
-  const toggleBg  = isIncluded ? 'background-color: var(--accent);' : '';
+  const nameColor = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
   return `
     <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
-      data-id="${a.id}" 
-      data-included="${isIncluded}">
+      data-id="${a.id}">
       <div class="flex items-center gap-3 flex-1 min-w-[200px]">
-        <div class="flex-shrink-0">
-          <label class="relative inline-block w-11 h-6 cursor-pointer" title="Include in calculation">
-            <span class="sr-only">Toggle ${a.name}</span>
-            <input type="checkbox" class="toggle-checkbox sr-only" ${isIncluded ? 'checked' : ''} data-action="toggle-include" data-id="${a.id}" aria-label="Include ${a.name} in calculation" />
-            <span class="toggle-label absolute inset-0 rounded-full bg-border cursor-pointer" style="${toggleBg}"></span>
-          </label>
-        </div>
         <div class="flex-1">
           <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
           ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
