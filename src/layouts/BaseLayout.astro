@@ -93,11 +93,16 @@ const schema = {
 
     <!-- Inline script to apply theme immediately -->
     <script is:inline>
-      if (localStorage.getItem('color-theme') === 'light') {
-        document.documentElement.classList.add('light');
-      } else {
-        document.documentElement.classList.remove('light');
-      }
+      const applyTheme = () => {
+        if (localStorage.getItem('color-theme') === 'light') {
+          document.documentElement.classList.add('light');
+        } else {
+          document.documentElement.classList.remove('light');
+        }
+      };
+
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
     </script>
 
     <!-- Favicon -->
