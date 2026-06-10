@@ -317,9 +317,14 @@ function calculate() {
     const catKWh   = catAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
     const catCount = appliances.filter(a => a.category === cat).length;
 
-    const wattEl = document.querySelector(`[data-category-watts="${cat}"]`);
-    const kwhEl  = document.querySelector(`[data-category-kwh="${cat}"]`);
-    const cntEl  = document.querySelector(`[data-category-count="${cat}"]`);
+    // Use slugified ID to find the category body, then get the section parent
+    const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
+    const body = document.getElementById(bodyId);
+    const section = body?.closest('.category-section');
+
+    const wattEl = section?.querySelector('[data-category-watts]');
+    const kwhEl  = section?.querySelector('[data-category-kwh]');
+    const cntEl  = section?.querySelector('[data-category-count]');
 
     const wattTextEl = wattEl?.querySelector('span:last-child');
     const kwhTextEl  = kwhEl?.querySelector('span:last-child');
@@ -491,7 +496,8 @@ document.addEventListener('click', (e) => {
     if (!confirm('Reset all appliances to their default values?')) return;
     appliances = structuredClone(DEFAULT_APPLIANCES);
     CATEGORIES.forEach(cat => {
-      const container = document.querySelector(`[data-rows-container="${cat}"]`);
+      const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
+      const container = document.getElementById(bodyId)?.querySelector('[data-rows-container]');
       if (!container) return;
       container.innerHTML = '';
       const catAppliances = appliances.filter(a => a.category === cat);
@@ -602,6 +608,7 @@ document.addEventListener('submit', (e) => {
   const form = e.target as HTMLFormElement;
   if (!form.classList.contains('add-appliance-form')) return;
   e.preventDefault();
+  e.stopImmediatePropagation(); // Prevent Astro's ClientRouter from intercepting this as a navigation
   const nameInput  = form.querySelector<HTMLInputElement>('[data-field="name"]');
   const wattsInput = form.querySelector<HTMLInputElement>('[data-field="watts"]');
   const hoursInput = form.querySelector<HTMLInputElement>('[data-field="hours"]');
@@ -621,7 +628,7 @@ document.addEventListener('submit', (e) => {
     wattsInput?.focus();
     return;
   }
-  if (hours < 0 || hours > 24) {
+  if (isNaN(hours) || hours < 0 || hours > 24) {
     if (errorEl) { errorEl.textContent = 'Hours must be between 0 and 24.'; errorEl.classList.remove('hidden'); }
     hoursInput?.focus();
     return;
@@ -641,17 +648,33 @@ document.addEventListener('submit', (e) => {
     custom: true,
   };
   appliances.push(newAppliance);
-  const container = document.querySelector(`[data-rows-container="${cat}"]`);
+  
+  // Use slugified ID to find the correct container
+  const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
+  const body = document.getElementById(bodyId);
+  const container = body?.querySelector('[data-rows-container]');
+  
   if (container) {
     const rowHtml = buildRowHTML(newAppliance);
     container.insertAdjacentHTML('beforeend', rowHtml);
+    
+    // Auto-expand category if hidden
+    if (body && body.style.display === 'none') {
+      body.style.display = '';
+      const section = body.closest('.category-section');
+      const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+      const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
+      toggleBtn?.setAttribute('aria-expanded', 'true');
+      if (chevron) chevron.style.transform = '';
+    }
   }
+  
   form.reset();
   form.classList.add('hidden');
   const toggleBtn = form.closest('.add-appliance-wrapper')?.querySelector<HTMLButtonElement>('.add-toggle-btn');
   toggleBtn?.setAttribute('aria-expanded', 'false');
   calculate();
-});
+}, true);
 
 function buildRowHTML(a: Appliance): string {
   const kwh = formatNumber(calculateRowKWh(a), 2);

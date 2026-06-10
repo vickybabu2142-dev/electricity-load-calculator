@@ -1,5 +1,5 @@
 {
-  "name": "electricityloadcalculator.com",
+  "name": "electricityloadcalculator",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -9,10 +9,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "generate-types": "wrangler types"
   },
   "dependencies": {
-    "@astrojs/vercel": "^10.0.8",
+    "@astrojs/cloudflare": "^13.7.0",
     "@fontsource/geist-mono": "^5.2.8",
     "@fontsource/hind": "^5.2.8",
     "@fontsource/khand": "^5.2.8",
@@ -23,6 +24,10 @@
   "devDependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "@playwright/test": "^1.60.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.99.0"
+  },
+  "overrides": {
+    "vite": "^7"
   }
 }
