@@ -180,6 +180,8 @@ import type { Appliance, ApplianceCategory } from '@/types';
 import { calculateRowKWh, calculateTotals } from '@/utils/calculations';
 
 // ── State & Settings ──────────────────────────────────────
+const STORAGE_KEY = 'electricity_load_calculator_state';
+
 const REGION_SETTINGS: Record<string, { locale: string, symbol: string, defaultTariff: number, step: number, defaultMaxKW: number }> = {
   INR: { locale: 'en-IN', symbol: '₹', defaultTariff: 8,    step: 0.5,  defaultMaxKW: 5  },
   USD: { locale: 'en-US', symbol: '$', defaultTariff: 0.15, step: 0.01, defaultMaxKW: 20 },
@@ -196,6 +198,34 @@ let maxCapacityKW = 5;
 let customIdCounter = 1000;
 
 // ── Helpers ───────────────────────────────────────────────
+function saveState() {
+  const state = {
+    appliances,
+    tariff,
+    currentCurrency,
+    maxCapacityKW,
+    customIdCounter
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadState(): boolean {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) return false;
+  try {
+    const state = JSON.parse(saved);
+    appliances = state.appliances;
+    tariff = state.tariff;
+    currentCurrency = state.currentCurrency;
+    maxCapacityKW = state.maxCapacityKW;
+    customIdCounter = state.customIdCounter;
+    return true;
+  } catch (e) {
+    console.error('Failed to load saved state:', e);
+    return false;
+  }
+}
+
 function getAppliance(id: string): Appliance | undefined {
   return appliances.find(a => a.id === id);
 }
@@ -407,6 +437,7 @@ document.addEventListener('change', (e) => {
     if (!isNaN(val) && val >= 1) {
       a.watts = val;
       updateRowKWh(a);
+      saveState();
       debouncedCalculate();
     }
   }
@@ -429,6 +460,7 @@ document.addEventListener('change', (e) => {
       // Still update the state but cap at 24 for calculation safety
       a.hours = Math.min(24, val);
       updateRowKWh(a);
+      saveState();
       debouncedCalculate();
     }
   }
@@ -491,6 +523,7 @@ document.addEventListener('click', (e) => {
     updateRowQtyDisplay(a);
     updateRowKWh(a);
     updateRowNameStyle(a);
+    saveState();
     calculate();
     return;
   }
@@ -499,13 +532,22 @@ document.addEventListener('click', (e) => {
     appliances = appliances.filter(a => a.id !== id);
     const row = document.querySelector(`[data-id="${id}"]`);
     row?.remove();
+    saveState();
     calculate();
     return;
   }
 
   if (action === 'reset-all') {
     if (!confirm('Reset all appliances to their default values?')) return;
+    
+    // Clear persisted state
+    localStorage.removeItem(STORAGE_KEY);
+    
+    // Restore default state variables
     appliances = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
+    customIdCounter = 1000;
+    
+    // Re-render UI
     CATEGORIES.forEach(cat => {
       const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
       const container = document.getElementById(bodyId)?.querySelector('[data-rows-container]');
@@ -516,20 +558,29 @@ document.addEventListener('click', (e) => {
         container.insertAdjacentHTML('beforeend', buildRowHTML(a));
       });
     });
+    
     appliances.forEach(a => updateRowNameStyle(a));
     currentCurrency = 'INR';
+    
     const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
     if (currencySelect) currencySelect.value = 'INR';
+    
     tariff = REGION_SETTINGS.INR.defaultTariff;
     const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
     if (tariffInput) {
       tariffInput.value = String(tariff);
       tariffInput.step = String(REGION_SETTINGS.INR.step);
     }
+    
     maxCapacityKW = REGION_SETTINGS.INR.defaultMaxKW;
     const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
     if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
+    
     calculate();
+    
+    // Scroll smoothly to the top to confirm reset visually
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     return;
   }
 
@@ -596,6 +647,7 @@ document.getElementById('currency-select')?.addEventListener('change', (e) => {
   const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
   if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
   appliances.forEach(a => updateRowKWh(a));
+  saveState();
   calculate();
 });
 
@@ -603,6 +655,7 @@ document.getElementById('max-kw-input')?.addEventListener('input', (e) => {
   const val = parseFloat((e.target as HTMLInputElement).value);
   if (!isNaN(val) && val > 0) {
     maxCapacityKW = val;
+    saveState();
     calculate();
   }
 });
@@ -611,6 +664,7 @@ document.getElementById('tariff-input')?.addEventListener('input', (e) => {
   const val = parseFloat((e.target as HTMLInputElement).value);
   if (!isNaN(val) && val > 0) {
     tariff = val;
+    saveState();
     debouncedCalculate();
   }
 });
@@ -683,6 +737,7 @@ document.addEventListener('submit', (e) => {
   form.classList.add('hidden');
   const toggleBtn = form.closest('.add-appliance-wrapper')?.querySelector<HTMLButtonElement>('.add-toggle-btn');
   toggleBtn?.setAttribute('aria-expanded', 'false');
+  saveState();
   calculate();
 }, true);
 
@@ -788,7 +843,40 @@ document.addEventListener('keydown', (e) => {
 });
 
 function initCalculator() {
+  const hasSavedState = loadState();
+
+  if (hasSavedState) {
+    // Re-hydrate settings inputs
+    const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
+    if (currencySelect) currencySelect.value = currentCurrency;
+
+    const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
+    if (tariffInput) {
+      tariffInput.value = String(tariff);
+      tariffInput.step = String(REGION_SETTINGS[currentCurrency].step);
+    }
+
+    const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
+    if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
+
+    // Re-hydrate appliance rows
+    CATEGORIES.forEach(cat => {
+      const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
+      const container = document.getElementById(bodyId)?.querySelector('[data-rows-container]');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      const catAppliances = appliances.filter(a => a.category === cat);
+      catAppliances.forEach(a => {
+        container.insertAdjacentHTML('beforeend', buildRowHTML(a));
+      });
+    });
+
+    appliances.forEach(a => updateRowNameStyle(a));
+  }
+
   calculate();
+  
   document.getElementById('sticky-details-link')?.addEventListener('click', (e) => {
     e.preventDefault();
     document.getElementById('results-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
