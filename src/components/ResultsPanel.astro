@@ -79,6 +79,7 @@
         <div class="relative group">
           <select
             id="currency-select"
+            data-action="change-currency"
             class="custom-select w-full appearance-none pl-3 pr-8 py-1.5 text-xs cursor-pointer transition-all duration-200 hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
           >
             <option value="INR">INR (₹)</option>
@@ -100,6 +101,7 @@
         <div class="flex items-center gap-1.5">
           <input
             id="max-kw-input"
+            data-action="update-max-kw"
             type="number"
             value="5"
             min="1"
@@ -146,6 +148,7 @@
         <span class="font-mono currency-symbol" style="color: var(--accent);">₹</span>
         <input
           id="tariff-input"
+          data-action="update-tariff"
           type="number"
           value="8"
           min="0.01"

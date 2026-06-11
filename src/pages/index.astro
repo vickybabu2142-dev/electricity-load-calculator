@@ -112,8 +112,13 @@ const sectionedData = SECTIONS.map(section => ({
     </div>
 
     <h2 class="text-sm font-bold uppercase tracking-wider text-text-primary mb-4 border-b border-text-primary pb-2">Active Appliances Breakdown</h2>
-    <div id="print-appliances-list" class="space-y-6">
+    <div id="print-appliances-list" class="space-y-6 pb-12">
       <!-- Populated by JS -->
+    </div>
+    
+    <div class="mt-12 pt-6 border-t border-border flex justify-between items-center text-xs text-text-muted select-none pointer-events-none break-inside-avoid opacity-80">
+      <p id="print-site-url" class="font-medium"></p>
+      <p>&copy; {new Date().getFullYear()} — All Rights Reserved</p>
     </div>
   </div>
 
@@ -373,6 +378,9 @@ function calculate() {
   setText('print-tariff', `${formatCurrency(tariff)}/kWh(unit)`);
   setText('print-date', `Generated on: ${new Date().toLocaleDateString(REGION_SETTINGS[currentCurrency].locale, { dateStyle: 'long' })}`);
 
+  const printUrlEl = document.getElementById('print-site-url');
+  if (printUrlEl) printUrlEl.textContent = window.location.origin;
+
   const printList = document.getElementById('print-appliances-list');
   if (printList) {
     let html = '';
@@ -428,41 +436,66 @@ document.addEventListener('change', (e) => {
   const action = target.dataset.action;
   const id     = target.dataset.id;
 
-  if (!action || !id) return;
-  const a = getAppliance(id);
-  if (!a) return;
+  if (!action) return;
 
-  if (action === 'update-watts') {
-    const val = parseFloat((target as HTMLInputElement).value);
-    if (!isNaN(val) && val >= 1) {
-      a.watts = val;
-      updateRowKWh(a);
-      saveState();
-      debouncedCalculate();
+  // Appliance updates
+  if (id) {
+    const a = getAppliance(id);
+    if (!a) return;
+
+    if (action === 'update-watts') {
+      const val = parseFloat((target as HTMLInputElement).value);
+      if (!isNaN(val) && val >= 1) {
+        a.watts = val;
+        updateRowKWh(a);
+        saveState();
+        debouncedCalculate();
+      }
+      return;
+    }
+
+    if (action === 'update-hours') {
+      const val = parseFloat((target as HTMLInputElement).value);
+      const errorEl = document.querySelector(`[data-error-id="${id}"]`);
+      
+      if (!isNaN(val)) {
+        if (val > 24) {
+          target.classList.add('border-danger');
+          target.classList.remove('border-border');
+          errorEl?.classList.remove('hidden');
+        } else {
+          target.classList.remove('border-danger');
+          target.classList.add('border-border');
+          errorEl?.classList.add('hidden');
+        }
+        
+        // Still update the state but cap at 24 for calculation safety
+        a.hours = Math.min(24, val);
+        updateRowKWh(a);
+        saveState();
+        debouncedCalculate();
+      }
+      return;
     }
   }
 
-  if (action === 'update-hours') {
-    const val = parseFloat((target as HTMLInputElement).value);
-    const errorEl = document.querySelector(`[data-error-id="${id}"]`);
-    
-    if (!isNaN(val)) {
-      if (val > 24) {
-        target.classList.add('border-danger');
-        target.classList.remove('border-border');
-        errorEl?.classList.remove('hidden');
-      } else {
-        target.classList.remove('border-danger');
-        target.classList.add('border-border');
-        errorEl?.classList.add('hidden');
-      }
-      
-      // Still update the state but cap at 24 for calculation safety
-      a.hours = Math.min(24, val);
-      updateRowKWh(a);
-      saveState();
-      debouncedCalculate();
+  // Settings updates
+  if (action === 'change-currency') {
+    const val = (target as HTMLSelectElement).value;
+    currentCurrency = val;
+    const settings = REGION_SETTINGS[val];
+    tariff = settings.defaultTariff;
+    const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
+    if (tariffInput) {
+      tariffInput.value = String(tariff);
+      tariffInput.step = String(settings.step);
     }
+    maxCapacityKW = settings.defaultMaxKW;
+    const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
+    if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
+    appliances.forEach(a => updateRowKWh(a));
+    saveState();
+    calculate();
   }
 });
 
@@ -550,13 +583,24 @@ document.addEventListener('click', (e) => {
     // Re-render UI
     CATEGORIES.forEach(cat => {
       const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
-      const container = document.getElementById(bodyId)?.querySelector('[data-rows-container]');
+      const body = document.getElementById(bodyId);
+      const container = body?.querySelector('[data-rows-container]');
       if (!container) return;
       container.innerHTML = '';
       const catAppliances = appliances.filter(a => a.category === cat);
       catAppliances.forEach(a => {
         container.insertAdjacentHTML('beforeend', buildRowHTML(a));
       });
+      
+      // Collapse the category on reset
+      if (body) {
+        body.style.display = 'none';
+        const section = body.closest('.category-section');
+        const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+        const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+        if (chevron) chevron.style.transform = 'rotate(-90deg)';
+      }
     });
     
     appliances.forEach(a => updateRowNameStyle(a));
@@ -621,6 +665,10 @@ document.addEventListener('click', (e) => {
       report += '\n';
     });
 
+    report += `${'─'.repeat(48)}\n`;
+    report += `Source: ${window.location.origin}\n`;
+    report += `© ${new Date().getFullYear()} Electricity Load Calculator\n`;
+
     const modal   = document.getElementById('report-modal');
     const content = document.getElementById('report-content');
     if (modal && content) {
@@ -630,42 +678,67 @@ document.addEventListener('click', (e) => {
     }
     return;
   }
-});
 
-// ── Settings listeners ────────────────────────────────────
-document.getElementById('currency-select')?.addEventListener('change', (e) => {
-  const val = (e.target as HTMLSelectElement).value;
-  currentCurrency = val;
-  const settings = REGION_SETTINGS[val];
-  tariff = settings.defaultTariff;
-  const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
-  if (tariffInput) {
-    tariffInput.value = String(tariff);
-    tariffInput.step = String(settings.step);
+  if (action === 'print-report') {
+    const originalTitle = document.title;
+    const dateStr = new Date().toISOString().split('T')[0];
+    document.title = `electricity-load-report-${dateStr}`;
+    window.print();
+    document.title = originalTitle;
+    return;
   }
-  maxCapacityKW = settings.defaultMaxKW;
-  const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
-  if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
-  appliances.forEach(a => updateRowKWh(a));
-  saveState();
-  calculate();
-});
 
-document.getElementById('max-kw-input')?.addEventListener('input', (e) => {
-  const val = parseFloat((e.target as HTMLInputElement).value);
-  if (!isNaN(val) && val > 0) {
-    maxCapacityKW = val;
-    saveState();
-    calculate();
+  if (action === 'download-txt') {
+    const content = document.getElementById('report-content')?.textContent || '';
+    if (!content) return;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `electricity-load-report-${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    return;
+  }
+
+  if (action === 'copy-report') {
+    const content = document.getElementById('report-content')?.textContent || '';
+    try {
+      navigator.clipboard.writeText(content).then(() => {
+        const btn = document.getElementById('copy-report-btn');
+        if (btn) {
+          const oldText = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = oldText; }, 2000);
+        }
+      });
+    } catch { /* silent fail */ }
+    return;
   }
 });
 
-document.getElementById('tariff-input')?.addEventListener('input', (e) => {
-  const val = parseFloat((e.target as HTMLInputElement).value);
-  if (!isNaN(val) && val > 0) {
-    tariff = val;
-    saveState();
-    debouncedCalculate();
+document.addEventListener('input', (e) => {
+  const target = e.target as HTMLElement;
+  const action = target.dataset.action;
+
+  if (!action) return;
+
+  if (action === 'update-max-kw') {
+    const val = parseFloat((target as HTMLInputElement).value);
+    if (!isNaN(val) && val > 0) {
+      maxCapacityKW = val;
+      saveState();
+      calculate();
+    }
+  }
+
+  if (action === 'update-tariff') {
+    const val = parseFloat((target as HTMLInputElement).value);
+    if (!isNaN(val) && val > 0) {
+      tariff = val;
+      saveState();
+      debouncedCalculate();
+    }
   }
 });
 
@@ -809,29 +882,6 @@ function buildRowHTML(a: Appliance): string {
     </div>`;
 }
 
-document.getElementById('print-btn')?.addEventListener('click', () => window.print());
-
-document.getElementById('download-txt-btn')?.addEventListener('click', () => {
-  const content = document.getElementById('report-content')?.textContent || '';
-  if (!content) return;
-  const blob = new Blob([content], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `electricity-load-report-${new Date().toISOString().split('T')[0]}.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-document.getElementById('copy-report-btn')?.addEventListener('click', async () => {
-  const content = document.getElementById('report-content')?.textContent || '';
-  try {
-    await navigator.clipboard.writeText(content);
-    const btn = document.getElementById('copy-report-btn');
-    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Text'; }, 2000); }
-  } catch { /* silent fail */ }
-});
-
 function closeModal() {
   const modal = document.getElementById('report-modal');
   modal?.classList.add('hidden');
@@ -862,7 +912,8 @@ function initCalculator() {
     // Re-hydrate appliance rows
     CATEGORIES.forEach(cat => {
       const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
-      const container = document.getElementById(bodyId)?.querySelector('[data-rows-container]');
+      const body = document.getElementById(bodyId);
+      const container = body?.querySelector('[data-rows-container]');
       if (!container) return;
       
       container.innerHTML = '';
@@ -870,6 +921,16 @@ function initCalculator() {
       catAppliances.forEach(a => {
         container.insertAdjacentHTML('beforeend', buildRowHTML(a));
       });
+
+      // Auto-expand category if it contains active appliances
+      if (catAppliances.some(a => a.qty > 0) && body) {
+        body.style.display = '';
+        const section = body.closest('.category-section');
+        const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+        const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+        if (chevron) chevron.style.transform = '';
+      }
     });
 
     appliances.forEach(a => updateRowNameStyle(a));

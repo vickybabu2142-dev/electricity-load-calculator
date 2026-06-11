@@ -266,6 +266,10 @@ select option {
 
 /* Print styles */
 @media print {
+  @page {
+    margin: 0;
+  }
+
   html, body { 
     background-color: white !important; 
     color: #0f0f0f !important;
@@ -279,6 +283,7 @@ select option {
     display: block !important;
     background-color: white !important;
     color: #0f0f0f !important;
+    padding: 1.5cm !important;
   }
 
   /* Force white background for all containers */
