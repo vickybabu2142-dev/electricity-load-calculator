@@ -14,6 +14,7 @@ export const DEFAULT_APPLIANCES: Appliance[] = [
   { id: makeId(), category: 'Fans & Cooling', name: 'Ceiling Fan',           defaultWatts: 75,   defaultQty: 1, defaultHours: 10,   watts: 75,   qty: 0, hours: 10,   custom: false },
   { id: makeId(), category: 'Fans & Cooling', name: 'Table Fan',             defaultWatts: 50,   defaultQty: 1, defaultHours: 6,    watts: 50,   qty: 0, hours: 6,    custom: false },
   { id: makeId(), category: 'Fans & Cooling', name: 'Air Conditioner (1.5T)',defaultWatts: 1500, defaultQty: 1, defaultHours: 8,    watts: 1500, qty: 0, hours: 8,    custom: false },
+  { id: makeId(), category: 'Fans & Cooling', name: 'Air Conditioner (2.0T)',defaultWatts: 2500, defaultQty: 1, defaultHours: 8,    watts: 2500, qty: 0, hours: 8,    custom: false },
   { id: makeId(), category: 'Fans & Cooling', name: 'Air Cooler',            defaultWatts: 180,  defaultQty: 1, defaultHours: 8,    watts: 180,  qty: 0, hours: 8,    custom: false },
   { id: makeId(), category: 'Fans & Cooling', name: 'Exhaust Fan',           defaultWatts: 35,   defaultQty: 1, defaultHours: 4,    watts: 35,   qty: 0, hours: 4,    custom: false },
 
@@ -21,13 +22,18 @@ export const DEFAULT_APPLIANCES: Appliance[] = [
   { id: makeId(), category: 'Kitchen',       name: 'Refrigerator',          defaultWatts: 150,  defaultQty: 1, defaultHours: 24,   watts: 150,  qty: 0, hours: 24,   custom: false },
   { id: makeId(), category: 'Kitchen',       name: 'Microwave Oven',        defaultWatts: 1200, defaultQty: 1, defaultHours: 0.5,  watts: 1200, qty: 0, hours: 0.5,  custom: false },
   { id: makeId(), category: 'Kitchen',       name: 'Mixer / Grinder',       defaultWatts: 750,  defaultQty: 1, defaultHours: 0.5,  watts: 750,  qty: 0, hours: 0.5,  custom: false },
+  { id: makeId(), category: 'Kitchen',       name: 'Water Purifier (RO)',   defaultWatts: 60,   defaultQty: 1, defaultHours: 4,    watts: 60,   qty: 0, hours: 4,    custom: false },
+  { id: makeId(), category: 'Kitchen',       name: 'Kitchen Chimney',       defaultWatts: 200,  defaultQty: 1, defaultHours: 2,    watts: 200,  qty: 0, hours: 2,    custom: false },
+  { id: makeId(), category: 'Kitchen',       name: 'Toaster / Griller',     defaultWatts: 800,  defaultQty: 1, defaultHours: 0.25, watts: 800,  qty: 0, hours: 0.25, custom: false },
   { id: makeId(), category: 'Kitchen',       name: 'Electric Kettle',       defaultWatts: 1500, defaultQty: 1, defaultHours: 0.25, watts: 1500, qty: 0, hours: 0.25, custom: false, hidden: true },
   { id: makeId(), category: 'Kitchen',       name: 'Induction Cooktop',     defaultWatts: 2000, defaultQty: 1, defaultHours: 1,    watts: 2000, qty: 0, hours: 1,    custom: false },
-  { id: makeId(), category: 'Kitchen',       name: 'Dishwasher',            defaultWatts: 1200, defaultQty: 1, defaultHours: 1,    watts: 1200, qty: 0, hours: 1,    custom: false, hidden: true },
+  { id: makeId(), category: 'Kitchen',       name: 'Dishwasher',            defaultWatts: 1200, defaultQty: 1, defaultHours: 1,    watts: 1200, qty: 0, hours: 1,    custom: false },
 
   // Entertainment
   { id: makeId(), category: 'Entertainment', name: 'LED TV (32")',          defaultWatts: 60,   defaultQty: 1, defaultHours: 6,    watts: 60,   qty: 0, hours: 6,    custom: false },
   { id: makeId(), category: 'Entertainment', name: 'LED TV (55")',          defaultWatts: 120,  defaultQty: 1, defaultHours: 4,    watts: 120,  qty: 0, hours: 4,    custom: false },
+  { id: makeId(), category: 'Entertainment', name: 'Home Theater System',    defaultWatts: 200,  defaultQty: 1, defaultHours: 3,    watts: 200,  qty: 0, hours: 3,    custom: false },
+  { id: makeId(), category: 'Entertainment', name: 'Desktop PC + Monitor',  defaultWatts: 300,  defaultQty: 1, defaultHours: 4,    watts: 300,  qty: 0, hours: 4,    custom: false },
   { id: makeId(), category: 'Entertainment', name: 'Set-top Box',           defaultWatts: 15,   defaultQty: 1, defaultHours: 6,    watts: 15,   qty: 0, hours: 6,    custom: false },
   { id: makeId(), category: 'Entertainment', name: 'Wi-Fi Router',          defaultWatts: 10,   defaultQty: 1, defaultHours: 24,   watts: 10,   qty: 0, hours: 24,   custom: false },
   { id: makeId(), category: 'Entertainment', name: 'Gaming Console',        defaultWatts: 150,  defaultQty: 1, defaultHours: 2,    watts: 150,  qty: 0, hours: 2,    custom: false },
@@ -36,43 +42,45 @@ export const DEFAULT_APPLIANCES: Appliance[] = [
   { id: makeId(), category: 'Other',         name: 'Washing Machine',       defaultWatts: 500,  defaultQty: 1, defaultHours: 1,    watts: 500,  qty: 0, hours: 1,    custom: false },
   { id: makeId(), category: 'Other',         name: 'Clothes Iron',          defaultWatts: 1000, defaultQty: 1, defaultHours: 0.5,  watts: 1000, qty: 0, hours: 0.5,  custom: false },
   { id: makeId(), category: 'Other',         name: 'Water Pump (0.5 HP)',   defaultWatts: 373,  defaultQty: 1, defaultHours: 1,    watts: 373,  qty: 0, hours: 1,    custom: false },
+  { id: makeId(), category: 'Other',         name: 'Vacuum Cleaner',        defaultWatts: 1200, defaultQty: 1, defaultHours: 0.5,  watts: 1200, qty: 0, hours: 0.5,  custom: false },
+  { id: makeId(), category: 'Other',         name: 'Hair Dryer',            defaultWatts: 1500, defaultQty: 1, defaultHours: 0.25, watts: 1500, qty: 0, hours: 0.25, custom: false },
   { id: makeId(), category: 'Other',         name: 'Laptop / Charger',      defaultWatts: 65,   defaultQty: 1, defaultHours: 6,    watts: 65,   qty: 0, hours: 6,    custom: false },
-  { id: makeId(), category: 'Other',         name: 'Desktop PC + Monitor',  defaultWatts: 300,  defaultQty: 1, defaultHours: 4,    watts: 300,  qty: 0, hours: 4,    custom: false },
   { id: makeId(), category: 'Other',         name: 'Geyser / Water Heater', defaultWatts: 2000, defaultQty: 1, defaultHours: 0.5,  watts: 2000, qty: 0, hours: 0.5,  custom: false },
 
   // Office & IT
-  { id: makeId(), category: 'Office & IT',   name: 'Workstation PC',        defaultWatts: 450,  defaultQty: 1, defaultHours: 8,    watts: 450,  qty: 0, hours: 8,    custom: false },
-  { id: makeId(), category: 'Office & IT',   name: 'Server (Small)',        defaultWatts: 300,  defaultQty: 1, defaultHours: 24,   watts: 300,  qty: 0, hours: 24,   custom: false },
-  { id: makeId(), category: 'Office & IT',   name: 'Network Switch',        defaultWatts: 50,   defaultQty: 1, defaultHours: 24,   watts: 50,   qty: 0, hours: 24,   custom: false },
-  { id: makeId(), category: 'Office & IT',   name: 'Laser Printer',         defaultWatts: 600,  defaultQty: 1, defaultHours: 1,    watts: 600,  qty: 0, hours: 1,    custom: false },
-  { id: makeId(), category: 'Office & IT',   name: 'Photocopier',           defaultWatts: 1500, defaultQty: 1, defaultHours: 2,    watts: 1500, qty: 0, hours: 2,    custom: false },
+  { id: makeId(), category: 'Office & IT',   name: 'Workstation PC',        defaultWatts: 450,  defaultQty: 1, defaultHours: 8,    watts: 450,  qty: 0, hours: 8,    custom: false, hidden: true },
+  { id: makeId(), category: 'Office & IT',   name: 'Server (Small)',        defaultWatts: 300,  defaultQty: 1, defaultHours: 24,   watts: 300,  qty: 0, hours: 24,   custom: false, hidden: true },
+  { id: makeId(), category: 'Office & IT',   name: 'Network Switch',        defaultWatts: 50,   defaultQty: 1, defaultHours: 24,   watts: 50,   qty: 0, hours: 24,   custom: false, hidden: true },
+  { id: makeId(), category: 'Office & IT',   name: 'Laser Printer',         defaultWatts: 600,  defaultQty: 1, defaultHours: 1,    watts: 600,  qty: 0, hours: 1,    custom: false, hidden: true },
+  { id: makeId(), category: 'Office & IT',   name: 'Photocopier',           defaultWatts: 1500, defaultQty: 1, defaultHours: 2,    watts: 1500, qty: 0, hours: 2,    custom: false, hidden: true },
 
   // Industrial
-  { id: makeId(), category: 'Industrial',    name: 'Air Compressor (2HP)',  defaultWatts: 1500, defaultQty: 1, defaultHours: 4,    watts: 1500, qty: 0, hours: 4,    custom: false },
-  { id: makeId(), category: 'Industrial',    name: 'Bench Grinder',         defaultWatts: 750,  defaultQty: 1, defaultHours: 1,    watts: 750,  qty: 0, hours: 1,    custom: false },
-  { id: makeId(), category: 'Industrial',    name: 'Welding Machine',       defaultWatts: 3000, defaultQty: 1, defaultHours: 2,    watts: 3000, qty: 0, hours: 2,    custom: false },
-  { id: makeId(), category: 'Industrial',    name: 'Drill Press',           defaultWatts: 500,  defaultQty: 1, defaultHours: 2,    watts: 500,  qty: 0, hours: 2,    custom: false },
-  { id: makeId(), category: 'Industrial',    name: 'Industrial Exhaust',    defaultWatts: 750,  defaultQty: 1, defaultHours: 12,   watts: 750,  qty: 0, hours: 12,   custom: false },
+  { id: makeId(), category: 'Industrial',    name: 'Air Compressor (2HP)',  defaultWatts: 1500, defaultQty: 1, defaultHours: 4,    watts: 1500, qty: 0, hours: 4,    custom: false, hidden: true },
+  { id: makeId(), category: 'Industrial',    name: 'Bench Grinder',         defaultWatts: 750,  defaultQty: 1, defaultHours: 1,    watts: 750,  qty: 0, hours: 1,    custom: false, hidden: true },
+  { id: makeId(), category: 'Industrial',    name: 'Welding Machine',       defaultWatts: 3000, defaultQty: 1, defaultHours: 2,    watts: 3000, qty: 0, hours: 2,    custom: false, hidden: true },
+  { id: makeId(), category: 'Industrial',    name: 'Drill Press',           defaultWatts: 500,  defaultQty: 1, defaultHours: 2,    watts: 500,  qty: 0, hours: 2,    custom: false, hidden: true },
+  { id: makeId(), category: 'Industrial',    name: 'Industrial Exhaust',    defaultWatts: 750,  defaultQty: 1, defaultHours: 12,   watts: 750,  qty: 0, hours: 12,   custom: false, hidden: true },
 ];
 
-export const CATEGORIES: Appliance['category'][] = [
+export const HOME_CATEGORIES: Appliance['category'][] = [
   'Lighting',
   'Fans & Cooling',
   'Kitchen',
   'Entertainment',
-  'Office & IT',
-  'Industrial',
   'Other',
 ];
+
+export const OFFICE_INDUSTRIAL_CATEGORIES: Appliance['category'][] = [
+  'Office & IT',
+  'Industrial',
+];
+
+export const CATEGORIES: Appliance['category'][] = [...HOME_CATEGORIES];
 
 export const SECTIONS = [
   {
     title: 'Home Appliances',
-    categories: ['Lighting', 'Fans & Cooling', 'Kitchen', 'Entertainment', 'Other'] as Appliance['category'][]
-  },
-  {
-    title: 'Office & Industrial',
-    categories: ['Office & IT', 'Industrial'] as Appliance['category'][]
+    categories: HOME_CATEGORIES
   }
 ];
 

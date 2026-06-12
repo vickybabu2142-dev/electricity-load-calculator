@@ -15,7 +15,7 @@ test.describe('Electricity Load Calculator', () => {
 
   test('shows correct active and total appliance counts on load', async ({ page }) => {
     await expect(page.locator('#active-count')).toHaveText('0');
-    await expect(page.locator('#total-count')).toHaveText('33');
+    await expect(page.locator('#total-count')).toHaveText('31');
   });
 
   test('starts in dark mode by default', async ({ page }) => {
