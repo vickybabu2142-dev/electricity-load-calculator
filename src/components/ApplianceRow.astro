@@ -55,7 +55,7 @@ const kwh = calculateRowKWh(a).toFixed(2);
         value={a.watts}
         min="1"
         max="99999"
-        class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+        class="w-14 sm:w-20 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
         data-action="update-watts"
         data-id={a.id}
         aria-label={`Watts for ${a.name}`}
@@ -67,7 +67,7 @@ const kwh = calculateRowKWh(a).toFixed(2);
     <div class="flex items-center lg:order-3" role="group" aria-label={`Quantity for ${a.name}`}>
       <button
         type="button"
-        class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none"
+        class="stepper-btn"
         data-action="decrement-qty"
         data-id={a.id}
         aria-label={`Decrease quantity of ${a.name}`}
@@ -78,7 +78,7 @@ const kwh = calculateRowKWh(a).toFixed(2);
       >{a.qty}</span>
       <button
         type="button"
-        class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none"
+        class="stepper-btn"
         data-action="increment-qty"
         data-id={a.id}
         aria-label={`Increase quantity of ${a.name}`}
@@ -96,7 +96,7 @@ const kwh = calculateRowKWh(a).toFixed(2);
           min="0"
           max="24"
           step="0.25"
-          class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+          class="w-12 sm:w-16 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
           data-action="update-hours"
           data-id={a.id}
           aria-label={`Hours per day for ${a.name}`}
