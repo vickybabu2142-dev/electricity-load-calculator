@@ -5,8 +5,8 @@ A professional, industrial-grade web application for calculating household elect
 ## Features
 
 - **Real-time Load Calculation** — Instant total wattage and monthly cost estimates as you configure appliances.
-- **Appliance Catalog** — Pre-loaded with common household appliances organized by category.
-- **Custom Appliances** — Add any appliance with a custom name and wattage.
+- **Home Appliance Catalog** — Pre-loaded with common residential appliances (Lighting, Cooling, Kitchen, etc.) organized by category.
+- **Custom Appliances** — Add any household appliance with a custom name and wattage.
 - **Quantity & Toggle Controls** — Stepper inputs for quantity; toggle switches to include/exclude items from the report.
 - **Dual Theme**
   - *Industrial Dark* (default) — High-contrast dashboard with amber accent.

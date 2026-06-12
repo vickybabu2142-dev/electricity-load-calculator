@@ -55,24 +55,25 @@ export const DEFAULT_APPLIANCES: Appliance[] = [
   { id: makeId(), category: 'Industrial',    name: 'Industrial Exhaust',    defaultWatts: 750,  defaultQty: 1, defaultHours: 12,   watts: 750,  qty: 0, hours: 12,   custom: false },
 ];
 
-export const CATEGORIES: Appliance['category'][] = [
+export const HOME_CATEGORIES: Appliance['category'][] = [
   'Lighting',
   'Fans & Cooling',
   'Kitchen',
   'Entertainment',
-  'Office & IT',
-  'Industrial',
   'Other',
 ];
+
+export const OFFICE_INDUSTRIAL_CATEGORIES: Appliance['category'][] = [
+  'Office & IT',
+  'Industrial',
+];
+
+export const CATEGORIES: Appliance['category'][] = [...HOME_CATEGORIES];
 
 export const SECTIONS = [
   {
     title: 'Home Appliances',
-    categories: ['Lighting', 'Fans & Cooling', 'Kitchen', 'Entertainment', 'Other'] as Appliance['category'][]
-  },
-  {
-    title: 'Office & Industrial',
-    categories: ['Office & IT', 'Industrial'] as Appliance['category'][]
+    categories: HOME_CATEGORIES
   }
 ];
 

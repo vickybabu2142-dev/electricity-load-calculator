@@ -4,6 +4,7 @@
 - **Framework:** Astro (Minimal template, strict TypeScript)
 - **Styling:** Tailwind CSS v4
 - **Design System:** Modern Industrial Dashboard aesthetic with dual-theme professional palettes.
+- **Scope:** Primarily focused on **Home Appliances** and residential energy management for Version 1.
 - **Deployment:** Vercel (via `@astrojs/vercel` adapter)
 - **State Management:** Vanilla client-side TypeScript (native `<script>` tags, no heavy frameworks).
 

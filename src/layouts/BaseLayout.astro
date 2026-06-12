@@ -24,8 +24,8 @@ interface Props {
 
 const {
   title = 'Electricity Load Calculator | kW, kVA & House Load Calculator',
-  description = "Calculate your house electricity load in kW/kVA for home, office, or commercial use. Use our accurate bijli load calculator with monthly bill estimation.",
-  keywords = "electricity load calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, bijli bill calculator, electricity load calculator in kw for home pdf, electricity load calculator in kw for office, electricity load calculator in kw for commercial, electrical load calculation for industrial building",
+  description = "Calculate your house electricity load in kW/kVA for home use. Use our accurate bijli load calculator with monthly bill estimation.",
+  keywords = "electricity load calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, bijli bill calculator, electricity load calculator in kw for home pdf",
   breadcrumbSchema,
 } = Astro.props;
 
@@ -42,7 +42,7 @@ const schema = {
       "operatingSystem": "Web",
       "applicationCategory": "UtilitiesApplication",
       "applicationSubCategory": "Finance/Utility",
-      "description": "Calculate total electrical load in kW and kVA for residential, commercial, and industrial buildings with bill estimation.",
+      "description": "Calculate total electrical load in kW and kVA for residential buildings with bill estimation.",
       "screenshot": ogImage,
       "softwareVersion": "1.0.0",
       "author": {
@@ -68,7 +68,7 @@ const schema = {
       "@type": "WebSite",
       "name": "Electricity Load Calculator",
       "url": canonicalURL.origin,
-      "description": "Free online electricity load calculator for home, office, and industrial use.",
+      "description": "Free online electricity load calculator for home use.",
     },
     ...(breadcrumbSchema ? [breadcrumbSchema] : []),
   ],
