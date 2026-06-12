@@ -352,7 +352,7 @@ function calculate() {
   }
 
   const activeCount = appliances.filter(a => a.qty > 0).length;
-  const totalCount  = appliances.length;
+  const totalCount  = appliances.filter(a => !a.hidden).length;
   setText('active-count', String(activeCount));
   setText('total-count',  String(totalCount));
   setText('hero-total-count', String(totalCount));

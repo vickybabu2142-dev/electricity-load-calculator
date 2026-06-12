@@ -1,7 +1,7 @@
 ---
-import { DEFAULT_APPLIANCES, CATEGORIES } from '@/data/appliances';
+import { DEFAULT_APPLIANCES, CATEGORIES, HOME_CATEGORIES } from '@/data/appliances';
 
-const applianceCount = DEFAULT_APPLIANCES.filter(a => !a.hidden).length;
+const applianceCount = DEFAULT_APPLIANCES.filter(a => HOME_CATEGORIES.includes(a.category) && !a.hidden).length;
 const categoryCount  = CATEGORIES.length;
 ---
 
