@@ -121,14 +121,14 @@
       <div class="flex items-center justify-between">
         <span class="text-sm text-text-muted">Daily Consumption</span>
         <div>
-          <span id="daily-kwh" class="font-mono font-semibold tabular-nums text-text-primary">0.00</span>
+          <span id="daily-kwh" class="font-mono font-semibold tabular-nums" style="color: var(--accent);">0.00</span>
           <span class="font-mono text-xs text-text-muted ml-1">kWh(unit)/day</span>
         </div>
       </div>
       <div class="flex items-center justify-between">
         <span class="text-sm text-text-muted">Monthly Estimate</span>
         <div>
-          <span id="monthly-kwh" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
+          <span id="monthly-kwh" class="font-mono font-semibold tabular-nums" style="color: var(--accent);">0</span>
           <span class="font-mono text-xs text-text-muted ml-1">kWh(unit)/mo</span>
         </div>
       </div>
@@ -143,7 +143,7 @@
         <span class="text-sm text-text-muted">Est. Monthly Bill</span>
         <span id="monthly-bill" class="font-display font-bold text-2xl tabular-nums" style="color: var(--accent);">0</span>
       </div>
-      <div class="flex items-center gap-2 text-xs text-text-muted">
+      <div class="flex items-center gap-2 text-sm text-text-muted">
         <span>Tariff:</span>
         <span class="font-mono currency-symbol">₹</span>
         <input
@@ -154,7 +154,7 @@
           min="0.01"
           max="500"
           step="0.5"
-          class="w-16 bg-card border border-border rounded px-2 py-0.5 font-mono text-xs font-bold text-center focus:border-accent focus:outline-none"
+          class="w-20 bg-card border border-border rounded px-2 py-1 font-mono text-sm font-bold text-center focus:border-accent focus:outline-none"
           style="color: var(--accent);"
           aria-label="Electricity tariff per kWh(unit)"
         />
