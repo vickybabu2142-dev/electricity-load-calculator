@@ -235,7 +235,7 @@ function saveState() {
 }
 
 function loadState(): boolean {
-  const saved = localStorage.getItem(STORAGE_KEY);
+  const saved = sessionStorage.getItem(STORAGE_KEY);
   if (!saved) return false;
   try {
     const state = JSON.parse(saved);
