@@ -328,6 +328,22 @@ textarea:focus {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Global Interactive Elements */
+button, 
+[type="button"], 
+[type="reset"], 
+[type="submit"],
+[role="button"],
+.cursor-pointer {
+  cursor: pointer;
+}
+
+button:active:not(:disabled),
+[role="button"]:active:not(:disabled),
+.active-press:active {
+  transform: scale(0.96);
+}
+
 /* Global Button Styles */
 .btn-primary {
   background-color: var(--btn-primary-bg);
@@ -353,7 +369,7 @@ textarea:focus {
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: scale(0.96);
 }
 
 .btn-secondary {
