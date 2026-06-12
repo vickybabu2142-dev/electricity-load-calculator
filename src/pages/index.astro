@@ -25,8 +25,9 @@ const sectionedData = SECTIONS.map(section => ({
     <div class="flex flex-col lg:flex-row gap-6 items-start">
 
       <!-- Left: appliance categories -->
-      <div class="flex-1 w-full min-w-0 space-y-10">
-        {sectionedData.map((section) => (
+      <div class="flex-1 w-full min-w-0">
+        <div class="space-y-10">
+          {sectionedData.map((section) => (
           <div class="space-y-4">
             <h2 class="text-xl font-display font-bold text-text-primary uppercase tracking-wider border-l-4 border-accent pl-3 flex items-center gap-2">
               {section.title === 'Home Appliances' ? (
@@ -47,6 +48,7 @@ const sectionedData = SECTIONS.map(section => ({
             </div>
           </div>
         ))}
+        </div>
       </div>
 
       <!-- Right: results panel -->
@@ -58,29 +60,47 @@ const sectionedData = SECTIONS.map(section => ({
   </main>
 
   <!-- MOBILE STICKY SUMMARY -->
-  <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-40 lg:hidden print:hidden no-print shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.3)] flex justify-between items-center pb-[max(1rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
-    <div class="flex flex-col">
-      <span class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Total Load</span>
-      <div class="flex items-baseline gap-1">
-        <span id="sticky-total-kw" class="font-display font-bold text-2xl tabular-nums leading-none" style="color: var(--accent);">0.00</span>
+  <div class="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border p-3 z-40 lg:hidden print:hidden no-print shadow-[0_-15px_30px_-15px_rgba(0,0,0,0.5)] flex justify-between items-center gap-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
+    
+    <!-- Reset Form -->
+    <button
+      id="sticky-reset-btn"
+      data-action="reset-all"
+      type="button"
+      class="flex items-center justify-center gap-2 px-3 h-10 rounded-lg border border-danger/20 text-danger bg-danger/5 hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-danger flex-shrink-0"
+      aria-label="Reset all appliances"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 opacity-80">
+        <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd"/>
+      </svg>
+      <span class="text-sm font-medium">Reset</span>
+    </button>
+
+    <!-- Center Summary -->
+    <div class="flex flex-col items-center text-center flex-1 min-w-0">
+      <div class="flex items-baseline justify-center gap-1">
+        <span id="sticky-total-kw" class="font-display font-bold text-2xl tabular-nums leading-none truncate" style="color: var(--accent);">0.00</span>
         <span class="font-mono text-xs text-text-muted">kW</span>
       </div>
-      <div class="text-xs mt-1 text-text-primary">
+      <div class="text-[10px] text-text-primary font-medium truncate w-full opacity-90">
         Est. Bill: <span id="sticky-monthly-bill" class="font-semibold tabular-nums" style="color: var(--accent);">0</span>
       </div>
     </div>
+
+    <!-- Details View -->
     <a
       href="#results-panel"
       id="sticky-details-link"
-      class="flex items-center justify-center gap-2 px-6 h-12 rounded-xl border-2 border-border text-text-primary hover:border-accent hover:text-accent bg-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent shadow-sm active:scale-95"
-      aria-label="View Details"
+      class="flex items-center justify-center gap-2 px-4 h-10 rounded-lg bg-accent text-accent-text hover:bg-accent-dim transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-accent shadow-lg shadow-accent/20 active:scale-95 flex-shrink-0"
+      aria-label="View Detailed Report"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
         <circle cx="12" cy="12" r="3" />
       </svg>
-      <span class="text-sm font-display font-bold uppercase tracking-widest">View</span>
+      <span class="text-sm font-bold">Details</span>
     </a>
+  </div>
   </div>
 
   <!-- PRINT ONLY LAYOUT -->
@@ -94,7 +114,7 @@ const sectionedData = SECTIONS.map(section => ({
       </div>
       <div class="text-right">
         <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Tariff</p>
-        <p class="text-lg font-semibold" id="print-tariff">0</p>
+        <p class="text-2xl font-semibold" id="print-tariff">0</p>
       </div>
     </div>
     
@@ -112,8 +132,13 @@ const sectionedData = SECTIONS.map(section => ({
     </div>
 
     <h2 class="text-sm font-bold uppercase tracking-wider text-text-primary mb-4 border-b border-text-primary pb-2">Active Appliances Breakdown</h2>
-    <div id="print-appliances-list" class="space-y-6">
+    <div id="print-appliances-list" class="space-y-6 pb-12">
       <!-- Populated by JS -->
+    </div>
+    
+    <div class="mt-12 pt-6 border-t border-border flex justify-between items-center text-xs text-text-muted select-none pointer-events-none break-inside-avoid opacity-80">
+      <p id="print-site-url" class="font-medium"></p>
+      <p>&copy; {new Date().getFullYear()} — All Rights Reserved</p>
     </div>
   </div>
 
@@ -180,6 +205,8 @@ import type { Appliance, ApplianceCategory } from '@/types';
 import { calculateRowKWh, calculateTotals } from '@/utils/calculations';
 
 // ── State & Settings ──────────────────────────────────────
+const STORAGE_KEY = 'electricity_load_calculator_state';
+
 const REGION_SETTINGS: Record<string, { locale: string, symbol: string, defaultTariff: number, step: number, defaultMaxKW: number }> = {
   INR: { locale: 'en-IN', symbol: '₹', defaultTariff: 8,    step: 0.5,  defaultMaxKW: 5  },
   USD: { locale: 'en-US', symbol: '$', defaultTariff: 0.15, step: 0.01, defaultMaxKW: 20 },
@@ -196,6 +223,34 @@ let maxCapacityKW = 5;
 let customIdCounter = 1000;
 
 // ── Helpers ───────────────────────────────────────────────
+function saveState() {
+  const state = {
+    appliances,
+    tariff,
+    currentCurrency,
+    maxCapacityKW,
+    customIdCounter
+  };
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadState(): boolean {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) return false;
+  try {
+    const state = JSON.parse(saved);
+    appliances = state.appliances;
+    tariff = state.tariff;
+    currentCurrency = state.currentCurrency;
+    maxCapacityKW = state.maxCapacityKW;
+    customIdCounter = state.customIdCounter;
+    return true;
+  } catch (e) {
+    console.error('Failed to load saved state:', e);
+    return false;
+  }
+}
+
 function getAppliance(id: string): Appliance | undefined {
   return appliances.find(a => a.id === id);
 }
@@ -343,6 +398,9 @@ function calculate() {
   setText('print-tariff', `${formatCurrency(tariff)}/kWh(unit)`);
   setText('print-date', `Generated on: ${new Date().toLocaleDateString(REGION_SETTINGS[currentCurrency].locale, { dateStyle: 'long' })}`);
 
+  const printUrlEl = document.getElementById('print-site-url');
+  if (printUrlEl) printUrlEl.textContent = window.location.origin;
+
   const printList = document.getElementById('print-appliances-list');
   if (printList) {
     let html = '';
@@ -398,39 +456,66 @@ document.addEventListener('change', (e) => {
   const action = target.dataset.action;
   const id     = target.dataset.id;
 
-  if (!action || !id) return;
-  const a = getAppliance(id);
-  if (!a) return;
+  if (!action) return;
 
-  if (action === 'update-watts') {
-    const val = parseFloat((target as HTMLInputElement).value);
-    if (!isNaN(val) && val >= 1) {
-      a.watts = val;
-      updateRowKWh(a);
-      debouncedCalculate();
+  // Appliance updates
+  if (id) {
+    const a = getAppliance(id);
+    if (!a) return;
+
+    if (action === 'update-watts') {
+      const val = parseFloat((target as HTMLInputElement).value);
+      if (!isNaN(val) && val >= 1) {
+        a.watts = val;
+        updateRowKWh(a);
+        saveState();
+        debouncedCalculate();
+      }
+      return;
+    }
+
+    if (action === 'update-hours') {
+      const val = parseFloat((target as HTMLInputElement).value);
+      const errorEl = document.querySelector(`[data-error-id="${id}"]`);
+      
+      if (!isNaN(val)) {
+        if (val > 24) {
+          target.classList.add('border-danger');
+          target.classList.remove('border-border');
+          errorEl?.classList.remove('hidden');
+        } else {
+          target.classList.remove('border-danger');
+          target.classList.add('border-border');
+          errorEl?.classList.add('hidden');
+        }
+        
+        // Still update the state but cap at 24 for calculation safety
+        a.hours = Math.min(24, val);
+        updateRowKWh(a);
+        saveState();
+        debouncedCalculate();
+      }
+      return;
     }
   }
 
-  if (action === 'update-hours') {
-    const val = parseFloat((target as HTMLInputElement).value);
-    const errorEl = document.querySelector(`[data-error-id="${id}"]`);
-    
-    if (!isNaN(val)) {
-      if (val > 24) {
-        target.classList.add('border-danger');
-        target.classList.remove('border-border');
-        errorEl?.classList.remove('hidden');
-      } else {
-        target.classList.remove('border-danger');
-        target.classList.add('border-border');
-        errorEl?.classList.add('hidden');
-      }
-      
-      // Still update the state but cap at 24 for calculation safety
-      a.hours = Math.min(24, val);
-      updateRowKWh(a);
-      debouncedCalculate();
+  // Settings updates
+  if (action === 'change-currency') {
+    const val = (target as HTMLSelectElement).value;
+    currentCurrency = val;
+    const settings = REGION_SETTINGS[val];
+    tariff = settings.defaultTariff;
+    const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
+    if (tariffInput) {
+      tariffInput.value = String(tariff);
+      tariffInput.step = String(settings.step);
     }
+    maxCapacityKW = settings.defaultMaxKW;
+    const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
+    if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
+    appliances.forEach(a => updateRowKWh(a));
+    saveState();
+    calculate();
   }
 });
 
@@ -491,6 +576,7 @@ document.addEventListener('click', (e) => {
     updateRowQtyDisplay(a);
     updateRowKWh(a);
     updateRowNameStyle(a);
+    saveState();
     calculate();
     return;
   }
@@ -499,37 +585,66 @@ document.addEventListener('click', (e) => {
     appliances = appliances.filter(a => a.id !== id);
     const row = document.querySelector(`[data-id="${id}"]`);
     row?.remove();
+    saveState();
     calculate();
     return;
   }
 
   if (action === 'reset-all') {
     if (!confirm('Reset all appliances to their default values?')) return;
+    
+    // Clear persisted state
+    localStorage.removeItem(STORAGE_KEY);
+    
+    // Restore default state variables
     appliances = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
+    customIdCounter = 1000;
+    
+    // Re-render UI
     CATEGORIES.forEach(cat => {
       const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
-      const container = document.getElementById(bodyId)?.querySelector('[data-rows-container]');
+      const body = document.getElementById(bodyId);
+      const container = body?.querySelector('[data-rows-container]');
       if (!container) return;
       container.innerHTML = '';
       const catAppliances = appliances.filter(a => a.category === cat);
       catAppliances.forEach(a => {
         container.insertAdjacentHTML('beforeend', buildRowHTML(a));
       });
+      
+      // Collapse the category on reset
+      if (body) {
+        body.style.display = 'none';
+        const section = body.closest('.category-section');
+        const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+        const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+        if (chevron) chevron.style.transform = 'rotate(-90deg)';
+      }
     });
+    
     appliances.forEach(a => updateRowNameStyle(a));
     currentCurrency = 'INR';
+    
     const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
     if (currencySelect) currencySelect.value = 'INR';
+    
     tariff = REGION_SETTINGS.INR.defaultTariff;
     const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
     if (tariffInput) {
       tariffInput.value = String(tariff);
       tariffInput.step = String(REGION_SETTINGS.INR.step);
     }
+    
     maxCapacityKW = REGION_SETTINGS.INR.defaultMaxKW;
     const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
     if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
+    
     calculate();
+    
+    // Scroll smoothly to the top to confirm reset visually
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     return;
   }
 
@@ -570,6 +685,10 @@ document.addEventListener('click', (e) => {
       report += '\n';
     });
 
+    report += `${'─'.repeat(48)}\n`;
+    report += `Source: ${window.location.origin}\n`;
+    report += `© ${new Date().getFullYear()} Electricity Load Calculator\n`;
+
     const modal   = document.getElementById('report-modal');
     const content = document.getElementById('report-content');
     if (modal && content) {
@@ -579,39 +698,52 @@ document.addEventListener('click', (e) => {
     }
     return;
   }
-});
 
-// ── Settings listeners ────────────────────────────────────
-document.getElementById('currency-select')?.addEventListener('change', (e) => {
-  const val = (e.target as HTMLSelectElement).value;
-  currentCurrency = val;
-  const settings = REGION_SETTINGS[val];
-  tariff = settings.defaultTariff;
-  const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
-  if (tariffInput) {
-    tariffInput.value = String(tariff);
-    tariffInput.step = String(settings.step);
+  if (action === 'print-report') {
+    const originalTitle = document.title;
+    const dateStr = new Date().toISOString().split('T')[0];
+    document.title = `electricity-load-report-${dateStr}`;
+    window.print();
+    document.title = originalTitle;
+    return;
   }
-  maxCapacityKW = settings.defaultMaxKW;
-  const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
-  if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
-  appliances.forEach(a => updateRowKWh(a));
-  calculate();
-});
 
-document.getElementById('max-kw-input')?.addEventListener('input', (e) => {
-  const val = parseFloat((e.target as HTMLInputElement).value);
-  if (!isNaN(val) && val > 0) {
-    maxCapacityKW = val;
-    calculate();
+  if (action === 'download-txt') {
+    const content = document.getElementById('report-content')?.textContent || '';
+    if (!content) return;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `electricity-load-report-${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    return;
   }
 });
 
-document.getElementById('tariff-input')?.addEventListener('input', (e) => {
-  const val = parseFloat((e.target as HTMLInputElement).value);
-  if (!isNaN(val) && val > 0) {
-    tariff = val;
-    debouncedCalculate();
+document.addEventListener('input', (e) => {
+  const target = e.target as HTMLElement;
+  const action = target.dataset.action;
+
+  if (!action) return;
+
+  if (action === 'update-max-kw') {
+    const val = parseFloat((target as HTMLInputElement).value);
+    if (!isNaN(val) && val > 0) {
+      maxCapacityKW = val;
+      saveState();
+      calculate();
+    }
+  }
+
+  if (action === 'update-tariff') {
+    const val = parseFloat((target as HTMLInputElement).value);
+    if (!isNaN(val) && val > 0) {
+      tariff = val;
+      saveState();
+      debouncedCalculate();
+    }
   }
 });
 
@@ -683,6 +815,7 @@ document.addEventListener('submit', (e) => {
   form.classList.add('hidden');
   const toggleBtn = form.closest('.add-appliance-wrapper')?.querySelector<HTMLButtonElement>('.add-toggle-btn');
   toggleBtn?.setAttribute('aria-expanded', 'false');
+  saveState();
   calculate();
 }, true);
 
@@ -709,35 +842,35 @@ function buildRowHTML(a: Appliance): string {
       </div>
 
       <!-- Controls Row -->
-      <div class="flex items-center justify-between gap-1 w-full lg:w-auto lg:contents lg:gap-3 order-3">
+      <div class="flex items-center justify-between w-full lg:w-auto lg:contents gap-2 lg:gap-3 order-3 mt-1 lg:mt-0">
         <!-- Watts -->
-        <div class="flex items-center gap-1 lg:order-2">
+        <div class="flex items-center gap-1 flex-1 lg:flex-none justify-center lg:justify-start lg:order-2">
           <input type="number" value="${a.watts}" min="1" max="99999"
-            class="w-14 sm:w-20 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+            class="w-full sm:w-20 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
             data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
-          <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">W</span>
+          <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-3 text-center">W</span>
         </div>
         
         <!-- Qty stepper -->
-        <div class="flex items-center lg:order-3">
-          <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
+        <div class="flex items-center flex-1 lg:flex-none justify-center lg:order-3">
+          <button type="button" class="stepper-btn flex-1 lg:flex-none max-w-[40px]" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
           <span class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
-          <button type="button" class="stepper-btn w-11 h-11 sm:w-8 sm:h-8 rounded-md bg-border text-text-primary hover:text-accent-text active:text-accent-text font-bold text-sm hover:bg-accent active:bg-accent transition-colors focus:outline-none" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
+          <button type="button" class="stepper-btn flex-1 lg:flex-none max-w-[40px]" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
         </div>
 
         <!-- Hours -->
-        <div class="flex flex-col items-center gap-1 lg:order-4">
-          <div class="flex items-center gap-1">
+        <div class="flex flex-col items-center gap-1 flex-1 lg:flex-none justify-center lg:order-4">
+          <div class="flex items-center gap-1 w-full justify-center">
             <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
-              class="w-12 sm:w-16 bg-base border border-border rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm text-text-primary focus:border-accent focus:outline-none transition-colors"
+              class="w-full sm:w-16 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
               data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
-            <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase">h/d</span>
+            <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-5 text-center">h/d</span>
           </div>
-          <span class="hours-error hidden text-[8px] sm:text-[9px] text-danger font-mono font-bold uppercase" data-error-id="${a.id}">Max 24h</span>
+          <span class="hours-error hidden text-[8px] sm:text-[9px] text-danger font-mono font-bold uppercase absolute mt-6" data-error-id="${a.id}">Max 24h</span>
         </div>
 
         <!-- Actions -->
-        <div class="flex-shrink-0 w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center lg:order-6">
+        <div class="flex-shrink-0 w-8 h-11 sm:w-8 sm:h-8 flex items-center justify-center lg:order-6 ml-auto">
           ${a.custom ? `
             <button type="button"
               class="w-10 h-10 sm:w-8 sm:h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
@@ -754,29 +887,6 @@ function buildRowHTML(a: Appliance): string {
     </div>`;
 }
 
-document.getElementById('print-btn')?.addEventListener('click', () => window.print());
-
-document.getElementById('download-txt-btn')?.addEventListener('click', () => {
-  const content = document.getElementById('report-content')?.textContent || '';
-  if (!content) return;
-  const blob = new Blob([content], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `electricity-load-report-${new Date().toISOString().split('T')[0]}.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-document.getElementById('copy-report-btn')?.addEventListener('click', async () => {
-  const content = document.getElementById('report-content')?.textContent || '';
-  try {
-    await navigator.clipboard.writeText(content);
-    const btn = document.getElementById('copy-report-btn');
-    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy Text'; }, 2000); }
-  } catch { /* silent fail */ }
-});
-
 function closeModal() {
   const modal = document.getElementById('report-modal');
   modal?.classList.add('hidden');
@@ -788,7 +898,51 @@ document.addEventListener('keydown', (e) => {
 });
 
 function initCalculator() {
+  const hasSavedState = loadState();
+
+  if (hasSavedState) {
+    // Re-hydrate settings inputs
+    const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
+    if (currencySelect) currencySelect.value = currentCurrency;
+
+    const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
+    if (tariffInput) {
+      tariffInput.value = String(tariff);
+      tariffInput.step = String(REGION_SETTINGS[currentCurrency].step);
+    }
+
+    const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
+    if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
+
+    // Re-hydrate appliance rows
+    CATEGORIES.forEach(cat => {
+      const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
+      const body = document.getElementById(bodyId);
+      const container = body?.querySelector('[data-rows-container]');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      const catAppliances = appliances.filter(a => a.category === cat);
+      catAppliances.forEach(a => {
+        container.insertAdjacentHTML('beforeend', buildRowHTML(a));
+      });
+
+      // Auto-expand category if it contains active appliances
+      if (catAppliances.some(a => a.qty > 0) && body) {
+        body.style.display = '';
+        const section = body.closest('.category-section');
+        const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+        const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+        if (chevron) chevron.style.transform = '';
+      }
+    });
+
+    appliances.forEach(a => updateRowNameStyle(a));
+  }
+
   calculate();
+  
   document.getElementById('sticky-details-link')?.addEventListener('click', (e) => {
     e.preventDefault();
     document.getElementById('results-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });

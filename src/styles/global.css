@@ -58,6 +58,24 @@
   --toggle-off-border: var(--border-strong-raw);
   --toggle-knob: var(--text-primary-raw);
 
+  /* Button specifics (Dark) */
+  --btn-primary-bg: var(--accent);
+  --btn-primary-text: #000000;
+  --btn-primary-hover: var(--accent-dim);
+  --btn-secondary-bg: rgba(255, 255, 255, 0.03);
+  --btn-secondary-border: var(--border);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-hover: rgba(255, 255, 255, 0.08);
+  --btn-stepper-bg: #1e1e1e;
+  --btn-stepper-text: var(--text-primary);
+  --btn-stepper-hover: #2d2d2d;
+
+  /* Input specific variables (Dark) */
+  --input-bg: #1a1a1a;
+  --input-border: #333333;
+  --input-text: #ffffff;
+  --input-placeholder: #71717a;
+
   /* Grid dots for dark mode */
   --grid-color: var(--border-hover-raw);
 }
@@ -96,6 +114,24 @@
   --toggle-off: #D1D5DB;
   --toggle-off-border: #9CA3AF;
   --toggle-knob: #F9FAF9;
+
+  /* Button specifics (Light) */
+  --btn-primary-bg: var(--accent);
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: var(--accent-dim);
+  --btn-secondary-bg: #FFFFFF;
+  --btn-secondary-border: #D1D5DB;
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-hover: #F9FAFB;
+  --btn-stepper-bg: #FFFFFF;
+  --btn-stepper-text: var(--text-primary);
+  --btn-stepper-hover: #F3F4F6;
+
+  /* Input specific variables (Light) */
+  --input-bg: #f8fafc;
+  --input-border: #cbd5e1;
+  --input-text: #0f172a;
+  --input-placeholder: #94a3b8;
 
   /* Grid dots for light mode */
   --grid-color: #DDE3E9;
@@ -188,6 +224,34 @@ select option {
   color: var(--text-primary);
 }
 
+/* Global Text/Number/Email/Textarea Input Styles */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+textarea {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--input-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+input[type="email"]::placeholder,
+textarea::placeholder {
+  color: var(--input-placeholder) !important;
+  opacity: 1;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  border-color: var(--accent) !important;
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent), transparent 80%);
+}
+
 /* Toggle switch (Vercel Style: Improved Visibility) */
 .toggle-label {
   background-color: var(--toggle-off);
@@ -264,8 +328,118 @@ select option {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Ensure hidden forms stay hidden even with md:flex */
+.add-appliance-form.hidden {
+  display: none !important;
+}
+
+/* Global Interactive Elements */
+button, 
+[type="button"], 
+[type="reset"], 
+[type="submit"],
+[role="button"],
+.cursor-pointer {
+  cursor: pointer;
+}
+
+button:active:not(:disabled),
+[role="button"]:active:not(:disabled),
+.active-press:active {
+  transform: scale(0.96);
+}
+
+/* Global Button Styles */
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+  font-family: var(--font-display);
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: var(--btn-secondary-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.stepper-btn {
+  background-color: var(--btn-stepper-bg);
+  color: var(--btn-stepper-text);
+  border: 1px solid var(--border);
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .stepper-btn {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+}
+
+.stepper-btn:hover {
+  background-color: var(--btn-stepper-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: scale(1.05);
+}
+
+.stepper-btn:active {
+  transform: scale(0.95);
+}
+
 /* Print styles */
 @media print {
+  @page {
+    margin: 0;
+  }
+
   html, body { 
     background-color: white !important; 
     color: #0f0f0f !important;
@@ -279,6 +453,7 @@ select option {
     display: block !important;
     background-color: white !important;
     color: #0f0f0f !important;
+    padding: 1.5cm !important;
   }
 
   /* Force white background for all containers */
