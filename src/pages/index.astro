@@ -56,7 +56,7 @@ const sectionedData = SECTIONS.map(section => ({
   </main>
 
   <!-- MOBILE STICKY SUMMARY -->
-  <div class="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border p-3 z-40 lg:hidden print:hidden no-print shadow-[0_-15px_30px_-15px_rgba(0,0,0,0.5)] flex justify-between items-center gap-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
+  <div id="mobile-sticky-bar" class="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border p-3 z-40 lg:hidden print:hidden no-print shadow-[0_-15px_30px_-15px_rgba(0,0,0,0.5)] flex justify-between items-center gap-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
     
     <!-- Reset Form -->
     <button
@@ -74,13 +74,31 @@ const sectionedData = SECTIONS.map(section => ({
 
     <!-- Center Summary -->
     <div class="flex flex-col items-center text-center flex-1 min-w-0">
-      <div class="flex items-baseline justify-center gap-1">
-        <span id="sticky-total-kw" class="font-display font-bold text-2xl tabular-nums leading-none truncate" style="color: var(--accent);">0.00</span>
-        <span class="font-mono text-xs text-text-muted">kW</span>
+
+      <!-- Numbers: shown when at least one appliance is active -->
+      <div id="sticky-summary">
+        <div class="flex items-baseline justify-center gap-1">
+          <span id="sticky-total-kw" class="font-display font-bold text-2xl tabular-nums leading-none truncate" style="color: var(--accent);">0.00</span>
+          <span class="font-mono text-xs text-text-muted">kW</span>
+        </div>
+        <div class="text-[10px] text-text-primary font-medium truncate w-full opacity-90">
+          Est. Bill: <span id="sticky-monthly-bill" class="font-semibold tabular-nums" style="color: var(--accent);">0</span>
+        </div>
       </div>
-      <div class="text-[10px] text-text-primary font-medium truncate w-full opacity-90">
-        Est. Bill: <span id="sticky-monthly-bill" class="font-semibold tabular-nums" style="color: var(--accent);">0</span>
+
+      <!-- Hint: shown when nothing is active yet -->
+      <div id="sticky-empty-hint" class="flex flex-col items-center gap-1" style="display: none;">
+        <!-- Bouncing arrow points users upward toward the appliance list -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+          class="w-3.5 h-3.5 animate-bounce" style="color: var(--accent);" aria-hidden="true">
+          <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+        <p class="text-xs font-semibold text-text-primary">
+          Tap <span class="font-bold" style="color: var(--accent);">+</span> on any appliance
+        </p>
+        <p class="text-[10px] text-text-muted">to see your load &amp; bill</p>
       </div>
+
     </div>
 
     <!-- Details View -->
@@ -219,11 +237,11 @@ function saveState() {
     maxCapacityKW,
     customIdCounter
   };
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
 function loadState(): boolean {
-  const saved = sessionStorage.getItem(STORAGE_KEY);
+  const saved = localStorage.getItem(STORAGE_KEY);
   if (!saved) return false;
   try {
     const state = JSON.parse(saved);
@@ -357,6 +375,15 @@ function calculate() {
   setText('total-count',  String(totalCount));
   setText('hero-total-count', String(totalCount));
 
+  const emptyPrompt = document.getElementById('empty-state-prompt');
+  if (emptyPrompt) emptyPrompt.style.display = activeCount === 0 ? '' : 'none';
+
+  const stickySummary = document.getElementById('sticky-summary');
+  const stickyHint = document.getElementById('sticky-empty-hint');
+  if (stickySummary) stickySummary.style.display = activeCount === 0 ? 'none' : '';
+  if (stickyHint) stickyHint.style.display = activeCount === 0 ? 'flex' : 'none';
+
+
   CATEGORIES.forEach(cat => {
     const catAppliances = appliances.filter(a => a.category === cat && a.qty > 0);
     const catWatts = catAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
@@ -407,7 +434,7 @@ function calculate() {
                   ${catItems.map(a => `
                     <div class="flex justify-between items-center text-sm">
                       <div class="flex-1">
-                        <span class="font-medium text-text-primary">${a.name}</span>
+                        <span class="font-medium text-text-primary">${escapeHtml(a.name)}</span>
                         <span class="text-text-muted ml-2 text-xs">${a.qty} × ${a.watts}W</span>
                       </div>
                       <div class="text-right font-mono font-medium text-text-primary">
@@ -807,18 +834,28 @@ document.addEventListener('submit', (e) => {
   calculate();
 }, true);
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function buildRowHTML(a: Appliance): string {
   const kwh = formatNumber(calculateRowKWh(a), 2);
   const nameColor = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
+  const safeName = escapeHtml(a.name);
   return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up"
       data-id="${a.id}">
-      
+
       <!-- Name & Reading Row -->
       <div class="flex items-center justify-between gap-3 flex-1 min-w-[200px] lg:min-w-0 lg:contents">
         <!-- Name -->
         <div class="flex-1 lg:order-1">
-          <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
+          <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${safeName}</span>
           ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
         </div>
 
@@ -835,10 +872,10 @@ function buildRowHTML(a: Appliance): string {
         <div class="flex items-center gap-1 flex-1 lg:flex-none justify-center lg:justify-start lg:order-2">
           <input type="number" value="${a.watts}" min="1" max="99999"
             class="w-full sm:w-20 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
-            data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
+            data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${safeName}" />
           <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-3 text-center">W</span>
         </div>
-        
+
         <!-- Qty stepper -->
         <div class="flex items-center flex-1 lg:flex-none justify-center lg:order-3">
           <button type="button" class="stepper-btn flex-1 lg:flex-none max-w-[40px]" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
@@ -851,7 +888,7 @@ function buildRowHTML(a: Appliance): string {
           <div class="flex items-center gap-1 w-full justify-center">
             <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
               class="w-full sm:w-16 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
-              data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
+              data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${safeName}" />
             <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-5 text-center">h/d</span>
           </div>
           <span class="hours-error hidden text-[8px] sm:text-[9px] text-danger font-mono font-bold uppercase absolute mt-6" data-error-id="${a.id}">Max 24h</span>
@@ -862,7 +899,7 @@ function buildRowHTML(a: Appliance): string {
           ${a.custom ? `
             <button type="button"
               class="w-10 h-10 sm:w-8 sm:h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
-              data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
+              data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${safeName}" title="Remove appliance">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mx-auto">
                 <path d="M3 6h18"></path>
                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
@@ -927,6 +964,19 @@ function initCalculator() {
     });
 
     appliances.forEach(a => updateRowNameStyle(a));
+  }
+
+  // Always open Lighting if it is still collapsed — works on every device and every visit.
+  // The re-hydration loop above already opens categories with active appliances, so this
+  // only fires when Lighting has nothing active yet (style.display is still 'none').
+  const lightingBody = document.getElementById('category-body-Lighting');
+  if (lightingBody && lightingBody.style.display === 'none') {
+    lightingBody.style.display = '';
+    const section = lightingBody.closest('.category-section');
+    const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+    const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+    if (chevron) chevron.style.transform = '';
   }
 
   calculate();
