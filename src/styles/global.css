@@ -467,13 +467,13 @@ button:active:not(:disabled),
 /* Print styles */
 @media print {
   @page {
-    margin: 0;
+    margin: 1.5cm;
   }
 
-  html, body { 
-    background-color: white !important; 
+  html, body {
+    background-color: white !important;
     color: #0f0f0f !important;
-    background-image: none !important; 
+    background-image: none !important;
     color-scheme: light !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -483,7 +483,7 @@ button:active:not(:disabled),
     display: block !important;
     background-color: white !important;
     color: #0f0f0f !important;
-    padding: 1.5cm !important;
+    padding: 0 !important;
   }
 
   /* Force white background for all containers */

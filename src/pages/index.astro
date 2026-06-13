@@ -26,7 +26,7 @@ const sectionedData = SECTIONS.map(section => ({
     <!-- QUICK START PRESETS -->
     <div class="mb-6 print:hidden">
       <div class="flex items-center gap-3 mb-3">
-        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">Quick Start</p>
+        <p class="text-sm font-semibold uppercase tracking-widest text-text-primary flex-shrink-0">Quick Start</p>
         <div class="flex-1 h-px bg-border"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
@@ -39,11 +39,11 @@ const sectionedData = SECTIONS.map(section => ({
               <span class="text-accent flex-shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
               </span>
-              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Typical 2BHK</span>
+              <span class="text-base font-semibold text-text-primary group-hover:text-accent transition-colors">Typical 2BHK</span>
             </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~5 kW</span>
+            <span class="flex-shrink-0 text-xs font-mono px-2 py-1 rounded-full border border-border text-text-primary tabular-nums font-semibold">~5 kW</span>
           </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Standard home — AC, fridge, TV &amp; kitchen</p>
+          <p class="hidden sm:block text-xs text-text-muted mt-2 leading-relaxed">Standard home — AC, fridge, TV &amp; kitchen</p>
         </button>
 
         <!-- Budget Home -->
@@ -54,11 +54,11 @@ const sectionedData = SECTIONS.map(section => ({
               <span class="text-accent flex-shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 22V12"/><path d="m5 12 7-10 7 10"/><path d="M19 15v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5"/></svg>
               </span>
-              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Budget Home</span>
+              <span class="text-base font-semibold text-text-primary group-hover:text-accent transition-colors">Budget Home</span>
             </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~1.3 kW</span>
+            <span class="flex-shrink-0 text-xs font-mono px-2 py-1 rounded-full border border-border text-text-primary tabular-nums font-semibold">~1.3 kW</span>
           </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Essentials only — fans, fridge, TV &amp; laptop</p>
+          <p class="hidden sm:block text-xs text-text-muted mt-2 leading-relaxed">Essentials only — fans, fridge, TV &amp; laptop</p>
         </button>
 
         <!-- Summer Heavy -->
@@ -69,11 +69,11 @@ const sectionedData = SECTIONS.map(section => ({
               <span class="text-accent flex-shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
               </span>
-              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Summer Heavy</span>
+              <span class="text-base font-semibold text-text-primary group-hover:text-accent transition-colors">Summer Heavy</span>
             </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~10 kW</span>
+            <span class="flex-shrink-0 text-xs font-mono px-2 py-1 rounded-full border border-border text-text-primary tabular-nums font-semibold">~10 kW</span>
           </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Peak season — dual AC, full kitchen &amp; more</p>
+          <p class="hidden sm:block text-xs text-text-muted mt-2 leading-relaxed">Peak season — dual AC, full kitchen &amp; more</p>
         </button>
 
       </div>
@@ -188,42 +188,179 @@ const sectionedData = SECTIONS.map(section => ({
   </div>
 
   <!-- PRINT ONLY LAYOUT -->
-  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto p-8 text-text-primary bg-base">
-    <div class="border-b-2 border-text-primary pb-6 mb-6 flex justify-between items-end">
-      <div>
-        <h1 class="text-3xl font-display font-bold text-text-primary">
-          Electricity Load <span class="text-accent">Report</span>
-        </h1>
-        <p class="text-sm text-text-muted mt-1" id="print-date"></p>
+  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto text-text-primary bg-base">
+
+    <!-- ── PAGE 1: Executive Summary ──────────────────────── -->
+    <div>
+      <!-- Report header -->
+      <div class="border-b-2 border-border pb-5 mb-8 flex justify-between items-end">
+        <div>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Electrical Assessment Report</p>
+          <h1 class="text-3xl font-display font-bold text-text-primary">
+            Electricity Load <span class="text-accent">Report</span>
+          </h1>
+          <p class="text-sm text-text-muted mt-1.5" id="print-date"></p>
+        </div>
+        <div class="text-right">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Electricity Tariff</p>
+          <p class="text-2xl font-semibold" id="print-tariff">0</p>
+        </div>
       </div>
-      <div class="text-right">
-        <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Tariff</p>
-        <p class="text-2xl font-semibold" id="print-tariff">0</p>
+
+      <!-- Executive Summary: 3-column stats -->
+      <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Total Electrical Load</p>
+          <p class="text-4xl font-bold font-display" style="color: var(--accent);"><span id="print-total-kw">0.00</span> kW</p>
+          <p class="text-xs text-text-muted mt-2"><span id="print-total-watts">0</span> W</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Daily Consumption</p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-daily-kwh">0.00</span></p>
+          <p class="text-xs text-text-muted mt-2">kWh (units) per day</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Est. Monthly Bill</p>
+          <p class="text-4xl font-bold font-display" style="color: var(--accent);"><span id="print-monthly-bill">0</span></p>
+          <p class="text-xs text-text-muted mt-2">per month</p>
+        </div>
       </div>
-    </div>
-    
-    <div class="grid grid-cols-2 gap-8 mb-8 bg-card p-6 rounded-xl border border-border">
-      <div>
-        <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Total Load</h2>
-        <p class="text-4xl font-bold font-display mb-1" style="color: var(--accent);"><span id="print-total-kw">0.00</span> kW</p>
-        <p class="text-sm text-text-muted"><span id="print-total-watts">0</span> W</p>
+
+      <!-- Electrical Health Score -->
+      <div class="break-inside-avoid">
+        <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-3">Electrical Health Score</h2>
+        <div class="bg-card p-6 rounded-xl border border-border">
+          <div class="flex items-center gap-8 mb-5">
+            <div class="flex items-end gap-2">
+              <span id="print-health-score" class="text-6xl font-bold font-display" style="color: var(--accent);">—</span>
+              <span class="text-xl text-text-muted mb-2">/ 100</span>
+            </div>
+            <div>
+              <span id="print-health-label" class="text-2xl font-semibold text-text-primary">—</span>
+              <p class="text-xs text-text-muted mt-1">Composite electrical system assessment</p>
+            </div>
+          </div>
+          <div id="print-health-details" class="space-y-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
       </div>
-      <div>
-        <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Energy & Est. Bill</h2>
-        <p class="text-lg font-semibold mb-1 text-text-primary"><span id="print-daily-kwh">0.00</span> kWh(unit)/day</p>
-        <p class="text-xl font-bold mt-2 border-t border-border pt-2" style="color: var(--accent);"><span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-text-muted">/ month</span></p>
+
+      <!-- Page 1 footer -->
+      <div class="mt-12 pt-4 border-t border-border flex justify-between items-center text-[10px] text-text-muted select-none pointer-events-none">
+        <p id="print-site-url" class="font-medium"></p>
+        <p>Page 1 of 4 &nbsp;·&nbsp; &copy; {new Date().getFullYear()} All Rights Reserved</p>
       </div>
     </div>
 
-    <h2 class="text-sm font-bold uppercase tracking-wider text-text-primary mb-4 border-b border-text-primary pb-2">Active Appliances Breakdown</h2>
-    <div id="print-appliances-list" class="space-y-6 pb-12">
-      <!-- Populated by JS -->
+    <!-- ── PAGE 2: Smart Insights ─────────────────────────── -->
+    <div style="page-break-before: always; break-before: page;">
+      <!-- Section header -->
+      <div class="border-b border-border pb-4 mb-8">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Smart Insights · Page 2 of 4</p>
+        <h2 class="text-2xl font-display font-bold text-text-primary">Electrical System Recommendations</h2>
+      </div>
+
+      <!-- Insights 2×2 grid -->
+      <div class="grid grid-cols-2 gap-5 mb-7 break-inside-avoid">
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">⚡ Recommended MCB</p>
+          <p class="text-3xl font-bold text-accent mt-3 mb-3" id="print-mcb-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Miniature Circuit Breaker rating for safe protection of your total load</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">🔌 Recommended Cable</p>
+          <p class="text-3xl font-bold text-accent mt-3 mb-3" id="print-cable-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Wire gauge suitable for safe and efficient power delivery</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">🔋 Recommended Inverter</p>
+          <p class="text-3xl font-bold text-accent mt-3 mb-3" id="print-inverter-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Minimum inverter capacity needed for reliable backup power</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">☀️ Recommended Solar</p>
+          <p class="text-3xl font-bold text-accent mt-3 mb-3" id="print-solar-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Solar panel capacity to meaningfully offset your consumption</p>
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="bg-card border border-border rounded-xl p-5 break-inside-avoid">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Important Notice</p>
+        <p class="text-xs text-text-muted leading-relaxed">These recommendations are estimates based on your declared appliance loads. Always consult a licensed electrician before making wiring changes or purchasing equipment. Local regulations and building codes take precedence over these figures.</p>
+      </div>
+
+      <!-- Page 2 footer -->
+      <div class="mt-12 pt-4 border-t border-border flex justify-between items-center text-[10px] text-text-muted select-none pointer-events-none">
+        <p class="font-medium">Smart Insights · Electrical Assessment Report</p>
+        <p>Page 2 of 4</p>
+      </div>
     </div>
-    
-    <div class="mt-12 pt-6 border-t border-border flex justify-between items-center text-xs text-text-muted select-none pointer-events-none break-inside-avoid opacity-80">
-      <p id="print-site-url" class="font-medium"></p>
-      <p>&copy; {new Date().getFullYear()} — All Rights Reserved</p>
+
+    <!-- ── PAGE 3: Consumption Breakdown ──────────────────── -->
+    <div style="page-break-before: always; break-before: page;">
+      <!-- Section header -->
+      <div class="border-b border-border pb-4 mb-8">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Energy Analysis · Page 3 of 4</p>
+        <h2 class="text-2xl font-display font-bold text-text-primary">Consumption Breakdown by Category</h2>
+      </div>
+
+      <!-- Breakdown table with column headers -->
+      <div class="break-inside-avoid mb-8">
+        <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-0.5 border-b-2 border-border">
+          <span class="flex-1 text-text-primary">Category</span>
+          <span class="w-32 text-right text-text-primary">kWh / day</span>
+          <span class="w-20 text-right text-text-primary">Share</span>
+        </div>
+        <div id="print-breakdown-table" class="space-y-0">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Active Appliances -->
+      <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-4 border-b border-border pb-2">Active Appliances Breakdown</h2>
+      <div id="print-appliances-list" class="space-y-5 pb-8">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Page 3 footer -->
+      <div class="mt-12 pt-4 border-t border-border flex justify-between items-center text-[10px] text-text-muted select-none pointer-events-none">
+        <p class="font-medium">Consumption Analysis · Electrical Assessment Report</p>
+        <p>Page 3 of 4</p>
+      </div>
     </div>
+
+    <!-- ── PAGE 4: Energy Saving + High Consumption ──────── -->
+    <div style="page-break-before: always; break-before: page;">
+      <!-- Section header -->
+      <div class="border-b border-border pb-4 mb-8">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Action Plan · Page 4 of 4</p>
+        <h2 class="text-2xl font-display font-bold text-text-primary">Energy Saving Opportunities</h2>
+      </div>
+
+      <!-- Energy Saving Tips -->
+      <div class="break-inside-avoid mb-8">
+        <div id="print-saving-tips" class="space-y-1.5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- High Consumption Devices -->
+      <div class="break-inside-avoid">
+        <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-4 border-b border-border pb-2">High Consumption Devices</h2>
+        <div id="print-high-consumption" class="space-y-0">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Final footer -->
+      <div class="mt-12 pt-6 border-t border-border flex justify-between items-center text-xs text-text-muted select-none pointer-events-none break-inside-avoid">
+        <p class="font-medium">Generated by the Electricity Load Calculator. For informational purposes only.</p>
+        <p>&copy; {new Date().getFullYear()} — All Rights Reserved</p>
+      </div>
+    </div>
+
   </div>
 
   <ReportModal />
@@ -280,6 +417,7 @@ import { DEFAULT_APPLIANCES, CATEGORIES, SECTIONS } from '@/data/appliances';
 import type { Appliance, ApplianceCategory } from '@/types';
 import { calculateRowKWh, calculateTotals } from '@/utils/calculations';
 import { calculateInsights } from '@/utils/insights';
+import { calculateHealthScore, calculateCategoryBreakdown, generateSavingsTips, getHighConsumptionAlerts } from '@/utils/health';
 
 // ── State & Settings ──────────────────────────────────────
 const STORAGE_KEY = 'electricity_load_calculator_state';
@@ -403,6 +541,46 @@ function animateCounter(id: string, target: number, decimals: number) {
 function setText(id: string, value: string) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
+}
+
+// ── Breakdown Hover State ─────────────────────────────────
+let currentBreakdownItems: Array<{ category: string; kWhDay: number; percent: number; color: string }> = [];
+
+function highlightBreakdownSlice(index: number) {
+  const item = currentBreakdownItems[index];
+  if (!item) return;
+
+  document.querySelectorAll<SVGElement>('#donut-chart-svg .donut-slice').forEach((s, i) => {
+    s.style.opacity = i === index ? '1' : '0.18';
+    s.setAttribute('stroke-width', i === index ? '12' : '9');
+  });
+
+  document.querySelectorAll<HTMLElement>('#breakdown-legend .legend-row').forEach((row, i) => {
+    row.style.opacity = i === index ? '1' : '0.35';
+  });
+
+  const def = document.getElementById('donut-center-default');
+  const hov = document.getElementById('donut-center-hover');
+  const pct = document.getElementById('donut-hover-pct');
+  const kwh = document.getElementById('donut-hover-kwh');
+  if (def) def.style.display = 'none';
+  if (hov) hov.style.display = '';
+  if (pct) { pct.textContent = `${Math.round(item.percent)}%`; pct.style.color = item.color; }
+  if (kwh) kwh.textContent = `${item.kWhDay.toFixed(1)} kWh`;
+}
+
+function resetBreakdownHighlight() {
+  document.querySelectorAll<SVGElement>('#donut-chart-svg .donut-slice').forEach(s => {
+    s.style.opacity = '1';
+    s.setAttribute('stroke-width', '9');
+  });
+  document.querySelectorAll<HTMLElement>('#breakdown-legend .legend-row').forEach(row => {
+    row.style.opacity = '1';
+  });
+  const def = document.getElementById('donut-center-default');
+  const hov = document.getElementById('donut-center-hover');
+  if (def) def.style.display = '';
+  if (hov) hov.style.display = 'none';
 }
 
 function updateRowKWh(a: Appliance) {
@@ -565,6 +743,11 @@ function calculate() {
     setText('insight-inverter-value', insights.recommendedInverter);
     setText('insight-solar-value', insights.recommendedSolar);
 
+    setText('print-mcb-value', insights.recommendedMCB);
+    setText('print-cable-value', insights.recommendedCable);
+    setText('print-inverter-value', insights.recommendedInverter);
+    setText('print-solar-value', insights.recommendedSolar);
+
     const qParams = `?load=${result.totalKW.toFixed(2)}&monthly=${Math.round(result.monthlyKWh)}`;
     const insightValues: Record<string, string> = {
       mcb: insights.recommendedMCB,
@@ -575,6 +758,272 @@ function calculate() {
     for (const type of ['mcb', 'cable', 'inverter', 'solar'] as const) {
       const link = document.getElementById(`insight-${type}-link`) as HTMLAnchorElement | null;
       if (link) link.href = `/insights/${type}${qParams}&value=${encodeURIComponent(insightValues[type])}`;
+    }
+  }
+
+  // ── Electrical Health Score ────────────────────────────
+  const topConsumerDailyKWh = appliances
+    .filter(a => a.qty > 0)
+    .reduce((best, a) => Math.max(best, calculateRowKWh(a)), 0);
+
+  const health = calculateHealthScore({
+    loadPercent: result.loadPercent,
+    dailyKWh: result.dailyKWh,
+    topConsumerDailyKWh,
+    monthlyKWh: result.monthlyKWh,
+    hasMCB: activeCount > 0,
+    hasCable: activeCount > 0,
+  });
+
+  const healthSection = document.getElementById('health-score-section');
+  if (healthSection) healthSection.style.display = activeCount === 0 ? 'none' : '';
+
+  if (activeCount > 0) {
+    const scoreEl = document.getElementById('health-score-value');
+    if (scoreEl) scoreEl.style.color = health.color;
+    animateCounter('health-score-value', health.score, 0);
+
+    // Ring arc — C = 2π×36 = 226.19
+    const ring = document.getElementById('health-score-ring') as SVGCircleElement | null;
+    if (ring) {
+      ring.style.stroke = health.color;
+      ring.style.strokeDashoffset = String(226.19 * (1 - health.score / 100));
+    }
+
+    // Card border + subtle tint — no glow, consistent with other cards
+    const scoreCard = document.getElementById('health-score-card');
+    if (scoreCard) {
+      scoreCard.style.borderColor = `color-mix(in srgb, ${health.color}, transparent 62%)`;
+      scoreCard.style.background   = `color-mix(in srgb, ${health.color}, transparent 93%)`;
+    }
+
+    // Header icon
+    const iconEl = document.getElementById('health-score-icon');
+    if (iconEl) (iconEl as HTMLElement).style.color = health.color;
+
+    // Label badge
+    const labelEl = document.getElementById('health-score-label');
+    if (labelEl) {
+      labelEl.textContent = health.label;
+      labelEl.style.color = health.color;
+      labelEl.style.background   = `color-mix(in srgb, ${health.color}, transparent 85%)`;
+      labelEl.style.borderColor  = `color-mix(in srgb, ${health.color}, transparent 55%)`;
+    }
+
+    // Description text
+    const descMap: Record<string, string> = {
+      Excellent: 'Well-balanced setup with efficient energy use.',
+      Good:      'Good setup with minor optimisation opportunities.',
+      Fair:      'Some inefficiencies found — review your top appliances.',
+      Poor:      'High load or imbalance detected — action recommended.',
+    };
+    setText('health-score-desc', descMap[health.label] ?? '');
+
+    // Sub-score bars — color follows health band
+    const subDefs = [
+      { id: 'utilization', pts: health.subScores.utilization, max: 30 },
+      { id: 'efficiency',  pts: health.subScores.efficiency,  max: 30 },
+      { id: 'safety',      pts: health.subScores.safety,      max: 20 },
+      { id: 'renewable',   pts: health.subScores.renewable,   max: 20 },
+    ] as const;
+    for (const { id, pts, max } of subDefs) {
+      const bar = document.getElementById(`health-sub-${id}-bar`);
+      if (bar) {
+        bar.style.width      = `${Math.round((pts / max) * 100)}%`;
+        bar.style.background = health.color;
+      }
+      setText(`health-sub-${id}-pts`, `${pts}/${max}`);
+    }
+
+    // Print
+    setText('print-health-score', String(health.score));
+    setText('print-health-label', health.label);
+    const printDetails = document.getElementById('print-health-details');
+    if (printDetails) {
+      printDetails.innerHTML = `
+        <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Load Utilization</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.utilization}/30</span></div>
+        <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Energy Efficiency</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.efficiency}/30</span></div>
+        <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Safety Readiness</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.safety}/20</span></div>
+        <div class="flex justify-between text-sm"><span class="text-text-muted">Renewable Readiness</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.renewable}/20</span></div>
+      `;
+    }
+  }
+
+  // ── Consumption Breakdown ──────────────────────────────
+  const breakdown = calculateCategoryBreakdown(appliances);
+  const breakdownSection = document.getElementById('consumption-breakdown-section');
+  if (breakdownSection) breakdownSection.style.display = activeCount === 0 ? 'none' : '';
+
+  if (activeCount > 0 && result.dailyKWh > 0) {
+    // Store for hover callbacks
+    currentBreakdownItems = breakdown.items;
+
+    setText('donut-center-kwh', result.dailyKWh.toFixed(1));
+    // Ensure default center is visible and hover is hidden
+    const centerDef = document.getElementById('donut-center-default');
+    const centerHov = document.getElementById('donut-center-hover');
+    if (centerDef) centerDef.style.display = '';
+    if (centerHov) centerHov.style.display = 'none';
+
+    // Build donut slices with interactivity
+    const R = 35;
+    const C = 2 * Math.PI * R;
+    const svgEl = document.getElementById('donut-chart-svg');
+    if (svgEl) {
+      // Update track ring stroke-width to match
+      const trackRing = svgEl.querySelector('circle:first-child') as SVGCircleElement | null;
+      if (trackRing) trackRing.setAttribute('stroke-width', '9');
+
+      svgEl.querySelectorAll('.donut-slice').forEach(s => s.remove());
+      let accumulated = 0;
+      breakdown.items.forEach((item, idx) => {
+        const dashLen = (item.percent / 100) * C;
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', '50');
+        circle.setAttribute('cy', '50');
+        circle.setAttribute('r', String(R));
+        circle.setAttribute('fill', 'none');
+        circle.setAttribute('stroke', item.color);
+        circle.setAttribute('stroke-width', '9');
+        circle.setAttribute('stroke-dasharray', `${dashLen} ${C}`);
+        circle.setAttribute('stroke-dashoffset', String(-accumulated));
+        circle.setAttribute('pointer-events', 'visibleStroke');
+        circle.classList.add('donut-slice');
+        circle.style.cursor = 'pointer';
+        circle.style.transition = 'opacity 0.2s ease';
+        circle.addEventListener('mouseenter', () => highlightBreakdownSlice(idx));
+        circle.addEventListener('mouseleave', resetBreakdownHighlight);
+        svgEl.appendChild(circle);
+        accumulated += dashLen;
+      });
+    }
+
+    // Build interactive legend
+    const legend = document.getElementById('breakdown-legend');
+    if (legend) {
+      legend.innerHTML = breakdown.items.map((item, idx) => `
+        <div class="legend-row flex items-center gap-2 min-w-0 cursor-pointer rounded-md px-1.5 py-1 transition-all duration-200 hover:bg-white/5" data-legend-index="${idx}">
+          <span class="flex-shrink-0 w-2.5 h-2.5 rounded-sm flex-shrink-0" style="background:${item.color}"></span>
+          <span class="text-[11px] text-text-muted truncate flex-1 leading-tight">${item.category}</span>
+          <div class="flex-shrink-0 text-right">
+            <div class="text-[11px] font-mono font-bold tabular-nums leading-tight" style="color:${item.color}">${Math.round(item.percent)}%</div>
+            <div class="text-[9px] font-mono text-text-muted tabular-nums leading-tight">${item.kWhDay.toFixed(1)} kWh</div>
+          </div>
+        </div>
+      `).join('');
+
+      legend.querySelectorAll<HTMLElement>('.legend-row').forEach(row => {
+        const idx = Number(row.dataset.legendIndex);
+        row.addEventListener('mouseenter', () => highlightBreakdownSlice(idx));
+        row.addEventListener('mouseleave', resetBreakdownHighlight);
+      });
+    }
+
+    // Insight badge
+    const insightDot = document.getElementById('breakdown-insight-dot');
+    const insightLabel = document.getElementById('breakdown-insight-label');
+    const insightBox = document.getElementById('breakdown-insight-text');
+    const topColor = breakdown.items[0]?.color ?? 'var(--accent)';
+    if (insightDot) insightDot.style.color = topColor;
+    if (insightBox) {
+      insightBox.style.background = `color-mix(in srgb, ${topColor}, transparent 92%)`;
+      insightBox.style.borderColor = `color-mix(in srgb, ${topColor}, transparent 75%)`;
+    }
+    if (insightLabel) {
+      insightLabel.textContent = `${breakdown.topCategory} · ${Math.round(breakdown.topPercent)}% of total usage`;
+      (insightLabel as HTMLElement).style.color = topColor;
+    }
+
+    // Print — text table (no SVG in print for reliability); columns match the HTML header
+    const printBreakdown = document.getElementById('print-breakdown-table');
+    if (printBreakdown) {
+      printBreakdown.innerHTML = breakdown.items.map(item => `
+        <div class="flex text-sm py-1.5 border-b border-border">
+          <span class="flex-1 text-text-muted">${item.category}</span>
+          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh/d</span>
+          <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  // ── Energy Saving Opportunities ───────────────────────
+  const savings = generateSavingsTips(appliances, result.monthlyBill);
+  const savingsSection = document.getElementById('energy-saving-section');
+  if (savingsSection) savingsSection.style.display = activeCount === 0 ? 'none' : '';
+
+  if (activeCount > 0) {
+    setText('saving-top-consumer', savings.topConsumerName);
+    setText('saving-potential', formatCurrency(savings.potentialSavings));
+
+    const tipsList = document.getElementById('saving-tips-list');
+    if (tipsList) {
+      tipsList.innerHTML = savings.tips.map(tip => `
+        <li class="flex items-start gap-2.5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style="color:#3ecf6e" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/>
+          </svg>
+          <span class="text-xs text-text-muted leading-relaxed">${tip}</span>
+        </li>
+      `).join('');
+    }
+
+    // Print
+    const printSaving = document.getElementById('print-saving-tips');
+    if (printSaving) {
+      printSaving.innerHTML = `
+        <div class="flex justify-between mb-2">
+          <span class="text-sm text-text-muted">Top Consumer</span>
+          <span class="text-sm font-semibold text-text-primary">${savings.topConsumerName}</span>
+        </div>
+        <div class="flex justify-between mb-3 pb-3 border-b border-border">
+          <span class="text-sm text-text-muted">Potential Monthly Savings</span>
+          <span class="text-sm font-bold" style="color:var(--accent)">${formatCurrency(savings.potentialSavings)}</span>
+        </div>
+        ${savings.tips.map(tip => `<div class="flex items-start gap-2 mb-1.5"><span class="text-accent font-bold">✓</span><span class="text-sm text-text-muted">${tip}</span></div>`).join('')}
+      `;
+    }
+  }
+
+  // ── High Consumption Alerts ────────────────────────────
+  const alerts = getHighConsumptionAlerts(appliances, result.dailyKWh);
+  const alertsSection = document.getElementById('high-consumption-section');
+  if (alertsSection) alertsSection.style.display = (activeCount === 0 || alerts.length === 0) ? 'none' : '';
+
+  if (alerts.length > 0) {
+    const alertsList = document.getElementById('high-consumption-list');
+    if (alertsList) {
+      alertsList.innerHTML = alerts.map(alert => `
+        <li class="flex items-start justify-between gap-3 rounded-lg px-3 py-2.5" style="background: color-mix(in srgb, var(--danger), transparent 91%); border: 1px solid color-mix(in srgb, var(--danger), transparent 72%);">
+          <div class="flex items-start gap-2 min-w-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style="color:var(--danger)" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold text-text-primary leading-tight">${alert.name}</p>
+              <p class="text-[10px] text-text-muted leading-tight mt-0.5">${alert.reason}</p>
+            </div>
+          </div>
+          <div class="flex-shrink-0 text-right">
+            <p class="text-xs font-mono font-bold tabular-nums" style="color:var(--danger)">${alert.kWhDay.toFixed(1)}</p>
+            <p class="text-[10px] font-mono text-text-muted">kWh/d</p>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    // Print
+    const printAlerts = document.getElementById('print-high-consumption');
+    if (printAlerts) {
+      printAlerts.innerHTML = alerts.map(alert => `
+        <div class="flex justify-between text-sm py-1.5 border-b border-border">
+          <div>
+            <span class="font-medium text-text-primary">⚠ ${alert.name}</span>
+            <span class="text-text-muted ml-2 text-xs">${alert.reason}</span>
+          </div>
+          <span class="font-mono font-semibold flex-shrink-0 ml-4" style="color:var(--accent)">${alert.kWhDay.toFixed(1)} kWh/d</span>
+        </div>
+      `).join('');
     }
   }
 }

@@ -1,55 +1,55 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
 ---
 
 <BaseLayout title="MCB Recommendation | Electricity Load Calculator" description="Find the right MCB (Miniature Circuit Breaker) rating for your electrical load.">
-  <main class="min-h-screen px-4 py-10 max-w-2xl mx-auto">
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'MCB Recommendation' }]} />
 
-    <a href="/" class="inline-flex items-center gap-1.5 text-sm font-mono mb-8 hover:opacity-80 transition-opacity" style="color:var(--accent)">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
-        <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
-      </svg>
-      Back to Calculator
-    </a>
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">
+    <div class="max-w-2xl mx-auto">
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-6">
 
-    <div class="insight-card rounded-xl border bg-card p-6 space-y-6" style="border-color:color-mix(in srgb, var(--accent), transparent 68%)">
-
-      <!-- Header -->
-      <div class="flex items-start gap-4">
-        <span class="insight-icon-ring flex h-14 w-14 items-center justify-center rounded-full flex-shrink-0" style="background:color-mix(in srgb, var(--accent), transparent 82%)">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7" style="color:var(--accent)" aria-hidden="true">
-            <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
-          </svg>
-        </span>
-        <div class="pt-1">
-          <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5" style="color:var(--accent)">MCB Recommendation</p>
-          <h1 class="font-display font-black text-3xl text-text-primary leading-tight">Miniature Circuit Breaker</h1>
+        <!-- Header -->
+        <div class="flex items-start gap-4">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-base flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-accent" aria-hidden="true">
+              <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+            </svg>
+          </span>
+          <div class="pt-0.5">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5 text-text-muted">MCB Recommendation</p>
+            <h1 class="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">Miniature Circuit Breaker</h1>
+          </div>
         </div>
-      </div>
 
-      <!-- Recommended value -->
-      <div class="insight-value-box rounded-xl border p-6 text-center" style="border-color:color-mix(in srgb, var(--accent), transparent 52%); background:color-mix(in srgb, var(--accent), transparent 90%)">
-        <p class="text-[10px] font-mono uppercase tracking-widest mb-3" style="color:var(--accent)">Recommended Rating</p>
-        <p id="insight-value" class="font-display font-black text-5xl tracking-tight" style="color:var(--accent)">—</p>
-        <p id="insight-context" class="text-sm text-text-muted mt-3"></p>
-      </div>
+        <!-- Recommended value -->
+        <div class="rounded-xl border border-border bg-base p-6 text-center">
+          <p class="text-[10px] font-mono uppercase tracking-widest mb-3 text-text-muted">Recommended Rating</p>
+          <p id="insight-value" class="font-display font-bold text-5xl tracking-tight text-accent">—</p>
+          <p id="insight-context" class="text-sm text-text-muted mt-3"></p>
+        </div>
 
-      <!-- Educational content -->
-      <div class="space-y-3 text-sm text-text-muted leading-relaxed">
-        <h2 class="font-semibold text-text-primary text-base">What is an MCB?</h2>
-        <p>A Miniature Circuit Breaker (MCB) is an automatic electrical switch that protects against overloads and short circuits. Unlike fuses, MCBs can be reset after tripping.</p>
-        <p>The <strong class="text-text-primary">C-Curve</strong> type is suitable for resistive and slightly inductive loads common in homes and offices — lighting, fans, computers, and similar equipment.</p>
-        <h2 class="font-semibold text-text-primary text-base mt-4">How the rating is calculated</h2>
-        <ul class="space-y-1 list-disc list-inside">
-          <li>Full load current = Total Watts ÷ 230V</li>
-          <li>Design current = Full load current × 1.25 (25% safety margin)</li>
-          <li>Select the next standard rating above the design current</li>
-        </ul>
-        <p class="text-xs mt-3 p-3 rounded-lg border border-border bg-base">
-          These recommendations are estimates based on single-phase supply at 230V. Consult a licensed electrician before purchasing or installing electrical components.
-        </p>
-      </div>
+        <!-- Educational content -->
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h2 class="font-display font-semibold text-text-primary text-lg">What is an MCB?</h2>
+          <p>A Miniature Circuit Breaker (MCB) is an automatic electrical switch that protects against overloads and short circuits. Unlike fuses, MCBs can be reset after tripping.</p>
+          <p>The <strong class="text-text-primary">C-Curve</strong> type is suitable for resistive and slightly inductive loads common in homes and offices — lighting, fans, computers, and similar equipment.</p>
+          <h2 class="font-display font-semibold text-text-primary text-lg mt-4">How the rating is calculated</h2>
+          <ul class="space-y-1 list-disc list-inside">
+            <li>Full load current = Total Watts ÷ 230V</li>
+            <li>Design current = Full load current × 1.25 (25% safety margin)</li>
+            <li>Select the next standard rating above the design current</li>
+          </ul>
+          <div class="flex gap-2.5 mt-3 p-3.5 rounded-lg border" style="border-color:color-mix(in srgb, var(--warning), transparent 55%); background:color-mix(in srgb, var(--warning), transparent 90%)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--warning)" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
+            </svg>
+            <p class="text-xs text-text-primary leading-relaxed">These recommendations are estimates based on single-phase supply at 230V. Consult a licensed electrician before purchasing or installing electrical components.</p>
+          </div>
+        </div>
 
+      </div>
     </div>
   </main>
 </BaseLayout>
