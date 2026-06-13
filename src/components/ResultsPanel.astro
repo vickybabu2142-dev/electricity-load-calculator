@@ -69,6 +69,34 @@
       </div>
     </div>
 
+    <!-- Empty state — shown when no appliances are active -->
+    <div
+      id="empty-state-prompt"
+      class="rounded-xl px-5 py-5 text-center"
+      style="
+        background: color-mix(in srgb, var(--accent), transparent 91%);
+        border: 1px solid color-mix(in srgb, var(--accent), transparent 55%);
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 82%), 0 6px 24px -6px color-mix(in srgb, var(--accent), transparent 65%);
+      "
+    >
+      <!-- Icon badge -->
+      <div class="flex justify-center mb-3">
+        <span
+          class="flex h-10 w-10 items-center justify-center rounded-full"
+          style="background: color-mix(in srgb, var(--accent), transparent 78%);"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="color: var(--accent);" aria-hidden="true">
+            <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+          </svg>
+        </span>
+      </div>
+
+      <p class="text-sm font-semibold text-text-primary mb-1">Nothing selected yet</p>
+      <p class="text-xs text-text-muted leading-relaxed">
+        Pick a <span class="font-semibold" style="color: var(--accent);">Quick Start</span> above for an instant setup, or increase the quantity on any appliance manually.
+      </p>
+    </div>
+
     <!-- Divider -->
     <hr class="border-border" />
 
@@ -207,18 +235,6 @@
           <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-7.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" clip-rule="evenodd" />
         </svg>
         Report
-      </button>
-      <button
-        id="reset-all-btn"
-        data-action="reset-all"
-        type="button"
-        class="hidden lg:flex flex-1 items-center justify-center gap-2 px-3 py-3 rounded-lg border border-danger/20 text-danger bg-danger/5 text-lg font-display font-medium hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-danger active:scale-95"
-        aria-label="Reset all appliances to defaults"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-          <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd"/>
-        </svg>
-        Reset
       </button>
     </div>
 

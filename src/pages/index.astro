@@ -22,6 +22,64 @@ const sectionedData = SECTIONS.map(section => ({
   <PageHero />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-24 print:hidden animate-slide-up">
+
+    <!-- QUICK START PRESETS -->
+    <div class="mb-6 print:hidden">
+      <div class="flex items-center gap-3 mb-3">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">Quick Start</p>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+
+        <!-- Typical 2BHK -->
+        <button type="button" data-action="load-preset" data-preset-id="typical-2bhk"
+          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-accent flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </span>
+              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Typical 2BHK</span>
+            </div>
+            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~5 kW</span>
+          </div>
+          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Standard home — AC, fridge, TV &amp; kitchen</p>
+        </button>
+
+        <!-- Budget Home -->
+        <button type="button" data-action="load-preset" data-preset-id="budget-home"
+          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-accent flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 22V12"/><path d="m5 12 7-10 7 10"/><path d="M19 15v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5"/></svg>
+              </span>
+              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Budget Home</span>
+            </div>
+            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~1.3 kW</span>
+          </div>
+          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Essentials only — fans, fridge, TV &amp; laptop</p>
+        </button>
+
+        <!-- Summer Heavy -->
+        <button type="button" data-action="load-preset" data-preset-id="summer-heavy"
+          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-accent flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+              </span>
+              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Summer Heavy</span>
+            </div>
+            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~10 kW</span>
+          </div>
+          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Peak season — dual AC, full kitchen &amp; more</p>
+        </button>
+
+      </div>
+
+    </div>
+
     <div class="flex flex-col lg:flex-row gap-6 items-start">
 
       <!-- Left: appliance categories -->
@@ -29,10 +87,23 @@ const sectionedData = SECTIONS.map(section => ({
         <div class="space-y-10">
           {sectionedData.map((section) => (
           <div class="space-y-4">
-            <h2 class="text-xl font-display font-bold text-text-primary uppercase tracking-wider border-l-4 border-accent pl-3 flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-accent"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              {section.title}
-            </h2>
+            <div class="flex items-center justify-between border-l-4 border-accent pl-3">
+              <h2 class="text-xl font-display font-bold text-text-primary uppercase tracking-wider flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-accent"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                {section.title}
+              </h2>
+              <button
+                type="button"
+                data-action="reset-all"
+                class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-lg border border-danger/20 text-danger bg-danger/5 text-lg font-display font-medium hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-danger active:scale-95"
+                aria-label="Reset all appliances"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd"/>
+                </svg>
+                Reset All
+              </button>
+            </div>
             <div class="space-y-4">
               {section.groups.map((group, i) => (
                 <ApplianceCategory
@@ -56,9 +127,9 @@ const sectionedData = SECTIONS.map(section => ({
   </main>
 
   <!-- MOBILE STICKY SUMMARY -->
-  <div class="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border p-3 z-40 lg:hidden print:hidden no-print shadow-[0_-15px_30px_-15px_rgba(0,0,0,0.5)] flex justify-between items-center gap-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
+  <div id="mobile-sticky-bar" class="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border p-3 z-40 lg:hidden print:hidden no-print shadow-[0_-15px_30px_-15px_rgba(0,0,0,0.5)] flex justify-between items-center gap-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] animate-slide-up-sticky">
     
-    <!-- Reset Form -->
+    <!-- Reset button -->
     <button
       id="sticky-reset-btn"
       data-action="reset-all"
@@ -74,13 +145,30 @@ const sectionedData = SECTIONS.map(section => ({
 
     <!-- Center Summary -->
     <div class="flex flex-col items-center text-center flex-1 min-w-0">
-      <div class="flex items-baseline justify-center gap-1">
-        <span id="sticky-total-kw" class="font-display font-bold text-2xl tabular-nums leading-none truncate" style="color: var(--accent);">0.00</span>
-        <span class="font-mono text-xs text-text-muted">kW</span>
+
+      <!-- Numbers: shown when at least one appliance is active -->
+      <div id="sticky-summary">
+        <div class="flex items-baseline justify-center gap-1">
+          <span id="sticky-total-kw" class="font-display font-bold text-2xl tabular-nums leading-none truncate" style="color: var(--accent);">0.00</span>
+          <span class="font-mono text-xs text-text-muted">kW</span>
+        </div>
+        <div class="text-[10px] text-text-primary font-medium truncate w-full opacity-90">
+          Est. Bill: <span id="sticky-monthly-bill" class="font-semibold tabular-nums" style="color: var(--accent);">0</span>
+        </div>
       </div>
-      <div class="text-[10px] text-text-primary font-medium truncate w-full opacity-90">
-        Est. Bill: <span id="sticky-monthly-bill" class="font-semibold tabular-nums" style="color: var(--accent);">0</span>
+
+      <!-- Hint: shown when nothing is active yet -->
+      <div id="sticky-empty-hint" class="flex flex-col items-center gap-0.5" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+          class="w-3 h-3 animate-bounce mb-0.5" style="color: var(--accent);" aria-hidden="true">
+          <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+        <p class="text-xs font-medium text-text-primary">
+          Pick a <span class="font-semibold" style="color: var(--accent);">Quick Start</span> or tap <span class="font-semibold" style="color: var(--accent);">+</span>
+        </p>
+        <p class="text-[10px] text-text-muted">to see your load &amp; bill</p>
       </div>
+
     </div>
 
     <!-- Details View -->
@@ -209,6 +297,30 @@ let tariff = 8;
 let currentCurrency = 'INR';
 let maxCapacityKW = 5;
 let customIdCounter = 1000;
+let activePresetId: string | null = null;
+
+const PRESETS: Record<string, Record<string, number>> = {
+  'typical-2bhk': {
+    'LED Bulb': 4, 'Tube Light': 2,
+    'Ceiling Fan': 3, 'Air Conditioner (1.5T)': 1,
+    'Refrigerator': 1, 'Microwave Oven': 1, 'Mixer / Grinder': 1, 'Water Purifier (RO)': 1,
+    'LED TV (32")': 1, 'Set-top Box': 1, 'Wi-Fi Router': 1,
+    'Washing Machine': 1, 'Laptop / Charger': 1, 'Water Pump (0.5 HP)': 1,
+  },
+  'budget-home': {
+    'LED Bulb': 3, 'Tube Light': 1,
+    'Ceiling Fan': 2, 'Table Fan': 1,
+    'Refrigerator': 1, 'Mixer / Grinder': 1,
+    'LED TV (32")': 1, 'Wi-Fi Router': 1, 'Laptop / Charger': 1,
+  },
+  'summer-heavy': {
+    'LED Bulb': 6, 'Spotlight / Downlight': 2,
+    'Ceiling Fan': 3, 'Air Conditioner (1.5T)': 2, 'Air Cooler': 1, 'Exhaust Fan': 2,
+    'Refrigerator': 1, 'Microwave Oven': 1, 'Water Purifier (RO)': 1, 'Induction Cooktop': 1,
+    'LED TV (55")': 1, 'Wi-Fi Router': 1,
+    'Washing Machine': 1, 'Laptop / Charger': 2, 'Geyser / Water Heater': 1, 'Water Pump (0.5 HP)': 1,
+  },
+};
 
 // ── Helpers ───────────────────────────────────────────────
 function saveState() {
@@ -219,11 +331,11 @@ function saveState() {
     maxCapacityKW,
     customIdCounter
   };
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
 function loadState(): boolean {
-  const saved = sessionStorage.getItem(STORAGE_KEY);
+  const saved = localStorage.getItem(STORAGE_KEY);
   if (!saved) return false;
   try {
     const state = JSON.parse(saved);
@@ -357,6 +469,15 @@ function calculate() {
   setText('total-count',  String(totalCount));
   setText('hero-total-count', String(totalCount));
 
+  const emptyPrompt = document.getElementById('empty-state-prompt');
+  if (emptyPrompt) emptyPrompt.style.display = activeCount === 0 ? '' : 'none';
+
+  const stickySummary = document.getElementById('sticky-summary');
+  const stickyHint = document.getElementById('sticky-empty-hint');
+  if (stickySummary) stickySummary.style.display = activeCount === 0 ? 'none' : '';
+  if (stickyHint) stickyHint.style.display = activeCount === 0 ? 'flex' : 'none';
+
+
   CATEGORIES.forEach(cat => {
     const catAppliances = appliances.filter(a => a.category === cat && a.qty > 0);
     const catWatts = catAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
@@ -407,7 +528,7 @@ function calculate() {
                   ${catItems.map(a => `
                     <div class="flex justify-between items-center text-sm">
                       <div class="flex-1">
-                        <span class="font-medium text-text-primary">${a.name}</span>
+                        <span class="font-medium text-text-primary">${escapeHtml(a.name)}</span>
                         <span class="text-text-muted ml-2 text-xs">${a.qty} × ${a.watts}W</span>
                       </div>
                       <div class="text-right font-mono font-medium text-text-primary">
@@ -523,6 +644,12 @@ document.addEventListener('click', (e) => {
 
   if (!action) return;
 
+  if (action === 'load-preset') {
+    const presetId = btn.dataset.presetId;
+    if (presetId) loadPreset(presetId);
+    return;
+  }
+
   if (action === 'toggle-category') {
     const category = btn.dataset.category!;
     const bodyId   = `category-body-${category.replace(/\s/g, '-')}`;
@@ -612,6 +739,8 @@ document.addEventListener('click', (e) => {
     });
     
     appliances.forEach(a => updateRowNameStyle(a));
+    activePresetId = null;
+    updatePresetButtons();
     currentCurrency = 'INR';
     
     const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
@@ -628,11 +757,9 @@ document.addEventListener('click', (e) => {
     const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
     if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
     
+    expandLighting();
     calculate();
-    
-    // Scroll smoothly to the top to confirm reset visually
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
+
     return;
   }
 
@@ -807,18 +934,75 @@ document.addEventListener('submit', (e) => {
   calculate();
 }, true);
 
+function updatePresetButtons() {
+  document.querySelectorAll<HTMLElement>('.preset-card').forEach(btn => {
+    const isActive = btn.dataset.presetId === activePresetId;
+    btn.style.borderColor = '';
+    btn.style.boxShadow  = isActive ? '0 0 0 1px color-mix(in srgb, var(--accent), transparent 65%)' : '';
+    btn.style.background  = isActive ? 'color-mix(in srgb, var(--accent), transparent 93%)' : '';
+  });
+}
+
+function loadPreset(presetId: string) {
+  const quantities = PRESETS[presetId];
+  if (!quantities) return;
+
+  // Reset all quantities then apply preset
+  appliances.forEach(a => { a.qty = 0; });
+  appliances.forEach(a => { if (quantities[a.name] !== undefined) a.qty = quantities[a.name]; });
+
+  activePresetId = presetId;
+
+  // Re-render every category and expand/collapse based on active appliances
+  CATEGORIES.forEach(cat => {
+    const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
+    const body = document.getElementById(bodyId);
+    const container = body?.querySelector('[data-rows-container]');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const catAppliances = appliances.filter(a => a.category === cat);
+    catAppliances.forEach(a => container.insertAdjacentHTML('beforeend', buildRowHTML(a)));
+
+    if (body) {
+      const hasActive = catAppliances.some(a => a.qty > 0);
+      body.style.display = hasActive ? '' : 'none';
+      const section = body.closest('.category-section');
+      const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+      const chevron   = toggleBtn?.querySelector<SVGElement>('.chevron');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', hasActive ? 'true' : 'false');
+      if (chevron)   chevron.style.transform = hasActive ? '' : 'rotate(-90deg)';
+    }
+  });
+
+  appliances.forEach(a => updateRowNameStyle(a));
+  updatePresetButtons();
+  saveState();
+  calculate();
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function buildRowHTML(a: Appliance): string {
   const kwh = formatNumber(calculateRowKWh(a), 2);
   const nameColor = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
+  const safeName = escapeHtml(a.name);
   return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up" 
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up"
       data-id="${a.id}">
-      
+
       <!-- Name & Reading Row -->
       <div class="flex items-center justify-between gap-3 flex-1 min-w-[200px] lg:min-w-0 lg:contents">
         <!-- Name -->
         <div class="flex-1 lg:order-1">
-          <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${a.name}</span>
+          <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${safeName}</span>
           ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
         </div>
 
@@ -835,10 +1019,10 @@ function buildRowHTML(a: Appliance): string {
         <div class="flex items-center gap-1 flex-1 lg:flex-none justify-center lg:justify-start lg:order-2">
           <input type="number" value="${a.watts}" min="1" max="99999"
             class="w-full sm:w-20 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
-            data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${a.name}" />
+            data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${safeName}" />
           <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-3 text-center">W</span>
         </div>
-        
+
         <!-- Qty stepper -->
         <div class="flex items-center flex-1 lg:flex-none justify-center lg:order-3">
           <button type="button" class="stepper-btn flex-1 lg:flex-none max-w-[40px]" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
@@ -851,7 +1035,7 @@ function buildRowHTML(a: Appliance): string {
           <div class="flex items-center gap-1 w-full justify-center">
             <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
               class="w-full sm:w-16 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
-              data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${a.name}" />
+              data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${safeName}" />
             <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-5 text-center">h/d</span>
           </div>
           <span class="hours-error hidden text-[8px] sm:text-[9px] text-danger font-mono font-bold uppercase absolute mt-6" data-error-id="${a.id}">Max 24h</span>
@@ -862,7 +1046,7 @@ function buildRowHTML(a: Appliance): string {
           ${a.custom ? `
             <button type="button"
               class="w-10 h-10 sm:w-8 sm:h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
-              data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${a.name}" title="Remove appliance">
+              data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${safeName}" title="Remove appliance">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mx-auto">
                 <path d="M3 6h18"></path>
                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
@@ -884,6 +1068,17 @@ function closeModal() {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
+
+function expandLighting() {
+  const body = document.getElementById('category-body-Lighting');
+  if (!body || body.style.display !== 'none') return;
+  body.style.display = '';
+  const section = body.closest('.category-section');
+  const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+  const chevron   = toggleBtn?.querySelector<SVGElement>('.chevron');
+  if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+  if (chevron)   chevron.style.transform = '';
+}
 
 function initCalculator() {
   const hasSavedState = loadState();
@@ -929,6 +1124,7 @@ function initCalculator() {
     appliances.forEach(a => updateRowNameStyle(a));
   }
 
+  expandLighting();
   calculate();
   
   document.getElementById('sticky-details-link')?.addEventListener('click', (e) => {
