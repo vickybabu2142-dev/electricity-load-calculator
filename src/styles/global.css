@@ -252,6 +252,14 @@ textarea:focus {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent), transparent 80%);
 }
 
+/* Category body accordion */
+.category-body-wrap {
+  display: none;
+}
+.category-body-wrap.is-open {
+  display: block;
+}
+
 /* Toggle switch (Vercel Style: Improved Visibility) */
 .toggle-label {
   background-color: var(--toggle-off);

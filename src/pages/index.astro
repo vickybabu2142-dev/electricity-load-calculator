@@ -33,7 +33,7 @@ const sectionedData = SECTIONS.map(section => ({
 
         <!-- Typical 2BHK -->
         <button type="button" data-action="load-preset" data-preset-id="typical-2bhk"
-          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
               <span class="text-accent flex-shrink-0">
@@ -48,7 +48,7 @@ const sectionedData = SECTIONS.map(section => ({
 
         <!-- Budget Home -->
         <button type="button" data-action="load-preset" data-preset-id="budget-home"
-          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
               <span class="text-accent flex-shrink-0">
@@ -63,7 +63,7 @@ const sectionedData = SECTIONS.map(section => ({
 
         <!-- Summer Heavy -->
         <button type="button" data-action="load-preset" data-preset-id="summer-heavy"
-          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
               <span class="text-accent flex-shrink-0">
@@ -119,7 +119,7 @@ const sectionedData = SECTIONS.map(section => ({
       </div>
 
       <!-- Right: results panel -->
-      <div class="w-full lg:w-80 xl:w-96 flex-shrink-0 lg:sticky lg:top-24 z-10 transition-all duration-500 ease-in-out">
+      <div class="w-full lg:w-80 xl:w-96 flex-shrink-0 lg:sticky lg:top-24 z-10">
         <ResultsPanel />
       </div>
 
@@ -1239,7 +1239,7 @@ document.addEventListener('click', (e) => {
     if (!body) return;
     const isOpen = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-    body.style.display = isOpen ? 'none' : '';
+    body.classList.toggle('is-open', !isOpen);
     if (chevron) chevron.style.transform = isOpen ? 'rotate(-90deg)' : '';
     return;
   }
@@ -1310,7 +1310,7 @@ document.addEventListener('click', (e) => {
       
       // Collapse the category on reset
       if (body) {
-        body.style.display = 'none';
+        body.classList.remove('is-open');
         const section = body.closest('.category-section');
         const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
         const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
@@ -1490,8 +1490,8 @@ document.addEventListener('submit', (e) => {
     container.insertAdjacentHTML('beforeend', rowHtml);
     
     // Auto-expand category if hidden
-    if (body && body.style.display === 'none') {
-      body.style.display = '';
+    if (body && !body.classList.contains('is-open')) {
+      body.classList.add('is-open');
       const section = body.closest('.category-section');
       const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
       const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
@@ -1540,7 +1540,7 @@ function loadPreset(presetId: string) {
 
     if (body) {
       const hasActive = catAppliances.some(a => a.qty > 0);
-      body.style.display = hasActive ? '' : 'none';
+      body.classList.toggle('is-open', hasActive);
       const section = body.closest('.category-section');
       const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
       const chevron   = toggleBtn?.querySelector<SVGElement>('.chevron');
@@ -1569,7 +1569,7 @@ function buildRowHTML(a: Appliance): string {
   const nameColor = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
   const safeName = escapeHtml(a.name);
   return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up"
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150"
       data-id="${a.id}">
 
       <!-- Name & Reading Row -->
@@ -1645,8 +1645,8 @@ document.addEventListener('keydown', (e) => {
 
 function expandLighting() {
   const body = document.getElementById('category-body-Lighting');
-  if (!body || body.style.display !== 'none') return;
-  body.style.display = '';
+  if (!body || body.classList.contains('is-open')) return;
+  body.classList.add('is-open');
   const section = body.closest('.category-section');
   const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
   const chevron   = toggleBtn?.querySelector<SVGElement>('.chevron');
@@ -1694,7 +1694,7 @@ function initCalculator() {
 
       // Auto-expand category if it contains active appliances
       if (catAppliances.some(a => a.qty > 0) && body) {
-        body.style.display = '';
+        body.classList.add('is-open');
         const section = body.closest('.category-section');
         const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
         const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');

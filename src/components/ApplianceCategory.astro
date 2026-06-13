@@ -24,14 +24,13 @@ const icon = CATEGORY_ICONS[name];
 ---
 
 <section
-  class="category-section rounded-xl border border-border bg-card overflow-hidden animate-slide-up"
+  class="category-section rounded-xl border border-border bg-card overflow-hidden"
   data-category={name}
-  style={`animation-delay: ${index * 0.08}s`}
 >
   <!-- Category header -->
   <button
     type="button"
-    class="category-toggle w-full flex items-center gap-3 px-5 py-4 hover:bg-card-hover transition-colors text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
+    class="category-toggle w-full flex items-center gap-3 px-5 py-4 hover:bg-card-hover transition-colors text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
     data-action="toggle-category"
     aria-expanded="false"
     aria-controls={`category-body-${name.replace(/\s/g, '-')}`}
@@ -88,7 +87,7 @@ const icon = CATEGORY_ICONS[name];
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
-      class="chevron w-5 h-5 text-text-muted flex-shrink-0 transition-transform duration-200"
+      class="chevron w-5 h-5 text-text-muted flex-shrink-0"
       style="transform: rotate(-90deg)"
     >
       <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
@@ -98,8 +97,7 @@ const icon = CATEGORY_ICONS[name];
   <!-- Category body -->
   <div
     id={`category-body-${name.replace(/\s/g, '-')}`}
-    class="category-body"
-    style="display: none"
+    class="category-body-wrap"
   >
     <!-- Column headers (desktop only) -->
     <div class="hidden lg:flex items-center gap-3 px-4 py-2 bg-base/50 border-b border-border text-[10px] font-mono uppercase tracking-widest text-text-muted">

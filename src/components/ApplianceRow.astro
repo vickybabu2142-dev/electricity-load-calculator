@@ -12,9 +12,8 @@ const kwh = calculateRowKWh(a).toFixed(2);
 ---
 
 <div
-  class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up"
+  class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150"
   data-id={a.id}
-  style={`animation-delay: ${index * 0.03}s;`}
 >
   <!-- Name & Reading Row -->
   <div class="flex items-center justify-between gap-3 flex-1 min-w-[200px] lg:min-w-0 lg:contents">
