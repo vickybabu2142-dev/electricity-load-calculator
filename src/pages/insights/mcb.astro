@@ -3,14 +3,14 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 ---
 
-<BaseLayout title="MCB Recommendation | Electricity Load Calculator" description="Find the right MCB (Miniature Circuit Breaker) rating for your electrical load.">
+<BaseLayout title="MCB Recommendation | Electricity Load Calculator" description="Find the right MCB (Miniature Circuit Breaker) rating for your electrical load. See the full calculation breakdown, why this rating was selected, and what alternatives were rejected.">
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'MCB Recommendation' }]} />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">
-    <div class="max-w-2xl mx-auto">
-      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-6">
+    <div class="max-w-2xl mx-auto space-y-4">
 
-        <!-- Header -->
+      <!-- ① Header -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
         <div class="flex items-start gap-4">
           <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-base flex-shrink-0">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-accent" aria-hidden="true">
@@ -22,52 +22,303 @@ import Breadcrumb from '@/components/Breadcrumb.astro';
             <h1 class="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">Miniature Circuit Breaker</h1>
           </div>
         </div>
+      </div>
 
-        <!-- Recommended value -->
+      <!-- ② Personalized Recommendation -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <p class="text-[10px] font-mono uppercase tracking-widest mb-4 text-text-muted">Your Recommendation</p>
         <div class="rounded-xl border border-border bg-base p-6 text-center">
           <p class="text-[10px] font-mono uppercase tracking-widest mb-3 text-text-muted">Recommended Rating</p>
           <p id="insight-value" class="font-display font-bold text-5xl tracking-tight text-accent">—</p>
           <p id="insight-context" class="text-sm text-text-muted mt-3"></p>
         </div>
+        <!-- Back to calculator CTA -->
+        <p class="text-xs text-text-muted mt-4 text-center">
+          Don't have a result yet? <a href="/" class="text-accent hover:underline">Calculate your load first →</a>
+        </p>
+      </div>
 
-        <!-- Educational content -->
-        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
-          <h2 class="font-display font-semibold text-text-primary text-lg">What is an MCB?</h2>
-          <p>A Miniature Circuit Breaker (MCB) is an automatic electrical switch that protects against overloads and short circuits. Unlike fuses, MCBs can be reset after tripping.</p>
-          <p>The <strong class="text-text-primary">C-Curve</strong> type is suitable for resistive and slightly inductive loads common in homes and offices — lighting, fans, computers, and similar equipment.</p>
-          <h2 class="font-display font-semibold text-text-primary text-lg mt-4">How the rating is calculated</h2>
-          <ul class="space-y-1 list-disc list-inside">
-            <li>Full load current = Total Watts ÷ 230V</li>
-            <li>Design current = Full load current × 1.25 (25% safety margin)</li>
-            <li>Select the next standard rating above the design current</li>
-          </ul>
-          <div class="flex gap-2.5 mt-3 p-3.5 rounded-lg border" style="border-color:color-mix(in srgb, var(--warning), transparent 55%); background:color-mix(in srgb, var(--warning), transparent 90%)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--warning)" aria-hidden="true">
-              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
-            </svg>
-            <p class="text-xs text-text-primary leading-relaxed">These recommendations are estimates based on single-phase supply at 230V. Consult a licensed electrician before purchasing or installing electrical components.</p>
+      <!-- ③ Calculation Breakdown (hidden until JS runs with URL params) -->
+      <div id="calc-section" class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4" style="display:none">
+        <h2 class="font-display font-semibold text-text-primary text-lg">How This Was Calculated</h2>
+        <div class="space-y-2">
+
+          <!-- Step: Load -->
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">1</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Your connected load</p>
+              <p class="font-mono font-semibold text-text-primary"><span id="mcb-load">—</span> kW</p>
+            </div>
+          </div>
+
+          <!-- Step: Full load current -->
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">2</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Full load current &nbsp;(<span id="mcb-load-w">—</span> W ÷ 230 V)</p>
+              <p class="font-mono font-semibold text-text-primary">= <span id="mcb-current">—</span> A</p>
+            </div>
+          </div>
+
+          <!-- Step: Safety margin -->
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">3</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">With 25% safety margin &nbsp;(<span id="mcb-current2">—</span> A × 1.25)</p>
+              <p class="font-mono font-semibold text-text-primary">= <span id="mcb-design">—</span> A</p>
+            </div>
+          </div>
+
+          <!-- Step: Nearest standard -->
+          <div class="flex items-center gap-3 p-3 rounded-lg border" style="border-color:color-mix(in srgb, var(--accent), transparent 55%); background:color-mix(in srgb, var(--accent), transparent 90%)">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-[var(--base)] text-xs font-mono font-bold flex-shrink-0">4</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Nearest standard rating above <span id="mcb-design2">—</span> A</p>
+              <p class="font-mono font-bold text-accent text-lg"><span id="mcb-rating">—</span></p>
+            </div>
           </div>
         </div>
-
       </div>
+
+      <!-- ④ What This Means (hidden until JS runs) -->
+      <div id="means-section" class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4" style="display:none">
+        <h2 class="font-display font-semibold text-text-primary text-lg">What This Means For You</h2>
+
+        <!-- Checkmarks -->
+        <ul class="space-y-2">
+          {[
+            'Correctly rated for your connected load',
+            'Residential-safe sizing per standard practice',
+            'Will trip before your wiring overheats',
+          ].map(item => (
+            <li class="flex items-start gap-2.5 text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mt-0.5 flex-shrink-0 text-accent" aria-hidden="true">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-text-primary">{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <!-- Why not smaller / larger -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+          <div class="rounded-lg border border-border bg-base p-4">
+            <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Why not smaller?</p>
+            <p class="font-mono font-semibold text-text-primary mb-1"><span id="smaller-rating">—</span></p>
+            <p class="text-xs text-text-muted leading-relaxed">Too close to your operating current. High risk of nuisance tripping under normal load.</p>
+          </div>
+          <div class="rounded-lg border border-border bg-base p-4">
+            <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Why not larger?</p>
+            <p class="font-mono font-semibold text-text-primary mb-1"><span id="larger-rating">—</span></p>
+            <p class="text-xs text-text-muted leading-relaxed">Oversized for your load. Delayed tripping during a fault reduces protection effectiveness.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ Educational Content -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-5">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Understanding MCBs</h2>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">What is an MCB?</h3>
+          <p>A Miniature Circuit Breaker (MCB) is an automatic electrical switch that protects circuits against overloads and short circuits. Unlike fuses, MCBs can be reset after tripping — no replacement needed.</p>
+        </div>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">MCB Trip Curve Types</h3>
+          <div class="rounded-lg border border-border bg-base overflow-hidden">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="border-b border-border">
+                  <th class="text-left px-3 py-2 text-text-muted">Curve</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Trip Multiplier</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Best For</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['B', '3–5×', 'Resistive loads: lighting, sockets'],
+                  ['C', '5–10×', 'Inductive loads: fans, ACs, pumps'],
+                  ['D', '10–20×', 'High-inrush: motors, transformers'],
+                ].map(([curve, mult, use]) => (
+                  <tr class="border-b border-border last:border-0">
+                    <td class="px-3 py-2 text-accent font-bold">{curve}</td>
+                    <td class="px-3 py-2 text-text-primary">{mult}</td>
+                    <td class="px-3 py-2 text-text-muted">{use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p><strong class="text-text-primary">C-Curve is the standard for homes.</strong> It tolerates the short inrush current of motors (fans, refrigerators, ACs) without tripping, while still protecting against genuine faults.</p>
+        </div>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Standard MCB Ratings</h3>
+          <div class="flex flex-wrap gap-2">
+            {['6A','10A','16A','20A','25A','32A','40A','50A','63A'].map(r => (
+              <span class="px-3 py-1 rounded-full border border-border font-mono text-xs text-text-muted bg-base">{r}</span>
+            ))}
+          </div>
+          <p>Always select the next standard rating <em>above</em> your design current — never below.</p>
+        </div>
+
+        <div class="flex gap-2.5 p-3.5 rounded-lg border" style="border-color:color-mix(in srgb, var(--warning), transparent 55%); background:color-mix(in srgb, var(--warning), transparent 90%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--warning)" aria-hidden="true">
+            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-xs text-text-primary leading-relaxed">These recommendations are estimates based on single-phase supply at 230V. Always consult a licensed electrician before purchasing or installing electrical components.</p>
+        </div>
+      </div>
+
+      <!-- ⑥ FAQ -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {[
+            {
+              q: 'What happens if my MCB rating is too small?',
+              a: 'An undersized MCB will trip repeatedly under normal load — called nuisance tripping. This interrupts power unnecessarily and forces a manual reset every time. In the worst case it can cause the MCB to wear out prematurely.',
+            },
+            {
+              q: 'What happens if my MCB rating is too large?',
+              a: 'An oversized MCB allows current to exceed the safe carrying capacity of your wiring before it trips. This means the cable can overheat and potentially cause a fire before the breaker cuts power. Bigger is NOT safer with MCBs.',
+            },
+            {
+              q: 'Which MCB trip curve is best for homes?',
+              a: 'C-Curve is recommended for most residential installations. It handles the short inrush currents from fans, air conditioners, and refrigerators without nuisance tripping, while still protecting against overloads and short circuits.',
+            },
+            {
+              q: 'Can I use an MCB as a main switch?',
+              a: 'MCBs provide overcurrent protection but are not designed as isolators. For a main switch, use a dedicated isolator or RCCB (Residual Current Circuit Breaker) that also provides earth fault protection.',
+            },
+          ].map(({ q, a }) => (
+            <details class="rounded-lg border border-border bg-base group">
+              <summary class="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer list-none text-sm font-semibold text-text-primary">
+                <span>{q}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+                </svg>
+              </summary>
+              <p class="px-4 pb-4 pt-1 text-sm text-text-muted leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <!-- ⑦ Related Recommendations -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Related Recommendations</h2>
+        <p class="text-sm text-text-muted">Your load calculation also informs these selections.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="related-links">
+          <!-- JS populates href with forwarded URL params -->
+          <a id="rel-cable" href="/insights/cable" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M4 12h16M7 5v14M17 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Cable</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Wire Size →</p>
+            </div>
+          </a>
+          <a id="rel-inverter" href="/insights/inverter" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M4 7h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm14 2H6v6h12V9Zm2-3h1v2h-1V6Zm-17 0H2v2h1V6Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Inverter</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">UPS Size →</p>
+            </div>
+          </a>
+          <a id="rel-solar" href="/insights/solar" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm8-6a1 1 0 0 1 0 2h-1a1 1 0 1 1 0-2h1ZM5 11a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2h1Zm14.07-6.07a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM6.34 17.66a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Zm12.02 1.41a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.34 7.76l-.71-.71a1 1 0 0 1 0-1.41ZM12 20a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Solar</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Panel Size →</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
     </div>
   </main>
 </BaseLayout>
 
 <script>
+  const MCB_RATINGS = [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100];
+  const CABLE_SIZE: Record<number, string> = {6:'1.0 sq mm',10:'1.5 sq mm',16:'2.5 sq mm',20:'4 sq mm',25:'4 sq mm',32:'6 sq mm',40:'10 sq mm',50:'16 sq mm',63:'16 sq mm',80:'25 sq mm',100:'35 sq mm'};
+  const INV_SIZES = [1, 2, 3, 5, 7.5, 10, 15];
+
+  function computeValues(load: number, monthly: number) {
+    if (!load || !monthly) return null;
+    const design = (load * 1000 / 230) * 1.25;
+    const mcbA = MCB_RATINGS.find(r => r >= design) ?? MCB_RATINGS[MCB_RATINGS.length - 1];
+    const invKVA = INV_SIZES.find(s => s >= load * 1.2) ?? INV_SIZES[INV_SIZES.length - 1];
+    const solarKW = Math.ceil((monthly / 120) * 2) / 2;
+    return {
+      mcb: `${mcbA}A C-Curve`,
+      cable: `${CABLE_SIZE[mcbA] ?? '6 sq mm'} Copper`,
+      inverter: `${invKVA} kVA`,
+      solar: `${solarKW} kW Solar System`,
+    };
+  }
+
   function init() {
     const params = new URLSearchParams(window.location.search);
-    const value = params.get('value');
-    const load = params.get('load');
+    const load = parseFloat(params.get('load') || '');
+    const monthly = parseInt(params.get('monthly') || '', 10);
+    const value = params.get('value') || '';
 
+    // Hero card
     const valueEl = document.getElementById('insight-value');
     const contextEl = document.getElementById('insight-context');
-
     if (valueEl) valueEl.textContent = value || '—';
-    if (contextEl) {
-      const kw = parseFloat(load || '');
-      contextEl.textContent = load && !isNaN(kw) ? `For a ${kw.toFixed(2)} kW connected load` : '';
-    }
+    if (contextEl) contextEl.textContent = !isNaN(load) && load > 0 ? `Based on your ${load.toFixed(2)} kW connected load` : '';
+
+    // Related links — forward params + computed values for destination pages
+    const base = `?load=${params.get('load') || ''}&monthly=${params.get('monthly') || ''}&bill=${params.get('bill') || ''}`;
+    const vals = computeValues(load, monthly);
+    (['cable', 'inverter', 'solar'] as const).forEach(type => {
+      const el = document.getElementById(`rel-${type}`) as HTMLAnchorElement | null;
+      if (el) el.href = `/insights/${type}${base}${vals ? `&value=${encodeURIComponent(vals[type])}` : ''}`;
+    });
+
+    if (isNaN(load) || load <= 0) return;
+
+    // Calculation breakdown
+    const watts = load * 1000;
+    const current = watts / 230;
+    const design = current * 1.25;
+    const mcbAmps = parseInt(value) || 0;
+
+    const setText = (id: string, text: string) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+
+    setText('mcb-load', load.toFixed(2));
+    setText('mcb-load-w', Math.round(watts).toString());
+    setText('mcb-current', current.toFixed(1));
+    setText('mcb-current2', current.toFixed(1));
+    setText('mcb-design', design.toFixed(1));
+    setText('mcb-design2', design.toFixed(1));
+    setText('mcb-rating', value || '—');
+
+    // Why not smaller / larger
+    const idx = MCB_RATINGS.indexOf(mcbAmps);
+    const smaller = idx > 0 ? `${MCB_RATINGS[idx - 1]}A C-Curve` : null;
+    const larger = idx < MCB_RATINGS.length - 1 ? `${MCB_RATINGS[idx + 1]}A C-Curve` : null;
+    setText('smaller-rating', smaller || 'N/A');
+    setText('larger-rating', larger || 'N/A');
+
+    // Show dynamic sections
+    const calcSection = document.getElementById('calc-section');
+    const meansSection = document.getElementById('means-section');
+    if (calcSection) calcSection.style.display = '';
+    if (meansSection) meansSection.style.display = '';
   }
 
   document.addEventListener('astro:page-load', init);

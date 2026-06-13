@@ -146,7 +146,7 @@ const DEFAULT_TIPS = [
   'Unplug chargers and adapters when not in use',
 ];
 
-export function generateSavingsTips(appliances: Appliance[], monthlyBill: number): SavingsTipsResult {
+export function generateSavingsTips(appliances: Appliance[], monthlyKWh: number): SavingsTipsResult {
   const active = appliances.filter(a => a.qty > 0);
 
   const top = active.reduce<Appliance | null>((best, a) => {
@@ -162,7 +162,7 @@ export function generateSavingsTips(appliances: Appliance[], monthlyBill: number
   const matched = TIPS_MAP.find(entry => entry.keywords.some(kw => nameLower.includes(kw)));
   const tips = (matched?.tips ?? DEFAULT_TIPS).slice(0, 4);
 
-  return { topConsumerName: top.name, potentialSavings: monthlyBill * 0.12, tips };
+  return { topConsumerName: top.name, potentialSavings: monthlyKWh * 0.12, tips };
 }
 
 // ── High Consumption Alerts ───────────────────────────────

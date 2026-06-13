@@ -23,9 +23,9 @@ interface Props {
 }
 
 const {
-  title = 'Electricity Load Calculator | Electrical & Home Load Calculator',
-  description = "Free electrical load calculator for home. Calculate connected load, power consumption, and AC load in kW/kVA. Estimate your monthly electricity bill instantly.",
-  keywords = "electricity load calculator, electrical load calculator, home load calculator, connected load calculator, power consumption calculator, electricity bill calculator, house wiring load calculation, load calculation for AC, load calculation for home in India, appliance power calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, bijli bill calculator",
+  title = 'Electricity Load Calculator | Electrical Load Assessment Tool',
+  description = "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh, get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
+  keywords = "electricity load calculator, electrical load calculator, home load calculator, connected load calculator, power consumption calculator, electrical load assessment, house wiring load calculation, load calculation for AC, load calculation for home in India, appliance power calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, energy cost estimator",
   breadcrumbSchema,
 } = Astro.props;
 
@@ -41,8 +41,8 @@ const schema = {
       "url": canonicalURL.origin,
       "operatingSystem": "Web",
       "applicationCategory": "UtilitiesApplication",
-      "applicationSubCategory": "Finance/Utility",
-      "description": "Free electrical load calculator for home. Calculate connected load, power consumption, and AC load in kW/kVA. Estimate your monthly electricity bill instantly.",
+      "applicationSubCategory": "Engineering/Utility",
+      "description": "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh, get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
       "screenshot": ogImage,
       "softwareVersion": "1.0.0",
       "author": {
@@ -57,18 +57,19 @@ const schema = {
       },
       "featureList": [
         "Real-time load calculation in Watts and kW",
-        "Daily energy consumption estimation (kWh)",
-        "Monthly electricity bill calculator",
+        "Daily and monthly energy consumption analysis (kWh)",
+        "MCB, cable, inverter, and solar recommendations",
+        "Electrical health score assessment",
+        "Optional Energy Cost Estimator (user-provided rate)",
         "Professional PDF report generation",
-        "Custom appliance support",
-        "Multi-currency support (INR, USD, EUR, GBP, etc.)"
+        "Custom appliance support"
       ]
     },
     {
       "@type": "WebSite",
       "name": "Electricity Load Calculator",
       "url": canonicalURL.origin,
-      "description": "Free online electrical load calculator — calculate connected load, power consumption, AC load, and electricity bill for any home.",
+      "description": "Free online electrical load assessment tool — calculate connected load, energy consumption, get MCB/cable/inverter/solar recommendations, and assess your electrical health score.",
     },
     ...(breadcrumbSchema ? [breadcrumbSchema] : []),
   ],

@@ -3,14 +3,14 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 ---
 
-<BaseLayout title="Cable Recommendation | Electricity Load Calculator" description="Find the right wire/cable size for your electrical load.">
+<BaseLayout title="Cable Size Recommendation | Electricity Load Calculator" description="Find the right copper wire size for your electrical load. See the full calculation breakdown, why this cable was selected, and how it relates to your MCB rating.">
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Cable Recommendation' }]} />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">
-    <div class="max-w-2xl mx-auto">
-      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-6">
+    <div class="max-w-2xl mx-auto space-y-4">
 
-        <!-- Header -->
+      <!-- ① Header -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
         <div class="flex items-start gap-4">
           <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-base flex-shrink-0">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 text-accent" aria-hidden="true">
@@ -22,60 +22,325 @@ import Breadcrumb from '@/components/Breadcrumb.astro';
             <h1 class="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">Copper Wire / Cable Size</h1>
           </div>
         </div>
+      </div>
 
-        <!-- Recommended value -->
+      <!-- ② Personalized Recommendation -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <p class="text-[10px] font-mono uppercase tracking-widest mb-4 text-text-muted">Your Recommendation</p>
         <div class="rounded-xl border border-border bg-base p-6 text-center">
           <p class="text-[10px] font-mono uppercase tracking-widest mb-3 text-text-muted">Recommended Size</p>
           <p id="insight-value" class="font-display font-bold text-5xl tracking-tight text-accent">—</p>
           <p id="insight-context" class="text-sm text-text-muted mt-3"></p>
         </div>
+        <p class="text-xs text-text-muted mt-4 text-center">
+          Don't have a result yet? <a href="/" class="text-accent hover:underline">Calculate your load first →</a>
+        </p>
+      </div>
 
-        <!-- Educational content -->
-        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
-          <h2 class="font-display font-semibold text-text-primary text-lg">Why cable size matters</h2>
-          <p>Using undersized cable causes excessive heat, voltage drops, and is a fire hazard. Using oversized cable wastes money. The cross-sectional area (sq mm) determines how much current the cable can safely carry.</p>
-          <p><strong class="text-text-primary">Copper</strong> conductors are preferred for their low resistance, flexibility, and long-term reliability.</p>
-          <h2 class="font-display font-semibold text-text-primary text-lg mt-4">Standard copper cable ratings</h2>
+      <!-- ③ Calculation Breakdown -->
+      <div id="calc-section" class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4" style="display:none">
+        <h2 class="font-display font-semibold text-text-primary text-lg">How This Was Calculated</h2>
+        <div class="space-y-2">
+
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">1</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Your connected load</p>
+              <p class="font-mono font-semibold text-text-primary"><span id="cable-load">—</span> kW</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">2</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Design current with 25% safety margin</p>
+              <p class="font-mono font-semibold text-text-primary"><span id="cable-design">—</span> A</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">3</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Equivalent MCB rating selected</p>
+              <p class="font-mono font-semibold text-text-primary"><span id="cable-mcb">—</span></p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 p-3 rounded-lg border" style="border-color:color-mix(in srgb, var(--accent), transparent 55%); background:color-mix(in srgb, var(--accent), transparent 90%)">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-[var(--base)] text-xs font-mono font-bold flex-shrink-0">4</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Cable matched to MCB rating</p>
+              <p class="font-mono font-bold text-accent text-lg"><span id="cable-result">—</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cable selection table with highlighted row -->
+        <div>
+          <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Cable Selection Table</p>
           <div class="rounded-lg border border-border bg-base overflow-hidden">
             <table class="w-full text-xs font-mono">
-              <thead><tr class="border-b border-border"><th class="text-left px-3 py-2 text-text-muted">MCB Rating</th><th class="text-left px-3 py-2 text-text-muted">Cable Size</th></tr></thead>
+              <thead>
+                <tr class="border-b border-border">
+                  <th class="text-left px-3 py-2 text-text-muted">MCB Rating</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Cable Size</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Typical Use</th>
+                </tr>
+              </thead>
+              <tbody id="cable-table">
+                <!-- JS renders rows with highlight -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ④ What This Means -->
+      <div id="means-section" class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4" style="display:none">
+        <h2 class="font-display font-semibold text-text-primary text-lg">What This Means For You</h2>
+
+        <ul class="space-y-2">
+          {[
+            'Current carrying capacity matches your MCB rating',
+            'Safe against overheating under sustained load',
+            'Compliant with standard residential wiring practice',
+          ].map(item => (
+            <li class="flex items-start gap-2.5 text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mt-0.5 flex-shrink-0 text-accent" aria-hidden="true">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-text-primary">{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="rounded-lg border border-border bg-base p-4">
+            <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Why not thinner?</p>
+            <p class="text-xs text-text-muted leading-relaxed">A smaller cable exceeds its current rating, causing the insulation to overheat. This is a leading cause of electrical fires in residential wiring.</p>
+          </div>
+          <div class="rounded-lg border border-border bg-base p-4">
+            <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Why not thicker?</p>
+            <p class="text-xs text-text-muted leading-relaxed">Oversized cable works safely but costs more and is harder to terminate at sockets and switches. The recommended size is the practical optimum.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ Educational Content -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-5">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Understanding Electrical Cables</h2>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Copper vs Aluminium</h3>
+          <div class="rounded-lg border border-border bg-base overflow-hidden">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="border-b border-border">
+                  <th class="text-left px-3 py-2 text-text-muted">Property</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Copper</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Aluminium</th>
+                </tr>
+              </thead>
               <tbody>
-                {[['6A','1.0 sq mm'],['10A','1.5 sq mm'],['16A','2.5 sq mm'],['25A','4 sq mm'],['32A','6 sq mm'],['40A','10 sq mm'],['63A','16 sq mm']].map(([r,c]) => (
+                {[
+                  ['Conductivity', 'Higher', 'Lower (~60%)'],
+                  ['Weight', 'Heavier', 'Lighter'],
+                  ['Flexibility', 'Very flexible', 'Stiffer'],
+                  ['Preferred for', 'Homes, offices', 'High-voltage mains'],
+                ].map(([prop, cu, al]) => (
                   <tr class="border-b border-border last:border-0">
-                    <td class="px-3 py-2 text-text-primary">{r}</td>
-                    <td class="px-3 py-2 text-accent">{c}</td>
+                    <td class="px-3 py-2 text-text-muted">{prop}</td>
+                    <td class="px-3 py-2 text-accent">{cu}</td>
+                    <td class="px-3 py-2 text-text-primary">{al}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <div class="flex gap-2.5 mt-3 p-3.5 rounded-lg border" style="border-color:color-mix(in srgb, var(--warning), transparent 55%); background:color-mix(in srgb, var(--warning), transparent 90%)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--warning)" aria-hidden="true">
-              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
-            </svg>
-            <p class="text-xs text-text-primary leading-relaxed">These recommendations are estimates. Always verify with a licensed electrician based on cable run length and installation method.</p>
-          </div>
+          <p><strong class="text-text-primary">Copper is the standard for residential wiring</strong> due to its superior conductivity, flexibility, and long-term reliability at termination points.</p>
         </div>
 
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Voltage Drop</h3>
+          <p>Every cable has resistance. When current flows, some voltage is lost along the cable length — called voltage drop. Longer cable runs and thinner cables produce more drop. For runs over 20 metres, consider upsizing one step to compensate.</p>
+        </div>
+
+        <div class="flex gap-2.5 p-3.5 rounded-lg border" style="border-color:color-mix(in srgb, var(--warning), transparent 55%); background:color-mix(in srgb, var(--warning), transparent 90%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--warning)" aria-hidden="true">
+            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-xs text-text-primary leading-relaxed">These recommendations are estimates. Always verify with a licensed electrician — cable run length, ambient temperature, and installation method all affect the safe rating.</p>
+        </div>
       </div>
+
+      <!-- ⑥ FAQ -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {[
+            {
+              q: 'Can I use a smaller cable to save cost?',
+              a: 'No. Using undersized cable is dangerous. The cable will overheat under load, degrading insulation over time and potentially causing an electrical fire. The cable must match or exceed the MCB rating to ensure safety.',
+            },
+            {
+              q: 'Why is copper preferred over aluminium for homes?',
+              a: 'Copper has lower resistance per mm², meaning less heat generated for the same current. It is also more flexible, making it easier to route and terminate in confined spaces like wall boxes and distribution boards.',
+            },
+            {
+              q: 'What causes cable overheating?',
+              a: 'Three main causes: undersized cable for the load, loose connections causing arcing at termination points, and cables bundled together without adequate ventilation. Always use the correct size and tighten terminations properly.',
+            },
+            {
+              q: 'What does sq mm mean on a cable?',
+              a: 'Square millimetres (sq mm or mm²) refers to the cross-sectional area of the conductor. A larger number means a thicker conductor that can carry more current safely. For example, 6 sq mm can carry around 32–40A safely in free air.',
+            },
+          ].map(({ q, a }) => (
+            <details class="rounded-lg border border-border bg-base group">
+              <summary class="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer list-none text-sm font-semibold text-text-primary">
+                <span>{q}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+                </svg>
+              </summary>
+              <p class="px-4 pb-4 pt-1 text-sm text-text-muted leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <!-- ⑦ Related Recommendations -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Related Recommendations</h2>
+        <p class="text-sm text-text-muted">Your load calculation also informs these selections.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <a id="rel-mcb" href="/insights/mcb" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">MCB</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Breaker Rating →</p>
+            </div>
+          </a>
+          <a id="rel-inverter" href="/insights/inverter" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M4 7h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm14 2H6v6h12V9Zm2-3h1v2h-1V6Zm-17 0H2v2h1V6Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Inverter</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">UPS Size →</p>
+            </div>
+          </a>
+          <a id="rel-solar" href="/insights/solar" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm8-6a1 1 0 0 1 0 2h-1a1 1 0 1 1 0-2h1ZM5 11a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2h1Zm14.07-6.07a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM6.34 17.66a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Zm12.02 1.41a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.34 7.76l-.71-.71a1 1 0 0 1 0-1.41ZM12 20a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Solar</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Panel Size →</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
     </div>
   </main>
 </BaseLayout>
 
 <script>
+  const MCB_RATINGS = [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100];
+  const CABLE_MAP: Record<number, { size: string; use: string }> = {
+    6:  { size: '1.0 sq mm', use: 'Light points' },
+    10: { size: '1.5 sq mm', use: 'Lighting circuits' },
+    16: { size: '2.5 sq mm', use: 'Power sockets' },
+    20: { size: '4 sq mm',   use: 'Heavy sockets / AC' },
+    25: { size: '4 sq mm',   use: 'Sub-circuits' },
+    32: { size: '6 sq mm',   use: 'Main circuits' },
+    40: { size: '10 sq mm',  use: 'DB incomer' },
+    50: { size: '16 sq mm',  use: 'Large feeders' },
+    63: { size: '16 sq mm',  use: 'Service entrance' },
+  };
+
+  function nextMCB(amps: number): number {
+    return MCB_RATINGS.find(r => r >= amps) ?? MCB_RATINGS[MCB_RATINGS.length - 1];
+  }
+
+  const CABLE_SIZE: Record<number, string> = Object.fromEntries(
+    Object.entries(CABLE_MAP).map(([k, v]) => [k, v.size])
+  );
+  const INV_SIZES = [1, 2, 3, 5, 7.5, 10, 15];
+
+  function computeValues(load: number, monthly: number) {
+    if (!load || !monthly) return null;
+    const design = (load * 1000 / 230) * 1.25;
+    const mcbA = MCB_RATINGS.find(r => r >= design) ?? MCB_RATINGS[MCB_RATINGS.length - 1];
+    const invKVA = INV_SIZES.find(s => s >= load * 1.2) ?? INV_SIZES[INV_SIZES.length - 1];
+    const solarKW = Math.ceil((monthly / 120) * 2) / 2;
+    return {
+      mcb: `${mcbA}A C-Curve`,
+      cable: `${CABLE_SIZE[mcbA] ?? '6 sq mm'} Copper`,
+      inverter: `${invKVA} kVA`,
+      solar: `${solarKW} kW Solar System`,
+    };
+  }
+
   function init() {
     const params = new URLSearchParams(window.location.search);
-    const value = params.get('value');
-    const load = params.get('load');
+    const load = parseFloat(params.get('load') || '');
+    const monthly = parseInt(params.get('monthly') || '', 10);
+    const value = params.get('value') || '';
 
     const valueEl = document.getElementById('insight-value');
     const contextEl = document.getElementById('insight-context');
-
     if (valueEl) valueEl.textContent = value || '—';
-    if (contextEl) {
-      const kw = parseFloat(load || '');
-      contextEl.textContent = load && !isNaN(kw) ? `For a ${kw.toFixed(2)} kW connected load` : '';
+    if (contextEl) contextEl.textContent = !isNaN(load) && load > 0 ? `For a ${load.toFixed(2)} kW connected load` : '';
+
+    // Related links — include computed values for destination pages
+    const base = `?load=${params.get('load') || ''}&monthly=${params.get('monthly') || ''}&bill=${params.get('bill') || ''}`;
+    const vals = computeValues(load, monthly);
+    (['mcb', 'inverter', 'solar'] as const).forEach(type => {
+      const el = document.getElementById(`rel-${type}`) as HTMLAnchorElement | null;
+      if (el) el.href = `/insights/${type}${base}${vals ? `&value=${encodeURIComponent(vals[type])}` : ''}`;
+    });
+
+    if (isNaN(load) || load <= 0) return;
+
+    const watts = load * 1000;
+    const current = watts / 230;
+    const design = current * 1.25;
+    const mcbAmps = nextMCB(design);
+    const cable = CABLE_MAP[mcbAmps];
+
+    const setText = (id: string, text: string) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+
+    setText('cable-load', load.toFixed(2));
+    setText('cable-design', design.toFixed(1));
+    setText('cable-mcb', `${mcbAmps}A`);
+    setText('cable-result', cable?.size ?? value);
+
+    // Build highlighted table
+    const tbody = document.getElementById('cable-table');
+    if (tbody) {
+      tbody.innerHTML = Object.entries(CABLE_MAP).map(([amp, info]) => {
+        const isSelected = parseInt(amp) === mcbAmps;
+        const row = isSelected
+          ? `<tr style="background:color-mix(in srgb, var(--accent), transparent 88%); border-bottom:1px solid color-mix(in srgb, var(--accent), transparent 55%)">`
+          : `<tr class="border-b border-border last:border-0">`;
+        return `${row}
+          <td class="px-3 py-2 ${isSelected ? 'text-accent font-bold' : 'text-text-primary'}">${amp}A</td>
+          <td class="px-3 py-2 ${isSelected ? 'text-accent font-bold' : 'text-text-primary'}">${info.size}${isSelected ? ' ✓' : ''}</td>
+          <td class="px-3 py-2 text-text-muted">${info.use}</td>
+        </tr>`;
+      }).join('');
     }
+
+    const calcSection = document.getElementById('calc-section');
+    const meansSection = document.getElementById('means-section');
+    if (calcSection) calcSection.style.display = '';
+    if (meansSection) meansSection.style.display = '';
   }
 
   document.addEventListener('astro:page-load', init);

@@ -9,7 +9,7 @@ test.describe('Electricity Load Calculator', () => {
 
   test('displays initial totals as zero with no appliances active', async ({ page }) => {
     await expect(page.locator('#total-kw')).toHaveText('0.00');
-    await expect(page.locator('#monthly-bill')).toContainText('₹');
+    await expect(page.locator('#monthly-kwh')).toHaveText('0');
     await expect(page.locator('#load-level-badge')).toHaveText('Light Load');
   });
 
@@ -73,38 +73,18 @@ test.describe('Electricity Load Calculator', () => {
     await expect(page.locator('[data-kwh-display="app-1"]')).toHaveText('0.09');
   });
 
-  // ── Currency, Tariff & Capacity ───────────────────────────
+  // ── Capacity & Energy Cost Estimator ─────────────────────
 
-  test('switching to USD updates currency symbol and default tariff', async ({ page }) => {
-    await page.locator('#currency-select').selectOption('USD');
-
-    await expect(page.locator('#monthly-bill')).toContainText('$');
-    await expect(page.locator('#tariff-input')).toHaveValue('0.15');
-    await expect(page.locator('#max-kw-input')).toHaveValue('20');
-  });
-
-  test('switching to EUR updates currency symbol and default tariff', async ({ page }) => {
-    await page.locator('#currency-select').selectOption('EUR');
-
-    await expect(page.locator('#monthly-bill')).toContainText('€');
-    await expect(page.locator('#tariff-input')).toHaveValue('0.35');
-  });
-
-  test('changing tariff updates the monthly bill', async ({ page }) => {
-    // Add an appliance so bill > 0
+  test('Energy Cost Estimator shows result when rate is entered', async ({ page }) => {
+    // Add an appliance so the estimator section appears
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
-    
-    const initialBill = await page.locator('#monthly-bill').textContent();
 
-    // Double the tariff: 8 → 16
-    await page.locator('#tariff-input').fill('16');
-    await page.locator('#tariff-input').dispatchEvent('input');
+    // Enter a rate in the estimator
+    await page.locator('#estimator-rate-input').fill('0.15');
+    await page.locator('#estimator-rate-input').dispatchEvent('input');
 
-    await expect(async () => {
-      const newBill = await page.locator('#monthly-bill').textContent();
-      expect(newBill).not.toBe(initialBill);
-      expect(newBill).not.toBe('₹0');
-    }).toPass();
+    await expect(page.locator('#estimator-result-section')).toBeVisible();
+    await expect(page.locator('#estimator-monthly-cost')).not.toHaveText('—');
   });
 
   test('changing max capacity updates the load percentage label', async ({ page }) => {
@@ -275,16 +255,15 @@ test.describe('Electricity Load Calculator', () => {
 
   test('reset button restores all defaults', async ({ page }) => {
     // Make several changes first (Lighting is already expanded by default)
-    await page.locator('#currency-select').selectOption('USD');
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+    await page.locator('#max-kw-input').fill('30');
+    await page.locator('#max-kw-input').dispatchEvent('input');
 
     page.on('dialog', dialog => dialog.accept());
     await page.locator('button[data-action="reset-all"]').filter({ visible: true }).click();
 
-    await expect(page.locator('#currency-select')).toHaveValue('INR');
-    await expect(page.locator('#tariff-input')).toHaveValue('8');
-    await expect(page.locator('#monthly-bill')).toContainText('₹');
     await expect(page.locator('#total-kw')).toHaveText('0.00');
+    await expect(page.locator('#active-count')).toHaveText('0');
   });
 
   // ── Category Collapse / Expand ────────────────────────────
@@ -426,14 +405,13 @@ test.describe('Electricity Load Calculator', () => {
     await expect(page.locator('#active-count')).toHaveText('1');
   });
 
-  test('currency selection persists across page reload', async ({ page }) => {
-    await page.locator('#currency-select').selectOption('USD');
-    await expect(page.locator('#monthly-bill')).toContainText('$');
+  test('max capacity setting persists across page reload', async ({ page }) => {
+    await page.locator('#max-kw-input').fill('25');
+    await page.locator('#max-kw-input').dispatchEvent('input');
 
     await page.reload();
 
-    await expect(page.locator('#currency-select')).toHaveValue('USD');
-    await expect(page.locator('#monthly-bill')).toContainText('$');
+    await expect(page.locator('#max-kw-input')).toHaveValue('25');
   });
 
   test('categories with saved active appliances re-expand after reload', async ({ page }) => {

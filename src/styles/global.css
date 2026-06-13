@@ -511,7 +511,7 @@ button:active:not(:disabled),
   #print-layout .text-accent,
   #print-layout h1 span,
   #print-layout #print-total-kw,
-  #print-layout #print-monthly-bill {
+  #print-layout #print-estimated-cost {
     color: #F4A826 !important; /* Industrial Amber */
   }
 
@@ -520,7 +520,7 @@ button:active:not(:disabled),
   .light #print-layout .text-accent,
   .light #print-layout h1 span,
   .light #print-layout #print-total-kw,
-  .light #print-layout #print-monthly-bill {
+  .light #print-layout #print-estimated-cost {
     color: #4A76A8 !important; /* Stormy Steel Blue */
   }
 

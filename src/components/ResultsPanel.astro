@@ -68,6 +68,23 @@
         <span id="max-kw-label" class="font-mono text-[10px] text-text-muted">5 kW max</span>
       </div>
     </div>
+
+    <!-- Global Settings -->
+    <div class="space-y-1.5">
+      <label for="max-kw-input" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Max Capacity</label>
+      <div class="flex items-center gap-1.5">
+        <input
+          id="max-kw-input"
+          data-action="update-max-kw"
+          type="number"
+          value="5"
+          min="1"
+          max="100"
+          class="flex-1 bg-base border border-border rounded-lg px-2 py-1.5 text-xs text-text-primary text-center focus:border-accent focus:outline-none font-mono"
+        />
+        <span class="text-[10px] font-mono text-text-muted uppercase">kW</span>
+      </div>
+    </div>
     
     <!-- Divider -->
     <hr class="border-border" />
@@ -89,6 +106,21 @@
         </div>
       </div>
     </div>
+
+    <!-- Top Consumer -->
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Top Consumer</p>
+        <span id="top-consumer-name" class="text-sm font-medium text-text-primary">—</span>
+      </div>
+      <div class="text-right">
+        <span id="top-consumer-watts" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
+        <span class="font-mono text-xs text-text-muted ml-1">W</span>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-border" />
 
     <!-- Smart Insights -->
     <div id="smart-insights-section" style="display:none;">
@@ -387,7 +419,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 flex-shrink-0" style="color:#3ecf6e" aria-hidden="true">
               <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-xs font-medium" style="color:#3ecf6e">Potential Monthly Savings</span>
+            <span class="text-xs font-medium" style="color:#3ecf6e">Potential Monthly Energy Savings</span>
           </div>
           <span id="saving-potential" class="text-sm font-display font-bold tabular-nums" style="color:#3ecf6e">—</span>
         </div>
@@ -427,104 +459,86 @@
         Pick a <span class="font-semibold" style="color: var(--accent);">Quick Start</span> above for an instant setup, or increase the quantity on any appliance manually.
       </p>
     </div>
+    
+    <!-- Energy Cost Estimator (Optional) -->
+    <div id="energy-cost-estimator-section" style="display:none;">
+      <div class="rounded-xl border border-border bg-card p-5 space-y-4">
 
-    <!-- Divider -->
-    <hr class="border-border" />
-
-    <!-- Global Settings -->
-    <div class="grid grid-cols-2 gap-3">
-      <div class="space-y-1.5">
-        <label for="currency-select" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Currency</label>
-        <div class="relative group">
-          <select
-            id="currency-select"
-            data-action="change-currency"
-            class="custom-select w-full appearance-none pl-3 pr-8 py-1.5 text-xs cursor-pointer transition-all duration-200 hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
-          >
-            <option value="INR">INR (₹)</option>
-            <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="GBP">GBP (£)</option>
-            <option value="CAD">CAD ($)</option>
-            <option value="AUD">AUD ($)</option>
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted group-hover:text-accent transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 flex-shrink-0" style="color:var(--accent)" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd"/>
             </svg>
+            <p class="text-sm font-mono uppercase tracking-widest text-text-muted">Energy Cost Estimator</p>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full border text-text-muted" style="border-color: var(--border);">Optional</span>
+        </div>
+
+        <p class="text-xs text-text-muted leading-relaxed">
+          Enter your local electricity rate to instantly calculate your estimated monthly energy cost.
+        </p>
+
+        <!-- Two-column inputs -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1.5">
+            <label for="estimator-currency-select" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Currency</label>
+            <div class="relative group">
+              <select
+                id="estimator-currency-select"
+                data-action="update-estimator"
+                class="custom-select w-full appearance-none pl-3 pr-8 py-1.5 text-xs cursor-pointer transition-all duration-200 hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                aria-label="Currency symbol for cost estimate"
+              >
+                <option value="₹">₹ INR</option>
+                <option value="$" selected>$ USD</option>
+                <option value="€">€ EUR</option>
+                <option value="£">£ GBP</option>
+                <option value="AED ">AED</option>
+                <option value="A$">A$ AUD</option>
+                <option value="C$">C$ CAD</option>
+                <option value="">Other</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted group-hover:text-accent transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label for="estimator-rate-input" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Rate per kWh</label>
+            <div class="flex items-center gap-1.5">
+              <input
+                id="estimator-rate-input"
+                data-action="update-estimator"
+                type="number"
+                min="0.001"
+                step="0.01"
+                placeholder="e.g. 0.15"
+                class="flex-1 bg-base border border-border rounded-lg px-2 py-1.5 text-xs font-mono text-center focus:border-accent focus:outline-none"
+                aria-label="Electricity rate per kWh"
+              />
+              <span class="text-[10px] font-mono text-text-muted uppercase flex-shrink-0">/kWh</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="space-y-1.5">
-        <label for="max-kw-input" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Max Capacity</label>
-        <div class="flex items-center gap-1.5">
-          <input
-            id="max-kw-input"
-            data-action="update-max-kw"
-            type="number"
-            value="5"
-            min="1"
-            max="100"
-            class="flex-1 bg-base border border-border rounded-lg px-2 py-1.5 text-xs text-text-primary text-center focus:border-accent focus:outline-none font-mono"
-          />
-          <span class="text-[10px] font-mono text-text-muted uppercase">kW</span>
+
+        <!-- Result (hidden until rate is entered) -->
+        <div
+          id="estimator-result-section"
+          class="rounded-lg p-4 text-center"
+          style="display:none; background: color-mix(in srgb, var(--accent), transparent 92%); border: 1px solid color-mix(in srgb, var(--accent), transparent 75%);"
+        >
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Estimated Monthly Energy Cost</p>
+          <p id="estimator-monthly-cost" class="font-display font-bold text-3xl tabular-nums" style="color: var(--accent);">—</p>
         </div>
-      </div>
-    </div>
 
-    <!-- Divider -->
-    <hr class="border-border" />
+        <!-- Disclaimer -->
+        <p class="text-[10px] text-text-muted leading-relaxed opacity-75">
+          Actual bills vary due to taxes, fixed charges, slab pricing, and regional tariffs.
+        </p>
 
-    <!-- Bill estimate -->
-    <div class="rounded-lg bg-base border border-border px-4 py-3">
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-sm text-text-muted">Est. Monthly Bill</span>
-        <span id="monthly-bill" class="font-display font-bold text-2xl tabular-nums" style="color: var(--accent);">0</span>
-      </div>
-      <div class="flex items-center gap-2 text-sm text-text-muted">
-        <span>Tariff:</span>
-        <span class="font-mono currency-symbol">₹</span>
-        <input
-          id="tariff-input"
-          data-action="update-tariff"
-          type="number"
-          value="8"
-          min="0.01"
-          max="500"
-          step="0.5"
-          class="w-20 bg-card border border-border rounded px-2 py-1 font-mono text-sm font-bold text-center focus:border-accent focus:outline-none"
-          style="color: var(--accent);"
-          aria-label="Electricity tariff per kWh(unit)"
-        />
-        <span class="font-mono">/ kWh(unit)</span>
-      </div>
-    </div>
-
-    <!-- Divider -->
-    <hr class="border-border" />
-
-    <!-- Top consumer -->
-    <div>
-      <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Top Consumer</p>
-      <div class="flex items-center justify-between">
-        <span id="top-consumer-name" class="text-sm font-medium text-text-primary">—</span>
-        <div>
-          <span id="top-consumer-watts" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
-          <span class="font-mono text-xs text-text-muted ml-1">W</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Active Appliances Stat -->
-    <hr class="border-border" />
-
-    <div class="flex items-center justify-between">
-      <span class="text-sm text-text-muted">Active Appliances</span>
-      <div class="flex items-center gap-1.5">
-        <span id="active-count" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
-        <span class="font-mono text-xs text-text-muted">/</span>
-        <span id="total-count" class="font-mono text-xs tabular-nums text-text-muted">0</span>
-        <span class="font-mono text-xs text-text-muted">appliances</span>
       </div>
     </div>
 
