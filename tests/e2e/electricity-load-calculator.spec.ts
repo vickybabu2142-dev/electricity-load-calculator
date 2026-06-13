@@ -26,17 +26,13 @@ test.describe('Electricity Load Calculator', () => {
 
   test('incrementing quantity increases total kW', async ({ page }) => {
     // LED Bulb: 9W × 1qty = 9W → 0.009 kW → "0.01"
-    
-    // First expand the category
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
-    
+    // Lighting category is expanded by default
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
     await expect(page.locator('#active-count')).toHaveText('1');
   });
 
   test('decrementing quantity to zero removes appliance from totals', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
     
@@ -45,7 +41,6 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('decrement button does not go below zero', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
 
     const qtyDisplay = page.locator('[data-qty-display="app-1"]');
@@ -55,7 +50,6 @@ test.describe('Electricity Load Calculator', () => {
   // ── Watts & Hours Editing ─────────────────────────────────
 
   test('editing watts updates the row kWh display and total load', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     
     const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
@@ -69,7 +63,6 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('editing hours updates the row kWh display', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     
     const hoursInput = page.locator('input[aria-label="Hours per day for LED Bulb"]');
@@ -99,7 +92,6 @@ test.describe('Electricity Load Calculator', () => {
 
   test('changing tariff updates the monthly bill', async ({ page }) => {
     // Add an appliance so bill > 0
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     
     const initialBill = await page.locator('#monthly-bill').textContent();
@@ -243,7 +235,6 @@ test.describe('Electricity Load Calculator', () => {
 
   test('opens report modal with report content', async ({ page }) => {
     // Add an appliance to appear in the report
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
     await page.locator('#download-report-btn').click();
@@ -283,13 +274,12 @@ test.describe('Electricity Load Calculator', () => {
   // ── Reset ─────────────────────────────────────────────────
 
   test('reset button restores all defaults', async ({ page }) => {
-    // Make several changes first
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    // Make several changes first (Lighting is already expanded by default)
     await page.locator('#currency-select').selectOption('USD');
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
     page.on('dialog', dialog => dialog.accept());
-    await page.locator('#reset-all-btn').click();
+    await page.locator('button[data-action="reset-all"]').filter({ visible: true }).click();
 
     await expect(page.locator('#currency-select')).toHaveValue('INR');
     await expect(page.locator('#tariff-input')).toHaveValue('8');
@@ -299,10 +289,10 @@ test.describe('Electricity Load Calculator', () => {
 
   // ── Category Collapse / Expand ────────────────────────────
 
-  test('all categories start collapsed by default', async ({ page }) => {
-    await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
+  test('Lighting starts expanded; other categories start collapsed by default', async ({ page }) => {
+    await expect(page.locator('#category-body-Lighting')).toBeVisible();
     await expect(page.locator('#category-body-Kitchen')).not.toBeVisible();
-    await expect(page.locator('[id="category-body-Office-&-IT"]')).not.toBeVisible();
+    await expect(page.locator('[id="category-body-Fans-&-Cooling"]')).not.toBeVisible();
   });
 
   test('clicking a category header expands then collapses it', async ({ page }) => {
@@ -323,7 +313,6 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('shows Moderate Load badge when load is between 30–70%', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
     // Change watts to 2000W: 2000/5000 = 40% → Moderate
@@ -335,7 +324,6 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('shows Heavy Load badge when load exceeds 70% of capacity', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
     // Change watts to 5000W: 5000/5000 = 100% → Heavy
@@ -351,21 +339,110 @@ test.describe('Electricity Load Calculator', () => {
   test('categories container maintains full width on mobile when collapsed', async ({ page }) => {
     // Set to a typical mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    
-    await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
 
-    // The categories container is the first child of the main layout div
-    // In our fix, we added 'w-full' to it.
-    const categoriesContainer = page.locator('main > div > div').first();
-    const mainContainer = page.locator('main > div');
+    await expect(page.locator('#category-body-Kitchen')).not.toBeVisible();
+
+    // The main flex layout is the second direct child of main (after the Quick Start presets div).
+    // The categories container is the first child of that flex layout.
+    const mainFlexLayout = page.locator('main > div').nth(1);
+    const categoriesContainer = mainFlexLayout.locator('> div').first();
 
     const containerBox = await categoriesContainer.boundingBox();
-    const mainBox = await mainContainer.boundingBox();
+    const mainBox = await mainFlexLayout.boundingBox();
 
     if (containerBox && mainBox) {
-      // The categories container should be approximately the same width as the main container
-      // (allowing for minor rounding or flex gap variations if any, but in flex-col it should match)
+      // On mobile (flex-col), categories container should match the flex layout width
       expect(containerBox.width).toBeCloseTo(mainBox.width, 0);
     }
+  });
+
+  // ── Quick Start Presets ───────────────────────────────────
+
+  test('loading a preset increases total kW above zero', async ({ page }) => {
+    await page.locator('[data-preset-id="budget-home"]').click();
+
+    await expect(async () => {
+      const kw = parseFloat((await page.locator('#total-kw').textContent()) || '0');
+      expect(kw).toBeGreaterThan(0);
+    }).toPass();
+  });
+
+  test('loading a preset expands categories with active appliances', async ({ page }) => {
+    // budget-home includes Kitchen appliances (Refrigerator, Mixer)
+    await page.locator('[data-preset-id="budget-home"]').click();
+
+    await expect(page.locator('#category-body-Kitchen')).toBeVisible();
+  });
+
+  test('loading a preset collapses categories with no active appliances', async ({ page }) => {
+    // budget-home has no Water Heating appliances
+    await page.locator('[data-preset-id="budget-home"]').click();
+
+    await expect(page.locator('#category-body-Water-Heating')).not.toBeVisible();
+  });
+
+  test('loading a preset highlights the active preset button', async ({ page }) => {
+    const presetBtn = page.locator('[data-preset-id="budget-home"]');
+    await presetBtn.click();
+
+    const boxShadow = await presetBtn.evaluate(el => (el as HTMLElement).style.boxShadow);
+    expect(boxShadow).not.toBe('');
+  });
+
+  test('loading a second preset clears the first preset highlight', async ({ page }) => {
+    const btn1 = page.locator('[data-preset-id="budget-home"]');
+    const btn2 = page.locator('[data-preset-id="typical-2bhk"]');
+
+    await btn1.click();
+    await btn2.click();
+
+    const shadow1 = await btn1.evaluate(el => (el as HTMLElement).style.boxShadow);
+    const shadow2 = await btn2.evaluate(el => (el as HTMLElement).style.boxShadow);
+    expect(shadow1).toBe('');
+    expect(shadow2).not.toBe('');
+  });
+
+  test('reset clears active preset highlight', async ({ page }) => {
+    await page.locator('[data-preset-id="budget-home"]').click();
+
+    page.on('dialog', dialog => dialog.accept());
+    await page.locator('button[data-action="reset-all"]').filter({ visible: true }).click();
+
+    const shadow = await page.locator('[data-preset-id="budget-home"]').evaluate(
+      el => (el as HTMLElement).style.boxShadow
+    );
+    expect(shadow).toBe('');
+  });
+
+  // ── LocalStorage Persistence ──────────────────────────────
+
+  test('appliance quantities persist across page reload', async ({ page }) => {
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+    await expect(page.locator('#total-kw')).toHaveText('0.01');
+
+    await page.reload();
+
+    await expect(page.locator('#total-kw')).toHaveText('0.01');
+    await expect(page.locator('#active-count')).toHaveText('1');
+  });
+
+  test('currency selection persists across page reload', async ({ page }) => {
+    await page.locator('#currency-select').selectOption('USD');
+    await expect(page.locator('#monthly-bill')).toContainText('$');
+
+    await page.reload();
+
+    await expect(page.locator('#currency-select')).toHaveValue('USD');
+    await expect(page.locator('#monthly-bill')).toContainText('$');
+  });
+
+  test('categories with saved active appliances re-expand after reload', async ({ page }) => {
+    // budget-home activates Kitchen appliances
+    await page.locator('[data-preset-id="budget-home"]').click();
+    await expect(page.locator('#category-body-Kitchen')).toBeVisible();
+
+    await page.reload();
+
+    await expect(page.locator('#category-body-Kitchen')).toBeVisible();
   });
 });
