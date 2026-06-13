@@ -1,0 +1,87 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Inverter Recommendation | Electricity Load Calculator" description="Find the right inverter or UPS size for your electrical load.">
+  <main class="min-h-screen px-4 py-10 max-w-2xl mx-auto">
+
+    <a href="/" class="inline-flex items-center gap-1.5 text-sm font-mono mb-8 hover:opacity-80 transition-opacity" style="color:var(--accent)">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
+        <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+      </svg>
+      Back to Calculator
+    </a>
+
+    <div class="insight-card rounded-xl border bg-card p-6 space-y-6" style="border-color:color-mix(in srgb, var(--accent), transparent 68%)">
+
+      <!-- Header -->
+      <div class="flex items-start gap-4">
+        <span class="insight-icon-ring flex h-14 w-14 items-center justify-center rounded-full flex-shrink-0" style="background:color-mix(in srgb, var(--accent), transparent 82%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7" style="color:var(--accent)" aria-hidden="true">
+            <path d="M4 7h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm14 2H6v6h12V9Zm2-3h1v2h-1V6Zm-17 0H2v2h1V6Z"/>
+          </svg>
+        </span>
+        <div class="pt-1">
+          <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5" style="color:var(--accent)">Inverter Recommendation</p>
+          <h1 class="font-display font-black text-3xl text-text-primary leading-tight">Inverter / UPS Size</h1>
+        </div>
+      </div>
+
+      <!-- Recommended value -->
+      <div class="insight-value-box rounded-xl border p-6 text-center" style="border-color:color-mix(in srgb, var(--accent), transparent 52%); background:color-mix(in srgb, var(--accent), transparent 90%)">
+        <p class="text-[10px] font-mono uppercase tracking-widest mb-3" style="color:var(--accent)">Recommended Size</p>
+        <p id="insight-value" class="font-display font-black text-5xl tracking-tight" style="color:var(--accent)">—</p>
+        <p id="insight-context" class="text-sm text-text-muted mt-3"></p>
+      </div>
+
+      <!-- Educational content -->
+      <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+        <h2 class="font-semibold text-text-primary text-base">What is inverter kVA?</h2>
+        <p>kVA (kilovolt-ampere) is the apparent power rating of an inverter. The actual usable power (kW) depends on the power factor — typically 0.8 for home inverters.</p>
+        <p>We recommend sizing your inverter at <strong class="text-text-primary">1.2× your total load</strong> to handle surge currents from motors and compressors (e.g. refrigerators, ACs).</p>
+        <h2 class="font-semibold text-text-primary text-base mt-4">Standard inverter sizes</h2>
+        <div class="flex flex-wrap gap-2">
+          {['1 kVA','2 kVA','3 kVA','5 kVA','7.5 kVA','10 kVA','15 kVA'].map(s => (
+            <span id={`std-${s}`} class="px-3 py-1 rounded-full border border-border font-mono text-xs text-text-muted bg-base">{s}</span>
+          ))}
+        </div>
+        <p class="text-xs mt-3 p-3 rounded-lg border border-border bg-base">
+          Battery backup duration depends on battery capacity (Ah), which is not covered here. Consult an inverter specialist for battery sizing.
+        </p>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  function init() {
+    const params = new URLSearchParams(window.location.search);
+    const value = params.get('value');
+    const load = params.get('load');
+
+    const valueEl = document.getElementById('insight-value');
+    const contextEl = document.getElementById('insight-context');
+
+    if (valueEl) valueEl.textContent = value || '—';
+
+    if (value) {
+      // Reset all chips first, then highlight the matching one
+      document.querySelectorAll<HTMLElement>('[id^="std-"]').forEach(chip => {
+        chip.style.borderColor = '';
+        chip.style.color = '';
+        chip.style.background = '';
+      });
+      const chip = document.getElementById(`std-${value}`);
+      if (chip) {
+        chip.style.borderColor = 'var(--accent)';
+        chip.style.color = 'var(--accent)';
+        chip.style.background = 'color-mix(in srgb, var(--accent), transparent 90%)';
+      }
+    }
+
+    if (contextEl) contextEl.textContent = load ? `For a ${parseFloat(load).toFixed(2)} kW connected load` : '';
+  }
+
+  document.addEventListener('astro:page-load', init);
+</script>

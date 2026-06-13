@@ -1,0 +1,75 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Solar Recommendation | Electricity Load Calculator" description="Find the right solar panel system size based on your monthly electricity consumption.">
+  <main class="min-h-screen px-4 py-10 max-w-2xl mx-auto">
+
+    <a href="/" class="inline-flex items-center gap-1.5 text-sm font-mono mb-8 hover:opacity-80 transition-opacity" style="color:var(--accent)">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
+        <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+      </svg>
+      Back to Calculator
+    </a>
+
+    <div class="insight-card rounded-xl border bg-card p-6 space-y-6" style="border-color:color-mix(in srgb, var(--accent), transparent 68%)">
+
+      <!-- Header -->
+      <div class="flex items-start gap-4">
+        <span class="insight-icon-ring flex h-14 w-14 items-center justify-center rounded-full flex-shrink-0" style="background:color-mix(in srgb, var(--accent), transparent 82%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7" style="color:var(--accent)" aria-hidden="true">
+            <path d="M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm8-6a1 1 0 0 1 0 2h-1a1 1 0 1 1 0-2h1ZM5 11a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2h1Zm14.07-6.07a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM6.34 17.66a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Zm12.02 1.41a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.34 7.76l-.71-.71a1 1 0 0 1 0-1.41ZM12 20a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Z"/>
+          </svg>
+        </span>
+        <div class="pt-1">
+          <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5" style="color:var(--accent)">Solar Recommendation</p>
+          <h1 class="font-display font-black text-3xl text-text-primary leading-tight">Solar Panel System</h1>
+        </div>
+      </div>
+
+      <!-- Recommended value -->
+      <div class="insight-value-box rounded-xl border p-6 text-center" style="border-color:color-mix(in srgb, var(--accent), transparent 52%); background:color-mix(in srgb, var(--accent), transparent 90%)">
+        <p class="text-[10px] font-mono uppercase tracking-widest mb-3" style="color:var(--accent)">Recommended System</p>
+        <p id="insight-value" class="font-display font-black text-5xl tracking-tight" style="color:var(--accent)">—</p>
+        <p id="insight-context" class="text-sm text-text-muted mt-3"></p>
+      </div>
+
+      <!-- Educational content -->
+      <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+        <h2 class="font-semibold text-text-primary text-base">How solar sizing works</h2>
+        <p>A 1 kW solar panel system generates approximately <strong class="text-text-primary">120 units (kWh)</strong> of electricity per month in India (assuming ~4 peak sun hours/day).</p>
+        <p>The calculation is: <code class="px-1.5 py-0.5 rounded bg-base border border-border font-mono text-xs">Solar kW = Monthly Units ÷ 120</code></p>
+        <h2 class="font-semibold text-text-primary text-base mt-4">Things to consider</h2>
+        <ul class="space-y-1 list-disc list-inside">
+          <li>Roof area: ~10 sq ft per 100W of panel capacity</li>
+          <li>On-grid vs off-grid: On-grid systems export excess power back to the grid</li>
+          <li>Battery storage adds cost but provides backup during outages</li>
+          <li>Government subsidies may apply — check your state electricity board</li>
+        </ul>
+        <p class="text-xs mt-3 p-3 rounded-lg border border-border bg-base">
+          Solar sizing varies by location, roof orientation, and shading. This is an estimate based on average Indian conditions. Get a site survey from a certified solar installer for accurate sizing.
+        </p>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  function init() {
+    const params = new URLSearchParams(window.location.search);
+    const value = params.get('value');
+    const monthly = params.get('monthly');
+
+    const valueEl = document.getElementById('insight-value');
+    const contextEl = document.getElementById('insight-context');
+
+    if (valueEl) valueEl.textContent = value || '—';
+    if (contextEl) {
+      const mo = parseInt(monthly || '', 10);
+      contextEl.textContent = monthly && !isNaN(mo) ? `Based on ~${mo} kWh/month consumption` : '';
+    }
+  }
+
+  document.addEventListener('astro:page-load', init);
+</script>

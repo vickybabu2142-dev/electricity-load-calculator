@@ -1,0 +1,82 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Cable Recommendation | Electricity Load Calculator" description="Find the right wire/cable size for your electrical load.">
+  <main class="min-h-screen px-4 py-10 max-w-2xl mx-auto">
+
+    <a href="/" class="inline-flex items-center gap-1.5 text-sm font-mono mb-8 hover:opacity-80 transition-opacity" style="color:var(--accent)">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
+        <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+      </svg>
+      Back to Calculator
+    </a>
+
+    <div class="insight-card rounded-xl border bg-card p-6 space-y-6" style="border-color:color-mix(in srgb, var(--accent), transparent 68%)">
+
+      <!-- Header -->
+      <div class="flex items-start gap-4">
+        <span class="insight-icon-ring flex h-14 w-14 items-center justify-center rounded-full flex-shrink-0" style="background:color-mix(in srgb, var(--accent), transparent 82%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-7 h-7" style="color:var(--accent)" aria-hidden="true">
+            <path d="M4 12h16M7 5v14M17 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </span>
+        <div class="pt-1">
+          <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5" style="color:var(--accent)">Cable Recommendation</p>
+          <h1 class="font-display font-black text-3xl text-text-primary leading-tight">Copper Wire / Cable Size</h1>
+        </div>
+      </div>
+
+      <!-- Recommended value -->
+      <div class="insight-value-box rounded-xl border p-6 text-center" style="border-color:color-mix(in srgb, var(--accent), transparent 52%); background:color-mix(in srgb, var(--accent), transparent 90%)">
+        <p class="text-[10px] font-mono uppercase tracking-widest mb-3" style="color:var(--accent)">Recommended Size</p>
+        <p id="insight-value" class="font-display font-black text-5xl tracking-tight" style="color:var(--accent)">—</p>
+        <p id="insight-context" class="text-sm text-text-muted mt-3"></p>
+      </div>
+
+      <!-- Educational content -->
+      <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+        <h2 class="font-semibold text-text-primary text-base">Why cable size matters</h2>
+        <p>Using undersized cable causes excessive heat, voltage drops, and is a fire hazard. Using oversized cable wastes money. The cross-sectional area (sq mm) determines how much current the cable can safely carry.</p>
+        <p><strong class="text-text-primary">Copper</strong> conductors are preferred for their low resistance, flexibility, and long-term reliability.</p>
+        <h2 class="font-semibold text-text-primary text-base mt-4">Standard copper cable ratings</h2>
+        <div class="rounded-lg border border-border bg-base overflow-hidden">
+          <table class="w-full text-xs font-mono">
+            <thead><tr class="border-b border-border"><th class="text-left px-3 py-2 text-text-muted">MCB Rating</th><th class="text-left px-3 py-2 text-text-muted">Cable Size</th></tr></thead>
+            <tbody>
+              {[['6A','1.0 sq mm'],['10A','1.5 sq mm'],['16A','2.5 sq mm'],['25A','4 sq mm'],['32A','6 sq mm'],['40A','10 sq mm'],['63A','16 sq mm']].map(([r,c]) => (
+                <tr class="border-b border-border last:border-0">
+                  <td class="px-3 py-2 text-text-primary">{r}</td>
+                  <td class="px-3 py-2" style="color:var(--accent)">{c}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs mt-3 p-3 rounded-lg border border-border bg-base">
+          These recommendations are estimates. Always verify with a licensed electrician based on cable run length and installation method.
+        </p>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  function init() {
+    const params = new URLSearchParams(window.location.search);
+    const value = params.get('value');
+    const load = params.get('load');
+
+    const valueEl = document.getElementById('insight-value');
+    const contextEl = document.getElementById('insight-context');
+
+    if (valueEl) valueEl.textContent = value || '—';
+    if (contextEl) {
+      const kw = parseFloat(load || '');
+      contextEl.textContent = load && !isNaN(kw) ? `For a ${kw.toFixed(2)} kW connected load` : '';
+    }
+  }
+
+  document.addEventListener('astro:page-load', init);
+</script>

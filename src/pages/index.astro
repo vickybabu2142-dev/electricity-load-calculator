@@ -279,6 +279,7 @@ const sectionedData = SECTIONS.map(section => ({
 import { DEFAULT_APPLIANCES, CATEGORIES, SECTIONS } from '@/data/appliances';
 import type { Appliance, ApplianceCategory } from '@/types';
 import { calculateRowKWh, calculateTotals } from '@/utils/calculations';
+import { calculateInsights } from '@/utils/insights';
 
 // ── State & Settings ──────────────────────────────────────
 const STORAGE_KEY = 'electricity_load_calculator_state';
@@ -331,7 +332,11 @@ function saveState() {
     maxCapacityKW,
     customIdCounter
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    // QuotaExceededError or SecurityError in private browsing — ignore silently
+  }
 }
 
 function loadState(): boolean {
@@ -339,14 +344,16 @@ function loadState(): boolean {
   if (!saved) return false;
   try {
     const state = JSON.parse(saved);
+    if (!Array.isArray(state.appliances) || state.appliances.length === 0) return false;
     appliances = state.appliances;
-    tariff = state.tariff;
-    currentCurrency = state.currentCurrency;
-    maxCapacityKW = state.maxCapacityKW;
-    customIdCounter = state.customIdCounter;
+    if (typeof state.tariff === 'number' && state.tariff > 0) tariff = state.tariff;
+    if (typeof state.currentCurrency === 'string' && REGION_SETTINGS[state.currentCurrency]) currentCurrency = state.currentCurrency;
+    if (typeof state.maxCapacityKW === 'number' && state.maxCapacityKW > 0) maxCapacityKW = state.maxCapacityKW;
+    if (typeof state.customIdCounter === 'number') customIdCounter = state.customIdCounter;
     return true;
   } catch (e) {
-    console.error('Failed to load saved state:', e);
+    appliances = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
+    localStorage.removeItem(STORAGE_KEY);
     return false;
   }
 }
@@ -545,6 +552,30 @@ function calculate() {
       }
     });
     printList.innerHTML = html || '<p class="text-text-muted italic">No active appliances selected.</p>';
+  }
+
+  // ── Smart Insights ─────────────────────────────────────
+  const insights = calculateInsights(result.totalKW, result.monthlyKWh);
+  const insightsSection = document.getElementById('smart-insights-section');
+  if (insightsSection) insightsSection.style.display = activeCount === 0 ? 'none' : '';
+
+  if (activeCount > 0) {
+    setText('insight-mcb-value', insights.recommendedMCB);
+    setText('insight-cable-value', insights.recommendedCable);
+    setText('insight-inverter-value', insights.recommendedInverter);
+    setText('insight-solar-value', insights.recommendedSolar);
+
+    const qParams = `?load=${result.totalKW.toFixed(2)}&monthly=${Math.round(result.monthlyKWh)}`;
+    const insightValues: Record<string, string> = {
+      mcb: insights.recommendedMCB,
+      cable: insights.recommendedCable,
+      inverter: insights.recommendedInverter,
+      solar: insights.recommendedSolar,
+    };
+    for (const type of ['mcb', 'cable', 'inverter', 'solar'] as const) {
+      const link = document.getElementById(`insight-${type}-link`) as HTMLAnchorElement | null;
+      if (link) link.href = `/insights/${type}${qParams}&value=${encodeURIComponent(insightValues[type])}`;
+    }
   }
 }
 
@@ -782,6 +813,13 @@ document.addEventListener('click', (e) => {
     report += `  Estimated Bill      : ${formatCurrency(monthlyBill)} / month\n`;
     report += `  Tariff Used         : ${formatCurrency(tariff)}/kWh(unit)\n`;
     report += `  Max Load Capacity   : ${maxCapacityKW} kW\n\n`;
+    report += `${'─'.repeat(48)}\n\n`;
+    const reportInsights = calculateInsights(totalWatts / 1000, monthlyKWh);
+    report += `SMART INSIGHTS\n`;
+    report += `  Recommended MCB         : ${reportInsights.recommendedMCB}\n`;
+    report += `  Recommended Cable       : ${reportInsights.recommendedCable}\n`;
+    report += `  Recommended Inverter    : ${reportInsights.recommendedInverter}\n`;
+    report += `  Recommended Solar       : ${reportInsights.recommendedSolar}\n\n`;
     report += `${'─'.repeat(48)}\n\n`;
     report += `APPLIANCE BREAKDOWN\n\n`;
     SECTIONS.forEach(section => {
@@ -1080,7 +1118,20 @@ function expandLighting() {
   if (chevron)   chevron.style.transform = '';
 }
 
+function onStickyDetailsClick(e: Event) {
+  e.preventDefault();
+  document.getElementById('results-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function initCalculator() {
+  if (!document.getElementById('results-panel')) return;
+
+  const stickyLink = document.getElementById('sticky-details-link');
+  if (stickyLink) {
+    stickyLink.removeEventListener('click', onStickyDetailsClick);
+    stickyLink.addEventListener('click', onStickyDetailsClick);
+  }
+
   const hasSavedState = loadState();
 
   if (hasSavedState) {
@@ -1103,7 +1154,7 @@ function initCalculator() {
       const body = document.getElementById(bodyId);
       const container = body?.querySelector('[data-rows-container]');
       if (!container) return;
-      
+
       container.innerHTML = '';
       const catAppliances = appliances.filter(a => a.category === cat);
       catAppliances.forEach(a => {
@@ -1126,13 +1177,7 @@ function initCalculator() {
 
   expandLighting();
   calculate();
-  
-  document.getElementById('sticky-details-link')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('results-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
 }
 
-document.addEventListener('DOMContentLoaded', initCalculator);
-document.addEventListener('astro:after-swap', initCalculator);
+document.addEventListener('astro:page-load', initCalculator);
 </script>

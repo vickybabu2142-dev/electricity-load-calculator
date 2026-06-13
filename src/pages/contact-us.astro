@@ -186,6 +186,5 @@ const breadcrumbSchema = {
     });
   }
 
-  setupContactForm();
-  document.addEventListener('astro:after-swap', setupContactForm);
+  document.addEventListener('astro:page-load', setupContactForm);
 </script>

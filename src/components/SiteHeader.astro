@@ -63,7 +63,15 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
 </header>
 
 <script>
+  // Holds the AbortController for the current menu setup so we can cancel
+  // all listeners cleanly before re-initialising on the next navigation.
+  let menuController: AbortController | null = null;
+
   function setupMobileMenu() {
+    menuController?.abort();
+    menuController = new AbortController();
+    const { signal } = menuController;
+
     const toggleBtn = document.getElementById('mobile-menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIcon = document.getElementById('menu-icon');
@@ -75,48 +83,32 @@ import ThemeToggle from '@/components/ThemeToggle.astro';
 
     function toggleMenu() {
       isOpen = !isOpen;
-      
-      // Update UI
       mobileMenu.classList.toggle('hidden', !isOpen);
       menuIcon.classList.toggle('hidden', isOpen);
       closeIcon.classList.toggle('hidden', !isOpen);
-      
-      // Update ARIA
       toggleBtn.setAttribute('aria-expanded', isOpen.toString());
     }
 
-    // Use pointerdown for faster response on touch devices (no 300ms delay)
     toggleBtn.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       e.stopPropagation();
       toggleMenu();
-    }, { passive: false });
+    }, { passive: false, signal });
 
-    // Close menu when clicking a link
     mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        if (isOpen) toggleMenu();
-      });
+      link.addEventListener('click', () => { if (isOpen) toggleMenu(); }, { signal });
     });
 
-    // Close menu when clicking outside
     document.addEventListener('pointerdown', (e) => {
       if (isOpen && !mobileMenu.contains(e.target as Node) && !toggleBtn.contains(e.target as Node)) {
         toggleMenu();
       }
-    });
+    }, { signal });
 
-    // Handle escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        toggleMenu();
-      }
-    });
+      if (e.key === 'Escape' && isOpen) toggleMenu();
+    }, { signal });
   }
 
-  // Initial setup
-  setupMobileMenu();
-
-  // Re-run setup on View Transitions (if enabled in Astro)
-  document.addEventListener('astro:after-swap', setupMobileMenu);
+  document.addEventListener('astro:page-load', setupMobileMenu);
 </script>

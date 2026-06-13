@@ -434,6 +434,36 @@ button:active:not(:disabled),
   transform: scale(0.95);
 }
 
+/* Insight Cards — calm ambient glow that radiates the accent color */
+.insight-card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 16px -6px color-mix(in srgb, var(--accent), transparent 82%);
+}
+.insight-card:hover {
+  border-color: color-mix(in srgb, var(--accent), transparent 42%) !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent), transparent 65%),
+    0 8px 32px -6px color-mix(in srgb, var(--accent), transparent 52%);
+  transform: translateY(-2px);
+}
+.insight-card:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+/* Glowing recommended-value box on insight detail pages */
+.insight-value-box {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent), transparent 50%),
+    0 16px 48px -8px color-mix(in srgb, var(--accent), transparent 42%),
+    inset 0 1px 0 color-mix(in srgb, var(--accent), transparent 68%);
+}
+
+/* Glowing icon ring */
+.insight-icon-ring {
+  box-shadow: 0 0 18px -3px color-mix(in srgb, var(--accent), transparent 52%);
+}
+
 /* Print styles */
 @media print {
   @page {
