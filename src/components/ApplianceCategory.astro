@@ -20,18 +20,19 @@ const dailyKWh = appliances
   .filter(a => a.qty > 0)
   .reduce((s, a) => s + (a.watts * a.qty * a.hours) / 1000, 0);
 
+const activeCount = appliances.filter(a => a.qty > 0).length;
+
 const icon = CATEGORY_ICONS[name];
 ---
 
 <section
-  class="category-section rounded-xl border border-border bg-card overflow-hidden animate-slide-up"
+  class="category-section rounded-xl border border-border bg-card overflow-hidden"
   data-category={name}
-  style={`animation-delay: ${index * 0.08}s`}
 >
   <!-- Category header -->
   <button
     type="button"
-    class="category-toggle w-full flex items-center gap-3 px-5 py-4 hover:bg-card-hover transition-colors text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent"
+    class="category-toggle w-full flex items-center gap-3 px-5 py-4 hover:bg-card-hover transition-colors text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
     data-action="toggle-category"
     aria-expanded="false"
     aria-controls={`category-body-${name.replace(/\s/g, '-')}`}
@@ -80,7 +81,16 @@ const icon = CATEGORY_ICONS[name];
 
     <!-- Appliance count -->
     <span class="text-xs text-text-muted mr-3 flex-shrink-0">
-      <span data-category-count={name}>{appliances.length}</span> appliances
+      <span
+        class:list={[
+          "transition-all duration-300",
+          activeCount > 0 ? "bg-accent text-accent-text px-2 py-0.5 rounded-full font-bold" : ""
+        ]}
+        data-category-count-badge={name}
+      >
+        <span data-category-count={name}>{activeCount}/{appliances.length}</span>
+      </span>
+      <span class="ml-1">appliances</span>
     </span>
 
     <!-- Chevron -->
@@ -88,7 +98,7 @@ const icon = CATEGORY_ICONS[name];
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
-      class="chevron w-5 h-5 text-text-muted flex-shrink-0 transition-transform duration-200"
+      class="chevron w-5 h-5 text-text-muted flex-shrink-0"
       style="transform: rotate(-90deg)"
     >
       <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
@@ -98,28 +108,40 @@ const icon = CATEGORY_ICONS[name];
   <!-- Category body -->
   <div
     id={`category-body-${name.replace(/\s/g, '-')}`}
-    class="category-body"
-    style="display: none"
+    class="category-body-wrap transition-all duration-300 ease-in-out"
   >
-    <!-- Column headers (desktop only) -->
-    <div class="hidden lg:flex items-center gap-3 px-4 py-2 bg-base/50 border-b border-border text-[10px] font-mono uppercase tracking-widest text-text-muted">
-      <div class="w-11 flex-shrink-0">On/Off</div>
-      <div class="flex-1 min-w-[140px]">Appliance</div>
-      <div class="w-[90px] text-center">Watts</div>
-      <div class="w-[100px] text-center">Quantity</div>
-      <div class="w-[80px] text-center">Hrs/Day</div>
-      <div class="w-[80px] text-right">Usage</div>
-      <div class="w-7"></div>
-    </div>
+    <div class="category-body-inner">
+      <!-- Column headers (desktop only) -->
+      <div class="hidden lg:flex items-center gap-3 px-4 py-2 border-b border-border text-[10px] font-mono uppercase tracking-widest text-text-muted">
+        <div class="w-11 flex-shrink-0">On/Off</div>
+        <div class="flex-1 min-w-[140px]">Appliance</div>
+        <div class="w-[90px] text-center">Watts</div>
+        <div class="w-[100px] text-center">Quantity</div>
+        <div class="w-[80px] text-center">Hrs/Day</div>
+        <div class="w-[80px] text-right">Usage</div>
+        <div class="w-7"></div>
+      </div>
 
-    <!-- Appliance rows -->
-    <div data-rows-container={name}>
-      {appliances.map((a, i) => (
-        <ApplianceRow appliance={a} index={i} />
-      ))}
-    </div>
+      <!-- Appliance rows -->
+      <div data-rows-container={name}>
+        {appliances.map((a, i) => (
+          <ApplianceRow appliance={a} index={i} />
+        ))}
+      </div>
 
-    <!-- Add appliance form -->
-    <AddApplianceForm category={name} />
+      <!-- Add appliance form -->
+      <AddApplianceForm category={name} />
+    </div>
   </div>
 </section>
+
+<style>
+  .chevron {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Prevent the global button scale animation on the category toggle for a more stable feel */
+  .category-toggle:active {
+    transform: none !important;
+  }
+</style>

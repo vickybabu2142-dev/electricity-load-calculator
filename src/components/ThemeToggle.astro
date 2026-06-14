@@ -49,7 +49,6 @@
       themeToggleLightIcon?.classList.remove('hidden');
     }
 
-    // Remove old listener if any (though astro:after-swap handles fresh script execution in most cases)
     themeToggleBtn.onclick = () => {
       // toggle icons
       themeToggleDarkIcon?.classList.toggle('hidden');
@@ -66,8 +65,5 @@
     };
   }
 
-  // Run on initial load
-  initThemeToggle();
-  // Re-run on View Transitions navigation
-  document.addEventListener('astro:after-swap', initThemeToggle);
+  document.addEventListener('astro:page-load', initThemeToggle);
 </script>

@@ -16,64 +16,106 @@ const sectionedData = SECTIONS.map(section => ({
     appliances: DEFAULT_APPLIANCES.filter(a => a.category === cat && !a.hidden),
   }))
 }));
+
+const faqs = [
+  {
+    question: "How to calculate electricity load?",
+    answer: "To calculate your total electricity load, sum the wattage of all appliances you intend to run simultaneously. The formula is: Total Load (Watts) = Σ (Appliance Wattage × Quantity). To find energy consumption in units (kWh), use: (Total Watts × Hours of Usage) / 1000."
+  },
+  {
+    question: "How much kWh is in 1 unit?",
+    answer: "In the context of electricity billing, 1 unit is exactly equal to 1 kilowatt-hour (kWh). If an appliance with a 1,000-watt (1 kW) rating runs for one hour, it consumes exactly 1 unit of electricity."
+  },
+  {
+    question: "What is 1 kW load?",
+    answer: "A 1 kW load represents a power demand of 1,000 watts. This is a measure of instantaneous power. For example, running a 1,000W heater or ten 100W bulbs simultaneously creates a 1 kW load on your electrical system."
+  },
+  {
+    question: "How much unit does 3000 watts consume in 1 hour?",
+    answer: "A 3,000-watt load is equivalent to 3 kW. Running this load for 1 hour results in a consumption of 3 units (3 kWh) of electricity. Formula: (3000W × 1h) / 1000 = 3 kWh."
+  },
+  {
+    question: "What runs up your electric bill the most?",
+    answer: "The biggest contributors to high electric bills are typically heating and cooling appliances: Air Conditioners, Electric Geysers (Water Heaters), Space Heaters, and old, inefficient Refrigerators that run 24/7."
+  }
+];
+
+const schemaGraph = [
+  {
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  }
+];
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Electricity Load Calculator | Home Electrical Load Assessment"
+  description="Professional electrical load calculator for home. Estimate kW load, kWh consumption, get MCB, cable, inverter & solar recommendations instantly."
+  keywords="electricity load calculator, electrical load assessment, kw load calculator for home, house wiring load, energy cost estimator, bijli load calculator India"
+  schemaGraph={schemaGraph}
+>
   <PageHero />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-24 print:hidden animate-slide-up">
 
     <!-- QUICK START PRESETS -->
-    <div class="mb-6 print:hidden">
-      <div class="flex items-center gap-3 mb-3">
-        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">Quick Start</p>
-        <div class="flex-1 h-px bg-border"></div>
+    <div class="mt-10 mb-8 print:hidden">
+      <div class="flex items-center gap-3 mb-4">
+        <p class="text-xs sm:text-sm font-normal uppercase tracking-widest text-text-muted flex-shrink-0">Quick Start</p>
+        <div class="flex-1 h-px bg-border/60"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
 
         <!-- Typical 2BHK -->
         <button type="button" data-action="load-preset" data-preset-id="typical-2bhk"
-          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          class="preset-card text-left px-3.5 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
           <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-accent flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
               </span>
-              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Typical 2BHK</span>
+              <span class="text-sm font-normal text-text-primary group-hover:text-accent transition-colors">Typical 2BHK</span>
             </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~5 kW</span>
+            <span class="flex-shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-border text-text-primary tabular-nums font-normal">~5 kW</span>
           </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Standard home — AC, fridge, TV &amp; kitchen</p>
+          <p class="hidden sm:block text-[11px] text-text-muted mt-1.5 leading-relaxed">Standard home — AC, fridge, TV &amp; kitchen</p>
         </button>
 
         <!-- Budget Home -->
         <button type="button" data-action="load-preset" data-preset-id="budget-home"
-          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          class="preset-card text-left px-3.5 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
           <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-accent flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 22V12"/><path d="m5 12 7-10 7 10"/><path d="M19 15v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M12 22V12"/><path d="m5 12 7-10 7 10"/><path d="M19 15v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5"/></svg>
               </span>
-              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Budget Home</span>
+              <span class="text-sm font-normal text-text-primary group-hover:text-accent transition-colors">Budget Home</span>
             </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~1.3 kW</span>
+            <span class="flex-shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-border text-text-primary tabular-nums font-normal">~1.3 kW</span>
           </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Essentials only — fans, fridge, TV &amp; laptop</p>
+          <p class="hidden sm:block text-[11px] text-text-muted mt-1.5 leading-relaxed">Essentials only — fans, fridge, TV &amp; laptop</p>
         </button>
 
         <!-- Summer Heavy -->
         <button type="button" data-action="load-preset" data-preset-id="summer-heavy"
-          class="preset-card text-left px-4 py-3 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent group active:scale-[0.98]">
+          class="preset-card text-left px-3.5 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
           <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2">
               <span class="text-accent flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
               </span>
-              <span class="text-sm font-medium text-text-muted group-hover:text-accent transition-colors">Summer Heavy</span>
+              <span class="text-sm font-normal text-text-primary group-hover:text-accent transition-colors">Summer Heavy</span>
             </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-2 py-0.5 rounded-full border border-border text-text-muted tabular-nums">~10 kW</span>
+            <span class="flex-shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-border text-text-primary tabular-nums font-normal">~10 kW</span>
           </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-2 leading-relaxed">Peak season — dual AC, full kitchen &amp; more</p>
+          <p class="hidden sm:block text-[11px] text-text-muted mt-1.5 leading-relaxed">Peak season — dual AC, full kitchen &amp; more</p>
         </button>
 
       </div>
@@ -119,7 +161,7 @@ const sectionedData = SECTIONS.map(section => ({
       </div>
 
       <!-- Right: results panel -->
-      <div class="w-full lg:w-80 xl:w-96 flex-shrink-0 lg:sticky lg:top-24 z-10 transition-all duration-500 ease-in-out">
+      <div class="w-full lg:w-80 xl:w-96 flex-shrink-0 z-10">
         <ResultsPanel />
       </div>
 
@@ -153,7 +195,7 @@ const sectionedData = SECTIONS.map(section => ({
           <span class="font-mono text-xs text-text-muted">kW</span>
         </div>
         <div class="text-[10px] text-text-primary font-medium truncate w-full opacity-90">
-          Est. Bill: <span id="sticky-monthly-bill" class="font-semibold tabular-nums" style="color: var(--accent);">0</span>
+          Monthly: <span id="sticky-monthly-kwh" class="font-semibold tabular-nums" style="color: var(--accent);">0</span> kWh
         </div>
       </div>
 
@@ -164,7 +206,7 @@ const sectionedData = SECTIONS.map(section => ({
           <path d="M12 19V5M5 12l7-7 7 7"/>
         </svg>
         <p class="text-xs font-medium text-text-primary">
-          Pick a <span class="font-semibold" style="color: var(--accent);">Quick Start</span> or tap <span class="font-semibold" style="color: var(--accent);">+</span>
+          Pick a <span class="font-medium" style="color: var(--accent);">Quick Start</span> or tap <span class="font-medium" style="color: var(--accent);">+</span>
         </p>
         <p class="text-[10px] text-text-muted">to see your load &amp; bill</p>
       </div>
@@ -182,48 +224,227 @@ const sectionedData = SECTIONS.map(section => ({
         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
         <circle cx="12" cy="12" r="3" />
       </svg>
-      <span class="text-sm font-medium">Details</span>
+      <span class="text-sm font-medium">View</span>
     </a>
   </div>
   </div>
 
   <!-- PRINT ONLY LAYOUT -->
-  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto p-8 text-text-primary bg-base">
-    <div class="border-b-2 border-text-primary pb-6 mb-6 flex justify-between items-end">
-      <div>
-        <h1 class="text-3xl font-display font-bold text-text-primary">
-          Electricity Load <span class="text-accent">Report</span>
-        </h1>
-        <p class="text-sm text-text-muted mt-1" id="print-date"></p>
+  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto text-text-primary bg-white print:bg-white" style="padding: 0; box-sizing: border-box; background-color: white !important;">
+
+    <!-- ── PAGE 1: Executive Summary ──────────────────────── -->
+    <div class="print-page">
+      <!-- Report header -->
+      <div class="border-b-2 border-border pb-5 mb-8 flex justify-between items-end">
+        <div>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Electrical Assessment Report</p>
+          <p class="text-2xl font-display font-bold text-text-primary" role="heading" aria-level="1">
+            Electricity Load <span class="text-accent">Report</span>
+          </p>
+          <p class="text-sm text-text-muted mt-1.5" id="print-date"></p>
+        </div>
+        <div class="text-right select-none">
+          <p class="print-brand-url text-sm font-bold font-mono text-accent tracking-wide"></p>
+          <p class="text-[10px] text-text-muted mt-1">&copy; {new Date().getFullYear()} · All Rights Reserved</p>
+          <p class="text-[9px] text-text-muted mt-0.5 uppercase tracking-widest">Proprietary Report</p>
+        </div>
       </div>
-      <div class="text-right">
-        <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Tariff</p>
-        <p class="text-2xl font-semibold" id="print-tariff">0</p>
+
+      <!-- Executive Summary: 3-column stats -->
+      <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Total Electrical Load</p>
+          <p class="text-4xl font-bold font-display" style="color: var(--accent);"><span id="print-total-kw">0.00</span> kW</p>
+          <p class="text-xs text-text-muted mt-2"><span id="print-total-watts">0</span> W</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Daily Consumption</p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-daily-kwh">0.00</span></p>
+          <p class="text-xs text-text-muted mt-2">kWh (units) per day</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Monthly Consumption</p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-monthly-kwh">0</span></p>
+          <p class="text-xs text-text-muted mt-2">kWh (units) per month</p>
+        </div>
       </div>
+
+      <!-- Electrical Health Score -->
+      <div class="break-inside-avoid">
+        <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-3">Electrical Health Score</h2>
+        <div class="bg-card p-6 rounded-xl border border-border">
+          <div class="flex items-center gap-8 mb-5">
+            <div class="flex items-end gap-2">
+              <span id="print-health-score" class="text-6xl font-bold font-display" style="color: var(--accent);">—</span>
+              <span class="text-xl text-text-muted mb-2">/ 100</span>
+            </div>
+            <div>
+              <span id="print-health-label" class="text-2xl font-semibold text-text-primary">—</span>
+              <p class="text-xs text-text-muted mt-1">Composite electrical system assessment</p>
+            </div>
+          </div>
+          <div id="print-health-details" class="space-y-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional Energy Cost Estimate (only shown if user entered a rate) -->
+      <div id="print-cost-estimator" class="mt-6 bg-card p-5 rounded-xl border border-border break-inside-avoid" style="display:none;">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-4">Energy Cost Estimator</p>
+
+        <!-- Three key numbers -->
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
+            <p class="text-2xl font-bold font-display" style="color: var(--accent);"><span id="print-cost-monthly-kwh">0</span></p>
+            <p class="text-xs text-text-muted mt-0.5">kWh / month</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Rate per kWh</p>
+            <p id="print-cost-rate" class="text-2xl font-bold font-display text-text-primary">—</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Est. Monthly Cost</p>
+            <p id="print-estimated-cost" class="text-2xl font-bold font-display" style="color: var(--accent);">—</p>
+          </div>
+        </div>
+
+        <!-- Daily and yearly breakdown -->
+        <div class="flex gap-8 pt-3 mb-4 border-t border-border">
+          <div>
+            <p class="text-[10px] font-mono text-text-muted uppercase tracking-widest">Daily Cost</p>
+            <p id="print-cost-daily" class="text-sm font-semibold font-mono text-text-primary mt-0.5">—</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-mono text-text-muted uppercase tracking-widest">Yearly Estimate</p>
+            <p id="print-cost-yearly" class="text-sm font-semibold font-mono text-text-primary mt-0.5">—</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-text-muted">Based on user-provided electricity rate. Actual bills may vary due to taxes, fixed charges, slab pricing, and regional tariffs.</p>
+      </div>
+
     </div>
-    
-    <div class="grid grid-cols-2 gap-8 mb-8 bg-card p-6 rounded-xl border border-border">
-      <div>
-        <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Total Load</h2>
-        <p class="text-4xl font-bold font-display mb-1" style="color: var(--accent);"><span id="print-total-kw">0.00</span> kW</p>
-        <p class="text-sm text-text-muted"><span id="print-total-watts">0</span> W</p>
+
+    <!-- ── Section 2: Smart Insights ─────────────────────────── -->
+    <div class="print-page" style="page-break-before: always; break-before: page;">
+      <!-- Section brand strip -->
+      <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
+        <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
+        <span class="print-brand-url text-[9px] font-mono font-semibold text-accent"></span>
       </div>
-      <div>
-        <h2 class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Energy & Est. Bill</h2>
-        <p class="text-lg font-semibold mb-1 text-text-primary"><span id="print-daily-kwh">0.00</span> kWh(unit)/day</p>
-        <p class="text-xl font-bold mt-2 border-t border-border pt-2" style="color: var(--accent);"><span id="print-monthly-bill">0</span> <span class="text-sm font-normal text-text-muted">/ month</span></p>
+      <!-- Section header -->
+      <div class="border-b border-border pb-2 mb-5">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Smart Insights</p>
+        <h2 class="text-base font-display font-bold text-text-primary">Electrical System Recommendations</h2>
+      </div>
+
+      <!-- Insights 2×2 grid -->
+      <div class="grid grid-cols-2 gap-5 mb-7 break-inside-avoid">
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">⚡ Recommended MCB</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="print-mcb-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Miniature Circuit Breaker rating for safe protection of your total load</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">🔌 Recommended Cable</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="print-cable-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Wire gauge suitable for safe and efficient power delivery</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">🔋 Recommended Inverter</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="print-inverter-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Minimum inverter capacity needed for reliable backup power</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">☀️ Recommended Solar</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="print-solar-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Solar panel capacity to meaningfully offset your consumption</p>
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="bg-card border border-border rounded-xl p-5 break-inside-avoid">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Important Notice</p>
+        <p class="text-xs text-text-muted leading-relaxed">These recommendations are estimates based on your declared appliance loads. Always consult a licensed electrician before making wiring changes or purchasing equipment. Local regulations and building codes take precedence over these figures.</p>
+      </div>
+
+    </div>
+
+    <!-- ── Section 3: Consumption Breakdown ──────────────────── -->
+    <div class="print-page" style="page-break-before: always; break-before: page;">
+      <!-- Section brand strip -->
+      <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
+        <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
+        <span class="print-brand-url text-[9px] font-mono font-semibold text-accent"></span>
+      </div>
+      <!-- Section header -->
+      <div class="border-b border-border pb-2 mb-5">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Energy Analysis</p>
+        <h2 class="text-base font-display font-bold text-text-primary">Consumption Breakdown by Category</h2>
+      </div>
+
+      <!-- Breakdown table with column headers -->
+      <div class="break-inside-avoid mb-8">
+        <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-0.5 border-b-2 border-border">
+          <span class="flex-1 text-text-primary">Category</span>
+          <span class="w-32 text-right text-text-primary">kWh / day</span>
+          <span class="w-20 text-right text-text-primary">Share</span>
+        </div>
+        <div id="print-breakdown-table" class="space-y-0">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Active Appliances -->
+      <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-4 border-b border-border pb-2">Active Appliances Breakdown</h2>
+      <div id="print-appliances-list" class="space-y-5">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Daily total row -->
+      <div id="print-appliances-total" class="mt-4 pt-3 border-t-2 border-border break-inside-avoid">
+        <!-- Populated by JS -->
+      </div>
+
+    </div>
+
+    <!-- ── Section 4: Energy Saving + High Consumption ──────── -->
+    <div class="print-page" style="page-break-before: always; break-before: page;">
+      <!-- Section brand strip -->
+      <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
+        <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
+        <span class="print-brand-url text-[9px] font-mono font-semibold text-accent"></span>
+      </div>
+      <!-- Section header -->
+      <div class="border-b border-border pb-2 mb-5">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Action Plan</p>
+        <h2 class="text-base font-display font-bold text-text-primary">Energy Saving Opportunities</h2>
+      </div>
+
+      <!-- Energy Saving Tips -->
+      <div class="break-inside-avoid mb-8">
+        <div id="print-saving-tips" class="space-y-1.5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- High Consumption Devices -->
+      <div class="break-inside-avoid">
+        <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-4 border-b border-border pb-2">High Consumption Devices</h2>
+        <div id="print-high-consumption" class="space-y-0">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Final footer -->
+      <div class="mt-12 pt-6 border-t border-border flex justify-between items-center text-[10px] text-text-muted select-none break-inside-avoid">
+        <p class="print-brand-url font-medium"></p>
+        <p>&copy; {new Date().getFullYear()} ElectricityLoadCalculator.com · All Rights Reserved · For informational purposes only.</p>
       </div>
     </div>
 
-    <h2 class="text-sm font-bold uppercase tracking-wider text-text-primary mb-4 border-b border-text-primary pb-2">Active Appliances Breakdown</h2>
-    <div id="print-appliances-list" class="space-y-6 pb-12">
-      <!-- Populated by JS -->
-    </div>
-    
-    <div class="mt-12 pt-6 border-t border-border flex justify-between items-center text-xs text-text-muted select-none pointer-events-none break-inside-avoid opacity-80">
-      <p id="print-site-url" class="font-medium"></p>
-      <p>&copy; {new Date().getFullYear()} — All Rights Reserved</p>
-    </div>
   </div>
 
   <ReportModal />
@@ -231,7 +452,7 @@ const sectionedData = SECTIONS.map(section => ({
   <!-- SEO CONTENT SECTION -->
   <section class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-12 print:hidden border-t border-border mt-12 pt-16">
     <div class="max-w-4xl mx-auto prose prose-invert prose-headings:font-display prose-headings:font-bold prose-headings:text-text-primary prose-p:text-text-muted prose-p:leading-relaxed">
-      <h2 class="text-3xl sm:text-4xl mb-8">Managing Your Home Power: The Ultimate Electricity Load Calculator Guide</h2>
+      <h2 class="text-3xl sm:text-4xl mb-8">Electrical Load Assessment: The Complete Guide to Home Power Planning</h2>
       
       <p>
         In today’s technology-driven world, managing residential energy consumption is more critical than ever. Whether you are setting up a new apartment or managing a large residential complex, using an <strong>electricity load calculator</strong> is the first step toward efficiency. Our tool is designed to simplify the complex process of <strong>electrical load calculation</strong>, providing you with instant insights into your household power needs.
@@ -253,17 +474,17 @@ const sectionedData = SECTIONS.map(section => ({
         Our <strong>electricity load calculator</strong> handles the base wattage measurements for all your home appliances. Knowing these metrics is the key to electrical safety and ensuring your home's wiring is adequate for your lifestyle. Whether you need a simple <strong>electricity load calculator for home</strong> or a more detailed breakdown for a residential project, our tool provides the accuracy you need.
       </p>
 
-      <h3 class="text-2xl mt-12 mb-6">The Power of a Bijli Bill Calculator</h3>
+      <h3 class="text-2xl mt-12 mb-6">Optional Energy Cost Estimator: Cost Transparency Without Assumptions</h3>
       <p>
-        Calculation isn't just about safety; it's about the bottom line. By integrating a <strong>bijli bill calculator</strong> feature, we allow users to see the direct financial impact of their appliance usage. Knowing that your old refrigerator or an inefficient AC is costing you significantly more per month can be the motivation you need to upgrade to energy-efficient models.
+        Electricity tariffs vary dramatically by country, state, and provider — fixed rate assumptions are inherently misleading for a global audience. That's why our <strong>energy cost estimator</strong> is built as an optional, user-controlled feature. Simply enter your local electricity rate (in your currency per kWh) and instantly see your estimated monthly energy cost calculated from your actual load data.
       </p>
       <p>
-        For those who prefer to keep their data offline or need to present a plan to an electrician, you can generate an <strong>electricity load calculator in kw for home pdf</strong> report directly from our tool. This report includes a detailed breakdown of every active appliance, its wattage, and its contribution to your daily and monthly energy consumption.
+        The primary value of this platform is load analysis — understanding your connected load in kW, your daily and monthly energy consumption in kWh, and your electrical health. If you want a cost estimate, you can optionally provide your local rate. For offline use or sharing with an electrician, you can generate a professional <strong>electricity load calculator PDF report</strong> including your full appliance breakdown and, if a rate was provided, your energy cost estimate.
       </p>
 
       <h3 class="text-2xl mt-12 mb-6">Conclusion</h3>
       <p>
-        Whether you call it an <strong>electricity load calculator</strong>, a <strong>bijli load calculator</strong>, or a residential load assessment tool, the goal remains the same: safety and efficiency. Start adding your home appliances today to take full control of your electrical infrastructure, optimize your costs, and ensure a stable power supply for your family.
+        Whether you are planning a new home, upgrading your wiring, sizing a solar system, or simply understanding your energy footprint, our <strong>electrical load calculator</strong> gives you the engineering-grade data you need. Add your appliances today for an instant load assessment, MCB and cable recommendations, an electrical health score, and smart energy-saving insights — no electricity tariff required.
       </p>
     </div>
   </section>
@@ -279,6 +500,8 @@ const sectionedData = SECTIONS.map(section => ({
 import { DEFAULT_APPLIANCES, CATEGORIES, SECTIONS } from '@/data/appliances';
 import type { Appliance, ApplianceCategory } from '@/types';
 import { calculateRowKWh, calculateTotals } from '@/utils/calculations';
+import { calculateInsights } from '@/utils/insights';
+import { calculateHealthScore, calculateCategoryBreakdown, generateSavingsTips, getHighConsumptionAlerts } from '@/utils/health';
 
 // ── State & Settings ──────────────────────────────────────
 const STORAGE_KEY = 'electricity_load_calculator_state';
@@ -293,7 +516,7 @@ const REGION_SETTINGS: Record<string, { locale: string, symbol: string, defaultT
 };
 
 let appliances: Appliance[] = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
-let tariff = 8;
+let tariff = 0;
 let currentCurrency = 'INR';
 let maxCapacityKW = 5;
 let customIdCounter = 1000;
@@ -331,7 +554,11 @@ function saveState() {
     maxCapacityKW,
     customIdCounter
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    // QuotaExceededError or SecurityError in private browsing — ignore silently
+  }
 }
 
 function loadState(): boolean {
@@ -339,14 +566,16 @@ function loadState(): boolean {
   if (!saved) return false;
   try {
     const state = JSON.parse(saved);
+    if (!Array.isArray(state.appliances) || state.appliances.length === 0) return false;
     appliances = state.appliances;
-    tariff = state.tariff;
-    currentCurrency = state.currentCurrency;
-    maxCapacityKW = state.maxCapacityKW;
-    customIdCounter = state.customIdCounter;
+    if (typeof state.tariff === 'number' && state.tariff > 0) tariff = state.tariff;
+    if (typeof state.currentCurrency === 'string' && REGION_SETTINGS[state.currentCurrency]) currentCurrency = state.currentCurrency;
+    if (typeof state.maxCapacityKW === 'number' && state.maxCapacityKW > 0) maxCapacityKW = state.maxCapacityKW;
+    if (typeof state.customIdCounter === 'number') customIdCounter = state.customIdCounter;
     return true;
   } catch (e) {
-    console.error('Failed to load saved state:', e);
+    appliances = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
+    localStorage.removeItem(STORAGE_KEY);
     return false;
   }
 }
@@ -368,8 +597,7 @@ function formatCurrency(amount: number): string {
 }
 
 function formatNumber(val: number, decimals = 0): string {
-  const { locale } = REGION_SETTINGS[currentCurrency];
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(navigator.language || 'en', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(val);
@@ -398,6 +626,7 @@ function setText(id: string, value: string) {
   if (el) el.textContent = value;
 }
 
+
 function updateRowKWh(a: Appliance) {
   const kwhEl = document.querySelector(`[data-kwh-display="${a.id}"]`);
   if (kwhEl) kwhEl.textContent = formatNumber(calculateRowKWh(a), 2);
@@ -408,34 +637,46 @@ function updateRowQtyDisplay(a: Appliance) {
   if (el) el.textContent = String(a.qty);
 }
 
-function updateRowNameStyle(a: Appliance) {
+function updateRowStyle(a: Appliance) {
   const row = document.querySelector<HTMLElement>(`[data-id="${a.id}"]`);
   if (!row) return;
+
   const nameEl = row.querySelector<HTMLElement>('.flex-1 span');
   if (nameEl) nameEl.style.color = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
+
+  // 1. Active Row Highlighting
+  row.classList.toggle('border-accent', a.qty > 0);
+  row.classList.toggle('bg-accent/5', a.qty > 0);
+  row.classList.toggle('border-transparent', a.qty === 0);
+
+  // 3. Progressive Dimming
+  const controlsRow = row.querySelector<HTMLElement>('[data-controls-row]');
+  if (controlsRow) {
+    controlsRow.classList.toggle('opacity-40', a.qty === 0);
+    controlsRow.classList.toggle('grayscale-[50%]', a.qty === 0);
+    controlsRow.classList.toggle('opacity-100', a.qty > 0);
+  }
+
+  // 4. Selection Iconography
+  const icon = row.querySelector<HTMLElement>('[data-selection-icon]');
+  if (icon) icon.classList.toggle('hidden', a.qty === 0);
 }
 
 // ── Calculation ───────────────────────────────────────────
 function calculate() {
   const result = calculateTotals(appliances, tariff, maxCapacityKW);
-  const settings = REGION_SETTINGS[currentCurrency];
 
   animateCounter('total-kw', result.totalKW, 2);
   animateCounter('sticky-total-kw', result.totalKW, 2);
   animateCounter('total-watts', result.totalWatts, 0);
   animateCounter('daily-kwh', result.dailyKWh, 2);
   animateCounter('monthly-kwh', result.monthlyKWh, 0);
-  
-  setText('monthly-bill', formatCurrency(result.monthlyBill));
-  setText('sticky-monthly-bill', formatCurrency(result.monthlyBill));
+  setText('sticky-monthly-kwh', String(Math.round(result.monthlyKWh)));
+
   setText('top-consumer-name', result.topConsumerName);
   setText('top-consumer-watts', formatNumber(result.topConsumerWatts));
   setText('load-percent', `${Math.round(result.loadPercent)}%`);
   setText('max-kw-label', `${maxCapacityKW} kW max`);
-
-  document.querySelectorAll('.currency-symbol').forEach(el => {
-    el.textContent = settings.symbol;
-  });
 
   const bar = document.getElementById('load-bar');
   if (bar) {
@@ -479,10 +720,13 @@ function calculate() {
 
 
   CATEGORIES.forEach(cat => {
-    const catAppliances = appliances.filter(a => a.category === cat && a.qty > 0);
-    const catWatts = catAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
-    const catKWh   = catAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
-    const catCount = appliances.filter(a => a.category === cat).length;
+    const catAppliances = appliances.filter(a => a.category === cat);
+    const activeCatAppliances = catAppliances.filter(a => a.qty > 0);
+    const catWatts = activeCatAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
+    const catKWh   = activeCatAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
+    
+    const activeCount = activeCatAppliances.length;
+    const totalCount  = catAppliances.length;
 
     // Use slugified ID to find the category body, then get the section parent
     const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
@@ -492,23 +736,38 @@ function calculate() {
     const wattEl = section?.querySelector('[data-category-watts]');
     const kwhEl  = section?.querySelector('[data-category-kwh]');
     const cntEl  = section?.querySelector('[data-category-count]');
+    const cntBadge = section?.querySelector('[data-category-count-badge]');
 
     const wattTextEl = wattEl?.querySelector('span:last-child');
     const kwhTextEl  = kwhEl?.querySelector('span:last-child');
     if (wattTextEl) wattTextEl.textContent = `${catWatts.toLocaleString()} W`;
     if (kwhTextEl)  kwhTextEl.textContent  = `${catKWh.toFixed(2)} kWh(unit)/d`;
-    if (cntEl)  cntEl.textContent  = String(catCount);
+    if (cntEl)  cntEl.textContent  = `${activeCount}/${totalCount}`;
+
+    if (cntBadge) {
+      if (activeCount > 0) {
+        cntBadge.classList.add('bg-accent', 'text-accent-text', 'px-2', 'py-0.5', 'rounded-full', 'font-bold');
+      } else {
+        cntBadge.classList.remove('bg-accent', 'text-accent-text', 'px-2', 'py-0.5', 'rounded-full', 'font-bold');
+      }
+    }
   });
 
   setText('print-total-kw', (result.totalWatts / 1000).toFixed(2));
   setText('print-total-watts', formatNumber(result.totalWatts));
   setText('print-daily-kwh', formatNumber(result.dailyKWh, 2));
-  setText('print-monthly-bill', formatCurrency(result.monthlyBill));
-  setText('print-tariff', `${formatCurrency(tariff)}/kWh(unit)`);
-  setText('print-date', `Generated on: ${new Date().toLocaleDateString(REGION_SETTINGS[currentCurrency].locale, { dateStyle: 'long' })}`);
+  setText('print-monthly-kwh', String(Math.round(result.monthlyKWh)));
+  setText('print-date', `Generated on: ${new Date().toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' })}`);
 
-  const printUrlEl = document.getElementById('print-site-url');
-  if (printUrlEl) printUrlEl.textContent = window.location.origin;
+  const siteUrl = window.location.origin;
+  document.querySelectorAll<HTMLElement>('.print-brand-url').forEach(el => {
+    el.innerHTML = ''; // Clear to prevent duplication
+    const a = document.createElement('a');
+    a.href = siteUrl;
+    a.textContent = siteUrl;
+    a.style.cssText = 'color:inherit;text-decoration:underline;text-underline-offset:2px;';
+    el.appendChild(a);
+  });
 
   const printList = document.getElementById('print-appliances-list');
   if (printList) {
@@ -545,8 +804,136 @@ function calculate() {
       }
     });
     printList.innerHTML = html || '<p class="text-text-muted italic">No active appliances selected.</p>';
+
+    const printTotal = document.getElementById('print-appliances-total');
+    if (printTotal) {
+      printTotal.innerHTML = `
+        <div class="flex justify-between items-baseline">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-text-muted">Total Daily Consumption</span>
+          <span class="font-mono font-bold text-lg" style="color:var(--accent);">${result.dailyKWh.toFixed(2)}<span class="text-xs text-text-muted font-normal ml-1">kWh / day</span></span>
+        </div>
+      `;
+    }
+  }
+
+  // ── Smart Insights (print only) ──
+  const insights = calculateInsights(result.totalKW, result.monthlyKWh);
+
+  if (activeCount > 0) {
+    setText('print-mcb-value', insights.recommendedMCB);
+    setText('print-cable-value', insights.recommendedCable);
+    setText('print-inverter-value', insights.recommendedInverter);
+    setText('print-solar-value', insights.recommendedSolar);
+  }
+
+  // ── Electrical Health Score ────────────────────────────
+  const topConsumerDailyKWh = appliances
+    .filter(a => a.qty > 0)
+    .reduce((best, a) => Math.max(best, calculateRowKWh(a)), 0);
+
+  const health = calculateHealthScore({
+    loadPercent: result.loadPercent,
+    dailyKWh: result.dailyKWh,
+    topConsumerDailyKWh,
+    monthlyKWh: result.monthlyKWh,
+    hasMCB: activeCount > 0,
+    hasCable: activeCount > 0,
+  });
+
+  const healthCompact = document.getElementById('health-score-compact');
+  if (healthCompact) healthCompact.style.display = activeCount === 0 ? 'none' : '';
+
+  if (activeCount > 0) {
+    const scoreEl = document.getElementById('health-score-value');
+    if (scoreEl) scoreEl.style.color = health.color;
+    animateCounter('health-score-value', health.score, 0);
+
+    const scoreCard = document.getElementById('health-score-card');
+    if (scoreCard) {
+      scoreCard.style.borderColor = `color-mix(in srgb, ${health.color}, transparent 62%)`;
+      scoreCard.style.background   = `color-mix(in srgb, ${health.color}, transparent 93%)`;
+    }
+
+    const iconEl = document.getElementById('health-score-icon');
+    if (iconEl) (iconEl as HTMLElement).style.color = health.color;
+
+    const labelEl = document.getElementById('health-score-label');
+    if (labelEl) {
+      labelEl.textContent = health.label;
+      labelEl.style.color = health.color;
+      labelEl.style.background   = `color-mix(in srgb, ${health.color}, transparent 85%)`;
+      labelEl.style.borderColor  = `color-mix(in srgb, ${health.color}, transparent 55%)`;
+    }
+
+    // Print
+    setText('print-health-score', String(health.score));
+    setText('print-health-label', health.label);
+    const printDetails = document.getElementById('print-health-details');
+    if (printDetails) {
+      printDetails.innerHTML = `
+        <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Load Utilization</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.utilization}/30</span></div>
+        <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Energy Efficiency</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.efficiency}/30</span></div>
+        <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Safety Readiness</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.safety}/20</span></div>
+        <div class="flex justify-between text-sm"><span class="text-text-muted">Renewable Readiness</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.renewable}/20</span></div>
+      `;
+    }
+  }
+
+  // ── Consumption Breakdown (print only — sidebar chart removed) ──
+  const breakdown = calculateCategoryBreakdown(appliances);
+
+  if (activeCount > 0 && result.dailyKWh > 0) {
+    const printBreakdown = document.getElementById('print-breakdown-table');
+    if (printBreakdown) {
+      printBreakdown.innerHTML = breakdown.items.map(item => `
+        <div class="flex text-sm py-1.5 border-b border-border">
+          <span class="flex-1 text-text-muted">${item.category}</span>
+          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh/d</span>
+          <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  // ── Energy Saving Opportunities (print only — sidebar section removed) ──
+  const savings = generateSavingsTips(appliances, result.monthlyKWh);
+
+  if (activeCount > 0) {
+    const printSaving = document.getElementById('print-saving-tips');
+    if (printSaving) {
+      printSaving.innerHTML = `
+        <div class="flex justify-between mb-2">
+          <span class="text-sm text-text-muted">Top Consumer</span>
+          <span class="text-sm font-semibold text-text-primary">${savings.topConsumerName}</span>
+        </div>
+        <div class="flex justify-between mb-3 pb-3 border-b border-border">
+          <span class="text-sm text-text-muted">Potential Monthly Savings</span>
+          <span class="text-sm font-bold" style="color:var(--accent)">${formatCurrency(savings.potentialSavings)}</span>
+        </div>
+        ${savings.tips.map(tip => `<div class="flex items-start gap-2 mb-1.5"><span class="text-accent font-bold">✓</span><span class="text-sm text-text-muted">${tip}</span></div>`).join('')}
+      `;
+    }
+  }
+
+  // ── High Consumption Alerts (print only — sidebar section removed) ──
+  const alerts = getHighConsumptionAlerts(appliances, result.dailyKWh);
+
+  if (alerts.length > 0) {
+    const printAlerts = document.getElementById('print-high-consumption');
+    if (printAlerts) {
+      printAlerts.innerHTML = alerts.map(alert => `
+        <div class="flex justify-between text-sm py-1.5 border-b border-border">
+          <div>
+            <span class="font-medium text-text-primary">⚠ ${alert.name}</span>
+            <span class="text-text-muted ml-2 text-xs">${alert.reason}</span>
+          </div>
+          <span class="font-mono font-semibold flex-shrink-0 ml-4" style="color:var(--accent)">${alert.kWhDay.toFixed(1)} kWh/d</span>
+        </div>
+      `).join('');
+    }
   }
 }
+
 
 // ── Debounce ──────────────────────────────────────────────
 function debounce<T extends (...args: any[]) => void>(fn: T, ms: number): T {
@@ -608,24 +995,6 @@ document.addEventListener('change', (e) => {
     }
   }
 
-  // Settings updates
-  if (action === 'change-currency') {
-    const val = (target as HTMLSelectElement).value;
-    currentCurrency = val;
-    const settings = REGION_SETTINGS[val];
-    tariff = settings.defaultTariff;
-    const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
-    if (tariffInput) {
-      tariffInput.value = String(tariff);
-      tariffInput.step = String(settings.step);
-    }
-    maxCapacityKW = settings.defaultMaxKW;
-    const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
-    if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
-    appliances.forEach(a => updateRowKWh(a));
-    saveState();
-    calculate();
-  }
 });
 
 document.addEventListener('click', (e) => {
@@ -658,7 +1027,7 @@ document.addEventListener('click', (e) => {
     if (!body) return;
     const isOpen = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-    body.style.display = isOpen ? 'none' : '';
+    body.classList.toggle('is-open', !isOpen);
     if (chevron) chevron.style.transform = isOpen ? 'rotate(-90deg)' : '';
     return;
   }
@@ -690,7 +1059,7 @@ document.addEventListener('click', (e) => {
     if (action === 'decrement-qty') a.qty = Math.max(a.qty - 1, 0);
     updateRowQtyDisplay(a);
     updateRowKWh(a);
-    updateRowNameStyle(a);
+    updateRowStyle(a);
     saveState();
     calculate();
     return;
@@ -729,7 +1098,7 @@ document.addEventListener('click', (e) => {
       
       // Collapse the category on reset
       if (body) {
-        body.style.display = 'none';
+        body.classList.remove('is-open');
         const section = body.closest('.category-section');
         const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
         const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
@@ -738,26 +1107,13 @@ document.addEventListener('click', (e) => {
       }
     });
     
-    appliances.forEach(a => updateRowNameStyle(a));
+    appliances.forEach(a => updateRowStyle(a));
     activePresetId = null;
     updatePresetButtons();
-    currentCurrency = 'INR';
-    
-    const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
-    if (currencySelect) currencySelect.value = 'INR';
-    
-    tariff = REGION_SETTINGS.INR.defaultTariff;
-    const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
-    if (tariffInput) {
-      tariffInput.value = String(tariff);
-      tariffInput.step = String(REGION_SETTINGS.INR.step);
-    }
-    
     maxCapacityKW = REGION_SETTINGS.INR.defaultMaxKW;
     const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
     if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
     
-    expandLighting();
     calculate();
 
     return;
@@ -768,9 +1124,7 @@ document.addEventListener('click', (e) => {
     const totalWatts  = included.reduce((s, a) => s + a.watts * a.qty, 0);
     const dailyKWh    = included.reduce((s, a) => s + calculateRowKWh(a), 0);
     const monthlyKWh  = dailyKWh * 30;
-    const monthlyBill = monthlyKWh * tariff;
-    const locale = REGION_SETTINGS[currentCurrency].locale;
-    const date = new Date().toLocaleDateString(locale, { dateStyle: 'long' });
+    const date = new Date().toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' });
 
     let report = `ELECTRICITY LOAD CALCULATOR REPORT\n`;
     report += `Generated: ${date}\n`;
@@ -779,9 +1133,14 @@ document.addEventListener('click', (e) => {
     report += `  Total Load          : ${formatNumber(totalWatts)} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
     report += `  Daily Consumption   : ${formatNumber(dailyKWh, 2)} kWh(unit)/day\n`;
     report += `  Monthly Estimate    : ${formatNumber(monthlyKWh)} kWh(unit)/month\n`;
-    report += `  Estimated Bill      : ${formatCurrency(monthlyBill)} / month\n`;
-    report += `  Tariff Used         : ${formatCurrency(tariff)}/kWh(unit)\n`;
     report += `  Max Load Capacity   : ${maxCapacityKW} kW\n\n`;
+    report += `${'─'.repeat(48)}\n\n`;
+    const reportInsights = calculateInsights(totalWatts / 1000, monthlyKWh);
+    report += `SMART INSIGHTS\n`;
+    report += `  Recommended MCB         : ${reportInsights.recommendedMCB}\n`;
+    report += `  Recommended Cable       : ${reportInsights.recommendedCable}\n`;
+    report += `  Recommended Inverter    : ${reportInsights.recommendedInverter}\n`;
+    report += `  Recommended Solar       : ${reportInsights.recommendedSolar}\n\n`;
     report += `${'─'.repeat(48)}\n\n`;
     report += `APPLIANCE BREAKDOWN\n\n`;
     SECTIONS.forEach(section => {
@@ -817,7 +1176,7 @@ document.addEventListener('click', (e) => {
   if (action === 'print-report') {
     const originalTitle = document.title;
     const dateStr = new Date().toISOString().split('T')[0];
-    document.title = `electricity-load-report-${dateStr}`;
+    document.title = `electricity-load-calculator-assessment-report-${dateStr}`;
     window.print();
     document.title = originalTitle;
     return;
@@ -852,14 +1211,6 @@ document.addEventListener('input', (e) => {
     }
   }
 
-  if (action === 'update-tariff') {
-    const val = parseFloat((target as HTMLInputElement).value);
-    if (!isNaN(val) && val > 0) {
-      tariff = val;
-      saveState();
-      debouncedCalculate();
-    }
-  }
 });
 
 document.addEventListener('submit', (e) => {
@@ -916,8 +1267,8 @@ document.addEventListener('submit', (e) => {
     container.insertAdjacentHTML('beforeend', rowHtml);
     
     // Auto-expand category if hidden
-    if (body && body.style.display === 'none') {
-      body.style.display = '';
+    if (body && !body.classList.contains('is-open')) {
+      body.classList.add('is-open');
       const section = body.closest('.category-section');
       const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
       const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
@@ -966,16 +1317,18 @@ function loadPreset(presetId: string) {
 
     if (body) {
       const hasActive = catAppliances.some(a => a.qty > 0);
-      body.style.display = hasActive ? '' : 'none';
+      // Only auto-expand Lighting category when loading presets
+      const shouldExpand = (cat === 'Lighting' && hasActive);
+      body.classList.toggle('is-open', shouldExpand);
       const section = body.closest('.category-section');
       const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
       const chevron   = toggleBtn?.querySelector<SVGElement>('.chevron');
-      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', hasActive ? 'true' : 'false');
-      if (chevron)   chevron.style.transform = hasActive ? '' : 'rotate(-90deg)';
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
+      if (chevron)   chevron.style.transform = shouldExpand ? '' : 'rotate(-90deg)';
     }
   });
 
-  appliances.forEach(a => updateRowNameStyle(a));
+  appliances.forEach(a => updateRowStyle(a));
   updatePresetButtons();
   saveState();
   calculate();
@@ -994,16 +1347,21 @@ function buildRowHTML(a: Appliance): string {
   const kwh = formatNumber(calculateRowKWh(a), 2);
   const nameColor = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
   const safeName = escapeHtml(a.name);
+  const isActive = a.qty > 0;
+
   return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 animate-slide-up"
+    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 border-l-4 ${isActive ? 'border-accent bg-accent/5' : 'border-transparent'}"
       data-id="${a.id}">
 
       <!-- Name & Reading Row -->
       <div class="flex items-center justify-between gap-3 flex-1 min-w-[200px] lg:min-w-0 lg:contents">
         <!-- Name -->
-        <div class="flex-1 lg:order-1">
+        <div class="flex-1 lg:order-1 flex items-center gap-2">
           <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${safeName}</span>
-          ${a.custom ? `<span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-success transition-opacity duration-150 ${isActive ? '' : 'hidden'}" data-selection-icon="${a.id}">
+            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+          </svg>
+          ${a.custom ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
         </div>
 
         <!-- kWh display (Shown on mobile line 1, on desktop after hours) -->
@@ -1014,7 +1372,7 @@ function buildRowHTML(a: Appliance): string {
       </div>
 
       <!-- Controls Row -->
-      <div class="flex items-center justify-between w-full lg:w-auto lg:contents gap-2 lg:gap-3 order-3 mt-1 lg:mt-0">
+      <div class="flex items-center justify-between w-full lg:w-auto lg:contents gap-2 lg:gap-3 order-3 mt-1 lg:mt-0 transition-opacity duration-150 ${isActive ? 'opacity-100' : 'opacity-40 grayscale-[50%]'}" data-controls-row="${a.id}">
         <!-- Watts -->
         <div class="flex items-center gap-1 flex-1 lg:flex-none justify-center lg:justify-start lg:order-2">
           <input type="number" value="${a.watts}" min="1" max="99999"
@@ -1069,31 +1427,24 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
 
-function expandLighting() {
-  const body = document.getElementById('category-body-Lighting');
-  if (!body || body.style.display !== 'none') return;
-  body.style.display = '';
-  const section = body.closest('.category-section');
-  const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
-  const chevron   = toggleBtn?.querySelector<SVGElement>('.chevron');
-  if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
-  if (chevron)   chevron.style.transform = '';
+function onStickyDetailsClick(e: Event) {
+  e.preventDefault();
+  document.getElementById('results-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function initCalculator() {
+  if (!document.getElementById('results-panel')) return;
+
+  const stickyLink = document.getElementById('sticky-details-link');
+  if (stickyLink) {
+    stickyLink.removeEventListener('click', onStickyDetailsClick);
+    stickyLink.addEventListener('click', onStickyDetailsClick);
+  }
+
   const hasSavedState = loadState();
 
   if (hasSavedState) {
     // Re-hydrate settings inputs
-    const currencySelect = document.getElementById('currency-select') as HTMLSelectElement;
-    if (currencySelect) currencySelect.value = currentCurrency;
-
-    const tariffInput = document.getElementById('tariff-input') as HTMLInputElement;
-    if (tariffInput) {
-      tariffInput.value = String(tariff);
-      tariffInput.step = String(REGION_SETTINGS[currentCurrency].step);
-    }
-
     const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
     if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
 
@@ -1103,16 +1454,16 @@ function initCalculator() {
       const body = document.getElementById(bodyId);
       const container = body?.querySelector('[data-rows-container]');
       if (!container) return;
-      
+
       container.innerHTML = '';
       const catAppliances = appliances.filter(a => a.category === cat);
       catAppliances.forEach(a => {
         container.insertAdjacentHTML('beforeend', buildRowHTML(a));
       });
 
-      // Auto-expand category if it contains active appliances
-      if (catAppliances.some(a => a.qty > 0) && body) {
-        body.style.display = '';
+      // Auto-expand Lighting category if it contains active appliances
+      if (cat === 'Lighting' && catAppliances.some(a => a.qty > 0) && body) {
+        body.classList.add('is-open');
         const section = body.closest('.category-section');
         const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
         const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
@@ -1121,18 +1472,11 @@ function initCalculator() {
       }
     });
 
-    appliances.forEach(a => updateRowNameStyle(a));
+    appliances.forEach(a => updateRowStyle(a));
   }
 
-  expandLighting();
   calculate();
-  
-  document.getElementById('sticky-details-link')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('results-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
 }
 
-document.addEventListener('DOMContentLoaded', initCalculator);
-document.addEventListener('astro:after-swap', initCalculator);
+document.addEventListener('astro:page-load', initCalculator);
 </script>

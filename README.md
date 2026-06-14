@@ -1,19 +1,21 @@
 # Electricity Load Calculator
 
-A professional, industrial-grade web application for calculating household electrical load requirements and estimating energy costs. Built with Astro, Tailwind CSS v4, and strict TypeScript.
+A professional, industrial-grade web application for calculating household electrical load requirements, assessing electrical health, and receiving smart component recommendations. Built with Astro, Tailwind CSS v4, and strict TypeScript.
 
 ## Features
 
-- **Real-time Load Calculation** — Instant total wattage and monthly cost estimates as you configure appliances.
-- **Home Appliance Catalog** — Pre-loaded with common residential appliances (Lighting, Cooling, Kitchen, etc.) organized by category.
+- **Real-time Load Calculation** — Instant total wattage, kW, and kWh estimates as you configure appliances.
+- **Electrical Health Assessment** — Instant score based on load utilization, energy efficiency, and safety readiness.
+- **Smart Recommendations** — Engineering-grade sizing for MCBs, Cables, Inverters, and Solar systems tailored to your specific load.
+- **Interactive Assessment Report** — Deep-dive analysis of your home's electrical profile with smart insights.
+- **Insight Guides** — Educational resources for understanding electrical components (MCBs, Cables, Solar, etc.).
+- **Home Appliance Catalog** — Pre-loaded with common residential appliances organized by category.
 - **Custom Appliances** — Add any household appliance with a custom name and wattage.
-- **Quantity & Toggle Controls** — Stepper inputs for quantity; toggle switches to include/exclude items from the report.
 - **Dual Theme**
-  - *Industrial Dark* (default) — High-contrast dashboard with amber accent.
-  - *Stormy Morning* (light) — Clean blue-gray palette. Theme persists across sessions.
-- **Print / PDF Report** — Ink-optimized layout that switches automatically on print.
-- **SEO Optimized** — Sitemap, structured metadata, breadcrumbs, and a custom 404 page.
-- **Performance First** — Minimal client-side JavaScript; Astro static output with vanilla TypeScript.
+  - *Industrial Dark* (default) — High-contrast technical dashboard.
+  - *Stormy Morning* (light) — Professional blue-gray palette.
+- **Professional PDF Reports** — Ink-optimized assessment reports ready for printing or sharing with electricians.
+- **Full Test Coverage** — Complete E2E test suite ensuring reliability across all pages and interactions.
 
 ## Tech Stack
 
@@ -30,30 +32,28 @@ A professional, industrial-grade web application for calculating household elect
 
 ```
 src/
-├── components/       # UI components (Astro)
-├── data/             # Appliance catalog data
-├── layouts/          # Base page layout
-├── pages/            # Route pages (index, about, contact, 404, …)
-├── types/            # Shared TypeScript types
-└── utils/            # Calculation logic
-scripts/
-└── verify-logic.cjs  # Unit-style logic verification script
+├── components/       # UI components (Hero, Results, Modal, etc.)
+├── data/             # Appliance catalog and default settings
+├── layouts/          # Base page layout with theme injection
+├── pages/            # Multi-page architecture (Assessment, Insights, Recommendations)
+├── styles/           # Tailwind v4 configuration and global CSS
+├── utils/            # Logic for calculations, health scores, and insights
+└── types/            # Strict TypeScript interfaces
 tests/
-└── e2e/              # Playwright end-to-end tests
+└── e2e/              # Comprehensive Playwright test suite
+scripts/
+└── verify-logic.cjs  # Standalone logic verification script
 ```
 
 ## Commands
 
-Run from the project root:
-
 | Command | Action |
 | :------ | :----- |
-| `npm install` | Install dependencies |
-| `npm run dev` | Start local dev server at `localhost:4321` |
+| `npm run dev` | Start local development server |
 | `npm run build` | Build for production |
-| `npm run preview` | Preview the production build locally |
+| `npm run preview` | Preview production build locally |
+| `npx playwright test` | Run all E2E tests |
 | `node scripts/verify-logic.cjs` | Run calculation logic verification |
-| `npx playwright test` | Run Playwright E2E tests |
 
 ## Getting Started
 
@@ -66,18 +66,16 @@ Open `http://localhost:4321` in your browser.
 
 ## Testing
 
-**Logic verification** (fast, no browser required):
-```sh
-node scripts/verify-logic.cjs
-```
-
-**End-to-end tests** (requires a running dev or preview server):
+**End-to-end tests** (Ensures UI and logic integrity):
 ```sh
 npx playwright test
 ```
 
-Test artifacts (`test-results/`, `playwright-report/`) are git-ignored.
+**Logic verification** (Fast unit-style checks):
+```sh
+node scripts/verify-logic.cjs
+```
 
 ---
 
-*Built for precision and reliability.*
+*Engineered for precision. Built for reliability.*

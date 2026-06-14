@@ -4,7 +4,7 @@
 
 <aside
   id="results-panel"
-  class="h-fit rounded-xl border border-border bg-card overflow-hidden animate-slide-up no-print transition-all duration-500 ease-in-out hover:-translate-y-1 hover:shadow-2xl hover:border-accent/30"
+  class="h-fit rounded-xl border border-border bg-card overflow-hidden animate-slide-up no-print"
   style="animation-delay: 0.1s; box-shadow: var(--panel-shadow);"
   aria-label="Calculation results"
 >
@@ -20,7 +20,12 @@
       >
         <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
       </svg>
-      <h2 class="font-display font-bold text-lg tracking-wide text-text-primary">Your Load Summary</h2>
+      <div>
+        <h2 class="font-display font-bold text-lg tracking-wide text-text-primary leading-tight">Your Load Summary</h2>
+        <p class="text-[10px] font-mono text-text-muted uppercase tracking-wider">
+          <span id="active-count" class="text-accent font-bold">0</span> active / <span id="total-count">0</span> appliances
+        </p>
+      </div>
     </div>
     <!-- Load level badge -->
     <span
@@ -57,7 +62,7 @@
         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="load-progress">
         <div
           id="load-bar"
-          class="h-full rounded-full transition-all duration-500 ease-out"
+          class="h-full rounded-full transition-[width] duration-200 ease-out"
           style="width: max(4px, 0%); background: var(--progress-gradient); border-radius: 999px;"
         ></div>
       </div>
@@ -69,75 +74,20 @@
       </div>
     </div>
 
-    <!-- Empty state — shown when no appliances are active -->
-    <div
-      id="empty-state-prompt"
-      class="rounded-xl px-5 py-5 text-center"
-      style="
-        background: color-mix(in srgb, var(--accent), transparent 91%);
-        border: 1px solid color-mix(in srgb, var(--accent), transparent 55%);
-        box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 82%), 0 6px 24px -6px color-mix(in srgb, var(--accent), transparent 65%);
-      "
-    >
-      <!-- Icon badge -->
-      <div class="flex justify-center mb-3">
-        <span
-          class="flex h-10 w-10 items-center justify-center rounded-full"
-          style="background: color-mix(in srgb, var(--accent), transparent 78%);"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="color: var(--accent);" aria-hidden="true">
-            <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
-          </svg>
-        </span>
-      </div>
-
-      <p class="text-sm font-semibold text-text-primary mb-1">Nothing selected yet</p>
-      <p class="text-xs text-text-muted leading-relaxed">
-        Pick a <span class="font-semibold" style="color: var(--accent);">Quick Start</span> above for an instant setup, or increase the quantity on any appliance manually.
-      </p>
-    </div>
-
-    <!-- Divider -->
-    <hr class="border-border" />
-
     <!-- Global Settings -->
-    <div class="grid grid-cols-2 gap-3">
-      <div class="space-y-1.5">
-        <label for="currency-select" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Currency</label>
-        <div class="relative group">
-          <select
-            id="currency-select"
-            data-action="change-currency"
-            class="custom-select w-full appearance-none pl-3 pr-8 py-1.5 text-xs cursor-pointer transition-all duration-200 hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
-          >
-            <option value="INR">INR (₹)</option>
-            <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="GBP">GBP (£)</option>
-            <option value="CAD">CAD ($)</option>
-            <option value="AUD">AUD ($)</option>
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted group-hover:text-accent transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="space-y-1.5">
-        <label for="max-kw-input" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Max Capacity</label>
-        <div class="flex items-center gap-1.5">
-          <input
-            id="max-kw-input"
-            data-action="update-max-kw"
-            type="number"
-            value="5"
-            min="1"
-            max="100"
-            class="flex-1 bg-base border border-border rounded-lg px-2 py-1.5 text-xs text-text-primary text-center focus:border-accent focus:outline-none font-mono"
-          />
-          <span class="text-[10px] font-mono text-text-muted uppercase">kW</span>
-        </div>
+    <div class="space-y-1.5">
+      <label for="max-kw-input" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Max Capacity</label>
+      <div class="flex items-center gap-1.5">
+        <input
+          id="max-kw-input"
+          data-action="update-max-kw"
+          type="number"
+          value="5"
+          min="1"
+          max="100"
+          class="flex-1 bg-base border border-border rounded-lg px-2 py-1.5 text-xs text-text-primary text-center focus:border-accent focus:outline-none font-mono"
+        />
+        <span class="text-[10px] font-mono text-text-muted uppercase">kW</span>
       </div>
     </div>
 
@@ -162,81 +112,79 @@
       </div>
     </div>
 
-    <!-- Divider -->
-    <hr class="border-border" />
-
-    <!-- Bill estimate -->
-    <div class="rounded-lg bg-base border border-border px-4 py-3">
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-sm text-text-muted">Est. Monthly Bill</span>
-        <span id="monthly-bill" class="font-display font-bold text-2xl tabular-nums" style="color: var(--accent);">0</span>
-      </div>
-      <div class="flex items-center gap-2 text-sm text-text-muted">
-        <span>Tariff:</span>
-        <span class="font-mono currency-symbol">₹</span>
-        <input
-          id="tariff-input"
-          data-action="update-tariff"
-          type="number"
-          value="8"
-          min="0.01"
-          max="500"
-          step="0.5"
-          class="w-20 bg-card border border-border rounded px-2 py-1 font-mono text-sm font-bold text-center focus:border-accent focus:outline-none"
-          style="color: var(--accent);"
-          aria-label="Electricity tariff per kWh(unit)"
-        />
-        <span class="font-mono">/ kWh(unit)</span>
-      </div>
-    </div>
-
-    <!-- Divider -->
-    <hr class="border-border" />
-
-    <!-- Top consumer -->
-    <div>
-      <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Top Consumer</p>
-      <div class="flex items-center justify-between">
-        <span id="top-consumer-name" class="text-sm font-medium text-text-primary">—</span>
-        <div>
-          <span id="top-consumer-watts" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
-          <span class="font-mono text-xs text-text-muted ml-1">W</span>
+    <!-- Compact Health Score — shown when appliances active -->
+    <div id="health-score-compact" style="display:none;">
+      <div
+        id="health-score-card"
+        class="flex items-center justify-between rounded-xl border border-border p-3.5"
+        style="background: var(--bg-card); transition: border-color 0.2s ease, background 0.2s ease;"
+      >
+        <div class="flex items-center gap-2.5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 flex-shrink-0" id="health-score-icon" style="color:var(--accent)" aria-hidden="true">
+            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"/>
+          </svg>
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted leading-none mb-1">Health Score</p>
+            <span
+              id="health-score-label"
+              class="inline-block text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border"
+              style="color:#3ecf6e; background:color-mix(in srgb, #3ecf6e, transparent 85%); border-color:color-mix(in srgb, #3ecf6e, transparent 55%);"
+            >Excellent</span>
+          </div>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <span id="health-score-value" class="font-display font-bold text-3xl tabular-nums leading-none" style="color:#3ecf6e; transition: color 0.2s ease;">0</span>
+          <span class="font-mono text-xs text-text-muted">/100</span>
         </div>
       </div>
     </div>
 
-    <!-- Active Appliances Stat -->
-    <hr class="border-border" />
-
-    <div class="flex items-center justify-between">
-      <span class="text-sm text-text-muted">Active Appliances</span>
-      <div class="flex items-center gap-1.5">
-        <span id="active-count" class="font-mono font-semibold tabular-nums text-text-primary">0</span>
-        <span class="font-mono text-xs text-text-muted">/</span>
-        <span id="total-count" class="font-mono text-xs tabular-nums text-text-muted">0</span>
-        <span class="font-mono text-xs text-text-muted">appliances</span>
-      </div>
-    </div>
-
     <!-- Divider -->
     <hr class="border-border" />
 
-    <!-- Actions -->
-    <div class="flex flex-col sm:flex-row lg:flex-row gap-3">
-      <button
-        id="download-report-btn"
-        data-action="download-report"
-        type="button"
-        class="flex-1 flex items-center justify-center gap-2 px-3 py-3 rounded-lg bg-accent text-accent-text text-lg font-display font-medium hover:bg-accent-dim transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent shadow-lg shadow-accent/20 active:scale-95"
-        aria-label="View load report"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-          <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
-          <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-7.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" clip-rule="evenodd" />
-        </svg>
-        Report
-      </button>
+    <!-- Empty state — shown when no appliances are active -->
+    <div
+      id="empty-state-prompt"
+      class="rounded-xl px-5 py-5 text-center"
+      style="
+        background: color-mix(in srgb, var(--accent), transparent 94%);
+        border: 1px solid color-mix(in srgb, var(--accent), transparent 75%);
+        box-shadow: 0 4px 16px -4px color-mix(in srgb, var(--accent), transparent 85%);
+      "
+    >
+      <!-- Icon badge -->
+      <div class="flex justify-center mb-3">
+        <span
+          class="flex h-10 w-10 items-center justify-center rounded-full"
+          style="background: color-mix(in srgb, var(--accent), transparent 88%);"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="color: var(--accent);" aria-hidden="true">
+            <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+          </svg>
+        </span>
+      </div>
+
+      <p class="text-sm font-semibold text-text-primary mb-1">Nothing selected yet</p>
+      <p class="text-xs text-text-muted leading-relaxed">
+        Pick a <span class="font-medium" style="color: var(--accent);">Quick Start</span> above for an instant setup, or increase the quantity on any appliance manually.
+      </p>
     </div>
+
+    <!-- Generate Assessment CTA -->
+    <a
+      id="generate-assessment-btn"
+      href="/assessment"
+      class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-accent text-accent-text font-display font-medium text-base hover:bg-accent-dim transition-all duration-300 shadow-lg shadow-accent/20 active:scale-95"
+      aria-label="View your full electrical assessment report"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0" aria-hidden="true">
+        <path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 0 0 3 3.5v13A1.5 1.5 0 0 0 4.5 18h11a1.5 1.5 0 0 0 1.5-1.5V7.621a1.5 1.5 0 0 0-.44-1.06l-4.12-4.122A1.5 1.5 0 0 0 11.378 2H4.5ZM10 8a.75.75 0 0 1 .75.75v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5a.75.75 0 0 1-1.5 0v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5A.75.75 0 0 1 10 8Z" clip-rule="evenodd"/>
+      </svg>
+      Generate Full Assessment
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70 flex-shrink-0" aria-hidden="true">
+        <path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+      </svg>
+    </a>
 
   </div>
 </aside>

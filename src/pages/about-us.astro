@@ -1,32 +1,30 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
-const breadcrumbSchema = {
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": Astro.site?.origin || "https://electricityloadcalculator.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "About Us"
+const schemaGraph = [
+  {
+    "@type": "AboutPage",
+    "name": "About Electricity Load Calculator",
+    "description": "Learn about our mission to simplify residential energy management and how our electrical load assessment tool works.",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://electricityloadcalculator.com" },
+        { "@type": "ListItem", "position": 2, "name": "About Us" }
+      ]
     }
-  ]
-};
+  }
+];
 ---
 
 <BaseLayout
   title="About Us | Electricity Load Calculator"
-  description="Learn how the free Electricity Load Calculator works, our privacy-first approach, and our mission to make energy management simple for homeowners and professionals."
+  description="Learn about the Electricity Load Calculator mission: providing professional, privacy-first electrical assessment tools for homeowners."
   keywords="about electricity load calculator, bijli load calculator tool, free electrical load estimator"
-  breadcrumbSchema={breadcrumbSchema}
+  schemaGraph={schemaGraph}
 >
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About Us' }]} />
-  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 md:pt-12 pb-12 md:pb-16 animate-slide-up">
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 md:pt-12 pb-12 md:pb-16 animate-slide-up">
     <div class="max-w-3xl mx-auto text-text-primary">
       <div class="mb-12">
         <h1 class="text-4xl sm:text-5xl font-display font-bold mb-4 uppercase tracking-tight">About Us</h1>
@@ -81,5 +79,5 @@ const breadcrumbSchema = {
 
       </div>
     </div>
-  </div>
+  </main>
 </BaseLayout>

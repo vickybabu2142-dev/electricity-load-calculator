@@ -1,32 +1,30 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
-const breadcrumbSchema = {
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": Astro.site?.origin || "https://electricityloadcalculator.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Terms & Conditions"
+const schemaGraph = [
+  {
+    "@type": "WebPage",
+    "name": "Terms & Conditions - Electricity Load Calculator",
+    "description": "Standard terms and conditions for using our free electrical load assessment tool.",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://electricityloadcalculator.com" },
+        { "@type": "ListItem", "position": 2, "name": "Terms & Conditions" }
+      ]
     }
-  ]
-};
+  }
+];
 ---
 
 <BaseLayout
   title="Terms & Conditions | Electricity Load Calculator"
   description="Terms and conditions for using the Electricity Load Calculator. Calculations are for informational purposes only — always consult a certified electrician for physical installations."
   keywords="electricity load calculator terms, terms of use, disclaimer"
-  breadcrumbSchema={breadcrumbSchema}
+  schemaGraph={schemaGraph}
 >
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Terms & Conditions' }]} />
-  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 md:pt-12 pb-12 md:pb-16 animate-slide-up">
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 md:pt-12 pb-12 md:pb-16 animate-slide-up">
     <div class="max-w-3xl mx-auto text-text-primary">
       <div class="mb-12">
         <h1 class="text-4xl sm:text-5xl font-display font-bold mb-4 uppercase tracking-tight">Terms & Conditions</h1>
@@ -99,5 +97,5 @@ const breadcrumbSchema = {
 
       </div>
     </div>
-  </div>
+  </main>
 </BaseLayout>

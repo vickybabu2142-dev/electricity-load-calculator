@@ -1,0 +1,348 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "Solar Panel Sizing Guide: Calculating the Right System for Your Home",
+    "description": "Learn how to calculate the ideal solar panel capacity (kW) based on your monthly energy consumption and household load.",
+    "author": {
+      "@type": "Organization",
+      "name": "Electricity Load Calculator"
+    }
+  }
+];
+---
+
+<BaseLayout
+  title="Solar Panel System Recommendation | Electricity Load Calculator"
+  description="Determine the right solar panel system size for your home. Detailed solar sizing guides, daily generation estimates, and electricity bill offsetting info."
+  keywords="solar panel calculator, solar system sizing, solar for home India, kW solar system guide, solar energy calculation"
+  schemaGraph={schemaGraph}
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Solar Recommendation' }]} />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">
+    <div class="max-w-2xl mx-auto space-y-4">
+
+      <!-- ① Header -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-base flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-accent" aria-hidden="true">
+              <path d="M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm8-6a1 1 0 0 1 0 2h-1a1 1 0 1 1 0-2h1ZM5 11a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2h1Zm14.07-6.07a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM6.34 17.66a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Zm12.02 1.41a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.34 7.76l-.71-.71a1 1 0 0 1 0-1.41ZM12 20a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Z"/>
+            </svg>
+          </span>
+          <div class="pt-0.5">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5 text-text-muted">Solar Recommendation</p>
+            <h1 class="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">Solar Panel System</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② Personalized Recommendation -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <p class="text-[10px] font-mono uppercase tracking-widest mb-4 text-text-muted">Your Recommendation</p>
+        <div class="rounded-xl border border-border bg-base p-6 text-center">
+          <p class="text-[10px] font-mono uppercase tracking-widest mb-3 text-text-muted">Recommended System</p>
+          <p id="insight-value" class="font-display font-bold text-5xl tracking-tight text-accent">—</p>
+          <p id="insight-context" class="text-sm text-text-muted mt-3"></p>
+        </div>
+        <p class="text-xs text-text-muted mt-4 text-center">
+          Don't have a result yet? <a href="/" class="text-accent hover:underline">Calculate your load first →</a>
+        </p>
+      </div>
+
+      <!-- ③ Calculation Breakdown -->
+      <div id="calc-section" class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4" style="display:none">
+        <h2 class="font-display font-semibold text-text-primary text-lg">How This Was Calculated</h2>
+        <div class="space-y-2">
+
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">1</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Your monthly electricity consumption</p>
+              <p class="font-mono font-semibold text-text-primary"><span id="sol-monthly">—</span> kWh / month</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">2</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Solar production factor (India avg, ~4 peak sun hours/day)</p>
+              <p class="font-mono font-semibold text-text-primary">120 kWh per kW per month</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">3</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Raw calculation (<span id="sol-monthly2">—</span> kWh ÷ 120)</p>
+              <p class="font-mono font-semibold text-text-primary">= <span id="sol-raw">—</span> kW required</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 p-3 rounded-lg border" style="border-color:color-mix(in srgb, var(--accent), transparent 55%); background:color-mix(in srgb, var(--accent), transparent 90%)">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-[var(--base)] text-xs font-mono font-bold flex-shrink-0">4</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-text-muted">Rounded up to next practical system size</p>
+              <p class="font-mono font-bold text-accent text-lg"><span id="sol-result">—</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ④ Estimated Benefits -->
+      <div id="benefits-section" class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4" style="display:none">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Estimated Benefits</h2>
+
+        <!-- Savings grid -->
+        <div class="grid grid-cols-3 gap-3">
+          <div class="rounded-lg border border-border bg-base p-4 text-center">
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Monthly Savings</p>
+            <p id="sol-monthly-savings" class="font-display font-bold text-xl text-accent">—</p>
+          </div>
+          <div class="rounded-lg border border-border bg-base p-4 text-center">
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Annual Savings</p>
+            <p id="sol-annual-savings" class="font-display font-bold text-xl text-accent">—</p>
+          </div>
+          <div class="rounded-lg border border-border bg-base p-4 text-center">
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Payback Period</p>
+            <p class="font-display font-bold text-xl text-accent">4–6 yrs</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-text-muted">Savings estimate assumes solar fully offsets your electricity bill. Actual savings depend on your tariff rate, grid export policy, and system efficiency.</p>
+
+        <ul class="space-y-2">
+          {[
+            'Can offset most or all of your electricity consumption',
+            'Reduce or eliminate your monthly electricity bill',
+            'Long-term investment with 25+ year panel lifespan',
+          ].map(item => (
+            <li class="flex items-start gap-2.5 text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mt-0.5 flex-shrink-0 text-accent" aria-hidden="true">
+                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-text-primary">{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <!-- Roof area indicator -->
+        <div class="rounded-lg border border-border bg-base p-4">
+          <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-1">Estimated Roof Area Required</p>
+          <p class="font-mono font-semibold text-text-primary"><span id="sol-roof">—</span> sq ft</p>
+          <p class="text-xs text-text-muted mt-1">Based on ~100 sq ft per kW of panel capacity</p>
+        </div>
+      </div>
+
+      <!-- ⑤ Educational Content -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-5">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Understanding Solar Systems</h2>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">On-Grid vs Off-Grid vs Hybrid</h3>
+          <div class="rounded-lg border border-border bg-base overflow-hidden">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="border-b border-border">
+                  <th class="text-left px-3 py-2 text-text-muted">System</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Grid Connected</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Battery Storage</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Best For</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['On-Grid', 'Yes', 'No', 'Max savings, urban areas'],
+                  ['Off-Grid', 'No', 'Yes', 'Remote locations'],
+                  ['Hybrid', 'Yes', 'Yes', 'Backup + savings'],
+                ].map(([sys, grid, batt, best]) => (
+                  <tr class="border-b border-border last:border-0">
+                    <td class="px-3 py-2 text-accent font-semibold">{sys}</td>
+                    <td class="px-3 py-2 text-text-primary">{grid}</td>
+                    <td class="px-3 py-2 text-text-primary">{batt}</td>
+                    <td class="px-3 py-2 text-text-muted">{best}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Net Metering</h3>
+          <p>Net metering lets you export surplus solar power to the grid in exchange for credits on your electricity bill. When your panels generate more than you consume (e.g. during the day when you're away), the excess flows to the grid and is credited at the agreed buy-back rate.</p>
+          <p>In India, net metering is available under state electricity board policies — the credit rate and eligibility varies by state.</p>
+        </div>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Government Subsidies (India)</h3>
+          <p>Under the PM Surya Ghar Muft Bijli Yojana scheme, residential solar installations may be eligible for central government subsidies. Check your state electricity board for current rates and application process.</p>
+        </div>
+
+        <div class="flex gap-2.5 p-3.5 rounded-lg border" style="border-color:color-mix(in srgb, var(--warning), transparent 55%); background:color-mix(in srgb, var(--warning), transparent 90%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--warning)" aria-hidden="true">
+            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-xs text-text-primary leading-relaxed">Solar sizing varies significantly by location, roof orientation, shading, and local sun hours. This estimate is based on average Indian conditions. Get a site survey from a certified solar installer for accurate sizing.</p>
+        </div>
+      </div>
+
+      <!-- ⑥ FAQ -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {[
+            {
+              q: 'How much roof area do I need for solar?',
+              a: 'A rough estimate is 100 sq ft (about 9 sq metres) per kW of solar capacity. So a 3 kW system needs approximately 300 sq ft of unshaded roof area oriented towards the south (in the northern hemisphere). Our recommendation includes the estimated area for your system.',
+            },
+            {
+              q: 'What is net metering and do I qualify?',
+              a: 'Net metering is a billing arrangement where excess solar power exported to the grid earns you a credit on your electricity bill. In India, it is available in most states for grid-connected systems under 10 kW (for residential). Contact your state electricity board (DISCOM) to check current eligibility and rates.',
+            },
+            {
+              q: 'How long do solar panels last?',
+              a: 'Quality solar panels carry 25-year performance warranties and typically last 30+ years. They degrade at around 0.5–0.7% per year, meaning after 25 years they still produce about 80–85% of their original output. Inverters typically need replacing after 10–15 years.',
+            },
+            {
+              q: 'Will solar work during a power cut?',
+              a: 'On-grid solar systems automatically shut down during a grid outage for safety reasons (to protect utility workers). To use solar during outages, you need a hybrid system with battery storage. A pure on-grid system is for bill reduction only, not backup power.',
+            },
+          ].map(({ q, a }) => (
+            <details class="rounded-lg border border-border bg-base group">
+              <summary class="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer list-none text-sm font-semibold text-text-primary">
+                <span>{q}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+                </svg>
+              </summary>
+              <p class="px-4 pb-4 pt-1 text-sm text-text-muted leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <!-- ⑦ Related Recommendations -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Related Recommendations</h2>
+        <p class="text-sm text-text-muted">Your load calculation also informs these selections.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <a id="rel-mcb" href="/insights/mcb" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">MCB</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Breaker Rating →</p>
+            </div>
+          </a>
+          <a id="rel-cable" href="/insights/cable" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M4 12h16M7 5v14M17 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Cable</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Wire Size →</p>
+            </div>
+          </a>
+          <a id="rel-inverter" href="/insights/inverter" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M4 7h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm14 2H6v6h12V9Zm2-3h1v2h-1V6Zm-17 0H2v2h1V6Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Inverter</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">UPS Size →</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  const MCB_RATINGS = [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100];
+  const CABLE_SIZE: Record<number, string> = {6:'1.0 sq mm',10:'1.5 sq mm',16:'2.5 sq mm',20:'4 sq mm',25:'4 sq mm',32:'6 sq mm',40:'10 sq mm',50:'16 sq mm',63:'16 sq mm',80:'25 sq mm',100:'35 sq mm'};
+  const INV_SIZES = [1, 2, 3, 5, 7.5, 10, 15];
+
+  function formatNumber(n: number): string {
+    if (n >= 100000) return `${(n / 100000).toFixed(1)}L`;
+    if (n >= 1000) return `${(n / 1000).toFixed(0)}k`;
+    return n.toFixed(0);
+  }
+
+  function computeValues(load: number, monthly: number) {
+    if (!load || !monthly) return null;
+    const design = (load * 1000 / 230) * 1.25;
+    const mcbA = MCB_RATINGS.find(r => r >= design) ?? MCB_RATINGS[MCB_RATINGS.length - 1];
+    const invKVA = INV_SIZES.find(s => s >= load * 1.2) ?? INV_SIZES[INV_SIZES.length - 1];
+    const solarKW = Math.ceil((monthly / 120) * 2) / 2;
+    return {
+      mcb: `${mcbA}A C-Curve`,
+      cable: `${CABLE_SIZE[mcbA] ?? '6 sq mm'} Copper`,
+      inverter: `${invKVA} kVA`,
+      solar: `${solarKW} kW Solar System`,
+    };
+  }
+
+  function init() {
+    const params = new URLSearchParams(window.location.search);
+    const load = parseFloat(params.get('load') || '');
+    const monthly = parseInt(params.get('monthly') || '', 10);
+    const bill = parseInt(params.get('bill') || '', 10);
+    const value = params.get('value') || '';
+
+    const valueEl = document.getElementById('insight-value');
+    const contextEl = document.getElementById('insight-context');
+    if (valueEl) valueEl.textContent = value || '—';
+    if (contextEl) contextEl.textContent = !isNaN(monthly) && monthly > 0 ? `Based on ~${monthly} kWh/month consumption` : '';
+
+    // Related links — include computed values for destination pages
+    const base = `?load=${params.get('load') || ''}&monthly=${params.get('monthly') || ''}&bill=${params.get('bill') || ''}`;
+    const vals = computeValues(load, monthly);
+    (['mcb', 'cable', 'inverter'] as const).forEach(type => {
+      const el = document.getElementById(`rel-${type}`) as HTMLAnchorElement | null;
+      if (el) el.href = `/insights/${type}${base}${vals ? `&value=${encodeURIComponent(vals[type])}` : ''}`;
+    });
+
+    if (isNaN(monthly) || monthly <= 0) return;
+
+    const raw = monthly / 120;
+
+    const setText = (id: string, text: string) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+
+    setText('sol-monthly', monthly.toString());
+    setText('sol-monthly2', monthly.toString());
+    setText('sol-raw', raw.toFixed(2));
+    setText('sol-result', value || `${Math.ceil(raw * 2) / 2} kW Solar System`);
+
+    // Parse kW from value string (e.g. "2.5 kW Solar System" → 2.5)
+    const systemKW = parseFloat(value) || Math.ceil(raw * 2) / 2;
+    const roofArea = Math.round(systemKW * 100);
+    setText('sol-roof', roofArea.toString());
+
+    // Savings (from bill param)
+    const calcSection = document.getElementById('calc-section');
+    const benefitsSection = document.getElementById('benefits-section');
+    if (calcSection) calcSection.style.display = '';
+    if (benefitsSection) benefitsSection.style.display = '';
+
+    if (!isNaN(bill) && bill > 0) {
+      setText('sol-monthly-savings', `~${formatNumber(bill)}`);
+      setText('sol-annual-savings', `~${formatNumber(bill * 12)}`);
+    } else {
+      setText('sol-monthly-savings', '—');
+      setText('sol-annual-savings', '—');
+    }
+  }
+
+  document.addEventListener('astro:page-load', init);
+</script>

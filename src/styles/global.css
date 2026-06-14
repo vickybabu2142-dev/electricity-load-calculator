@@ -252,6 +252,48 @@ textarea:focus {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent), transparent 80%);
 }
 
+/* Category body accordion */
+.category-body-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.category-body-wrap.is-open {
+  grid-template-rows: 1fr;
+}
+
+.category-body-inner {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Enhanced Category Section when open */
+.category-section {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.category-section:has(.category-body-wrap.is-open) {
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  position: relative;
+}
+
+.category-section:has(.category-body-wrap.is-open) .category-toggle {
+  background-color: var(--bg-card-hover);
+  border-bottom: 1px solid var(--border);
+}
+
+.light .category-section:has(.category-body-wrap.is-open) {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.light .category-section:has(.category-body-wrap.is-open) .category-toggle {
+  background-color: var(--bg-card-hover);
+}
+
 /* Toggle switch (Vercel Style: Improved Visibility) */
 .toggle-label {
   background-color: var(--toggle-off);
@@ -434,16 +476,49 @@ button:active:not(:disabled),
   transform: scale(0.95);
 }
 
+/* Insight Cards — calm ambient glow that radiates the accent color */
+.insight-card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 16px -6px color-mix(in srgb, var(--accent), transparent 82%);
+}
+.insight-card:hover {
+  border-color: color-mix(in srgb, var(--accent), transparent 42%) !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent), transparent 65%),
+    0 8px 32px -6px color-mix(in srgb, var(--accent), transparent 52%);
+  transform: translateY(-2px);
+}
+.insight-card:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+/* Glowing recommended-value box on insight detail pages */
+.insight-value-box {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent), transparent 50%),
+    0 16px 48px -8px color-mix(in srgb, var(--accent), transparent 42%),
+    inset 0 1px 0 color-mix(in srgb, var(--accent), transparent 68%);
+}
+
+/* Glowing icon ring */
+.insight-icon-ring {
+  box-shadow: 0 0 18px -3px color-mix(in srgb, var(--accent), transparent 52%);
+}
+
 /* Print styles */
 @media print {
   @page {
+    /* Zero margins remove browser-added URL/date/page-number chrome entirely.
+       Our custom in-document headers/footers provide all branding and pagination. */
     margin: 0;
+    size: A4;
   }
 
-  html, body { 
-    background-color: white !important; 
+  html, body {
+    background-color: white !important;
     color: #0f0f0f !important;
-    background-image: none !important; 
+    background-image: none !important;
     color-scheme: light !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -453,51 +528,89 @@ button:active:not(:disabled),
     display: block !important;
     background-color: white !important;
     color: #0f0f0f !important;
-    padding: 1.5cm !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-page {
+    width: 100% !important;
+    min-height: 297mm;
+    /* Professional margins: 2cm top for balance, 1.5cm sides/bottom for density */
+    padding: 2cm 1.5cm 1.5cm 1.5cm !important;
+    margin: 0;
+    background: white !important;
+    box-sizing: border-box;
+    position: relative;
   }
 
   /* Force white background for all containers */
   #print-layout,
+  #assess-print-layout,
   #print-layout .bg-base,
-  #print-layout .bg-card {
+  #assess-print-layout .bg-base,
+  #print-layout .bg-card,
+  #assess-print-layout .bg-card {
     background-color: white !important;
     background: white !important;
   }
 
   /* Force primary text to be dark for readability on white */
   #print-layout,
+  #assess-print-layout,
   #print-layout *,
-  #print-layout .text-text-primary {
+  #assess-print-layout *,
+  #print-layout .text-text-primary,
+  #assess-print-layout .text-text-primary {
     color: #0f0f0f !important;
   }
 
-  #print-layout .text-text-muted {
+  #print-layout .text-text-muted,
+  #assess-print-layout .text-text-muted {
     color: #4b5563 !important;
   }
 
-  /* THEME-BASED ACCENTS FOR PRINT */
-  /* Dark Mode users get Amber accents in report */
-  #print-layout [style*="color: var(--accent)"],
+  /* Specific color overrides for print legibility (must come after * rule) */
   #print-layout .text-accent,
-  #print-layout h1 span,
-  #print-layout #print-total-kw,
-  #print-layout #print-monthly-bill {
-    color: #F4A826 !important; /* Industrial Amber */
+  #assess-print-layout .text-accent,
+  #print-layout [style*="color: var(--accent)"],
+  #assess-print-layout [style*="color: var(--accent)"],
+  #print-layout [style*="color:var(--accent)"],
+  #assess-print-layout [style*="color:var(--accent)"],
+  #aprint-total-kw,
+  #print-total-kw,
+  #aprint-health-score,
+  #print-health-score,
+  #aprint-mcb-value,
+  #aprint-cable-value,
+  #aprint-inverter-value,
+  #aprint-solar-value {
+    color: #F4A826 !important; /* Always use brand Amber for professional report highlights */
   }
 
-  /* Light Mode users get Stormy Blue accents in report */
-  .light #print-layout [style*="color: var(--accent)"],
-  .light #print-layout .text-accent,
-  .light #print-layout h1 span,
-  .light #print-layout #print-total-kw,
-  .light #print-layout #print-monthly-bill {
-    color: #4A76A8 !important; /* Stormy Steel Blue */
+  #print-layout .text-danger,
+  #assess-print-layout .text-danger,
+  #print-layout [style*="color: var(--danger)"],
+  #assess-print-layout [style*="color: var(--danger)"] {
+    color: #dc2626 !important; /* Darker red for print */
+  }
+
+  #print-layout .text-warning,
+  #assess-print-layout .text-warning,
+  #print-layout [style*="color: var(--warning)"],
+  #assess-print-layout [style*="color: var(--warning)"] {
+    color: #d97706 !important; /* Darker amber for print */
   }
 
   #print-layout .border,
+  #assess-print-layout .border,
   #print-layout .border-border,
+  #assess-print-layout .border-border,
   #print-layout .border-t,
-  #print-layout .border-b {
+  #assess-print-layout .border-t,
+  #print-layout .border-b,
+  #assess-print-layout .border-b {
     border-color: #e5e7eb !important;
   }
 

@@ -5,11 +5,11 @@ const applianceCount = DEFAULT_APPLIANCES.filter(a => HOME_CATEGORIES.includes(a
 const categoryCount  = CATEGORIES.length;
 ---
 
-<section class="relative pt-4 pb-4 px-6 text-center overflow-hidden no-print">
+<section class="relative pt-2 pb-2 px-6 text-center overflow-hidden no-print">
   <!-- Subtle Dot Grid Background -->
   <div class="absolute inset-0 pointer-events-none opacity-[0.15]" style="background-image: radial-gradient(circle, var(--text-muted) 1px, transparent 1px); background-size: 24px 24px; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 40%, transparent 100%);"></div>
 
-  <p class="relative font-mono text-[10px] tracking-[0.25em] text-text-muted uppercase mb-2 animate-fade-in flex items-center justify-center gap-1.5">
+  <p class="relative font-mono text-[10px] tracking-[0.25em] text-text-muted uppercase mb-1 animate-fade-in flex items-center justify-center gap-1.5">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -23,11 +23,11 @@ const categoryCount  = CATEGORIES.length;
   </p>
 
   <h1
-    class="relative font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-text-primary leading-none tracking-tight mb-4 animate-slide-up"
+    class="relative font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-text-primary leading-none tracking-tight mb-2 animate-slide-up"
     style="animation-delay: 0.05s"
   >
     <span class="hero-text-gradient">Electricity Load</span>
-    <span class="inline-block sm:block text-accent">Calculator</span>
+    <span class="inline-block sm:block text-accent">Calculator & Assessment Tool</span>
   </h1>
 
   <p
@@ -35,12 +35,12 @@ const categoryCount  = CATEGORIES.length;
     style="animation-delay: 0.12s"
   >
     Add your appliances and equipment to instantly see the total electrical load,
-    daily energy consumption, and estimated monthly electricity bills for your home.
+    daily energy consumption, and a complete electrical health assessment with smart planning insights.
   </p>
 
   <!-- Stats strip -->
   <div
-    class="relative mt-5 inline-flex flex-wrap justify-center gap-3 text-xs animate-slide-up"
+    class="relative mt-3 inline-flex flex-wrap justify-center gap-3 text-xs animate-slide-up"
     style="animation-delay: 0.2s"
   >
     <span class="stat-badge flex items-center gap-1.5 text-text-primary px-3.5 py-1.5 rounded-full">
@@ -61,7 +61,7 @@ const categoryCount  = CATEGORIES.length;
       >
         <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
       </svg>
-      <span class="font-medium">Real-time Calc</span>
+      <span class="font-medium">Real-time assessment </span>
     </span>
   </div>
 </section>

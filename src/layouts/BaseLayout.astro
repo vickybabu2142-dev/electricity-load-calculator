@@ -20,55 +20,61 @@ interface Props {
   description?: string;
   keywords?: string;
   breadcrumbSchema?: any;
+  schemaGraph?: any[];
 }
 
 const {
-  title = 'Electricity Load Calculator | kW, kVA & House Load Calculator',
-  description = "Calculate your house electricity load in kW/kVA for home use. Use our accurate bijli load calculator with monthly bill estimation.",
-  keywords = "electricity load calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, bijli bill calculator, electricity load calculator in kw for home pdf",
+  title = 'Electricity Load Calculator | Electrical Load Assessment Tool',
+  description = "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh, get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
+  keywords = "electricity load calculator, electrical load calculator, home load calculator, connected load calculator, power consumption calculator, electrical load assessment, house wiring load calculation, load calculation for AC, load calculation for home in India, appliance power calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, energy cost estimator",
   breadcrumbSchema,
+  schemaGraph = [],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 const ogImage = new URL('/site-image.png', Astro.site ?? Astro.url).href;
 
-const schema = {
+// Default software application schema (primarily for the home page)
+const defaultSoftwareSchema = {
+  "@type": "SoftwareApplication",
+  "name": "Electricity Load Calculator",
+  "url": canonicalURL.origin,
+  "operatingSystem": "Web",
+  "applicationCategory": "UtilitiesApplication",
+  "applicationSubCategory": "Engineering/Utility",
+  "description": "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh, get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
+  "screenshot": ogImage,
+  "softwareVersion": "1.0.0",
+  "author": {
+    "@type": "Organization",
+    "name": "Electricity Load Calculator",
+    "url": canonicalURL.origin,
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+  },
+  "featureList": [
+    "Real-time load calculation in Watts and kW",
+    "Daily and monthly energy consumption analysis (kWh)",
+    "MCB, cable, inverter, and solar recommendations",
+    "Electrical health score assessment",
+    "Optional Energy Cost Estimator (user-provided rate)",
+    "Professional PDF report generation",
+    "Custom appliance support"
+  ]
+};
+
+const finalSchema = {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "name": "Electricity Load Calculator",
-      "url": canonicalURL.origin,
-      "operatingSystem": "Web",
-      "applicationCategory": "UtilitiesApplication",
-      "applicationSubCategory": "Finance/Utility",
-      "description": "Calculate total electrical load in kW and kVA for residential buildings with bill estimation.",
-      "screenshot": ogImage,
-      "softwareVersion": "1.0.0",
-      "author": {
-        "@type": "Organization",
-        "name": "Electricity Load Calculator",
-        "url": canonicalURL.origin,
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-      },
-      "featureList": [
-        "Real-time load calculation in Watts and kW",
-        "Daily energy consumption estimation (kWh)",
-        "Monthly electricity bill calculator",
-        "Professional PDF report generation",
-        "Custom appliance support",
-        "Multi-currency support (INR, USD, EUR, GBP, etc.)"
-      ]
-    },
+    ...(schemaGraph.length > 0 ? schemaGraph : [defaultSoftwareSchema]),
     {
       "@type": "WebSite",
       "name": "Electricity Load Calculator",
       "url": canonicalURL.origin,
-      "description": "Free online electricity load calculator for home use.",
+      "description": "Free online electrical load assessment tool — calculate connected load, energy consumption, get MCB/cable/inverter/solar recommendations, and assess your electrical health score.",
     },
     ...(breadcrumbSchema ? [breadcrumbSchema] : []),
   ],
@@ -83,6 +89,10 @@ const schema = {
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <title>{title}</title>
+
+    <!-- Performance: Preconnect to key origins -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalURL.href} />
@@ -102,7 +112,7 @@ const schema = {
     <meta property="twitter:image" content={ogImage} />
 
     <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(finalSchema)} />
 
     <!-- Inline script to apply theme immediately -->
     <script is:inline>
