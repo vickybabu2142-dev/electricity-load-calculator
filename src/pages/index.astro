@@ -188,7 +188,7 @@ const sectionedData = SECTIONS.map(section => ({
   </div>
 
   <!-- PRINT ONLY LAYOUT -->
-  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto text-text-primary bg-base">
+  <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto text-text-primary bg-white print:bg-white" style="padding: 0; box-sizing: border-box; background-color: white !important;">
 
     <!-- ── PAGE 1: Executive Summary ──────────────────────── -->
     <div class="print-page">
@@ -1108,7 +1108,7 @@ document.addEventListener('click', (e) => {
   if (action === 'print-report') {
     const originalTitle = document.title;
     const dateStr = new Date().toISOString().split('T')[0];
-    document.title = `electricity-load-report-${dateStr}`;
+    document.title = `electricity-load-calculator-assessment-report-${dateStr}`;
     window.print();
     document.title = originalTitle;
     return;

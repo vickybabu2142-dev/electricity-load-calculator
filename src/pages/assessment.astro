@@ -474,7 +474,7 @@ import Breadcrumb from '@/components/Breadcrumb.astro';
         <div class="flex-1 h-px bg-border"></div>
       </div>
       <div class="flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center md:justify-start md:text-left">
-        <button type="button" onclick="window.print()"
+        <button type="button" data-action="print-report"
           class="flex items-center gap-2 px-5 py-3 rounded-lg bg-accent text-accent-text font-display font-medium hover:bg-accent-dim transition-all active:scale-95 shadow-lg shadow-accent/20">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5" aria-hidden="true">
             <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v2a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-2h1a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-1V4a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1Zm2 0h6v3H7V4Zm0 8h6v4H7v-4Zm-3-4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" clip-rule="evenodd"/>
@@ -487,94 +487,219 @@ import Breadcrumb from '@/components/Breadcrumb.astro';
 
   </main>
 
-  <!-- PRINT LAYOUT (assessment-specific, separate from calculator print) -->
-  <div id="assess-print-layout" class="hidden print:block w-full max-w-4xl mx-auto text-text-primary bg-base">
+  <!-- PRINT ONLY LAYOUT (Matches index.astro structure for consistent PDF generation) -->
+  <div id="assess-print-layout" class="hidden print:block w-full max-w-4xl mx-auto text-text-primary bg-white print:bg-white" style="padding: 0; box-sizing: border-box; background-color: white !important;">
 
-    <div class="border-b-2 border-border pb-5 mb-8 flex justify-between items-end">
-      <div>
-        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Electrical Assessment Report</p>
-        <h1 class="text-2xl font-display font-bold text-text-primary">Electrical Load <span class="text-accent">Assessment</span></h1>
-        <p class="text-sm text-text-muted mt-1.5" id="aprint-date"></p>
-      </div>
-      <div class="text-right">
-        <p class="text-sm font-bold font-mono text-accent tracking-wide">electricityloadcalculator.com</p>
-        <p class="text-[10px] text-text-muted mt-1">&copy; {new Date().getFullYear()} · All Rights Reserved</p>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-3 gap-4 mb-8">
-      <div class="bg-card p-5 rounded-xl border border-border">
-        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Total Load</p>
-        <p class="text-4xl font-bold font-display" style="color:var(--accent)"><span id="aprint-total-kw">—</span> kW</p>
-        <p class="text-xs text-text-muted mt-2"><span id="aprint-total-watts">—</span> W</p>
-      </div>
-      <div class="bg-card p-5 rounded-xl border border-border">
-        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Daily Consumption</p>
-        <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-daily-kwh">—</span></p>
-        <p class="text-xs text-text-muted mt-2">kWh per day</p>
-      </div>
-      <div class="bg-card p-5 rounded-xl border border-border">
-        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Monthly Consumption</p>
-        <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-monthly-kwh">—</span></p>
-        <p class="text-xs text-text-muted mt-2">kWh per month</p>
-      </div>
-    </div>
-
-    <div class="bg-card p-6 rounded-xl border border-border mb-8">
-      <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Electrical Health Score</p>
-      <div class="flex items-center gap-6 mb-4">
-        <span id="aprint-health-score" class="text-5xl font-bold font-display" style="color:var(--accent)">—</span>
+    <!-- ── PAGE 1: Executive Summary ──────────────────────── -->
+    <div class="print-page">
+      <!-- Report header -->
+      <div class="border-b-2 border-border pb-5 mb-8 flex justify-between items-end">
         <div>
-          <span id="aprint-health-label" class="text-xl font-semibold text-text-primary">—</span>
-          <p class="text-xs text-text-muted mt-1">/ 100 composite score</p>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Electrical Assessment Report</p>
+          <h1 class="text-2xl font-display font-bold text-text-primary">
+            Electricity Load <span class="text-accent">Report</span>
+          </h1>
+          <p class="text-sm text-text-muted mt-1.5" id="aprint-date"></p>
+        </div>
+        <div class="text-right select-none">
+          <p class="print-brand-url text-sm font-bold font-mono text-accent tracking-wide"></p>
+          <p class="text-[10px] text-text-muted mt-1">&copy; {new Date().getFullYear()} · All Rights Reserved</p>
+          <p class="text-[9px] text-text-muted mt-0.5 uppercase tracking-widest">Proprietary Report</p>
         </div>
       </div>
+
+      <!-- Executive Summary: 3-column stats -->
+      <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Total Electrical Load</p>
+          <p class="text-4xl font-bold font-display" style="color: var(--accent);"><span id="aprint-total-kw">0.00</span> kW</p>
+          <p class="text-xs text-text-muted mt-2"><span id="aprint-total-watts">0</span> W</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Daily Consumption</p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-daily-kwh">0.00</span></p>
+          <p class="text-xs text-text-muted mt-2">kWh (units) per day</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border break-inside-avoid">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Monthly Consumption</p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-monthly-kwh">0</span></p>
+          <p class="text-xs text-text-muted mt-2">kWh (units) per month</p>
+        </div>
+      </div>
+
+      <!-- Electrical Health Score -->
+      <div class="break-inside-avoid">
+        <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-3">Electrical Health Score</h2>
+        <div class="bg-card p-6 rounded-xl border border-border">
+          <div class="flex items-center gap-8 mb-5">
+            <div class="flex items-end gap-2">
+              <span id="aprint-health-score" class="text-6xl font-bold font-display" style="color: var(--accent);">—</span>
+              <span class="text-xl text-text-muted mb-2">/ 100</span>
+            </div>
+            <div>
+              <span id="aprint-health-label" class="text-2xl font-semibold text-text-primary">—</span>
+              <p class="text-xs text-text-muted mt-1">Composite electrical system assessment</p>
+            </div>
+          </div>
+          <div id="aprint-health-details" class="space-y-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional Energy Cost Estimate (only shown if user entered a rate) -->
+      <div id="aprint-cost-estimator" class="mt-6 bg-card p-5 rounded-xl border border-border break-inside-avoid" style="display:none;">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-4">Energy Cost Estimator</p>
+
+        <!-- Three key numbers -->
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
+            <p class="text-2xl font-bold font-display" style="color: var(--accent);"><span id="aprint-cost-monthly-kwh">0</span></p>
+            <p class="text-xs text-text-muted mt-0.5">kWh / month</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Rate per kWh</p>
+            <p id="aprint-cost-rate" class="text-2xl font-bold font-display text-text-primary">—</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Est. Monthly Cost</p>
+            <p id="aprint-estimated-cost" class="text-2xl font-bold font-display" style="color: var(--accent);">—</p>
+          </div>
+        </div>
+
+        <!-- Daily and yearly breakdown -->
+        <div class="flex gap-8 pt-3 mb-4 border-t border-border">
+          <div>
+            <p class="text-[10px] font-mono text-text-muted uppercase tracking-widest">Daily Cost</p>
+            <p id="aprint-cost-daily" class="text-sm font-semibold font-mono text-text-primary mt-0.5">—</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-mono text-text-muted uppercase tracking-widest">Yearly Estimate</p>
+            <p id="aprint-cost-yearly" class="text-sm font-semibold font-mono text-text-primary mt-0.5">—</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-text-muted">Based on user-provided electricity rate. Actual bills may vary due to taxes, fixed charges, slab pricing, and regional tariffs.</p>
+      </div>
+
     </div>
 
-    <div style="margin-top:2cm">
+    <!-- ── Section 2: Smart Insights ─────────────────────────── -->
+    <div class="print-page" style="page-break-before: always; break-before: page;">
+      <!-- Section brand strip -->
+      <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
+        <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
+        <span class="print-brand-url text-[9px] font-mono font-semibold text-accent"></span>
+      </div>
+      <!-- Section header -->
       <div class="border-b border-border pb-2 mb-5">
-        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Smart Recommendations</p>
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Smart Insights</p>
         <h2 class="text-base font-display font-bold text-text-primary">Electrical System Recommendations</h2>
       </div>
-      <div class="grid grid-cols-2 gap-5 mb-6">
+
+      <!-- Insights 2×2 grid -->
+      <div class="grid grid-cols-2 gap-5 mb-7 break-inside-avoid">
         <div class="bg-card p-5 rounded-xl border border-border">
-          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Recommended MCB</p>
-          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-mcb">—</p>
-          <p class="text-xs text-text-muted">Circuit breaker with 25% safety margin</p>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">⚡ Recommended MCB</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-mcb-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Miniature Circuit Breaker rating for safe protection of your total load</p>
         </div>
         <div class="bg-card p-5 rounded-xl border border-border">
-          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Recommended Cable</p>
-          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-cable">—</p>
-          <p class="text-xs text-text-muted">Wire gauge for safe power delivery</p>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">🔌 Recommended Cable</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-cable-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Wire gauge suitable for safe and efficient power delivery</p>
         </div>
         <div class="bg-card p-5 rounded-xl border border-border">
-          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Recommended Inverter</p>
-          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-inverter">—</p>
-          <p class="text-xs text-text-muted">Minimum backup power capacity</p>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">🔋 Recommended Inverter</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-inverter-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Minimum inverter capacity needed for reliable backup power</p>
         </div>
         <div class="bg-card p-5 rounded-xl border border-border">
-          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Recommended Solar</p>
-          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-solar">—</p>
-          <p class="text-xs text-text-muted">Solar capacity to offset monthly usage</p>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">☀️ Recommended Solar</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-solar-value">—</p>
+          <p class="text-xs text-text-muted leading-relaxed">Solar panel capacity to meaningfully offset your consumption</p>
         </div>
       </div>
-      <p class="text-xs text-text-muted leading-relaxed p-4 border border-border rounded-lg bg-card">Estimates based on single-phase 230V supply. Always consult a licensed electrician before purchasing or installing electrical components.</p>
+
+      <!-- Disclaimer -->
+      <div class="bg-card border border-border rounded-xl p-5 break-inside-avoid">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Important Notice</p>
+        <p class="text-xs text-text-muted leading-relaxed">These recommendations are estimates based on your declared appliance loads. Always consult a licensed electrician before making wiring changes or purchasing equipment. Local regulations and building codes take precedence over these figures.</p>
+      </div>
+
     </div>
 
-    <div style="margin-top:2cm">
+    <!-- ── Section 3: Consumption Breakdown ──────────────────── -->
+    <div class="print-page" style="page-break-before: always; break-before: page;">
+      <!-- Section brand strip -->
+      <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
+        <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
+        <span class="print-brand-url text-[9px] font-mono font-semibold text-accent"></span>
+      </div>
+      <!-- Section header -->
       <div class="border-b border-border pb-2 mb-5">
         <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Energy Analysis</p>
         <h2 class="text-base font-display font-bold text-text-primary">Consumption Breakdown by Category</h2>
       </div>
-      <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 border-b-2 border-border mb-1">
-        <span class="flex-1 text-text-primary">Category</span>
-        <span class="w-32 text-right text-text-primary">kWh / day</span>
-        <span class="w-20 text-right text-text-primary">Share</span>
+
+      <!-- Breakdown table with column headers -->
+      <div class="break-inside-avoid mb-8">
+        <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-0.5 border-b-2 border-border">
+          <span class="flex-1 text-text-primary">Category</span>
+          <span class="w-32 text-right text-text-primary">kWh / day</span>
+          <span class="w-20 text-right text-text-primary">Share</span>
+        </div>
+        <div id="aprint-breakdown-table" class="space-y-0">
+          <!-- Populated by JS -->
+        </div>
       </div>
-      <div id="aprint-breakdown" class="space-y-0 mb-8"></div>
-      <div class="mt-6 pt-5 border-t border-border text-[10px] text-text-muted flex justify-between">
-        <p>electricityloadcalculator.com</p>
-        <p>&copy; {new Date().getFullYear()} · For informational purposes only</p>
+
+      <!-- Active Appliances -->
+      <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-4 border-b border-border pb-2">Active Appliances Breakdown</h2>
+      <div id="aprint-appliances-list" class="space-y-5">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Daily total row -->
+      <div id="aprint-appliances-total" class="mt-4 pt-3 border-t-2 border-border break-inside-avoid">
+        <!-- Populated by JS -->
+      </div>
+
+    </div>
+
+    <!-- ── Section 4: Energy Saving + High Consumption ──────── -->
+    <div class="print-page" style="page-break-before: always; break-before: page;">
+      <!-- Section brand strip -->
+      <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
+        <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
+        <span class="print-brand-url text-[9px] font-mono font-semibold text-accent"></span>
+      </div>
+      <!-- Section header -->
+      <div class="border-b border-border pb-2 mb-5">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Action Plan</p>
+        <h2 class="text-base font-display font-bold text-text-primary">Energy Saving Opportunities</h2>
+      </div>
+
+      <!-- Energy Saving Tips -->
+      <div class="break-inside-avoid mb-8">
+        <div id="aprint-saving-tips" class="space-y-1.5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- High Consumption Devices -->
+      <div class="break-inside-avoid">
+        <h2 class="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-4 border-b border-border pb-2">High Consumption Devices</h2>
+        <div id="aprint-high-consumption" class="space-y-0">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Final footer -->
+      <div class="mt-12 pt-6 border-t border-border flex justify-between items-center text-[10px] text-text-muted select-none break-inside-avoid">
+        <p class="print-brand-url font-medium"></p>
+        <p>&copy; {new Date().getFullYear()} ElectricityLoadCalculator.com · All Rights Reserved · For informational purposes only.</p>
       </div>
     </div>
 
@@ -623,7 +748,8 @@ import Breadcrumb from '@/components/Breadcrumb.astro';
 
 <script>
 import type { Appliance } from '@/types';
-import { calculateTotals } from '@/utils/calculations';
+import { SECTIONS } from '@/data/appliances';
+import { calculateTotals, calculateRowKWh } from '@/utils/calculations';
 import { calculateInsights } from '@/utils/insights';
 import { calculateHealthScore, calculateCategoryBreakdown, generateSavingsTips, getHighConsumptionAlerts } from '@/utils/health';
 
@@ -632,6 +758,22 @@ const STORAGE_KEY = 'electricity_load_calculator_state';
 function setText(id: string, val: string) {
   const el = document.getElementById(id);
   if (el) el.textContent = val;
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function formatNumber(val: number, decimals = 0): string {
+  return new Intl.NumberFormat(navigator.language || 'en', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(val);
 }
 
 let bdItems: Array<{ category: string; kWhDay: number; percent: number; color: string }> = [];
@@ -802,17 +944,6 @@ function initAssessment() {
             <span class="w-16 text-right font-mono font-semibold" style="color:${item.color}">${Math.round(item.percent)}%</span>
           </div>`).join('')}`;
     }
-
-    // Print breakdown
-    const aprint = document.getElementById('aprint-breakdown');
-    if (aprint) {
-      aprint.innerHTML = breakdown.items.map(item => `
-        <div class="flex text-sm py-2 border-b border-border">
-          <span class="flex-1 text-text-muted">${item.category}</span>
-          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh/d</span>
-          <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
-        </div>`).join('');
-    }
   }
 
   // ── S5: Health Score ──────────────────────────────────────
@@ -896,28 +1027,169 @@ function initAssessment() {
     const rate = parseFloat((document.getElementById('assess-rate') as HTMLInputElement | null)?.value ?? '');
     const resEl = document.getElementById('assess-est-result');
     if (!resEl) return;
-    if (!rate || rate <= 0) { resEl.style.display = 'none'; return; }
+
+    if (!rate || rate <= 0) {
+      resEl.style.display = 'none';
+      const pCost = document.getElementById('aprint-cost-estimator');
+      if (pCost) pCost.style.display = 'none';
+      return;
+    }
+
     const fmt = (v: number) => `${sym}${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
     setText('assess-est-daily',   fmt(result.dailyKWh   * rate));
     setText('assess-est-monthly', fmt(result.monthlyKWh * rate));
     setText('assess-est-yearly',  fmt(result.monthlyKWh * rate * 12));
     resEl.style.display = '';
+
+    // Update Print layout cost fields
+    const pCost = document.getElementById('aprint-cost-estimator');
+    if (pCost) {
+      pCost.style.display = '';
+      setText('aprint-cost-monthly-kwh', Math.round(result.monthlyKWh).toString());
+      setText('aprint-cost-rate',        `${sym}${rate}/kWh`);
+      setText('aprint-estimated-cost',   fmt(result.monthlyKWh * rate));
+      setText('aprint-cost-daily',        `${fmt(result.dailyKWh * rate)} / day`);
+      setText('aprint-cost-yearly',       `${fmt(result.monthlyKWh * rate * 12)} / year`);
+    }
   }
   document.getElementById('assess-currency')?.addEventListener('change', updateCost);
   document.getElementById('assess-rate')?.addEventListener('input', updateCost);
 
   // ── Print layout ──────────────────────────────────────────
-  setText('aprint-date',         new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }));
   setText('aprint-total-kw',     result.totalKW.toFixed(2));
-  setText('aprint-total-watts',  Math.round(result.totalWatts).toString());
-  setText('aprint-daily-kwh',    result.dailyKWh.toFixed(2));
-  setText('aprint-monthly-kwh',  Math.round(result.monthlyKWh).toString());
-  setText('aprint-health-score', health.score.toString());
+  setText('aprint-total-watts',  formatNumber(result.totalWatts));
+  setText('aprint-daily-kwh',    formatNumber(result.dailyKWh, 2));
+  setText('aprint-monthly-kwh',  String(Math.round(result.monthlyKWh)));
+  setText('aprint-date',         `Generated on: ${new Date().toLocaleDateString(undefined, { dateStyle: 'long' })}`);
+
+  const siteUrl = window.location.origin;
+  document.querySelectorAll<HTMLElement>('.print-brand-url').forEach(el => {
+    el.innerHTML = '';
+    const a = document.createElement('a');
+    a.href = siteUrl;
+    a.textContent = siteUrl;
+    a.style.cssText = 'color:inherit;text-decoration:underline;text-underline-offset:2px;';
+    el.appendChild(a);
+  });
+
+  setText('aprint-mcb-value',      insights.recommendedMCB);
+  setText('aprint-cable-value',    insights.recommendedCable);
+  setText('aprint-inverter-value', insights.recommendedInverter);
+  setText('aprint-solar-value',    insights.recommendedSolar);
+
+  setText('aprint-health-score', String(health.score));
   setText('aprint-health-label', health.label);
-  setText('aprint-mcb',          insights.recommendedMCB);
-  setText('aprint-cable',        insights.recommendedCable);
-  setText('aprint-inverter',     insights.recommendedInverter);
-  setText('aprint-solar',        insights.recommendedSolar);
+  const printDetails = document.getElementById('aprint-health-details');
+  if (printDetails) {
+    printDetails.innerHTML = `
+      <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Load Utilization</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.utilization}/30</span></div>
+      <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Energy Efficiency</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.efficiency}/30</span></div>
+      <div class="flex justify-between text-sm border-b border-border pb-1"><span class="text-text-muted">Safety Readiness</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.safety}/20</span></div>
+      <div class="flex justify-between text-sm"><span class="text-text-muted">Renewable Readiness</span><span class="font-mono font-semibold" style="color:var(--accent)">${health.subScores.renewable}/20</span></div>
+    `;
+  }
+
+  const printBreakdown = document.getElementById('aprint-breakdown-table');
+  if (printBreakdown) {
+    printBreakdown.innerHTML = breakdown.items.map(item => `
+      <div class="flex text-sm py-1.5 border-b border-border">
+        <span class="flex-1 text-text-muted">${item.category}</span>
+        <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh/d</span>
+        <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
+      </div>`).join('');
+  }
+
+  const printList = document.getElementById('aprint-appliances-list');
+  if (printList) {
+    let html = '';
+    SECTIONS.forEach(section => {
+      const sectionItems = active.filter(a => section.categories.includes(a.category));
+      if (sectionItems.length > 0) {
+        html += `<div class="mb-6"><h2 class="text-sm font-bold text-accent uppercase tracking-widest mb-4 border-l-4 border-accent pl-3">${section.title}</h2><div class="space-y-4">`;
+        section.categories.forEach(cat => {
+          const catItems = sectionItems.filter(a => a.category === cat);
+          if (catItems.length > 0) {
+            html += `
+              <div>
+                <h3 class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2 border-b border-border pb-1">${cat}</h3>
+                <div class="space-y-1.5">
+                  ${catItems.map(a => `
+                    <div class="flex justify-between items-center text-sm">
+                      <div class="flex-1">
+                        <span class="font-medium text-text-primary">${escapeHtml(a.name)}</span>
+                        <span class="text-text-muted ml-2 text-xs">${a.qty} × ${a.watts}W</span>
+                      </div>
+                      <div class="text-right font-mono font-medium text-text-primary">
+                        ${calculateRowKWh(a).toFixed(2)} <span class="text-[10px] text-text-muted">kWh/d</span>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }
+        });
+        html += `</div></div>`;
+      }
+    });
+    printList.innerHTML = html || '<p class="text-text-muted italic">No active appliances selected.</p>';
+  }
+
+  const printTotal = document.getElementById('aprint-appliances-total');
+  if (printTotal) {
+    printTotal.innerHTML = `
+      <div class="flex justify-between items-baseline">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-text-muted">Total Daily Consumption</span>
+        <span class="font-mono font-bold text-lg" style="color:var(--accent);">${result.dailyKWh.toFixed(2)}<span class="text-xs text-text-muted font-normal ml-1">kWh / day</span></span>
+      </div>
+    `;
+  }
+
+  const printSaving = document.getElementById('aprint-saving-tips');
+  if (printSaving) {
+    printSaving.innerHTML = `
+      <div class="flex justify-between mb-2">
+        <span class="text-sm text-text-muted">Top Consumer</span>
+        <span class="text-sm font-semibold text-text-primary">${savings.topConsumerName}</span>
+      </div>
+      <div class="flex justify-between mb-3 pb-3 border-b border-border">
+        <span class="text-sm text-text-muted">Potential Monthly Savings</span>
+        <span class="text-sm font-bold" style="color:var(--accent)">${savings.potentialSavings.toFixed(1)} kWh</span>
+      </div>
+      ${savings.tips.map(tip => `<div class="flex items-start gap-2 mb-1.5"><span class="text-accent font-bold">✓</span><span class="text-sm text-text-muted">${tip}</span></div>`).join('')}
+    `;
+  }
+
+  const printAlerts = document.getElementById('aprint-high-consumption');
+  if (printAlerts) {
+    printAlerts.innerHTML = alerts.map(alert => `
+      <div class="flex justify-between text-sm py-1.5 border-b border-border">
+        <div>
+          <span class="font-medium text-text-primary">⚠ ${alert.name}</span>
+          <span class="text-text-muted ml-2 text-xs">${alert.reason}</span>
+        </div>
+        <span class="font-mono font-semibold flex-shrink-0 ml-4" style="color:var(--accent)">${alert.kWhDay.toFixed(1)} kWh/d</span>
+      </div>`).join('');
+  }
+  
+  // Initial cost update
+  updateCost();
+
+  // ── Global Event Delegation ───────────────────────────────
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const action = target.dataset.action || target.closest('[data-action]')?.getAttribute('data-action');
+
+    if (action === 'print-report') {
+      const originalTitle = document.title;
+      const dateStr = new Date().toISOString().split('T')[0];
+      document.title = `electricity-load-calculator-assessment-report-${dateStr}`;
+      window.print();
+      document.title = originalTitle;
+      return;
+    }
+  });
 }
 
 document.addEventListener('astro:page-load', initAssessment);
