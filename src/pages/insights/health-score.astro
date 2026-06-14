@@ -1,0 +1,204 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "Understanding Your Electrical Health Score: Safety and Efficiency Metrics",
+    "description": "Learn how we calculate your home's electrical health score based on load utilization, energy efficiency, safety readiness, and renewable potential.",
+    "author": {
+      "@type": "Organization",
+      "name": "Electricity Load Calculator"
+    }
+  }
+];
+---
+
+<BaseLayout
+  title="Electrical Health Score Logic | Electricity Load Calculator"
+  description="Deep dive into the logic behind the Electrical Health Score. Learn how load balance, appliance efficiency, and safety margins impact your score."
+  keywords="electrical health score, energy efficiency metrics, load utilization, electrical safety assessment, residential power health"
+  schemaGraph={schemaGraph}
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessment', href: '/assessment' }, { label: 'Health Score Logic' }]} />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">
+    <div class="max-w-2xl mx-auto space-y-4">
+
+      <!-- Back link -->
+      <a href="/assessment" class="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors" style="color:var(--accent); border-color:color-mix(in srgb,var(--accent),transparent 60%); background:color-mix(in srgb,var(--accent),transparent 92%)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
+          <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/>
+        </svg>
+        Back to Assessment
+      </a>
+
+      <!-- ① Header -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-base flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-accent" aria-hidden="true">
+              <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.5 3c1.557 0 3.046.812 3.945 2.027A4.912 4.912 0 0115.395 3c2.786 0 5.25 2.322 5.25 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+            </svg>
+          </span>
+          <div class="pt-0.5">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5 text-text-muted">Assessment Logic</p>
+            <h1 class="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">Electrical Health Score</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② Concept -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4">
+        <h2 class="font-display font-semibold text-text-primary text-lg">What is a Health Score?</h2>
+        <p class="text-sm text-text-muted leading-relaxed">
+          The Electrical Health Score is a composite metric from 0 to 100 that evaluates how well your electrical system is managed. It's not just about how much power you use, but how **safely**, **efficiently**, and **responsibly** you use it.
+        </p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+           {[
+             { label: 'Poor', range: '0-40', color: '#ef4444' },
+             { label: 'Fair', range: '41-60', color: '#fb923c' },
+             { label: 'Good', range: '61-80', color: '#3ecf6e' },
+             { label: 'Excellent', range: '81-100', color: '#22d3ee' }
+           ].map(item => (
+             <div class="text-center p-3 rounded-lg border border-border bg-base">
+               <p class="text-[10px] font-mono font-bold uppercase mb-1" style={`color:${item.color}`}>{item.label}</p>
+               <p class="text-xs text-text-muted">{item.range}</p>
+             </div>
+           ))}
+        </div>
+      </div>
+
+      <!-- ③ The Four Pillars -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-8">
+        <h2 class="font-display font-semibold text-text-primary text-lg border-b border-border pb-3">The 4 Pillars of Your Score</h2>
+
+        <!-- Pillar 1: Load Utilization -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent text-sm font-mono font-bold flex-shrink-0">30%</span>
+            <h3 class="font-display font-semibold text-text-primary text-base">Load Utilization (30 points)</h3>
+          </div>
+          <div class="pl-11 space-y-3">
+            <p class="text-sm text-text-muted leading-relaxed">
+              This measures your total connected load relative to your home's maximum configured capacity (kW). It evaluates how much "breathing room" your electrical system has.
+            </p>
+            <div class="rounded-lg border border-border bg-base p-4 text-xs text-text-muted space-y-2">
+              <p><strong class="text-text-primary">50% – 80% Utilization:</strong> Optimal range. Awards maximum points. You are using your capacity efficiently without stressing the system.</p>
+              <p><strong class="text-warning">80% – 95% Utilization:</strong> Warning zone. Point deductions begin. Your system is heavily loaded, increasing the risk of tripped breakers if multiple heavy appliances run simultaneously.</p>
+              <p><strong class="text-danger">> 95% Utilization:</strong> Danger zone. Severe point deductions. High risk of overloading and potential fire hazard. Upgrade your sanctioned load or reduce concurrent usage.</p>
+              <p><strong class="text-warning">< 25% Utilization:</strong> Low efficiency. Minor point deduction. You may be paying higher fixed charges for a sanctioned load much larger than you actually need.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pillar 2: Energy Efficiency -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent text-sm font-mono font-bold flex-shrink-0">30%</span>
+            <h3 class="font-display font-semibold text-text-primary text-base">Energy Efficiency (30 points)</h3>
+          </div>
+          <div class="pl-11 space-y-3">
+            <p class="text-sm text-text-muted leading-relaxed">
+              This evaluates your load distribution and penalises over-reliance on a single high-consumption appliance. A healthy home has a balanced distribution of energy.
+            </p>
+            <div class="rounded-lg border border-border bg-base p-4 text-xs text-text-muted space-y-2">
+              <p><strong class="text-text-primary">Balanced Distribution:</strong> If your highest-consuming appliance uses less than 40% of your total daily energy, you receive maximum points.</p>
+              <p><strong class="text-warning">Heavy Concentration (> 40%):</strong> If a single appliance (like an old AC running 12 hours/day) dominates your energy profile, points are deducted. This indicates a primary target for energy savings (e.g., upgrading to a 5-star inverter AC).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pillar 3: Safety Readiness -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent text-sm font-mono font-bold flex-shrink-0">20%</span>
+            <h3 class="font-display font-semibold text-text-primary text-base">Safety Readiness (20 points)</h3>
+          </div>
+          <div class="pl-11 space-y-3">
+            <p class="text-sm text-text-muted leading-relaxed">
+              This confirms whether your connected load falls within safe, standard residential engineering margins.
+            </p>
+            <div class="rounded-lg border border-border bg-base p-4 text-xs text-text-muted space-y-2">
+              <p><strong class="text-text-primary">Standard Compliance:</strong> You receive full points if the calculator can successfully determine standard MCB (Miniature Circuit Breaker) and cable sizing recommendations based on your load.</p>
+              <p><strong class="text-danger">Beyond Standard Margins:</strong> If your load exceeds the safe limits of standard residential calculators (e.g., requiring industrial-grade breakers), points are deducted, indicating you urgently need professional electrical planning.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pillar 4: Renewable Potential -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent text-sm font-mono font-bold flex-shrink-0">20%</span>
+            <h3 class="font-display font-semibold text-text-primary text-base">Renewable Readiness (20 points)</h3>
+          </div>
+          <div class="pl-11 space-y-3">
+            <p class="text-sm text-text-muted leading-relaxed">
+              This assesses your Return on Investment (ROI) potential for installing a solar panel system.
+            </p>
+            <div class="rounded-lg border border-border bg-base p-4 text-xs text-text-muted space-y-2">
+              <p><strong class="text-text-primary">High Consumption (> 150 kWh/mo):</strong> Awards maximum points. Homes with higher consumption have the strongest financial case for solar, as the panels will pay for themselves much faster.</p>
+              <p><strong class="text-warning">Low Consumption (< 150 kWh/mo):</strong> Points are reduced on a sliding scale. While solar is always good for the environment, the financial ROI is slower for very low-consumption households.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ④ How to Improve -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4">
+        <h2 class="font-display font-semibold text-text-primary text-lg">How to Improve Your Score</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-4 rounded-lg bg-base border border-border">
+            <p class="text-xs font-bold text-accent uppercase mb-2">To Gain Points:</p>
+            <ul class="text-xs text-text-muted space-y-2">
+              <li class="flex gap-2"><span>•</span> Use high-wattage devices during separate times.</li>
+              <li class="flex gap-2"><span>•</span> Swap old lights for LEDs to balance load.</li>
+              <li class="flex gap-2"><span>•</span> Review MCB sizing to ensure safety margin.</li>
+            </ul>
+          </div>
+          <div class="p-4 rounded-lg bg-base border border-border">
+            <p class="text-xs font-bold text-danger uppercase mb-2">Points Are Lost If:</p>
+            <ul class="text-xs text-text-muted space-y-2">
+              <li class="flex gap-2"><span>•</span> One device runs 24/7 at very high wattage.</li>
+              <li class="flex gap-2"><span>•</span> You exceed 95% of your max kW capacity.</li>
+              <li class="flex gap-2"><span>•</span> Load is highly concentrated in one room.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ FAQ -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {[
+            {
+              q: 'Does a low score mean my house is dangerous?',
+              a: 'Not necessarily. A low score indicates that your electrical setup is inefficient or that you are pushing your system to its limits. It is a prompt to review your usage habits and consult an electrician to ensure your wiring and breakers (MCB) are sized correctly for your load.',
+            },
+            {
+              q: 'Why did my score drop when I added an AC?',
+              a: 'Air conditioners are high-consumption devices. Adding one increases your load utilization (bringing it closer to capacity) and often makes energy distribution less balanced, both of which can lower the health score.',
+            },
+            {
+              q: 'How often should I check my health score?',
+              a: 'Whenever you add a new major appliance or change your daily usage habits. It helps you keep track of your home\'s "electrical overhead" so you aren\'t surprised by trips or high bills.',
+            },
+          ].map(({ q, a }) => (
+            <details class="rounded-lg border border-border bg-base group">
+              <summary class="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer list-none text-sm font-semibold text-text-primary">
+                <span>{q}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+                </svg>
+              </summary>
+              <p class="px-4 pb-4 pt-1 text-sm text-text-muted leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>

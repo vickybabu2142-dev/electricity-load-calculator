@@ -60,7 +60,7 @@ test.describe('Site Pages & Navigation', () => {
   });
 
   test('Insights pages load correctly', async ({ page }) => {
-    const insights = ['cable', 'inverter', 'mcb', 'solar'];
+    const insights = ['cable', 'inverter', 'mcb', 'solar', 'health-score'];
     for (const insight of insights) {
       await page.goto(`/insights/${insight}`);
       // Use more specific selector and wait
