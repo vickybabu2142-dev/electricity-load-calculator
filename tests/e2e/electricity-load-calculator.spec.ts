@@ -76,15 +76,18 @@ test.describe('Electricity Load Calculator', () => {
   // ── Capacity & Energy Cost Estimator ─────────────────────
 
   test('Energy Cost Estimator shows result when rate is entered', async ({ page }) => {
-    // Add an appliance so the estimator section appears
+    // Add an appliance so data exists
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
-    // Enter a rate in the estimator
-    await page.locator('#estimator-rate-input').fill('0.15');
-    await page.locator('#estimator-rate-input').dispatchEvent('input');
+    // Navigate to assessment page where the estimator is located
+    await page.goto('/assessment');
 
-    await expect(page.locator('#estimator-result-section')).toBeVisible();
-    await expect(page.locator('#estimator-monthly-cost')).not.toHaveText('—');
+    // Enter a rate in the estimator
+    await page.locator('#assess-rate').fill('0.15');
+    await page.locator('#assess-rate').dispatchEvent('input');
+
+    await expect(page.locator('#assess-est-result')).toBeVisible();
+    await expect(page.locator('#assess-est-monthly')).not.toHaveText('—');
   });
 
   test('changing max capacity updates the load percentage label', async ({ page }) => {
@@ -211,44 +214,15 @@ test.describe('Electricity Load Calculator', () => {
     await expect(page.locator('html')).toHaveClass(/light/);
   });
 
-  // ── Report Modal ──────────────────────────────────────────
+  // ── Report & Assessment ──────────────────────────────────
 
-  test('opens report modal with report content', async ({ page }) => {
-    // Add an appliance to appear in the report
+  test('navigates to assessment page with the CTA button', async ({ page }) => {
+    // Add an appliance to ensure data exists
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
-    await page.locator('#download-report-btn').click();
-
-    const modal = page.locator('#report-modal');
-    await expect(modal).toBeVisible();
-    await expect(modal).toContainText('ELECTRICITY LOAD CALCULATOR REPORT');
-    await expect(modal).toContainText('SUMMARY');
-    await expect(modal).toContainText('LED Bulb');
-  });
-
-  test('closes report modal with the close button', async ({ page }) => {
-    await page.locator('#download-report-btn').click();
-    await expect(page.locator('#report-modal')).toBeVisible();
-
-    await page.locator('#modal-close').click();
-    await expect(page.locator('#report-modal')).not.toBeVisible();
-  });
-
-  test('closes report modal by clicking the backdrop', async ({ page }) => {
-    await page.locator('#download-report-btn').click();
-    await expect(page.locator('#report-modal')).toBeVisible();
-
-    // Click at the top-left corner of the backdrop to avoid hitting the centered modal box
-    await page.locator('#modal-backdrop').click({ position: { x: 5, y: 5 } });
-    await expect(page.locator('#report-modal')).not.toBeVisible();
-  });
-
-  test('closes report modal with the Escape key', async ({ page }) => {
-    await page.locator('#download-report-btn').click();
-    await expect(page.locator('#report-modal')).toBeVisible();
-
-    await page.keyboard.press('Escape');
-    await expect(page.locator('#report-modal')).not.toBeVisible();
+    await page.locator('#generate-assessment-btn').click();
+    await expect(page).toHaveURL(/\/assessment/);
+    await expect(page.locator('main h1')).toContainText('Your Electrical Assessment');
   });
 
   // ── Reset ─────────────────────────────────────────────────
@@ -260,7 +234,7 @@ test.describe('Electricity Load Calculator', () => {
     await page.locator('#max-kw-input').dispatchEvent('input');
 
     page.on('dialog', dialog => dialog.accept());
-    await page.locator('button[data-action="reset-all"]').filter({ visible: true }).click();
+    await page.locator('button[data-action="reset-all"]').filter({ visible: true }).first().click();
 
     await expect(page.locator('#total-kw')).toHaveText('0.00');
     await expect(page.locator('#active-count')).toHaveText('0');
