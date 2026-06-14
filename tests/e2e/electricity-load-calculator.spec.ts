@@ -27,12 +27,14 @@ test.describe('Electricity Load Calculator', () => {
   test('incrementing quantity increases total kW', async ({ page }) => {
     // LED Bulb: 9W × 1qty = 9W → 0.009 kW → "0.01"
     // Lighting category is expanded by default
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
     await expect(page.locator('#active-count')).toHaveText('1');
   });
 
   test('decrementing quantity to zero removes appliance from totals', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
     
@@ -41,6 +43,7 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('decrement button does not go below zero', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
 
     const qtyDisplay = page.locator('[data-qty-display="app-1"]');
@@ -50,6 +53,7 @@ test.describe('Electricity Load Calculator', () => {
   // ── Watts & Hours Editing ─────────────────────────────────
 
   test('editing watts updates the row kWh display and total load', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     
     const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
@@ -63,6 +67,7 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('editing hours updates the row kWh display', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     
     const hoursInput = page.locator('input[aria-label="Hours per day for LED Bulb"]');
@@ -203,6 +208,7 @@ test.describe('Electricity Load Calculator', () => {
 
   test('navigates to assessment page with the CTA button', async ({ page }) => {
     // Add an appliance to ensure data exists
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await page.waitForTimeout(300);
 
@@ -218,6 +224,7 @@ test.describe('Electricity Load Calculator', () => {
 
   test('Energy Cost Estimator shows result when rate is entered', async ({ page }) => {
     // Add an appliance so data exists
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await page.waitForTimeout(300);
 
@@ -241,6 +248,7 @@ test.describe('Electricity Load Calculator', () => {
 
   test('reset button restores all defaults', async ({ page }) => {
     // Make several changes first (Lighting is already expanded by default)
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await page.locator('#max-kw-input').fill('30');
     await page.locator('#max-kw-input').dispatchEvent('input');
@@ -254,9 +262,17 @@ test.describe('Electricity Load Calculator', () => {
 
   // ── Category Collapse / Expand ────────────────────────────
 
-  test('Lighting starts expanded; other categories start collapsed by default', async ({ page }) => {
-    await expect(page.locator('#category-body-Lighting')).toBeVisible();
+  test('all categories start collapsed by default', async ({ page }) => {
+    await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
     await expect(page.locator('#category-body-Kitchen')).not.toBeVisible();
+    await expect(page.locator('[id="category-body-Fans-&-Cooling"]')).not.toBeVisible();
+  });
+
+  test('Lighting expands when a Quick Start preset is loaded while others stay collapsed', async ({ page }) => {
+    await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
+    await page.locator('button[data-preset-id="budget-home"]').click();
+    await expect(page.locator('#category-body-Lighting')).toBeVisible();
+    // Others should remain collapsed even if they have active appliances in the preset
     await expect(page.locator('[id="category-body-Fans-&-Cooling"]')).not.toBeVisible();
   });
 
@@ -278,6 +294,7 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('shows Moderate Load badge when load is between 30–70%', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
     // Change watts to 2000W: 2000/5000 = 40% → Moderate
@@ -289,6 +306,7 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('shows Heavy Load badge when load exceeds 70% of capacity', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
     // Change watts to 5000W: 5000/5000 = 100% → Heavy
@@ -332,11 +350,12 @@ test.describe('Electricity Load Calculator', () => {
     }).toPass();
   });
 
-  test('loading a preset expands categories with active appliances', async ({ page }) => {
-    // budget-home includes Kitchen appliances (Refrigerator, Mixer)
+  test('loading a preset only expands the Lighting category', async ({ page }) => {
+    // budget-home includes Kitchen appliances (Refrigerator, Mixer), but they should stay collapsed
     await page.locator('[data-preset-id="budget-home"]').click();
 
-    await expect(page.locator('#category-body-Kitchen')).toBeVisible();
+    await expect(page.locator('#category-body-Lighting')).toBeVisible();
+    await expect(page.locator('#category-body-Kitchen')).not.toBeVisible();
   });
 
   test('loading a preset collapses categories with no active appliances', async ({ page }) => {
@@ -382,6 +401,7 @@ test.describe('Electricity Load Calculator', () => {
   // ── LocalStorage Persistence ──────────────────────────────
 
   test('appliance quantities persist across page reload', async ({ page }) => {
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
 
@@ -400,13 +420,15 @@ test.describe('Electricity Load Calculator', () => {
     await expect(page.locator('#max-kw-input')).toHaveValue('25');
   });
 
-  test('categories with saved active appliances re-expand after reload', async ({ page }) => {
-    // budget-home activates Kitchen appliances
+  test('only Lighting category with saved active appliances re-expands after reload', async ({ page }) => {
+    // budget-home activates Lighting and Kitchen appliances
     await page.locator('[data-preset-id="budget-home"]').click();
-    await expect(page.locator('#category-body-Kitchen')).toBeVisible();
+    await expect(page.locator('#category-body-Lighting')).toBeVisible();
+    await expect(page.locator('#category-body-Kitchen')).not.toBeVisible(); // Kitchen stays collapsed per new rule
 
     await page.reload();
 
-    await expect(page.locator('#category-body-Kitchen')).toBeVisible();
+    await expect(page.locator('#category-body-Lighting')).toBeVisible();
+    await expect(page.locator('#category-body-Kitchen')).not.toBeVisible();
   });
 });

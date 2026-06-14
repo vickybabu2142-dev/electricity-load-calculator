@@ -81,7 +81,16 @@ const icon = CATEGORY_ICONS[name];
 
     <!-- Appliance count -->
     <span class="text-xs text-text-muted mr-3 flex-shrink-0">
-      <span data-category-count={name}>{activeCount}/{appliances.length}</span> appliances
+      <span
+        class:list={[
+          "transition-all duration-300",
+          activeCount > 0 ? "bg-accent text-accent-text px-2 py-0.5 rounded-full font-bold" : ""
+        ]}
+        data-category-count-badge={name}
+      >
+        <span data-category-count={name}>{activeCount}/{appliances.length}</span>
+      </span>
+      <span class="ml-1">appliances</span>
     </span>
 
     <!-- Chevron -->
