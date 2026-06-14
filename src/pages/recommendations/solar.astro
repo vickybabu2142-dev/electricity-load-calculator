@@ -1,12 +1,29 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "WebPage",
+    "name": "Solar Panel System Recommendation",
+    "description": "Personalized solar panel capacity (kW) recommendation based on your monthly energy consumption and load profile.",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://electricityloadcalculator.com" },
+        { "@type": "ListItem", "position": 2, "name": "Assessment", "item": "https://electricityloadcalculator.com/assessment" },
+        { "@type": "ListItem", "position": 3, "name": "Solar Recommendation" }
+      ]
+    }
+  }
+];
 ---
 
 <BaseLayout
-  title="Solar Panel Recommendation | Electrical Assessment | Electricity Load Calculator"
-  description="Your personalised solar panel capacity recommendation based on your monthly energy consumption. Includes calculation breakdown, payback period guidance, and system sizing tips."
-  keywords="solar panel recommendation, solar system size, rooftop solar calculator, solar kW calculator, solar for home India"
+  title="Solar Recommendation | Electricity Load Calculator"
+  description="Your personalised solar panel system recommendation. Includes capacity calculations, daily generation estimates, and electricity bill savings."
+  keywords="solar recommendation, solar panel system sizing, home solar kW, solar energy calculator, renewable energy for home"
+  schemaGraph={schemaGraph}
 >
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessment', href: '/assessment' }, { label: 'Solar Recommendation' }]} />
 

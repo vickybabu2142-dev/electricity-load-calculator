@@ -1,9 +1,26 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "Electrical Cable Sizing Guide: Choosing the Right Wire for Your Load",
+    "description": "Comprehensive guide on selecting the correct copper cable size for residential electrical loads based on MCB ratings and safety standards.",
+    "author": {
+      "@type": "Organization",
+      "name": "Electricity Load Calculator"
+    }
+  }
+];
 ---
 
-<BaseLayout title="Cable Size Recommendation | Electricity Load Calculator" description="Find the right copper wire size for your electrical load. See the full calculation breakdown, why this cable was selected, and how it relates to your MCB rating.">
+<BaseLayout
+  title="Cable Size Recommendation | Electricity Load Calculator"
+  description="Find the right copper wire size for your residential electrical load. Detailed cable sizing charts, copper vs aluminium comparisons, and safety guides."
+  keywords="cable size calculator, electrical wire sizing, copper vs aluminium wire, house wiring guide, wire gauge for AC, residential cable sizing chart"
+  schemaGraph={schemaGraph}
+>
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Cable Recommendation' }]} />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">

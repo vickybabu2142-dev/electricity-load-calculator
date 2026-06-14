@@ -75,21 +75,6 @@ test.describe('Electricity Load Calculator', () => {
 
   // ── Capacity & Energy Cost Estimator ─────────────────────
 
-  test('Energy Cost Estimator shows result when rate is entered', async ({ page }) => {
-    // Add an appliance so data exists
-    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
-
-    // Navigate to assessment page where the estimator is located
-    await page.goto('/assessment');
-
-    // Enter a rate in the estimator
-    await page.locator('#assess-rate').fill('0.15');
-    await page.locator('#assess-rate').dispatchEvent('input');
-
-    await expect(page.locator('#assess-est-result')).toBeVisible();
-    await expect(page.locator('#assess-est-monthly')).not.toHaveText('—');
-  });
-
   test('changing max capacity updates the load percentage label', async ({ page }) => {
     await page.locator('#max-kw-input').fill('10');
     await page.locator('#max-kw-input').dispatchEvent('input');
@@ -219,10 +204,37 @@ test.describe('Electricity Load Calculator', () => {
   test('navigates to assessment page with the CTA button', async ({ page }) => {
     // Add an appliance to ensure data exists
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+    await page.waitForTimeout(300);
 
     await page.locator('#generate-assessment-btn').click();
     await expect(page).toHaveURL(/\/assessment/);
-    await expect(page.locator('main h1')).toContainText('Your Electrical Assessment');
+    
+    // Check for unique content on the assessment page
+    await expect(page.locator('#assess-content')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('#assess-content h1')).toContainText('Your Electrical Assessment');
+  });
+
+  // ── Energy Cost Estimator ─────────────────────────────────
+
+  test('Energy Cost Estimator shows result when rate is entered', async ({ page }) => {
+    // Add an appliance so data exists
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+    await page.waitForTimeout(300);
+
+    // Navigate to assessment page where the estimator is located
+    await page.goto('/assessment');
+
+    // Wait for content to load
+    await expect(page.locator('#assess-content')).toBeVisible({ timeout: 10000 });
+
+    // Enter a rate in the estimator
+    const rateInput = page.locator('#assess-rate');
+    await expect(rateInput).toBeVisible();
+    await rateInput.fill('0.15');
+    await rateInput.dispatchEvent('input');
+
+    await expect(page.locator('#assess-est-result')).toBeVisible();
+    await expect(page.locator('#assess-est-monthly')).not.toHaveText('—');
   });
 
   // ── Reset ─────────────────────────────────────────────────

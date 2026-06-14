@@ -1,12 +1,29 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "WebPage",
+    "name": "Electrical Cable Sizing Recommendation",
+    "description": "Personalized wire gauge sizing based on your specific household electrical load calculation.",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://electricityloadcalculator.com" },
+        { "@type": "ListItem", "position": 2, "name": "Assessment", "item": "https://electricityloadcalculator.com/assessment" },
+        { "@type": "ListItem", "position": 3, "name": "Cable Recommendation" }
+      ]
+    }
+  }
+];
 ---
 
 <BaseLayout
-  title="Cable Size Recommendation | Electrical Assessment | Electricity Load Calculator"
-  description="Your personalised wire gauge recommendation based on your connected load. Includes calculation breakdown and safety guidance for electrical wiring."
+  title="Cable Size Recommendation | Electricity Load Calculator"
+  description="Your personalised wire gauge recommendation based on your connected load. Includes calculation breakdown and safety guidance for residential electrical wiring."
   keywords="cable sizing, wire gauge recommendation, electrical cable size, wiring size for home, conductor sizing"
+  schemaGraph={schemaGraph}
 >
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessment', href: '/assessment' }, { label: 'Cable Recommendation' }]} />
 

@@ -1,9 +1,26 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "Solar Panel Sizing Guide: Calculating the Right System for Your Home",
+    "description": "Learn how to calculate the ideal solar panel capacity (kW) based on your monthly energy consumption and household load.",
+    "author": {
+      "@type": "Organization",
+      "name": "Electricity Load Calculator"
+    }
+  }
+];
 ---
 
-<BaseLayout title="Solar Panel System Recommendation | Electricity Load Calculator" description="Find the right solar system size based on your monthly electricity consumption. Includes calculation breakdown, estimated savings, payback period, and net metering explained.">
+<BaseLayout
+  title="Solar Panel System Recommendation | Electricity Load Calculator"
+  description="Determine the right solar panel system size for your home. Detailed solar sizing guides, daily generation estimates, and electricity bill offsetting info."
+  keywords="solar panel calculator, solar system sizing, solar for home India, kW solar system guide, solar energy calculation"
+  schemaGraph={schemaGraph}
+>
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Solar Recommendation' }]} />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">

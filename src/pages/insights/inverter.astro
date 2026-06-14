@@ -1,9 +1,26 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "Inverter & UPS Sizing Guide: Backup Power for Your Home",
+    "description": "How to calculate the right inverter capacity (kVA) and battery bank for your household appliances and backup requirements.",
+    "author": {
+      "@type": "Organization",
+      "name": "Electricity Load Calculator"
+    }
+  }
+];
 ---
 
-<BaseLayout title="Inverter / UPS Size Recommendation | Electricity Load Calculator" description="Find the right inverter or UPS capacity for your electrical load. Includes full calculation breakdown, backup time estimates, and battery selection guidance.">
+<BaseLayout
+  title="Inverter / UPS Size Recommendation | Electricity Load Calculator"
+  description="Calculate the ideal inverter and UPS size for your home. Guidance on VA ratings, battery backup hours, and pure sine wave vs square wave inverters."
+  keywords="inverter size calculator, UPS for home, kVA to Watts calculator, pure sine wave inverter guide, battery backup calculation"
+  schemaGraph={schemaGraph}
+>
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Inverter Recommendation' }]} />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">

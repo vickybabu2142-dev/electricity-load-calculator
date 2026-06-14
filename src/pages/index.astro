@@ -16,9 +16,51 @@ const sectionedData = SECTIONS.map(section => ({
     appliances: DEFAULT_APPLIANCES.filter(a => a.category === cat && !a.hidden),
   }))
 }));
+
+const faqs = [
+  {
+    question: "How to calculate electricity load?",
+    answer: "To calculate your total electricity load, sum the wattage of all appliances you intend to run simultaneously. The formula is: Total Load (Watts) = Σ (Appliance Wattage × Quantity). To find energy consumption in units (kWh), use: (Total Watts × Hours of Usage) / 1000."
+  },
+  {
+    question: "How much kWh is in 1 unit?",
+    answer: "In the context of electricity billing, 1 unit is exactly equal to 1 kilowatt-hour (kWh). If an appliance with a 1,000-watt (1 kW) rating runs for one hour, it consumes exactly 1 unit of electricity."
+  },
+  {
+    question: "What is 1 kW load?",
+    answer: "A 1 kW load represents a power demand of 1,000 watts. This is a measure of instantaneous power. For example, running a 1,000W heater or ten 100W bulbs simultaneously creates a 1 kW load on your electrical system."
+  },
+  {
+    question: "How much unit does 3000 watts consume in 1 hour?",
+    answer: "A 3,000-watt load is equivalent to 3 kW. Running this load for 1 hour results in a consumption of 3 units (3 kWh) of electricity. Formula: (3000W × 1h) / 1000 = 3 kWh."
+  },
+  {
+    question: "What runs up your electric bill the most?",
+    answer: "The biggest contributors to high electric bills are typically heating and cooling appliances: Air Conditioners, Electric Geysers (Water Heaters), Space Heaters, and old, inefficient Refrigerators that run 24/7."
+  }
+];
+
+const schemaGraph = [
+  {
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  }
+];
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Electricity Load Calculator | Home Electrical Load Assessment"
+  description="Professional electrical load calculator for home. Estimate kW load, kWh consumption, get MCB, cable, inverter & solar recommendations instantly."
+  keywords="electricity load calculator, electrical load assessment, kw load calculator for home, house wiring load, energy cost estimator, bijli load calculator India"
+  schemaGraph={schemaGraph}
+>
   <PageHero />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-24 print:hidden animate-slide-up">
@@ -196,9 +238,9 @@ const sectionedData = SECTIONS.map(section => ({
       <div class="border-b-2 border-border pb-5 mb-8 flex justify-between items-end">
         <div>
           <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Electrical Assessment Report</p>
-          <h1 class="text-2xl font-display font-bold text-text-primary">
+          <p class="text-2xl font-display font-bold text-text-primary" role="heading" aria-level="1">
             Electricity Load <span class="text-accent">Report</span>
-          </h1>
+          </p>
           <p class="text-sm text-text-muted mt-1.5" id="print-date"></p>
         </div>
         <div class="text-right select-none">

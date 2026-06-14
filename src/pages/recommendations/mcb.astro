@@ -1,12 +1,29 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "WebPage",
+    "name": "MCB Rating Recommendation",
+    "description": "Personalized Miniature Circuit Breaker (MCB) rating recommendation based on your specific household electrical load.",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://electricityloadcalculator.com" },
+        { "@type": "ListItem", "position": 2, "name": "Assessment", "item": "https://electricityloadcalculator.com/assessment" },
+        { "@type": "ListItem", "position": 3, "name": "MCB Recommendation" }
+      ]
+    }
+  }
+];
 ---
 
 <BaseLayout
-  title="MCB Recommendation | Electrical Assessment | Electricity Load Calculator"
-  description="Your personalised MCB (Miniature Circuit Breaker) recommendation based on your connected load. Includes calculation breakdown and safety guidance."
+  title="MCB Recommendation | Electricity Load Calculator"
+  description="Your personalised MCB rating recommendation based on your connected load. Includes safety margin calculations and breaker type guidance."
   keywords="MCB recommendation, miniature circuit breaker rating, MCB sizing for home, circuit breaker selection, electrical safety"
+  schemaGraph={schemaGraph}
 >
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessment', href: '/assessment' }, { label: 'MCB Recommendation' }]} />
 

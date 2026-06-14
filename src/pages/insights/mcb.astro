@@ -1,9 +1,26 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "MCB Rating Guide: Choosing the Right Circuit Breaker for Your Home",
+    "description": "Learn how to select the correct Miniature Circuit Breaker (MCB) rating based on your electrical load, including safety margins and curve types.",
+    "author": {
+      "@type": "Organization",
+      "name": "Electricity Load Calculator"
+    }
+  }
+];
 ---
 
-<BaseLayout title="MCB Recommendation | Electricity Load Calculator" description="Find the right MCB (Miniature Circuit Breaker) rating for your electrical load. See the full calculation breakdown, why this rating was selected, and what alternatives were rejected.">
+<BaseLayout
+  title="MCB Recommendation | Electricity Load Calculator"
+  description="Determine the ideal MCB rating for your household electrical load. Guidance on B, C, and D curve breakers, safety margins, and circuit protection."
+  keywords="MCB rating calculator, circuit breaker sizing, type C mcb vs type B, residential electrical safety, breaker for air conditioner"
+  schemaGraph={schemaGraph}
+>
   <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'MCB Recommendation' }]} />
 
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">

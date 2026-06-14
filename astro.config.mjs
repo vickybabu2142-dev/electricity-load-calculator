@@ -11,6 +11,11 @@ export default defineConfig({
   site: SITE_URL,
   output: 'server',
 
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover',
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },
