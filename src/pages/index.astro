@@ -479,9 +479,6 @@ let currentCurrency = 'INR';
 let maxCapacityKW = 5;
 let customIdCounter = 1000;
 let activePresetId: string | null = null;
-let lastMonthlyKWh = 0;
-let lastEstimatorRate: number | null = null;
-let lastEstimatorSymbol = '$';
 
 const PRESETS: Record<string, Record<string, number>> = {
   'typical-2bhk': {
@@ -587,45 +584,6 @@ function setText(id: string, value: string) {
   if (el) el.textContent = value;
 }
 
-// ── Breakdown Hover State ─────────────────────────────────
-let currentBreakdownItems: Array<{ category: string; kWhDay: number; percent: number; color: string }> = [];
-
-function highlightBreakdownSlice(index: number) {
-  const item = currentBreakdownItems[index];
-  if (!item) return;
-
-  document.querySelectorAll<SVGElement>('#donut-chart-svg .donut-slice').forEach((s, i) => {
-    s.style.opacity = i === index ? '1' : '0.18';
-    s.setAttribute('stroke-width', i === index ? '12' : '9');
-  });
-
-  document.querySelectorAll<HTMLElement>('#breakdown-legend .legend-row').forEach((row, i) => {
-    row.style.opacity = i === index ? '1' : '0.35';
-  });
-
-  const def = document.getElementById('donut-center-default');
-  const hov = document.getElementById('donut-center-hover');
-  const pct = document.getElementById('donut-hover-pct');
-  const kwh = document.getElementById('donut-hover-kwh');
-  if (def) def.style.display = 'none';
-  if (hov) hov.style.display = '';
-  if (pct) { pct.textContent = `${Math.round(item.percent)}%`; pct.style.color = item.color; }
-  if (kwh) kwh.textContent = `${item.kWhDay.toFixed(1)} kWh`;
-}
-
-function resetBreakdownHighlight() {
-  document.querySelectorAll<SVGElement>('#donut-chart-svg .donut-slice').forEach(s => {
-    s.style.opacity = '1';
-    s.setAttribute('stroke-width', '9');
-  });
-  document.querySelectorAll<HTMLElement>('#breakdown-legend .legend-row').forEach(row => {
-    row.style.opacity = '1';
-  });
-  const def = document.getElementById('donut-center-default');
-  const hov = document.getElementById('donut-center-hover');
-  if (def) def.style.display = '';
-  if (hov) hov.style.display = 'none';
-}
 
 function updateRowKWh(a: Appliance) {
   const kwhEl = document.querySelector(`[data-kwh-display="${a.id}"]`);
@@ -654,7 +612,6 @@ function calculate() {
   animateCounter('daily-kwh', result.dailyKWh, 2);
   animateCounter('monthly-kwh', result.monthlyKWh, 0);
   setText('sticky-monthly-kwh', String(Math.round(result.monthlyKWh)));
-  lastMonthlyKWh = result.monthlyKWh;
 
   setText('top-consumer-name', result.topConsumerName);
   setText('top-consumer-watts', formatNumber(result.topConsumerWatts));
@@ -786,33 +743,14 @@ function calculate() {
     }
   }
 
-  // ── Smart Insights ─────────────────────────────────────
+  // ── Smart Insights (print only) ──
   const insights = calculateInsights(result.totalKW, result.monthlyKWh);
-  const insightsSection = document.getElementById('smart-insights-section');
-  if (insightsSection) insightsSection.style.display = activeCount === 0 ? 'none' : '';
 
   if (activeCount > 0) {
-    setText('insight-mcb-value', insights.recommendedMCB);
-    setText('insight-cable-value', insights.recommendedCable);
-    setText('insight-inverter-value', insights.recommendedInverter);
-    setText('insight-solar-value', insights.recommendedSolar);
-
     setText('print-mcb-value', insights.recommendedMCB);
     setText('print-cable-value', insights.recommendedCable);
     setText('print-inverter-value', insights.recommendedInverter);
     setText('print-solar-value', insights.recommendedSolar);
-
-    const qParams = `?load=${result.totalKW.toFixed(2)}&monthly=${Math.round(result.monthlyKWh)}&bill=${Math.round(result.monthlyBill)}`;
-    const insightValues: Record<string, string> = {
-      mcb: insights.recommendedMCB,
-      cable: insights.recommendedCable,
-      inverter: insights.recommendedInverter,
-      solar: insights.recommendedSolar,
-    };
-    for (const type of ['mcb', 'cable', 'inverter', 'solar'] as const) {
-      const link = document.getElementById(`insight-${type}-link`) as HTMLAnchorElement | null;
-      if (link) link.href = `/insights/${type}${qParams}&value=${encodeURIComponent(insightValues[type])}`;
-    }
   }
 
   // ── Electrical Health Score ────────────────────────────
@@ -829,64 +767,29 @@ function calculate() {
     hasCable: activeCount > 0,
   });
 
-  const healthSection = document.getElementById('health-score-section');
-  if (healthSection) healthSection.style.display = activeCount === 0 ? 'none' : '';
+  const healthCompact = document.getElementById('health-score-compact');
+  if (healthCompact) healthCompact.style.display = activeCount === 0 ? 'none' : '';
 
   if (activeCount > 0) {
     const scoreEl = document.getElementById('health-score-value');
     if (scoreEl) scoreEl.style.color = health.color;
     animateCounter('health-score-value', health.score, 0);
 
-    // Ring arc — C = 2π×36 = 226.19
-    const ring = document.getElementById('health-score-ring') as SVGCircleElement | null;
-    if (ring) {
-      ring.style.stroke = health.color;
-      ring.style.strokeDashoffset = String(226.19 * (1 - health.score / 100));
-    }
-
-    // Card border + subtle tint — no glow, consistent with other cards
     const scoreCard = document.getElementById('health-score-card');
     if (scoreCard) {
       scoreCard.style.borderColor = `color-mix(in srgb, ${health.color}, transparent 62%)`;
       scoreCard.style.background   = `color-mix(in srgb, ${health.color}, transparent 93%)`;
     }
 
-    // Header icon
     const iconEl = document.getElementById('health-score-icon');
     if (iconEl) (iconEl as HTMLElement).style.color = health.color;
 
-    // Label badge
     const labelEl = document.getElementById('health-score-label');
     if (labelEl) {
       labelEl.textContent = health.label;
       labelEl.style.color = health.color;
       labelEl.style.background   = `color-mix(in srgb, ${health.color}, transparent 85%)`;
       labelEl.style.borderColor  = `color-mix(in srgb, ${health.color}, transparent 55%)`;
-    }
-
-    // Description text
-    const descMap: Record<string, string> = {
-      Excellent: 'Well-balanced setup with efficient energy use.',
-      Good:      'Good setup with minor optimisation opportunities.',
-      Fair:      'Some inefficiencies found — review your top appliances.',
-      Poor:      'High load or imbalance detected — action recommended.',
-    };
-    setText('health-score-desc', descMap[health.label] ?? '');
-
-    // Sub-score bars — color follows health band
-    const subDefs = [
-      { id: 'utilization', pts: health.subScores.utilization, max: 30 },
-      { id: 'efficiency',  pts: health.subScores.efficiency,  max: 30 },
-      { id: 'safety',      pts: health.subScores.safety,      max: 20 },
-      { id: 'renewable',   pts: health.subScores.renewable,   max: 20 },
-    ] as const;
-    for (const { id, pts, max } of subDefs) {
-      const bar = document.getElementById(`health-sub-${id}-bar`);
-      if (bar) {
-        bar.style.width      = `${Math.round((pts / max) * 100)}%`;
-        bar.style.background = health.color;
-      }
-      setText(`health-sub-${id}-pts`, `${pts}/${max}`);
     }
 
     // Print
@@ -903,92 +806,10 @@ function calculate() {
     }
   }
 
-  // ── Consumption Breakdown ──────────────────────────────
+  // ── Consumption Breakdown (print only — sidebar chart removed) ──
   const breakdown = calculateCategoryBreakdown(appliances);
-  const breakdownSection = document.getElementById('consumption-breakdown-section');
-  if (breakdownSection) breakdownSection.style.display = activeCount === 0 ? 'none' : '';
 
   if (activeCount > 0 && result.dailyKWh > 0) {
-    // Store for hover callbacks
-    currentBreakdownItems = breakdown.items;
-
-    setText('donut-center-kwh', result.dailyKWh.toFixed(1));
-    // Ensure default center is visible and hover is hidden
-    const centerDef = document.getElementById('donut-center-default');
-    const centerHov = document.getElementById('donut-center-hover');
-    if (centerDef) centerDef.style.display = '';
-    if (centerHov) centerHov.style.display = 'none';
-
-    // Build donut slices with interactivity
-    const R = 35;
-    const C = 2 * Math.PI * R;
-    const svgEl = document.getElementById('donut-chart-svg');
-    if (svgEl) {
-      // Update track ring stroke-width to match
-      const trackRing = svgEl.querySelector('circle:first-child') as SVGCircleElement | null;
-      if (trackRing) trackRing.setAttribute('stroke-width', '9');
-
-      svgEl.querySelectorAll('.donut-slice').forEach(s => s.remove());
-      let accumulated = 0;
-      breakdown.items.forEach((item, idx) => {
-        const dashLen = (item.percent / 100) * C;
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', '50');
-        circle.setAttribute('cy', '50');
-        circle.setAttribute('r', String(R));
-        circle.setAttribute('fill', 'none');
-        circle.setAttribute('stroke', item.color);
-        circle.setAttribute('stroke-width', '9');
-        circle.setAttribute('stroke-dasharray', `${dashLen} ${C}`);
-        circle.setAttribute('stroke-dashoffset', String(-accumulated));
-        circle.setAttribute('pointer-events', 'visibleStroke');
-        circle.classList.add('donut-slice');
-        circle.style.cursor = 'pointer';
-        circle.style.transition = 'opacity 0.2s ease';
-        circle.addEventListener('mouseenter', () => highlightBreakdownSlice(idx));
-        circle.addEventListener('mouseleave', resetBreakdownHighlight);
-        svgEl.appendChild(circle);
-        accumulated += dashLen;
-      });
-    }
-
-    // Build interactive legend
-    const legend = document.getElementById('breakdown-legend');
-    if (legend) {
-      legend.innerHTML = breakdown.items.map((item, idx) => `
-        <div class="legend-row flex items-center gap-2 min-w-0 cursor-pointer rounded-md px-1.5 py-1 transition-all duration-200 hover:bg-white/5" data-legend-index="${idx}">
-          <span class="flex-shrink-0 w-2.5 h-2.5 rounded-sm flex-shrink-0" style="background:${item.color}"></span>
-          <span class="text-[11px] text-text-muted truncate flex-1 leading-tight">${item.category}</span>
-          <div class="flex-shrink-0 text-right">
-            <div class="text-[11px] font-mono font-bold tabular-nums leading-tight" style="color:${item.color}">${Math.round(item.percent)}%</div>
-            <div class="text-[9px] font-mono text-text-muted tabular-nums leading-tight">${item.kWhDay.toFixed(1)} kWh</div>
-          </div>
-        </div>
-      `).join('');
-
-      legend.querySelectorAll<HTMLElement>('.legend-row').forEach(row => {
-        const idx = Number(row.dataset.legendIndex);
-        row.addEventListener('mouseenter', () => highlightBreakdownSlice(idx));
-        row.addEventListener('mouseleave', resetBreakdownHighlight);
-      });
-    }
-
-    // Insight badge
-    const insightDot = document.getElementById('breakdown-insight-dot');
-    const insightLabel = document.getElementById('breakdown-insight-label');
-    const insightBox = document.getElementById('breakdown-insight-text');
-    const topColor = breakdown.items[0]?.color ?? 'var(--accent)';
-    if (insightDot) insightDot.style.color = topColor;
-    if (insightBox) {
-      insightBox.style.background = `color-mix(in srgb, ${topColor}, transparent 92%)`;
-      insightBox.style.borderColor = `color-mix(in srgb, ${topColor}, transparent 75%)`;
-    }
-    if (insightLabel) {
-      insightLabel.textContent = `${breakdown.topCategory} · ${Math.round(breakdown.topPercent)}% of total usage`;
-      (insightLabel as HTMLElement).style.color = topColor;
-    }
-
-    // Print — text table (no SVG in print for reliability); columns match the HTML header
     const printBreakdown = document.getElementById('print-breakdown-table');
     if (printBreakdown) {
       printBreakdown.innerHTML = breakdown.items.map(item => `
@@ -1001,28 +822,10 @@ function calculate() {
     }
   }
 
-  // ── Energy Saving Opportunities ───────────────────────
+  // ── Energy Saving Opportunities (print only — sidebar section removed) ──
   const savings = generateSavingsTips(appliances, result.monthlyKWh);
-  const savingsSection = document.getElementById('energy-saving-section');
-  if (savingsSection) savingsSection.style.display = activeCount === 0 ? 'none' : '';
 
   if (activeCount > 0) {
-    setText('saving-top-consumer', savings.topConsumerName);
-    setText('saving-potential', `${savings.potentialSavings.toFixed(1)} kWh`);
-
-    const tipsList = document.getElementById('saving-tips-list');
-    if (tipsList) {
-      tipsList.innerHTML = savings.tips.map(tip => `
-        <li class="flex items-start gap-2.5">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style="color:#3ecf6e" aria-hidden="true">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/>
-          </svg>
-          <span class="text-xs text-text-muted leading-relaxed">${tip}</span>
-        </li>
-      `).join('');
-    }
-
-    // Print
     const printSaving = document.getElementById('print-saving-tips');
     if (printSaving) {
       printSaving.innerHTML = `
@@ -1039,34 +842,10 @@ function calculate() {
     }
   }
 
-  // ── High Consumption Alerts ────────────────────────────
+  // ── High Consumption Alerts (print only — sidebar section removed) ──
   const alerts = getHighConsumptionAlerts(appliances, result.dailyKWh);
-  const alertsSection = document.getElementById('high-consumption-section');
-  if (alertsSection) alertsSection.style.display = (activeCount === 0 || alerts.length === 0) ? 'none' : '';
 
   if (alerts.length > 0) {
-    const alertsList = document.getElementById('high-consumption-list');
-    if (alertsList) {
-      alertsList.innerHTML = alerts.map(alert => `
-        <li class="flex items-start justify-between gap-3 rounded-lg px-3 py-2.5" style="background: color-mix(in srgb, var(--danger), transparent 91%); border: 1px solid color-mix(in srgb, var(--danger), transparent 72%);">
-          <div class="flex items-start gap-2 min-w-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style="color:var(--danger)" aria-hidden="true">
-              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
-            </svg>
-            <div class="min-w-0">
-              <p class="text-xs font-semibold text-text-primary leading-tight">${alert.name}</p>
-              <p class="text-[10px] text-text-muted leading-tight mt-0.5">${alert.reason}</p>
-            </div>
-          </div>
-          <div class="flex-shrink-0 text-right">
-            <p class="text-xs font-mono font-bold tabular-nums" style="color:var(--danger)">${alert.kWhDay.toFixed(1)}</p>
-            <p class="text-[10px] font-mono text-text-muted">kWh/d</p>
-          </div>
-        </li>
-      `).join('');
-    }
-
-    // Print
     const printAlerts = document.getElementById('print-high-consumption');
     if (printAlerts) {
       printAlerts.innerHTML = alerts.map(alert => `
@@ -1080,68 +859,8 @@ function calculate() {
       `).join('');
     }
   }
-
-  updateCostEstimator();
 }
 
-// ── Energy Cost Estimator ─────────────────────────────────
-function getLocaleSymbol(): string {
-  const lang = navigator.language || 'en-US';
-  const map: Record<string, string> = {
-    'en-IN': '₹', 'hi-IN': '₹', 'hi': '₹',
-    'en-GB': '£',
-    'en-AU': 'A$',
-    'en-CA': 'C$',
-    'de': '€', 'fr': '€', 'es': '€', 'it': '€', 'nl': '€', 'pt': '€',
-  };
-  return map[lang] || map[lang.split('-')[0]] || '$';
-}
-
-function updateCostEstimator() {
-  const rateInput = document.getElementById('estimator-rate-input') as HTMLInputElement;
-  const symbolSelect = document.getElementById('estimator-currency-select') as HTMLSelectElement;
-  const resultSection = document.getElementById('estimator-result-section');
-  const costEl = document.getElementById('estimator-monthly-cost');
-  const estimatorSection = document.getElementById('energy-cost-estimator-section');
-
-  const hasAppliances = appliances.some(a => a.qty > 0);
-  if (estimatorSection) estimatorSection.style.display = hasAppliances ? '' : 'none';
-
-  const monthlyKWhDisplay = document.getElementById('estimator-monthly-kwh');
-  if (monthlyKWhDisplay) monthlyKWhDisplay.textContent = String(Math.round(lastMonthlyKWh));
-
-  const rate = parseFloat(rateInput?.value ?? '');
-  const symbol = symbolSelect?.value ?? '$';
-
-  const printCostSection = document.getElementById('print-cost-estimator');
-
-  if (!isNaN(rate) && rate > 0 && lastMonthlyKWh > 0) {
-    const cost = lastMonthlyKWh * rate;
-    if (costEl) costEl.textContent = `${symbol}${cost.toFixed(2)}`;
-    if (resultSection) resultSection.style.display = '';
-    lastEstimatorRate = rate;
-    lastEstimatorSymbol = symbol;
-
-    // Sync print card — runs both when rate changes and when appliances change
-    const dailyCost = cost / 30;
-    const yearlyCost = cost * 12;
-    const printCostEl = document.getElementById('print-estimated-cost');
-    const printCostMonthlyKWh = document.getElementById('print-cost-monthly-kwh');
-    const printCostRate = document.getElementById('print-cost-rate');
-    const printCostDaily = document.getElementById('print-cost-daily');
-    const printCostYearly = document.getElementById('print-cost-yearly');
-    if (printCostMonthlyKWh) printCostMonthlyKWh.textContent = String(Math.round(lastMonthlyKWh));
-    if (printCostRate) printCostRate.textContent = `${symbol}${rate}/kWh`;
-    if (printCostEl) printCostEl.textContent = `${symbol}${cost.toFixed(2)}`;
-    if (printCostDaily) printCostDaily.textContent = `${symbol}${dailyCost.toFixed(2)} / day`;
-    if (printCostYearly) printCostYearly.textContent = `${symbol}${Math.round(yearlyCost).toLocaleString()} / year`;
-    if (printCostSection) printCostSection.style.display = '';
-  } else {
-    if (resultSection) resultSection.style.display = 'none';
-    lastEstimatorRate = null;
-    if (printCostSection) printCostSection.style.display = 'none';
-  }
-}
 
 // ── Debounce ──────────────────────────────────────────────
 function debounce<T extends (...args: any[]) => void>(fn: T, ms: number): T {
@@ -1203,10 +922,6 @@ document.addEventListener('change', (e) => {
     }
   }
 
-  // Settings updates
-  if (action === 'update-estimator') {
-    updateCostEstimator();
-  }
 });
 
 document.addEventListener('click', (e) => {
@@ -1346,13 +1061,6 @@ document.addEventListener('click', (e) => {
     report += `  Total Load          : ${formatNumber(totalWatts)} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
     report += `  Daily Consumption   : ${formatNumber(dailyKWh, 2)} kWh(unit)/day\n`;
     report += `  Monthly Estimate    : ${formatNumber(monthlyKWh)} kWh(unit)/month\n`;
-    if (lastEstimatorRate !== null) {
-      const cost = monthlyKWh * lastEstimatorRate;
-      report += `  Rate Used           : ${lastEstimatorSymbol}${lastEstimatorRate}/kWh\n`;
-      report += `  Est. Daily Cost     : ${lastEstimatorSymbol}${(cost / 30).toFixed(2)} / day\n`;
-      report += `  Est. Monthly Cost   : ${lastEstimatorSymbol}${cost.toFixed(2)} / month\n`;
-      report += `  Est. Yearly Cost    : ${lastEstimatorSymbol}${Math.round(cost * 12).toLocaleString()} / year\n`;
-    }
     report += `  Max Load Capacity   : ${maxCapacityKW} kW\n\n`;
     report += `${'─'.repeat(48)}\n\n`;
     const reportInsights = calculateInsights(totalWatts / 1000, monthlyKWh);
@@ -1431,9 +1139,6 @@ document.addEventListener('input', (e) => {
     }
   }
 
-  if (action === 'update-estimator') {
-    updateCostEstimator();
-  }
 });
 
 document.addEventListener('submit', (e) => {
@@ -1669,10 +1374,6 @@ function initCalculator() {
   }
 
   const hasSavedState = loadState();
-
-  // Auto-detect browser locale for estimator currency symbol
-  const estSelect = document.getElementById('estimator-currency-select') as HTMLSelectElement;
-  if (estSelect) estSelect.value = getLocaleSymbol();
 
   if (hasSavedState) {
     // Re-hydrate settings inputs

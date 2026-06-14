@@ -1,0 +1,924 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+---
+
+<BaseLayout
+  title="Electrical Assessment Report | Electricity Load Calculator"
+  description="Your personalised electrical load assessment — total load, MCB, cable, inverter and solar recommendations, health score, and energy savings based on your appliance configuration."
+  keywords="electrical assessment report, electrical load assessment, MCB recommendation, cable sizing recommendation, inverter recommendation, solar panel recommendation, electrical health score, energy consumption analysis"
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Electrical Assessment' }]} />
+
+  <!-- LOADING STATE -->
+  <div id="assess-loading" class="max-w-[1300px] mx-auto px-4 sm:px-6 pt-16 pb-32 text-center">
+    <p class="text-sm text-text-muted font-mono animate-pulse">Loading your assessment…</p>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="assess-empty" class="max-w-[600px] mx-auto px-4 sm:px-6 py-20 text-center" style="display:none">
+    <div class="rounded-xl border border-border bg-card p-10">
+      <div class="flex justify-center mb-5">
+        <span class="flex h-14 w-14 items-center justify-center rounded-2xl border border-border" style="background:color-mix(in srgb, var(--accent), transparent 88%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+        </span>
+      </div>
+      <h1 class="font-display font-bold text-2xl text-text-primary mb-3">No Assessment Data</h1>
+      <p class="text-text-muted text-sm leading-relaxed mb-6">You haven't configured your appliances yet. Use the calculator to select your appliances, then come back to view your full assessment.</p>
+      <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent text-accent-text font-medium hover:bg-accent-dim transition-colors shadow-lg shadow-accent/20">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true"><path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/></svg>
+        Configure Your Appliances
+      </a>
+    </div>
+  </div>
+
+  <!-- ASSESSMENT CONTENT -->
+  <main id="assess-content" class="max-w-[1300px] mx-auto px-4 sm:px-6 pb-24 print:hidden" style="display:none">
+
+    <!-- S1: Header -->
+    <div class="pt-8 pb-8 border-b border-border mb-10">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Electrical Assessment Report</p>
+          <h1 class="font-display font-bold text-3xl sm:text-4xl text-text-primary leading-tight mb-2">Your Electrical Assessment</h1>
+          <p class="text-sm text-text-muted">Generated from your appliance configuration &nbsp;·&nbsp; <span id="assess-timestamp" class="font-mono"></span></p>
+        </div>
+        <a href="/" class="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors" style="color:var(--accent); border-color:color-mix(in srgb,var(--accent),transparent 60%); background:color-mix(in srgb,var(--accent),transparent 92%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true"><path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/></svg>
+          Edit Configuration
+        </a>
+      </div>
+    </div>
+
+    <!-- S2: Load Summary -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">01</span>
+        <div class="flex-1 h-px bg-border"></div>
+        <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">Load Summary</h2>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+
+        <div class="rounded-xl border border-border bg-card p-5">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Total Load</p>
+          <p class="font-display font-bold text-4xl tabular-nums leading-none mb-1" style="color:var(--accent)"><span id="assess-total-kw">—</span></p>
+          <p class="text-xs font-mono text-text-muted">kW connected</p>
+        </div>
+
+        <div class="rounded-xl border border-border bg-card p-5">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Daily Usage</p>
+          <p class="font-display font-bold text-4xl tabular-nums leading-none mb-1 text-text-primary"><span id="assess-daily-kwh">—</span></p>
+          <p class="text-xs font-mono text-text-muted">kWh per day</p>
+        </div>
+
+        <div class="rounded-xl border border-border bg-card p-5">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Monthly Usage</p>
+          <p class="font-display font-bold text-4xl tabular-nums leading-none mb-1 text-text-primary"><span id="assess-monthly-kwh">—</span></p>
+          <p class="text-xs font-mono text-text-muted">kWh per month</p>
+        </div>
+
+        <div class="rounded-xl border border-border bg-card p-5">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Top Consumer</p>
+          <p id="assess-top-consumer-name" class="font-display font-bold text-lg leading-tight text-text-primary mb-1 truncate">—</p>
+          <p id="assess-top-consumer-watts" class="text-xs font-mono text-text-muted">—</p>
+        </div>
+
+        <div class="rounded-xl border border-border bg-card p-5">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Health Score</p>
+          <p class="font-display font-bold text-4xl tabular-nums leading-none mb-1" style="color:var(--accent)"><span id="assess-health-score-summary">—</span></p>
+          <p id="assess-health-label-summary" class="text-xs font-mono text-text-muted">/ 100</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- S3: Smart Recommendations -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">02</span>
+        <div class="flex-1 h-px bg-border"></div>
+        <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">Smart Recommendations</h2>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <!-- MCB — Amber -->
+        <a href="/recommendations/mcb"
+          class="rec-card rec-glow-amber group relative flex flex-col gap-4 rounded-2xl p-6 no-underline overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:-translate-y-0.5"
+          style="background:color-mix(in srgb,#F59E0B,transparent 92%); border:1px solid color-mix(in srgb,#F59E0B,transparent 70%); box-shadow:0 0 22px color-mix(in srgb,#F59E0B,transparent 72%),0 8px 28px color-mix(in srgb,#F59E0B,transparent 82%);"
+          aria-label="View MCB recommendation">
+          <div class="flex items-start justify-between">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0"
+              style="background:color-mix(in srgb,#F59E0B,transparent 78%); border:1px solid color-mix(in srgb,#F59E0B,transparent 58%)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="color:#F59E0B" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity mt-1" style="color:#F59E0B" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1" style="color:color-mix(in srgb,#F59E0B,transparent 25%)">Circuit Breaker</p>
+            <p id="assess-mcb-value" class="font-display font-bold text-3xl leading-tight mb-2" style="color:#F59E0B">—</p>
+            <p class="text-xs leading-relaxed" style="color:color-mix(in srgb,#F59E0B,transparent 35%)">MCB with 25% safety margin for your connected load.</p>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs font-semibold" style="color:color-mix(in srgb,#F59E0B,transparent 20%)">
+            View Details
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style="box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#F59E0B,transparent 42%)"></div>
+        </a>
+
+        <!-- Cable — Sky Blue -->
+        <a href="/recommendations/cable"
+          class="rec-card rec-glow-sky group relative flex flex-col gap-4 rounded-2xl p-6 no-underline overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:-translate-y-0.5"
+          style="background:color-mix(in srgb,#38BDF8,transparent 92%); border:1px solid color-mix(in srgb,#38BDF8,transparent 70%); box-shadow:0 0 22px color-mix(in srgb,#38BDF8,transparent 72%),0 8px 28px color-mix(in srgb,#38BDF8,transparent 82%);"
+          aria-label="View cable recommendation">
+          <div class="flex items-start justify-between">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0"
+              style="background:color-mix(in srgb,#38BDF8,transparent 78%); border:1px solid color-mix(in srgb,#38BDF8,transparent 58%)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5" style="color:#38BDF8" aria-hidden="true"><path d="M4 12h16M7 5v14M17 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity mt-1" style="color:#38BDF8" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1" style="color:color-mix(in srgb,#38BDF8,transparent 25%)">Wiring</p>
+            <p id="assess-cable-value" class="font-display font-bold text-3xl leading-tight mb-2" style="color:#38BDF8">—</p>
+            <p class="text-xs leading-relaxed" style="color:color-mix(in srgb,#38BDF8,transparent 35%)">Wire cross-section for safe, efficient power delivery.</p>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs font-semibold" style="color:color-mix(in srgb,#38BDF8,transparent 20%)">
+            View Details
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style="box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#38BDF8,transparent 42%)"></div>
+        </a>
+
+        <!-- Inverter — Violet -->
+        <a href="/recommendations/inverter"
+          class="rec-card rec-glow-violet group relative flex flex-col gap-4 rounded-2xl p-6 no-underline overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:-translate-y-0.5"
+          style="background:color-mix(in srgb,#A78BFA,transparent 92%); border:1px solid color-mix(in srgb,#A78BFA,transparent 70%); box-shadow:0 0 22px color-mix(in srgb,#A78BFA,transparent 72%),0 8px 28px color-mix(in srgb,#A78BFA,transparent 82%);"
+          aria-label="View inverter recommendation">
+          <div class="flex items-start justify-between">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0"
+              style="background:color-mix(in srgb,#A78BFA,transparent 78%); border:1px solid color-mix(in srgb,#A78BFA,transparent 58%)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="color:#A78BFA" aria-hidden="true"><path d="M4 7h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm14 2H6v6h12V9Zm2-3h1v2h-1V6Zm-17 0H2v2h1V6Z"/></svg>
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity mt-1" style="color:#A78BFA" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1" style="color:color-mix(in srgb,#A78BFA,transparent 25%)">Backup Power</p>
+            <p id="assess-inverter-value" class="font-display font-bold text-3xl leading-tight mb-2" style="color:#A78BFA">—</p>
+            <p class="text-xs leading-relaxed" style="color:color-mix(in srgb,#A78BFA,transparent 35%)">Minimum inverter capacity for reliable backup power.</p>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs font-semibold" style="color:color-mix(in srgb,#A78BFA,transparent 20%)">
+            View Details
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style="box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#A78BFA,transparent 42%)"></div>
+        </a>
+
+        <!-- Solar — Emerald -->
+        <a href="/recommendations/solar"
+          class="rec-card rec-glow-emerald group relative flex flex-col gap-4 rounded-2xl p-6 no-underline overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:-translate-y-0.5"
+          style="background:color-mix(in srgb,#4ADE80,transparent 92%); border:1px solid color-mix(in srgb,#4ADE80,transparent 70%); box-shadow:0 0 22px color-mix(in srgb,#4ADE80,transparent 72%),0 8px 28px color-mix(in srgb,#4ADE80,transparent 82%);"
+          aria-label="View solar recommendation">
+          <div class="flex items-start justify-between">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0"
+              style="background:color-mix(in srgb,#4ADE80,transparent 78%); border:1px solid color-mix(in srgb,#4ADE80,transparent 58%)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="color:#4ADE80" aria-hidden="true"><path d="M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm8-6a1 1 0 0 1 0 2h-1a1 1 0 1 1 0-2h1ZM5 11a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2h1Zm14.07-6.07a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM6.34 17.66a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Zm12.02 1.41a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.34 7.76l-.71-.71a1 1 0 0 1 0-1.41ZM12 20a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Z"/></svg>
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity mt-1" style="color:#4ADE80" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1" style="color:color-mix(in srgb,#4ADE80,transparent 25%)">Renewable</p>
+            <p id="assess-solar-value" class="font-display font-bold text-3xl leading-tight mb-2" style="color:#4ADE80">—</p>
+            <p class="text-xs leading-relaxed" style="color:color-mix(in srgb,#4ADE80,transparent 35%)">Solar panel capacity to offset your monthly consumption.</p>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs font-semibold" style="color:color-mix(in srgb,#4ADE80,transparent 20%)">
+            View Details
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style="box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#4ADE80,transparent 42%)"></div>
+        </a>
+
+      </div>
+      <p class="mt-4 text-xs text-text-muted leading-relaxed opacity-80">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5 inline mr-1 mb-0.5" style="color:var(--warning)" aria-hidden="true"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/></svg>
+        Estimates based on single-phase 230V supply. Always consult a licensed electrician before purchasing or installing electrical components.
+      </p>
+    </section>
+
+    <!-- S4: Consumption Analysis -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">03</span>
+        <div class="flex-1 h-px bg-border"></div>
+        <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">Consumption Analysis</h2>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Donut chart -->
+        <div class="rounded-xl border border-border bg-card p-6">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-4">Distribution by Category</p>
+          <div class="flex items-center gap-6">
+            <div class="flex-shrink-0 relative" style="width:160px; height:160px;">
+              <svg id="assess-donut-svg" viewBox="0 0 100 100" class="w-full h-full" style="transform:rotate(-90deg);" aria-hidden="true">
+                <circle cx="50" cy="50" r="35" fill="none" stroke="var(--toggle-off)" stroke-width="9"/>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-2">
+                <div id="assess-donut-center-default">
+                  <span id="assess-donut-kwh" class="font-display font-bold text-lg tabular-nums leading-tight" style="color:var(--accent)">0.0</span>
+                  <span class="block text-[10px] font-mono text-text-muted leading-tight mt-0.5">kWh/day</span>
+                </div>
+                <div id="assess-donut-center-hover" style="display:none">
+                  <span id="assess-donut-hover-pct" class="font-display font-bold text-xl tabular-nums leading-tight" style="color:var(--accent)">0%</span>
+                  <span id="assess-donut-hover-kwh" class="block text-[10px] font-mono text-text-muted leading-tight mt-0.5">0 kWh</span>
+                </div>
+              </div>
+            </div>
+            <div id="assess-donut-legend" class="flex-1 min-w-0 space-y-1"></div>
+          </div>
+          <div id="assess-breakdown-insight" class="mt-4 flex items-center gap-2 rounded-lg px-3 py-2.5" style="background:color-mix(in srgb, var(--accent), transparent 92%); border:1px solid color-mix(in srgb, var(--accent), transparent 78%)">
+            <svg id="assess-breakdown-dot" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0" style="width:12px;height:12px;color:var(--accent)" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+            <span id="assess-breakdown-label" class="text-xs font-medium" style="color:var(--accent)"></span>
+          </div>
+        </div>
+
+        <!-- Breakdown table -->
+        <div class="rounded-xl border border-border bg-card p-6">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-4">Category Breakdown</p>
+          <div id="assess-breakdown-table" class="space-y-0"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- S5: Electrical Health -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">04</span>
+        <div class="flex-1 h-px bg-border"></div>
+        <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">Electrical Health Score</h2>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Score ring -->
+        <div class="rounded-xl border border-border bg-card p-6 flex flex-col items-center justify-center gap-4">
+          <div class="relative" style="width:160px;height:160px;">
+            <svg viewBox="0 0 160 160" class="w-full h-full" style="transform:rotate(-90deg);" aria-hidden="true">
+              <circle cx="80" cy="80" r="64" fill="none" stroke="var(--toggle-off)" stroke-width="12"/>
+              <circle id="assess-health-ring" cx="80" cy="80" r="64" fill="none" stroke="#3ecf6e" stroke-width="12" stroke-linecap="round"
+                style="stroke-dasharray:402.12; stroke-dashoffset:402.12; transition:stroke-dashoffset 0.5s ease, stroke 0.2s ease;"/>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span id="assess-health-score-value" class="font-display font-bold text-5xl tabular-nums leading-none" style="color:#3ecf6e; transition:color 0.2s ease;">0</span>
+              <span class="text-sm font-mono text-text-muted mt-1">/ 100</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <span id="assess-health-label" class="inline-block text-sm font-mono font-semibold px-4 py-1.5 rounded-full border mb-2" style="color:#3ecf6e; background:color-mix(in srgb, #3ecf6e, transparent 85%); border-color:color-mix(in srgb, #3ecf6e, transparent 55%);">Excellent</span>
+            <p id="assess-health-desc" class="text-xs text-text-muted leading-relaxed max-w-[220px] mx-auto">Your electrical setup is well-balanced and efficient.</p>
+          </div>
+        </div>
+
+        <!-- Sub-scores -->
+        <div class="rounded-xl border border-border bg-card p-6 space-y-5">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Score Breakdown</p>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-text-muted">Load Utilization</span>
+              <span id="assess-sub-util-pts" class="text-sm font-mono tabular-nums text-text-muted">0/30</span>
+            </div>
+            <div class="h-2 rounded-full overflow-hidden" style="background:var(--toggle-off)">
+              <div id="assess-sub-util-bar" class="h-full rounded-full transition-[width] duration-300 ease-out" style="width:0%;background:var(--accent)"></div>
+            </div>
+            <p class="text-xs text-text-muted">Optimal load relative to configured capacity (50–80% is ideal)</p>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-text-muted">Energy Efficiency</span>
+              <span id="assess-sub-eff-pts" class="text-sm font-mono tabular-nums text-text-muted">0/30</span>
+            </div>
+            <div class="h-2 rounded-full overflow-hidden" style="background:var(--toggle-off)">
+              <div id="assess-sub-eff-bar" class="h-full rounded-full transition-[width] duration-300 ease-out" style="width:0%;background:var(--accent)"></div>
+            </div>
+            <p class="text-xs text-text-muted">Load distribution — penalises over-reliance on a single appliance</p>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-text-muted">Safety Readiness</span>
+              <span id="assess-sub-safety-pts" class="text-sm font-mono tabular-nums text-text-muted">0/20</span>
+            </div>
+            <div class="h-2 rounded-full overflow-hidden" style="background:var(--toggle-off)">
+              <div id="assess-sub-safety-bar" class="h-full rounded-full transition-[width] duration-300 ease-out" style="width:0%;background:var(--accent)"></div>
+            </div>
+            <p class="text-xs text-text-muted">MCB and cable recommendations available for your load</p>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-text-muted">Renewable Readiness</span>
+              <span id="assess-sub-renew-pts" class="text-sm font-mono tabular-nums text-text-muted">0/20</span>
+            </div>
+            <div class="h-2 rounded-full overflow-hidden" style="background:var(--toggle-off)">
+              <div id="assess-sub-renew-bar" class="h-full rounded-full transition-[width] duration-300 ease-out" style="width:0%;background:var(--accent)"></div>
+            </div>
+            <p class="text-xs text-text-muted">Solar ROI potential — higher consumption = stronger case for solar</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- S6: High Consumption Devices (conditionally shown) -->
+    <section id="assess-alerts-section" class="mb-12" style="display:none">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">05</span>
+        <div class="flex-1 h-px bg-border"></div>
+        <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">High Consumption Devices</h2>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="rounded-xl border p-6" style="border-color:color-mix(in srgb, var(--danger), transparent 60%); background:color-mix(in srgb, var(--danger), transparent 91%)">
+        <p class="text-xs text-text-muted mb-4">Appliances accounting for 15% or more of your total daily energy use.</p>
+        <div id="assess-alerts-list" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- S7: Energy Saving Opportunities -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-5">
+        <span id="assess-saving-num" class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">06</span>
+        <div class="flex-1 h-px bg-border"></div>
+        <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">Energy Saving Opportunities</h2>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div class="rounded-xl border border-border bg-card p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Top Consumer</p>
+              <p id="assess-saving-top" class="text-base font-semibold text-text-primary">—</p>
+            </div>
+            <div class="text-right">
+              <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Potential Saving</p>
+              <p id="assess-saving-potential" class="text-base font-semibold" style="color:#3ecf6e">—</p>
+            </div>
+          </div>
+          <ul id="assess-saving-tips" class="space-y-3"></ul>
+        </div>
+
+        <div class="rounded-xl border border-border bg-card p-6 space-y-3">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted">General Energy Tips</p>
+          <ul class="space-y-3">
+            {[
+              'Turn off devices completely — avoid standby power drain',
+              'Schedule high-wattage tasks during off-peak tariff hours',
+              'Choose BEE 5-star rated appliances on next replacement',
+              'Unplug chargers and adapters when not in use',
+            ].map(tip => (
+              <li class="flex items-start gap-2.5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5 text-accent" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-xs text-text-muted leading-relaxed">{tip}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- S8: Energy Cost Estimator -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-5">
+        <span id="assess-cost-num" class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">07</span>
+        <div class="flex-1 h-px bg-border"></div>
+        <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">Energy Cost Estimator</h2>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="rounded-xl border border-border bg-card p-6 space-y-5 max-w-2xl">
+        <p class="text-sm text-text-muted leading-relaxed">Enter your local electricity rate to estimate costs. We do not assume tariffs — this is entirely optional.</p>
+
+        <div class="flex items-center justify-between rounded-lg px-4 py-3.5" style="background:color-mix(in srgb, var(--accent), transparent 92%); border:1px solid color-mix(in srgb, var(--accent), transparent 75%)">
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-0.5">Your Monthly Usage</p>
+            <p class="text-xs text-text-muted">From your appliance configuration</p>
+          </div>
+          <div class="text-right flex-shrink-0 ml-4">
+            <span id="assess-est-monthly-kwh" class="font-display font-bold text-3xl tabular-nums" style="color:var(--accent)">0</span>
+            <span class="font-mono text-xs text-text-muted ml-1">kWh/mo</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label for="assess-currency" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Currency</label>
+            <div class="relative">
+              <select id="assess-currency" class="custom-select w-full appearance-none pl-3 pr-8 py-2 text-sm cursor-pointer transition-all hover:border-accent focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent" aria-label="Currency for cost estimate">
+                <option value="₹" selected>₹ INR</option>
+                <option value="$">$ USD</option>
+                <option value="€">€ EUR</option>
+                <option value="£">£ GBP</option>
+                <option value="AED ">AED</option>
+                <option value="A$">A$ AUD</option>
+                <option value="C$">C$ CAD</option>
+                <option value="">Other</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label for="assess-rate" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Rate per kWh</label>
+            <div class="flex items-center gap-2">
+              <input id="assess-rate" type="number" min="0.001" step="0.01" placeholder="e.g. 0.15"
+                class="min-w-0 flex-1 bg-base border border-border rounded-lg px-3 py-2 text-sm font-mono focus:border-accent focus:outline-none"
+                aria-label="Electricity rate per kWh" />
+              <span class="text-xs font-mono text-text-muted flex-shrink-0">/kWh</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="assess-est-result" class="rounded-xl overflow-hidden" style="display:none; background:color-mix(in srgb, var(--accent), transparent 92%); border:1px solid color-mix(in srgb, var(--accent), transparent 75%)">
+          <div class="grid grid-cols-1 sm:grid-cols-3">
+            <div class="text-center px-5 py-4">
+              <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Daily Cost</p>
+              <p id="assess-est-daily" class="font-display font-bold text-2xl leading-none" style="color:var(--accent)">—</p>
+            </div>
+            <div class="text-center px-5 py-5">
+              <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Monthly Cost</p>
+              <p id="assess-est-monthly" class="font-display font-bold text-3xl leading-none" style="color:var(--accent)">—</p>
+            </div>
+            <div class="text-center px-5 py-4">
+              <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Yearly Estimate</p>
+              <p id="assess-est-yearly" class="font-display font-bold text-2xl leading-none" style="color:var(--accent)">—</p>
+            </div>
+          </div>
+          <p class="text-[10px] text-text-muted text-center leading-relaxed px-5 py-3" style="border-top:1px solid color-mix(in srgb, var(--accent), transparent 72%)">Actual bills may vary due to taxes, fixed charges, slab pricing, and regional tariffs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S9: Download Report -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-5">
+        <span id="assess-dl-num" class="text-[10px] font-mono uppercase tracking-widest text-text-muted flex-shrink-0">08</span>
+        <div class="flex-1 h-px bg-border"></div>
+        <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">Download Report</h2>
+        <div class="flex-1 h-px bg-border"></div>
+      </div>
+      <div class="flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center">
+        <button type="button" onclick="window.print()"
+          class="flex items-center gap-2 px-5 py-3 rounded-lg bg-accent text-accent-text font-display font-medium hover:bg-accent-dim transition-all active:scale-95 shadow-lg shadow-accent/20">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v2a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-2h1a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-1V4a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1Zm2 0h6v3H7V4Zm0 8h6v4H7v-4Zm-3-4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" clip-rule="evenodd"/>
+          </svg>
+          Print / Save as PDF
+        </button>
+        <p class="text-xs text-text-muted leading-relaxed max-w-xs">Use your browser's print dialog and choose "Save as PDF". Works on all devices and browsers.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PRINT LAYOUT (assessment-specific, separate from calculator print) -->
+  <div id="assess-print-layout" class="hidden print:block w-full max-w-4xl mx-auto text-text-primary bg-base">
+
+    <div class="border-b-2 border-border pb-5 mb-8 flex justify-between items-end">
+      <div>
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Electrical Assessment Report</p>
+        <h1 class="text-2xl font-display font-bold text-text-primary">Electrical Load <span class="text-accent">Assessment</span></h1>
+        <p class="text-sm text-text-muted mt-1.5" id="aprint-date"></p>
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-bold font-mono text-accent tracking-wide">electricityloadcalculator.com</p>
+        <p class="text-[10px] text-text-muted mt-1">&copy; {new Date().getFullYear()} · All Rights Reserved</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <div class="bg-card p-5 rounded-xl border border-border">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Total Load</p>
+        <p class="text-4xl font-bold font-display" style="color:var(--accent)"><span id="aprint-total-kw">—</span> kW</p>
+        <p class="text-xs text-text-muted mt-2"><span id="aprint-total-watts">—</span> W</p>
+      </div>
+      <div class="bg-card p-5 rounded-xl border border-border">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Daily Consumption</p>
+        <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-daily-kwh">—</span></p>
+        <p class="text-xs text-text-muted mt-2">kWh per day</p>
+      </div>
+      <div class="bg-card p-5 rounded-xl border border-border">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Monthly Consumption</p>
+        <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-monthly-kwh">—</span></p>
+        <p class="text-xs text-text-muted mt-2">kWh per month</p>
+      </div>
+    </div>
+
+    <div class="bg-card p-6 rounded-xl border border-border mb-8">
+      <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Electrical Health Score</p>
+      <div class="flex items-center gap-6 mb-4">
+        <span id="aprint-health-score" class="text-5xl font-bold font-display" style="color:var(--accent)">—</span>
+        <div>
+          <span id="aprint-health-label" class="text-xl font-semibold text-text-primary">—</span>
+          <p class="text-xs text-text-muted mt-1">/ 100 composite score</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:2cm">
+      <div class="border-b border-border pb-2 mb-5">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Smart Recommendations</p>
+        <h2 class="text-base font-display font-bold text-text-primary">Electrical System Recommendations</h2>
+      </div>
+      <div class="grid grid-cols-2 gap-5 mb-6">
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Recommended MCB</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-mcb">—</p>
+          <p class="text-xs text-text-muted">Circuit breaker with 25% safety margin</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Recommended Cable</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-cable">—</p>
+          <p class="text-xs text-text-muted">Wire gauge for safe power delivery</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Recommended Inverter</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-inverter">—</p>
+          <p class="text-xs text-text-muted">Minimum backup power capacity</p>
+        </div>
+        <div class="bg-card p-5 rounded-xl border border-border">
+          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Recommended Solar</p>
+          <p class="text-xl font-bold text-accent mt-2 mb-1" id="aprint-solar">—</p>
+          <p class="text-xs text-text-muted">Solar capacity to offset monthly usage</p>
+        </div>
+      </div>
+      <p class="text-xs text-text-muted leading-relaxed p-4 border border-border rounded-lg bg-card">Estimates based on single-phase 230V supply. Always consult a licensed electrician before purchasing or installing electrical components.</p>
+    </div>
+
+    <div style="margin-top:2cm">
+      <div class="border-b border-border pb-2 mb-5">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Energy Analysis</p>
+        <h2 class="text-base font-display font-bold text-text-primary">Consumption Breakdown by Category</h2>
+      </div>
+      <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 border-b-2 border-border mb-1">
+        <span class="flex-1 text-text-primary">Category</span>
+        <span class="w-32 text-right text-text-primary">kWh / day</span>
+        <span class="w-20 text-right text-text-primary">Share</span>
+      </div>
+      <div id="aprint-breakdown" class="space-y-0 mb-8"></div>
+      <div class="mt-6 pt-5 border-t border-border text-[10px] text-text-muted flex justify-between">
+        <p>electricityloadcalculator.com</p>
+        <p>&copy; {new Date().getFullYear()} · For informational purposes only</p>
+      </div>
+    </div>
+
+  </div>
+
+<style>
+  /* ── Insight cards — strong per-color glow ── */
+  .rec-card { transition: box-shadow 0.25s ease, transform 0.2s ease; }
+  .rec-glow-amber:hover  { box-shadow: 0 0 38px color-mix(in srgb,#F59E0B,transparent 50%), 0 12px 40px color-mix(in srgb,#F59E0B,transparent 62%) !important; }
+  .rec-glow-sky:hover    { box-shadow: 0 0 38px color-mix(in srgb,#38BDF8,transparent 50%), 0 12px 40px color-mix(in srgb,#38BDF8,transparent 62%) !important; }
+  .rec-glow-violet:hover { box-shadow: 0 0 38px color-mix(in srgb,#A78BFA,transparent 50%), 0 12px 40px color-mix(in srgb,#A78BFA,transparent 62%) !important; }
+  .rec-glow-emerald:hover{ box-shadow: 0 0 38px color-mix(in srgb,#4ADE80,transparent 50%), 0 12px 40px color-mix(in srgb,#4ADE80,transparent 62%) !important; }
+
+  /* ── All other content cards — subtle accent glow on hover ── */
+  section div.bg-card {
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  }
+  section div.bg-card:hover {
+    border-color: color-mix(in srgb, var(--accent), transparent 68%);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent), transparent 86%), 0 4px 16px rgba(0, 0, 0, 0.09);
+  }
+
+  /* ── Touch / mobile: make glows always visible, :active for tap feedback ── */
+  @media (hover: none) {
+    section div.bg-card {
+      border-color: color-mix(in srgb, var(--accent), transparent 80%);
+      box-shadow: 0 0 16px color-mix(in srgb, var(--accent), transparent 88%), 0 2px 10px rgba(0, 0, 0, 0.07);
+    }
+    section div.bg-card:active {
+      border-color: color-mix(in srgb, var(--accent), transparent 62%);
+      box-shadow: 0 0 22px color-mix(in srgb, var(--accent), transparent 80%), 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+    .rec-glow-amber  { box-shadow: 0 0 28px color-mix(in srgb,#F59E0B,transparent 60%), 0 8px 28px color-mix(in srgb,#F59E0B,transparent 72%) !important; }
+    .rec-glow-sky    { box-shadow: 0 0 28px color-mix(in srgb,#38BDF8,transparent 60%), 0 8px 28px color-mix(in srgb,#38BDF8,transparent 72%) !important; }
+    .rec-glow-violet { box-shadow: 0 0 28px color-mix(in srgb,#A78BFA,transparent 60%), 0 8px 28px color-mix(in srgb,#A78BFA,transparent 72%) !important; }
+    .rec-glow-emerald{ box-shadow: 0 0 28px color-mix(in srgb,#4ADE80,transparent 60%), 0 8px 28px color-mix(in srgb,#4ADE80,transparent 72%) !important; }
+    .rec-glow-amber:active  { box-shadow: 0 0 42px color-mix(in srgb,#F59E0B,transparent 42%), 0 12px 36px color-mix(in srgb,#F59E0B,transparent 55%) !important; }
+    .rec-glow-sky:active    { box-shadow: 0 0 42px color-mix(in srgb,#38BDF8,transparent 42%), 0 12px 36px color-mix(in srgb,#38BDF8,transparent 55%) !important; }
+    .rec-glow-violet:active { box-shadow: 0 0 42px color-mix(in srgb,#A78BFA,transparent 42%), 0 12px 36px color-mix(in srgb,#A78BFA,transparent 55%) !important; }
+    .rec-glow-emerald:active{ box-shadow: 0 0 42px color-mix(in srgb,#4ADE80,transparent 42%), 0 12px 36px color-mix(in srgb,#4ADE80,transparent 55%) !important; }
+  }
+</style>
+
+</BaseLayout>
+
+<script>
+import type { Appliance } from '@/types';
+import { calculateTotals } from '@/utils/calculations';
+import { calculateInsights } from '@/utils/insights';
+import { calculateHealthScore, calculateCategoryBreakdown, generateSavingsTips, getHighConsumptionAlerts } from '@/utils/health';
+
+const STORAGE_KEY = 'electricity_load_calculator_state';
+
+function setText(id: string, val: string) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+let bdItems: Array<{ category: string; kWhDay: number; percent: number; color: string }> = [];
+
+function highlightSlice(idx: number) {
+  const item = bdItems[idx];
+  if (!item) return;
+  document.querySelectorAll<SVGElement>('#assess-donut-svg .assess-slice').forEach((s, i) => {
+    s.style.opacity = i === idx ? '1' : '0.18';
+    s.setAttribute('stroke-width', i === idx ? '12' : '9');
+  });
+  document.querySelectorAll<HTMLElement>('#assess-donut-legend .assess-leg-row').forEach((r, i) => {
+    r.style.opacity = i === idx ? '1' : '0.35';
+  });
+  const def = document.getElementById('assess-donut-center-default');
+  const hov = document.getElementById('assess-donut-center-hover');
+  const pct = document.getElementById('assess-donut-hover-pct');
+  const kwh = document.getElementById('assess-donut-hover-kwh');
+  if (def) def.style.display = 'none';
+  if (hov) hov.style.display = '';
+  if (pct) { pct.textContent = `${Math.round(item.percent)}%`; pct.style.color = item.color; }
+  if (kwh) kwh.textContent = `${item.kWhDay.toFixed(1)} kWh`;
+}
+
+function resetSlices() {
+  document.querySelectorAll<SVGElement>('#assess-donut-svg .assess-slice').forEach(s => {
+    s.style.opacity = '1'; s.setAttribute('stroke-width', '9');
+  });
+  document.querySelectorAll<HTMLElement>('#assess-donut-legend .assess-leg-row').forEach(r => { r.style.opacity = '1'; });
+  const def = document.getElementById('assess-donut-center-default');
+  const hov = document.getElementById('assess-donut-center-hover');
+  if (def) def.style.display = '';
+  if (hov) hov.style.display = 'none';
+}
+
+function initAssessment() {
+  const loadingEl = document.getElementById('assess-loading');
+  const emptyEl   = document.getElementById('assess-empty');
+  const contentEl = document.getElementById('assess-content');
+
+  function showEmpty() {
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (emptyEl)   emptyEl.style.display   = '';
+    if (contentEl) contentEl.style.display = 'none';
+  }
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) { showEmpty(); return; }
+
+  let state: { appliances: Appliance[]; tariff?: number; currentCurrency?: string; maxCapacityKW?: number } | null = null;
+  try { state = JSON.parse(saved); } catch { showEmpty(); return; }
+
+  const appliances: Appliance[] = state?.appliances ?? [];
+  if (!Array.isArray(appliances) || !appliances.some(a => a.qty > 0)) { showEmpty(); return; }
+
+  const tariff      = typeof state?.tariff      === 'number' && state.tariff      > 0 ? state.tariff      : 0;
+  const maxCapacity = typeof state?.maxCapacityKW === 'number' && state.maxCapacityKW > 0 ? state.maxCapacityKW : 5;
+
+  // ── Run all calculations ──────────────────────────────────
+  const result   = calculateTotals(appliances, tariff, maxCapacity);
+  const insights = calculateInsights(result.totalKW, result.monthlyKWh);
+
+  const active = appliances.filter(a => a.qty > 0);
+  const topApp = active.reduce<Appliance | null>((best, a) =>
+    !best || (a.watts * a.qty * a.hours) > (best.watts * best.qty * best.hours) ? a : best, null);
+  const topConsumerDailyKWh = topApp
+    ? (topApp.watts * topApp.qty * Math.min(24, topApp.hours)) / 1000 : 0;
+
+  const health    = calculateHealthScore({ loadPercent: result.loadPercent, dailyKWh: result.dailyKWh, topConsumerDailyKWh, monthlyKWh: result.monthlyKWh, hasMCB: insights.mcbAmps > 0, hasCable: true });
+  const breakdown = calculateCategoryBreakdown(appliances);
+  const savings   = generateSavingsTips(appliances, result.monthlyKWh);
+  const alerts    = getHighConsumptionAlerts(appliances, result.dailyKWh);
+
+  // ── Show content ──────────────────────────────────────────
+  if (loadingEl) loadingEl.style.display = 'none';
+  if (emptyEl)   emptyEl.style.display   = 'none';
+  if (contentEl) contentEl.style.display = '';
+
+  // ── S1: Timestamp ─────────────────────────────────────────
+  setText('assess-timestamp', new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }));
+
+  // ── S2: Load Summary ──────────────────────────────────────
+  setText('assess-total-kw',         result.totalKW.toFixed(2));
+  setText('assess-daily-kwh',        result.dailyKWh.toFixed(2));
+  setText('assess-monthly-kwh',      Math.round(result.monthlyKWh).toString());
+  setText('assess-top-consumer-name',result.topConsumerName);
+  setText('assess-top-consumer-watts', result.topConsumerWatts > 0 ? `${result.topConsumerWatts} W` : '—');
+  setText('assess-health-score-summary', health.score.toString());
+  const hlSummary = document.getElementById('assess-health-label-summary');
+  if (hlSummary) { hlSummary.textContent = `/ 100 · ${health.label}`; hlSummary.style.color = health.color; }
+  const kwEl = document.getElementById('assess-health-score-summary');
+  if (kwEl) kwEl.style.color = health.color;
+
+  // ── S3: Recommendations ───────────────────────────────────
+  setText('assess-mcb-value',      insights.recommendedMCB);
+  setText('assess-cable-value',    insights.recommendedCable);
+  setText('assess-inverter-value', insights.recommendedInverter);
+  setText('assess-solar-value',    insights.recommendedSolar);
+
+  // ── S4: Consumption Analysis ──────────────────────────────
+  if (breakdown.items.length > 0) {
+    bdItems = breakdown.items;
+    setText('assess-donut-kwh', result.dailyKWh.toFixed(1));
+
+    const R = 35, C = 2 * Math.PI * R;
+    const svgEl = document.getElementById('assess-donut-svg');
+    if (svgEl) {
+      svgEl.querySelectorAll('.assess-slice').forEach(s => s.remove());
+      let acc = 0;
+      breakdown.items.forEach((item, idx) => {
+        const dashLen = (item.percent / 100) * C;
+        const circle  = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', '50'); circle.setAttribute('cy', '50');
+        circle.setAttribute('r', String(R)); circle.setAttribute('fill', 'none');
+        circle.setAttribute('stroke', item.color); circle.setAttribute('stroke-width', '9');
+        circle.setAttribute('stroke-dasharray', `${dashLen} ${C}`);
+        circle.setAttribute('stroke-dashoffset', String(-acc));
+        circle.setAttribute('pointer-events', 'visibleStroke');
+        circle.classList.add('assess-slice');
+        circle.style.cursor = 'pointer';
+        circle.style.transition = 'opacity 0.2s ease';
+        circle.addEventListener('mouseenter', () => highlightSlice(idx));
+        circle.addEventListener('mouseleave', resetSlices);
+        svgEl.appendChild(circle);
+        acc += dashLen;
+      });
+    }
+
+    const legend = document.getElementById('assess-donut-legend');
+    if (legend) {
+      legend.innerHTML = breakdown.items.map((item, idx) => `
+        <div class="assess-leg-row flex items-center gap-2 min-w-0 cursor-pointer rounded-md px-1.5 py-1 transition-all hover:bg-white/5" data-li="${idx}">
+          <span class="flex-shrink-0 w-2.5 h-2.5 rounded-sm" style="background:${item.color}"></span>
+          <span class="text-[11px] text-text-muted truncate flex-1">${item.category}</span>
+          <div class="flex-shrink-0 text-right">
+            <div class="text-[11px] font-mono font-bold tabular-nums" style="color:${item.color}">${Math.round(item.percent)}%</div>
+            <div class="text-[9px] font-mono text-text-muted">${item.kWhDay.toFixed(1)} kWh</div>
+          </div>
+        </div>`).join('');
+      legend.querySelectorAll<HTMLElement>('.assess-leg-row').forEach(row => {
+        const i = Number(row.dataset.li);
+        row.addEventListener('mouseenter', () => highlightSlice(i));
+        row.addEventListener('mouseleave', resetSlices);
+      });
+    }
+
+    const topColor   = breakdown.items[0]?.color ?? 'var(--accent)';
+    const insightBox = document.getElementById('assess-breakdown-insight');
+    const insightDot = document.getElementById('assess-breakdown-dot');
+    const insightLbl = document.getElementById('assess-breakdown-label');
+    if (insightBox) { insightBox.style.background = `color-mix(in srgb, ${topColor}, transparent 92%)`; insightBox.style.borderColor = `color-mix(in srgb, ${topColor}, transparent 78%)`; }
+    if (insightDot) insightDot.style.color = topColor;
+    if (insightLbl) { insightLbl.textContent = `${breakdown.topCategory} · ${Math.round(breakdown.topPercent)}% of total daily usage`; insightLbl.style.color = topColor; }
+
+    const table = document.getElementById('assess-breakdown-table');
+    if (table) {
+      table.innerHTML = `
+        <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-1 border-b-2 border-border text-text-muted">
+          <span class="flex-1">Category</span><span class="w-28 text-right">kWh / day</span><span class="w-16 text-right">Share</span>
+        </div>
+        ${breakdown.items.map(item => `
+          <div class="flex items-center text-sm py-2.5 border-b border-border/40 last:border-0">
+            <div class="flex items-center gap-2 flex-1 min-w-0">
+              <span class="w-2.5 h-2.5 rounded-sm flex-shrink-0" style="background:${item.color}"></span>
+              <span class="text-text-muted truncate">${item.category}</span>
+            </div>
+            <span class="w-28 text-right font-mono text-text-primary">${item.kWhDay.toFixed(2)}</span>
+            <span class="w-16 text-right font-mono font-semibold" style="color:${item.color}">${Math.round(item.percent)}%</span>
+          </div>`).join('')}`;
+    }
+
+    // Print breakdown
+    const aprint = document.getElementById('aprint-breakdown');
+    if (aprint) {
+      aprint.innerHTML = breakdown.items.map(item => `
+        <div class="flex text-sm py-2 border-b border-border">
+          <span class="flex-1 text-text-muted">${item.category}</span>
+          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh/d</span>
+          <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
+        </div>`).join('');
+    }
+  }
+
+  // ── S5: Health Score ──────────────────────────────────────
+  const C_RING = 2 * Math.PI * 64;
+  const ringEl = document.getElementById('assess-health-ring') as SVGCircleElement | null;
+  if (ringEl) { ringEl.style.stroke = health.color; ringEl.style.strokeDashoffset = String(C_RING * (1 - health.score / 100)); }
+
+  const hvEl = document.getElementById('assess-health-score-value');
+  if (hvEl) { hvEl.textContent = health.score.toString(); hvEl.style.color = health.color; }
+
+  const hlEl = document.getElementById('assess-health-label');
+  if (hlEl) { hlEl.textContent = health.label; hlEl.style.color = health.color; hlEl.style.background = `color-mix(in srgb, ${health.color}, transparent 85%)`; hlEl.style.borderColor = `color-mix(in srgb, ${health.color}, transparent 55%)`; }
+
+  const HEALTH_DESC: Record<string, string> = {
+    'Excellent': 'Your electrical setup is well-balanced, efficient, and ready for expansion.',
+    'Good':      'Good setup with minor improvements possible. Review sub-scores for guidance.',
+    'Fair':      'Several improvements recommended to optimise safety and efficiency.',
+    'Poor':      'Significant improvements needed. Consider consulting an electrician.',
+  };
+  setText('assess-health-desc', HEALTH_DESC[health.label] ?? '');
+
+  const { utilization, efficiency, safety, renewable } = health.subScores;
+  const setBar = (id: string, pct: number) => { const el = document.getElementById(id); if (el) el.style.width = `${pct}%`; };
+  setText('assess-sub-util-pts',   `${utilization}/30`);
+  setText('assess-sub-eff-pts',    `${efficiency}/30`);
+  setText('assess-sub-safety-pts', `${safety}/20`);
+  setText('assess-sub-renew-pts',  `${renewable}/20`);
+  setBar('assess-sub-util-bar',   (utilization / 30) * 100);
+  setBar('assess-sub-eff-bar',    (efficiency  / 30) * 100);
+  setBar('assess-sub-safety-bar', (safety      / 20) * 100);
+  setBar('assess-sub-renew-bar',  (renewable   / 20) * 100);
+
+  // ── S6: Alerts (conditional) ──────────────────────────────
+  const alertsSection = document.getElementById('assess-alerts-section');
+  const alertsList    = document.getElementById('assess-alerts-list');
+  if (alerts.length > 0 && alertsSection && alertsList) {
+    alertsSection.style.display = '';
+    alertsList.innerHTML = alerts.map(a => `
+      <div class="flex items-center justify-between gap-4 rounded-lg px-4 py-3 bg-card border" style="border-color:color-mix(in srgb, var(--danger), transparent 65%)">
+        <div class="flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0" style="color:var(--danger)"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/></svg>
+          <div>
+            <p class="text-sm font-semibold text-text-primary">${a.name}</p>
+            <p class="text-xs text-text-muted">${a.reason}</p>
+          </div>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <p class="text-sm font-mono font-bold" style="color:var(--danger)">${a.kWhDay.toFixed(1)} kWh/d</p>
+          <p class="text-xs font-mono text-text-muted">${Math.round(a.percent)}% of total</p>
+        </div>
+      </div>`).join('');
+
+    // Re-number subsequent sections
+    setText('assess-saving-num', '06');
+    setText('assess-cost-num',   '07');
+    setText('assess-dl-num',     '08');
+  } else {
+    if (alertsSection) alertsSection.style.display = 'none';
+    setText('assess-saving-num', '05');
+    setText('assess-cost-num',   '06');
+    setText('assess-dl-num',     '07');
+  }
+
+  // ── S7: Saving tips ───────────────────────────────────────
+  setText('assess-saving-top',      savings.topConsumerName);
+  setText('assess-saving-potential', `${savings.potentialSavings.toFixed(1)} kWh/month`);
+  const tipsList = document.getElementById('assess-saving-tips');
+  if (tipsList) {
+    tipsList.innerHTML = savings.tips.map(tip => `
+      <li class="flex items-start gap-2.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5 text-accent"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
+        <span class="text-xs text-text-muted leading-relaxed">${tip}</span>
+      </li>`).join('');
+  }
+
+  // ── S8: Cost Estimator ────────────────────────────────────
+  setText('assess-est-monthly-kwh', Math.round(result.monthlyKWh).toString());
+
+  function updateCost() {
+    const sym  = (document.getElementById('assess-currency') as HTMLSelectElement | null)?.value ?? '$';
+    const rate = parseFloat((document.getElementById('assess-rate') as HTMLInputElement | null)?.value ?? '');
+    const resEl = document.getElementById('assess-est-result');
+    if (!resEl) return;
+    if (!rate || rate <= 0) { resEl.style.display = 'none'; return; }
+    const fmt = (v: number) => `${sym}${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    setText('assess-est-daily',   fmt(result.dailyKWh   * rate));
+    setText('assess-est-monthly', fmt(result.monthlyKWh * rate));
+    setText('assess-est-yearly',  fmt(result.monthlyKWh * rate * 12));
+    resEl.style.display = '';
+  }
+  document.getElementById('assess-currency')?.addEventListener('change', updateCost);
+  document.getElementById('assess-rate')?.addEventListener('input', updateCost);
+
+  // ── Print layout ──────────────────────────────────────────
+  setText('aprint-date',         new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }));
+  setText('aprint-total-kw',     result.totalKW.toFixed(2));
+  setText('aprint-total-watts',  Math.round(result.totalWatts).toString());
+  setText('aprint-daily-kwh',    result.dailyKWh.toFixed(2));
+  setText('aprint-monthly-kwh',  Math.round(result.monthlyKWh).toString());
+  setText('aprint-health-score', health.score.toString());
+  setText('aprint-health-label', health.label);
+  setText('aprint-mcb',          insights.recommendedMCB);
+  setText('aprint-cable',        insights.recommendedCable);
+  setText('aprint-inverter',     insights.recommendedInverter);
+  setText('aprint-solar',        insights.recommendedSolar);
+}
+
+document.addEventListener('astro:page-load', initAssessment);
+</script>

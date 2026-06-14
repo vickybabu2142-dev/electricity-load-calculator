@@ -1,0 +1,255 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+---
+
+<BaseLayout
+  title="Inverter Recommendation | Electrical Assessment | Electricity Load Calculator"
+  description="Your personalised inverter/UPS capacity recommendation based on your connected load. Includes calculation breakdown and battery backup guidance."
+  keywords="inverter recommendation, UPS size, home inverter capacity, backup power, inverter KVA calculator"
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessment', href: '/assessment' }, { label: 'Inverter Recommendation' }]} />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">
+    <div class="max-w-2xl mx-auto space-y-4">
+
+      <!-- Back link -->
+      <a href="/assessment" class="inline-flex items-center gap-2 text-sm text-text-muted hover:text-accent transition-colors group">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" aria-hidden="true">
+          <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/>
+        </svg>
+        Back to Assessment
+      </a>
+
+      <!-- ① Header -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-base flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-accent" aria-hidden="true">
+              <path d="M4 7h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm14 2H6v6h12V9Zm2-3h1v2h-1V6Zm-17 0H2v2h1V6Z"/>
+            </svg>
+          </span>
+          <div class="pt-0.5">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5 text-text-muted">Inverter Recommendation</p>
+            <h1 class="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">Home Inverter / UPS</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② Personalised Recommendation -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Your Recommendation</p>
+
+        <div id="rec-empty" class="text-center py-4 text-sm text-text-muted">
+          No assessment data found.
+          <a href="/" class="text-accent hover:underline ml-1">Calculate your load first →</a>
+        </div>
+
+        <div id="rec-result" style="display:none">
+          <div class="rounded-xl border border-border bg-base p-6 text-center mb-4">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-3 text-text-muted">Recommended Inverter Size</p>
+            <p id="rec-value" class="font-display font-bold text-5xl tracking-tight text-accent">—</p>
+            <p id="rec-context" class="text-sm text-text-muted mt-3"></p>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">1</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-text-muted">Your total connected load</p>
+                <p class="font-mono font-semibold text-text-primary"><span id="inv-load">—</span> kW</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">2</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-text-muted">With 20% headroom for peak demand</p>
+                <p class="font-mono font-semibold text-text-primary"><span id="inv-load">—</span> kW × 1.20 = <span id="inv-design">—</span> kVA</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg border" style="border-color:color-mix(in srgb, var(--accent), transparent 55%); background:color-mix(in srgb, var(--accent), transparent 90%)">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-[var(--base)] text-xs font-mono font-bold flex-shrink-0">3</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-text-muted">Next standard inverter size above <span id="inv-design2">—</span> kVA</p>
+                <p class="font-mono font-bold text-accent text-lg"><span id="inv-rating">—</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ Educational Content -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-5">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Understanding Home Inverters</h2>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">What is an Inverter?</h3>
+          <p>A home inverter converts DC power from batteries into AC power for your appliances during a power cut. The inverter rating (kVA) determines the maximum load it can supply simultaneously at any given moment.</p>
+        </div>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Standard Inverter Sizes</h3>
+          <div class="rounded-lg border border-border bg-base overflow-hidden">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="border-b border-border">
+                  <th class="text-left px-3 py-2 text-text-muted">Inverter</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Max Load</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Typical Use</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['1 kVA', '~0.7–0.8 kW', 'Lights, fans, small devices'],
+                  ['2 kVA', '~1.5–1.7 kW', 'Small home: fans, TV, lights'],
+                  ['3 kVA', '~2.2–2.5 kW', '2 BHK: fans, TV, laptop, lights'],
+                  ['5 kVA', '~4 kW', 'Large home or small office'],
+                  ['7.5 kVA', '~6 kW', 'High-load homes, multiple ACs'],
+                ].map(([size, load, use]) => (
+                  <tr class="border-b border-border last:border-0">
+                    <td class="px-3 py-2 text-accent font-bold">{size}</td>
+                    <td class="px-3 py-2 text-text-primary">{load}</td>
+                    <td class="px-3 py-2 text-text-muted">{use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p>Note: kVA is the apparent power rating. The actual usable power (kW) is lower due to the power factor of the inverter (~0.8 for most pure-sine-wave models).</p>
+        </div>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Pure Sine Wave vs Modified Sine Wave</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="rounded-lg border border-border bg-base p-4">
+              <p class="font-semibold text-text-primary mb-1">Pure Sine Wave</p>
+              <p class="text-xs text-text-muted leading-relaxed">Identical to grid power. Required for ACs, refrigerators, sensitive electronics. More expensive but universally compatible.</p>
+            </div>
+            <div class="rounded-lg border border-border bg-base p-4">
+              <p class="font-semibold text-text-primary mb-1">Modified Sine Wave</p>
+              <p class="text-xs text-text-muted leading-relaxed">Works for most lighting and basic appliances. Not suitable for ACs, refrigerators, or sensitive electronics. Cheaper but limited.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-2.5 p-3.5 rounded-lg border" style="border-color:color-mix(in srgb, var(--warning), transparent 55%); background:color-mix(in srgb, var(--warning), transparent 90%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--warning)" aria-hidden="true">
+            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-xs text-text-primary leading-relaxed">Battery backup time depends on battery capacity (Ah), not inverter rating. Inverter sizing and battery sizing are separate decisions.</p>
+        </div>
+      </div>
+
+      <!-- ④ FAQ -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {[
+            { q: 'Can I run my AC on an inverter?', a: 'Yes, but you need a pure sine wave inverter sized for the AC\'s start-up current (typically 2–3× running watts). A 1.5 ton AC needs ~2.5 kW running + inrush, so a 3.5–5 kVA pure sine inverter is usually required.' },
+            { q: 'How long will my inverter provide backup?', a: 'Backup time = Battery Capacity (Ah) × Battery Voltage × Efficiency ÷ Load (W). A 150Ah 12V battery at 80% efficiency powering 500W gives ~2.9 hours. Inverter rating sets max load, not backup duration.' },
+            { q: 'What\'s the difference between an inverter and a UPS?', a: 'A UPS (Uninterruptible Power Supply) switches to battery in milliseconds — imperceptible to computers. A regular home inverter takes 10–25ms to switch, which can restart PCs. For sensitive computing equipment, use a line-interactive or online UPS.' },
+            { q: 'Should I choose a higher-rated inverter than recommended?', a: 'Upsizing by one tier is generally fine and gives room to add appliances later. Severely over-sizing an inverter reduces efficiency and increases standby losses.' },
+          ].map(({ q, a }) => (
+            <details class="rounded-lg border border-border bg-base group">
+              <summary class="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer list-none text-sm font-semibold text-text-primary">
+                <span>{q}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+                </svg>
+              </summary>
+              <p class="px-4 pb-4 pt-1 text-sm text-text-muted leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <!-- ⑤ Related Recommendations -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Related Recommendations</h2>
+        <p class="text-sm text-text-muted">Your load calculation also informs these selections.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <a href="/recommendations/mcb" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">MCB</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Breaker Rating →</p>
+            </div>
+          </a>
+          <a href="/recommendations/cable" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M4 12h16M7 5v14M17 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Cable</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Wire Size →</p>
+            </div>
+          </a>
+          <a href="/recommendations/solar" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm8-6a1 1 0 0 1 0 2h-1a1 1 0 1 1 0-2h1ZM5 11a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2h1Zm14.07-6.07a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM6.34 17.66a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Zm12.02 1.41a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.34 7.76l-.71-.71a1 1 0 0 1 0-1.41ZM12 20a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Solar</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Panel Size →</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+import type { Appliance } from '@/types';
+import { calculateTotals } from '@/utils/calculations';
+import { calculateInsights } from '@/utils/insights';
+
+const STORAGE_KEY = 'electricity_load_calculator_state';
+const INV_SIZES = [1, 2, 3, 5, 7.5, 10, 15];
+
+function setText(id: string, val: string) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function initPage() {
+  const emptyEl  = document.getElementById('rec-empty');
+  const resultEl = document.getElementById('rec-result');
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) { if (emptyEl) emptyEl.style.display = ''; return; }
+
+  let state: { appliances: Appliance[]; tariff?: number; maxCapacityKW?: number } | null = null;
+  try { state = JSON.parse(saved); } catch { return; }
+
+  const appliances: Appliance[] = state?.appliances ?? [];
+  if (!Array.isArray(appliances) || !appliances.some(a => a.qty > 0)) {
+    if (emptyEl) emptyEl.style.display = '';
+    return;
+  }
+
+  const tariff      = typeof state?.tariff      === 'number' ? state.tariff      : 0;
+  const maxCapacity = typeof state?.maxCapacityKW === 'number' ? state.maxCapacityKW : 5;
+  const result   = calculateTotals(appliances, tariff, maxCapacity);
+  const insights = calculateInsights(result.totalKW, result.monthlyKWh);
+
+  if (emptyEl)  emptyEl.style.display  = 'none';
+  if (resultEl) resultEl.style.display = '';
+
+  const design  = result.totalKW * 1.2;
+  const invKVA  = INV_SIZES.find(s => s >= result.totalKW * 1.2) ?? INV_SIZES[INV_SIZES.length - 1];
+
+  setText('rec-value',   insights.recommendedInverter);
+  setText('rec-context', `For ${result.totalKW.toFixed(2)} kW connected load with 20% headroom`);
+  setText('inv-design',  design.toFixed(2));
+  setText('inv-design2', design.toFixed(2));
+  setText('inv-rating',  `${invKVA} kVA Pure Sine Wave`);
+
+  document.querySelectorAll('#inv-load').forEach(el => { el.textContent = result.totalKW.toFixed(2); });
+}
+
+document.addEventListener('astro:page-load', initPage);
+</script>

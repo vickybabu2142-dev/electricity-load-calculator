@@ -1,0 +1,250 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+---
+
+<BaseLayout
+  title="Cable Size Recommendation | Electrical Assessment | Electricity Load Calculator"
+  description="Your personalised wire gauge recommendation based on your connected load. Includes calculation breakdown and safety guidance for electrical wiring."
+  keywords="cable sizing, wire gauge recommendation, electrical cable size, wiring size for home, conductor sizing"
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessment', href: '/assessment' }, { label: 'Cable Recommendation' }]} />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">
+    <div class="max-w-2xl mx-auto space-y-4">
+
+      <!-- Back link -->
+      <a href="/assessment" class="inline-flex items-center gap-2 text-sm text-text-muted hover:text-accent transition-colors group">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" aria-hidden="true">
+          <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/>
+        </svg>
+        Back to Assessment
+      </a>
+
+      <!-- ① Header -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-base flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 text-accent" aria-hidden="true">
+              <path d="M4 12h16M7 5v14M17 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </svg>
+          </span>
+          <div class="pt-0.5">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5 text-text-muted">Cable Recommendation</p>
+            <h1 class="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">Electrical Cable Sizing</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② Personalised Recommendation -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Your Recommendation</p>
+
+        <div id="rec-empty" class="text-center py-4 text-sm text-text-muted">
+          No assessment data found.
+          <a href="/" class="text-accent hover:underline ml-1">Calculate your load first →</a>
+        </div>
+
+        <div id="rec-result" style="display:none">
+          <div class="rounded-xl border border-border bg-base p-6 text-center mb-4">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-3 text-text-muted">Recommended Wire Size</p>
+            <p id="rec-value" class="font-display font-bold text-5xl tracking-tight text-accent">—</p>
+            <p id="rec-context" class="text-sm text-text-muted mt-3"></p>
+          </div>
+
+          <!-- Calculation steps -->
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">1</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-text-muted">Your connected load</p>
+                <p class="font-mono font-semibold text-text-primary"><span id="cable-load">—</span> kW</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">2</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-text-muted">Full load current at 230V</p>
+                <p class="font-mono font-semibold text-text-primary">= <span id="cable-current">—</span> A</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">3</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-text-muted">MCB rating selected for this current</p>
+                <p class="font-mono font-semibold text-text-primary"><span id="cable-mcb">—</span></p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg border" style="border-color:color-mix(in srgb, var(--accent), transparent 55%); background:color-mix(in srgb, var(--accent), transparent 90%)">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-[var(--base)] text-xs font-mono font-bold flex-shrink-0">4</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-text-muted">Minimum cable rated for MCB current</p>
+                <p class="font-mono font-bold text-accent text-lg"><span id="cable-size">—</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ Educational Content -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-5">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Understanding Cable Sizing</h2>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Why Cable Size Matters</h3>
+          <p>Electrical cables have a maximum current-carrying capacity (ampacity) determined by their cross-sectional area. Using undersized cable causes overheating, insulation failure, and fire risk. Oversized cable is wasteful but not dangerous.</p>
+        </div>
+
+        <div class="space-y-3 text-sm text-text-muted leading-relaxed">
+          <h3 class="font-display font-semibold text-text-primary">Copper Cable Reference (PVC Insulated)</h3>
+          <div class="rounded-lg border border-border bg-base overflow-hidden">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="border-b border-border">
+                  <th class="text-left px-3 py-2 text-text-muted">Size</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Max Current</th>
+                  <th class="text-left px-3 py-2 text-text-muted">Typical Use</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['1.0 sq mm', '10–13A', 'Lighting circuits'],
+                  ['1.5 sq mm', '15–16A', 'Lighting + light sockets'],
+                  ['2.5 sq mm', '20–25A', 'Power sockets, ACs'],
+                  ['4 sq mm', '25–32A', 'High-power appliances'],
+                  ['6 sq mm', '35–40A', 'Main distribution circuits'],
+                  ['10 sq mm', '50–60A', 'Sub-main feeders'],
+                ].map(([size, curr, use]) => (
+                  <tr class="border-b border-border last:border-0">
+                    <td class="px-3 py-2 text-accent font-bold">{size}</td>
+                    <td class="px-3 py-2 text-text-primary">{curr}</td>
+                    <td class="px-3 py-2 text-text-muted">{use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p>Values are approximate for single-core copper conductors in conduit at 30°C ambient. Consult local wiring regulations for exact values.</p>
+        </div>
+
+        <div class="flex gap-2.5 p-3.5 rounded-lg border" style="border-color:color-mix(in srgb, var(--warning), transparent 55%); background:color-mix(in srgb, var(--warning), transparent 90%)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--warning)" aria-hidden="true">
+            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-xs text-text-primary leading-relaxed">Estimates based on single-phase 230V supply. Cable sizing must account for installation method, ambient temperature, and grouping derating. Always consult a licensed electrician.</p>
+        </div>
+      </div>
+
+      <!-- ④ FAQ -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {[
+            { q: 'What happens if I use undersized cable?', a: 'Undersized cable overheats under load. The insulation can melt, causing short circuits or fire. This is one of the most common causes of electrical fires in homes.' },
+            { q: 'Does cable length affect the size I need?', a: 'Yes — longer runs increase resistance and voltage drop. For runs over 20 metres, you may need to upsize the cable by one step to keep voltage drop below 3%.' },
+            { q: 'Copper vs aluminium — which is better for homes?', a: 'Copper is always preferred for home wiring. It has lower resistance, better conductivity per cross-section, is easier to terminate, and does not suffer from the galvanic corrosion issues aluminium can have at joints.' },
+            { q: 'Should I use 2-core or 3-core cable?', a: 'For single-phase circuits: 2-core (live + neutral) for basic loads. 3-core (live + neutral + earth) for earthed appliances, ACs, geysers, and any appliance with a metal casing.' },
+          ].map(({ q, a }) => (
+            <details class="rounded-lg border border-border bg-base group">
+              <summary class="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer list-none text-sm font-semibold text-text-primary">
+                <span>{q}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+                </svg>
+              </summary>
+              <p class="px-4 pb-4 pt-1 text-sm text-text-muted leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <!-- ⑤ Related Recommendations -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Related Recommendations</h2>
+        <p class="text-sm text-text-muted">Your load calculation also informs these selections.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <a href="/recommendations/mcb" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">MCB</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Breaker Rating →</p>
+            </div>
+          </a>
+          <a href="/recommendations/inverter" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M4 7h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm14 2H6v6h12V9Zm2-3h1v2h-1V6Zm-17 0H2v2h1V6Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Inverter</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">UPS Size →</p>
+            </div>
+          </a>
+          <a href="/recommendations/solar" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm8-6a1 1 0 0 1 0 2h-1a1 1 0 1 1 0-2h1ZM5 11a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2h1Zm14.07-6.07a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0ZM6.34 17.66a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 0Zm12.02 1.41a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.34 7.76l-.71-.71a1 1 0 0 1 0-1.41ZM12 20a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Solar</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Panel Size →</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+import type { Appliance } from '@/types';
+import { calculateTotals } from '@/utils/calculations';
+import { calculateInsights } from '@/utils/insights';
+
+const STORAGE_KEY = 'electricity_load_calculator_state';
+const MCB_RATINGS = [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100];
+
+function setText(id: string, val: string) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function initPage() {
+  const emptyEl  = document.getElementById('rec-empty');
+  const resultEl = document.getElementById('rec-result');
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) { if (emptyEl) emptyEl.style.display = ''; return; }
+
+  let state: { appliances: Appliance[]; tariff?: number; maxCapacityKW?: number } | null = null;
+  try { state = JSON.parse(saved); } catch { return; }
+
+  const appliances: Appliance[] = state?.appliances ?? [];
+  if (!Array.isArray(appliances) || !appliances.some(a => a.qty > 0)) {
+    if (emptyEl) emptyEl.style.display = '';
+    return;
+  }
+
+  const tariff      = typeof state?.tariff      === 'number' ? state.tariff      : 0;
+  const maxCapacity = typeof state?.maxCapacityKW === 'number' ? state.maxCapacityKW : 5;
+  const result   = calculateTotals(appliances, tariff, maxCapacity);
+  const insights = calculateInsights(result.totalKW, result.monthlyKWh);
+
+  if (emptyEl)  emptyEl.style.display  = 'none';
+  if (resultEl) resultEl.style.display = '';
+
+  const flc    = result.totalWatts / 230;
+  const design = flc * 1.25;
+  const mcbA   = MCB_RATINGS.find(r => r >= design) ?? MCB_RATINGS[MCB_RATINGS.length - 1];
+
+  setText('rec-value',    insights.recommendedCable);
+  setText('rec-context',  `For ${result.totalKW.toFixed(2)} kW connected load at 230V single-phase`);
+  setText('cable-load',   result.totalKW.toFixed(2));
+  setText('cable-current', flc.toFixed(1));
+  setText('cable-mcb',    `${mcbA}A C-Curve MCB`);
+  setText('cable-size',   insights.recommendedCable);
+}
+
+document.addEventListener('astro:page-load', initPage);
+</script>
