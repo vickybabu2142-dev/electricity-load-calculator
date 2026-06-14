@@ -119,7 +119,7 @@ const sectionedData = SECTIONS.map(section => ({
       </div>
 
       <!-- Right: results panel -->
-      <div class="w-full lg:w-80 xl:w-96 flex-shrink-0 lg:sticky lg:top-24 z-10">
+      <div class="w-full lg:w-80 xl:w-96 flex-shrink-0 z-10">
         <ResultsPanel />
       </div>
 
@@ -191,7 +191,7 @@ const sectionedData = SECTIONS.map(section => ({
   <div id="print-layout" class="hidden print:block w-full max-w-4xl mx-auto text-text-primary bg-base">
 
     <!-- ── PAGE 1: Executive Summary ──────────────────────── -->
-    <div>
+    <div class="print-page">
       <!-- Report header -->
       <div class="border-b-2 border-border pb-5 mb-8 flex justify-between items-end">
         <div>
@@ -286,7 +286,7 @@ const sectionedData = SECTIONS.map(section => ({
     </div>
 
     <!-- ── Section 2: Smart Insights ─────────────────────────── -->
-    <div style="margin-top: 2.5cm;">
+    <div class="print-page" style="page-break-before: always; break-before: page;">
       <!-- Section brand strip -->
       <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
         <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
@@ -331,7 +331,7 @@ const sectionedData = SECTIONS.map(section => ({
     </div>
 
     <!-- ── Section 3: Consumption Breakdown ──────────────────── -->
-    <div style="margin-top: 2.5cm;">
+    <div class="print-page" style="page-break-before: always; break-before: page;">
       <!-- Section brand strip -->
       <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
         <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
@@ -369,7 +369,7 @@ const sectionedData = SECTIONS.map(section => ({
     </div>
 
     <!-- ── Section 4: Energy Saving + High Consumption ──────── -->
-    <div style="margin-top: 2.5cm;">
+    <div class="print-page" style="page-break-before: always; break-before: page;">
       <!-- Section brand strip -->
       <div class="flex justify-between items-center pb-3 mb-6 border-b border-border select-none">
         <span class="text-[9px] font-mono uppercase tracking-widest text-text-muted">Electrical Assessment Report &nbsp;·&nbsp; Proprietary</span>
@@ -660,10 +660,13 @@ function calculate() {
 
 
   CATEGORIES.forEach(cat => {
-    const catAppliances = appliances.filter(a => a.category === cat && a.qty > 0);
-    const catWatts = catAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
-    const catKWh   = catAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
-    const catCount = appliances.filter(a => a.category === cat).length;
+    const catAppliances = appliances.filter(a => a.category === cat);
+    const activeCatAppliances = catAppliances.filter(a => a.qty > 0);
+    const catWatts = activeCatAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
+    const catKWh   = activeCatAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
+    
+    const activeCount = activeCatAppliances.length;
+    const totalCount  = catAppliances.length;
 
     // Use slugified ID to find the category body, then get the section parent
     const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
@@ -678,7 +681,7 @@ function calculate() {
     const kwhTextEl  = kwhEl?.querySelector('span:last-child');
     if (wattTextEl) wattTextEl.textContent = `${catWatts.toLocaleString()} W`;
     if (kwhTextEl)  kwhTextEl.textContent  = `${catKWh.toFixed(2)} kWh(unit)/d`;
-    if (cntEl)  cntEl.textContent  = String(catCount);
+    if (cntEl)  cntEl.textContent  = `${activeCount}/${totalCount}`;
   });
 
   setText('print-total-kw', (result.totalWatts / 1000).toFixed(2));
@@ -689,6 +692,7 @@ function calculate() {
 
   const siteUrl = window.location.origin;
   document.querySelectorAll<HTMLElement>('.print-brand-url').forEach(el => {
+    el.innerHTML = ''; // Clear to prevent duplication
     const a = document.createElement('a');
     a.href = siteUrl;
     a.textContent = siteUrl;

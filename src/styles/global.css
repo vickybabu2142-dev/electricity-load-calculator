@@ -494,8 +494,21 @@ button:active:not(:disabled),
     display: block !important;
     background-color: white !important;
     color: #0f0f0f !important;
-    /* Compensate for zeroed @page margin so content stays within safe area */
-    padding: 2cm 2cm 1.5cm !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-page {
+    width: 100% !important;
+    min-height: 297mm;
+    /* Generous 2.5cm padding to ensure no content is cut off by printer non-printable areas */
+    padding: 2.5cm 2cm !important;
+    margin: 0;
+    background: white !important;
+    box-sizing: border-box;
+    position: relative;
   }
 
   /* Force white background for all containers */

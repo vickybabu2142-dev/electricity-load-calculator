@@ -20,6 +20,8 @@ const dailyKWh = appliances
   .filter(a => a.qty > 0)
   .reduce((s, a) => s + (a.watts * a.qty * a.hours) / 1000, 0);
 
+const activeCount = appliances.filter(a => a.qty > 0).length;
+
 const icon = CATEGORY_ICONS[name];
 ---
 
@@ -79,7 +81,7 @@ const icon = CATEGORY_ICONS[name];
 
     <!-- Appliance count -->
     <span class="text-xs text-text-muted mr-3 flex-shrink-0">
-      <span data-category-count={name}>{appliances.length}</span> appliances
+      <span data-category-count={name}>{activeCount}/{appliances.length}</span> appliances
     </span>
 
     <!-- Chevron -->
