@@ -254,10 +254,44 @@ textarea:focus {
 
 /* Category body accordion */
 .category-body-wrap {
-  display: none;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
+
 .category-body-wrap.is-open {
-  display: block;
+  grid-template-rows: 1fr;
+}
+
+.category-body-inner {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Enhanced Category Section when open */
+.category-section {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.category-section:has(.category-body-wrap.is-open) {
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  position: relative;
+}
+
+.category-section:has(.category-body-wrap.is-open) .category-toggle {
+  background-color: var(--bg-card-hover);
+  border-bottom: 1px solid var(--border);
+}
+
+.light .category-section:has(.category-body-wrap.is-open) {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.light .category-section:has(.category-body-wrap.is-open) .category-toggle {
+  background-color: var(--bg-card-hover);
 }
 
 /* Toggle switch (Vercel Style: Improved Visibility) */

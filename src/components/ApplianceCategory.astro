@@ -108,27 +108,40 @@ const icon = CATEGORY_ICONS[name];
   <!-- Category body -->
   <div
     id={`category-body-${name.replace(/\s/g, '-')}`}
-    class="category-body-wrap"
+    class="category-body-wrap transition-all duration-300 ease-in-out"
   >
-    <!-- Column headers (desktop only) -->
-    <div class="hidden lg:flex items-center gap-3 px-4 py-2 bg-base/50 border-b border-border text-[10px] font-mono uppercase tracking-widest text-text-muted">
-      <div class="w-11 flex-shrink-0">On/Off</div>
-      <div class="flex-1 min-w-[140px]">Appliance</div>
-      <div class="w-[90px] text-center">Watts</div>
-      <div class="w-[100px] text-center">Quantity</div>
-      <div class="w-[80px] text-center">Hrs/Day</div>
-      <div class="w-[80px] text-right">Usage</div>
-      <div class="w-7"></div>
-    </div>
+    <div class="category-body-inner">
+      <!-- Column headers (desktop only) -->
+      <div class="hidden lg:flex items-center gap-3 px-4 py-2 border-b border-border text-[10px] font-mono uppercase tracking-widest text-text-muted">
+        <div class="w-11 flex-shrink-0">On/Off</div>
+        <div class="flex-1 min-w-[140px]">Appliance</div>
+        <div class="w-[90px] text-center">Watts</div>
+        <div class="w-[100px] text-center">Quantity</div>
+        <div class="w-[80px] text-center">Hrs/Day</div>
+        <div class="w-[80px] text-right">Usage</div>
+        <div class="w-7"></div>
+      </div>
 
-    <!-- Appliance rows -->
-    <div data-rows-container={name}>
-      {appliances.map((a, i) => (
-        <ApplianceRow appliance={a} index={i} />
-      ))}
-    </div>
+      <!-- Appliance rows -->
+      <div data-rows-container={name}>
+        {appliances.map((a, i) => (
+          <ApplianceRow appliance={a} index={i} />
+        ))}
+      </div>
 
-    <!-- Add appliance form -->
-    <AddApplianceForm category={name} />
+      <!-- Add appliance form -->
+      <AddApplianceForm category={name} />
+    </div>
   </div>
 </section>
+
+<style>
+  .chevron {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Prevent the global button scale animation on the category toggle for a more stable feel */
+  .category-toggle:active {
+    transform: none !important;
+  }
+</style>
