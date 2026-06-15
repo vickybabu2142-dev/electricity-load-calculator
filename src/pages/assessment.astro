@@ -55,7 +55,7 @@ const schemaGraph = [
     <div class="pt-8 pb-8 border-b border-border mb-10">
       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-2">Electrical Assessment Report</p>
+          <p class="text-[10px] font-mono uppercase tracking-widest text-accent mb-2">Electrical Assessment Report</p>
           <h1 class="font-display font-bold text-3xl sm:text-4xl text-text-primary leading-tight mb-2">Your Electrical Assessment</h1>
           <p class="text-sm text-text-muted">Generated from your appliance configuration &nbsp;·&nbsp; <span id="assess-timestamp" class="font-mono"></span></p>
         </div>
@@ -514,7 +514,7 @@ const schemaGraph = [
     <!-- SECTION 1: Cover Page -->
     <div class="print-page flex flex-col justify-center min-h-[1050px]" style="page-break-after: always;">
       <div class="text-center">
-        <h1 class="text-5xl font-display font-bold text-text-primary mb-6">Electrical Assessment Report</h1>
+        <h1 class="text-5xl font-display font-bold text-accent mb-6">Electrical Assessment Report</h1>
         <p class="text-xl text-text-muted mb-12">Electrical Load Analysis, Safety Recommendations, Energy Assessment and Planning Report</p>
         
         <div class="mt-16 flex flex-col items-center justify-center gap-3">
@@ -721,6 +721,34 @@ const schemaGraph = [
            <h3 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4 border-b border-border pb-2">Active Appliances</h3>
            <div id="aprint-appliances-list" class="space-y-4"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- SECTION 7.5: Energy Cost Estimator (Conditional Page) -->
+    <div id="aprint-cost-estimator" class="print-page" style="page-break-before: always; break-before: page; display:none">
+      <div class="border-b-2 border-border pb-4 mb-6">
+        <h2 class="text-2xl font-display font-bold text-text-primary">Energy Cost Estimator</h2>
+      </div>
+      <div class="bg-card border border-border rounded-xl p-6">
+        <div class="grid grid-cols-3 gap-6 mb-6 border-b border-border pb-6">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
+            <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh</p>
+            <p class="text-xl font-bold text-text-primary" id="aprint-cost-rate">—</p>
+          </div>
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Estimated Monthly Cost</p>
+            <p class="text-3xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-6">
+          <p class="text-sm text-text-primary"><span class="text-text-muted">Daily Estimate:</span> <span id="aprint-cost-daily" class="font-bold">—</span></p>
+          <p class="text-sm text-text-primary"><span class="text-text-muted">Yearly Estimate:</span> <span id="aprint-cost-yearly" class="font-bold">—</span></p>
+        </div>
+        <p class="text-[10px] text-text-muted mt-4 italic">Note: These are estimates based on your provided rate and configured appliance load. Actual bills may vary due to taxes, fixed charges, slab pricing, and regional tariffs.</p>
       </div>
     </div>
 
@@ -1162,11 +1190,35 @@ function initAssessment() {
   // ── S8: Cost Estimator ────────────────────────────────────
   setText('assess-est-monthly-kwh', Math.round(result.monthlyKWh).toString());
 
+  // Populate from saved state
+  const currencySelect = document.getElementById('assess-currency') as HTMLSelectElement | null;
+  const rateInput = document.getElementById('assess-rate') as HTMLInputElement | null;
+  
+  if (currencySelect && state?.currentCurrencySymbol) {
+    currencySelect.value = state.currentCurrencySymbol;
+  }
+  if (rateInput && tariff > 0) {
+    rateInput.value = tariff.toString();
+  }
+
   function updateCost() {
-    const sym  = (document.getElementById('assess-currency') as HTMLSelectElement | null)?.value ?? '$';
-    const rate = parseFloat((document.getElementById('assess-rate') as HTMLInputElement | null)?.value ?? '');
+    const sym  = currencySelect?.value ?? '$';
+    const rate = parseFloat(rateInput?.value ?? '');
     const resEl = document.getElementById('assess-est-result');
     if (!resEl) return;
+
+    // Save to localStorage
+    try {
+      const currentSaved = localStorage.getItem(STORAGE_KEY);
+      if (currentSaved) {
+        const currentState = JSON.parse(currentSaved);
+        currentState.tariff = rate || 0;
+        currentState.currentCurrencySymbol = sym;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+      }
+    } catch (e) {
+      // Ignore storage errors
+    }
 
     if (!rate || rate <= 0) {
       resEl.style.display = 'none';

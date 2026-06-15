@@ -27,8 +27,8 @@ const schemaGraph = [
     <div class="max-w-2xl mx-auto space-y-4">
 
       <!-- Back link -->
-      <a href="/assessment" class="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors" style="color:var(--accent); border-color:color-mix(in srgb,var(--accent),transparent 60%); background:color-mix(in srgb,var(--accent),transparent 92%)">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
+      <a href="/assessment" class="group inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all hover:shadow-lg active:scale-95" style="color:var(--accent); border-color:color-mix(in srgb,var(--accent),transparent 60%); background:color-mix(in srgb,var(--accent),transparent 92%)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true">
           <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/>
         </svg>
         Back to Assessment
@@ -50,137 +50,191 @@ const schemaGraph = [
       </div>
 
       <!-- ② Concept -->
-      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4">
-        <h2 class="font-display font-semibold text-text-primary text-lg">What is a Health Score?</h2>
-        <p class="text-sm text-text-muted leading-relaxed">
-          The Electrical Health Score is a composite metric from 0 to 100 that evaluates how well your electrical system is managed. It's not just about how much power you use, but how **safely**, **efficiently**, and **responsibly** you use it.
-        </p>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-           {[
-             { label: 'Poor', range: '0-40', color: '#ef4444' },
-             { label: 'Fair', range: '41-60', color: '#fb923c' },
-             { label: 'Good', range: '61-80', color: '#3ecf6e' },
-             { label: 'Excellent', range: '81-100', color: '#22d3ee' }
-           ].map(item => (
-             <div class="text-center p-3 rounded-lg border border-border bg-base">
-               <p class="text-[10px] font-mono font-bold uppercase mb-1" style={`color:${item.color}`}>{item.label}</p>
-               <p class="text-xs text-text-muted">{item.range}</p>
-             </div>
-           ))}
+      <div class="rounded-2xl border border-border bg-card p-6 sm:p-10 space-y-6 overflow-hidden relative group">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-accent/10 transition-colors"></div>
+        <div class="relative">
+          <h2 class="font-display font-bold text-text-primary text-xl sm:text-2xl mb-4">The Logic of "Electrical Health"</h2>
+          <p class="text-base text-text-muted leading-relaxed max-w-xl">
+            Think of this score as a <span class="text-text-primary font-medium">fitness tracker for your home</span>. It doesn't just measure how much power you consume—it analyzes the quality, balance, and safety of that consumption.
+          </p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6">
+             {[
+               { label: 'Poor', range: '0-40', color: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
+               { label: 'Fair', range: '41-60', color: '#fb923c', bg: 'rgba(251,146,60,0.1)' },
+               { label: 'Good', range: '61-80', color: '#3ecf6e', bg: 'rgba(62,207,110,0.1)' },
+               { label: 'Excellent', range: '81-100', color: '#22d3ee', bg: 'rgba(34,211,238,0.1)' }
+             ].map(item => (
+               <div class="text-center p-4 rounded-xl border border-border bg-base transition-transform hover:-translate-y-1">
+                 <p class="text-[10px] font-mono font-bold uppercase tracking-widest mb-1.5" style={`color:${item.color}`}>{item.label}</p>
+                 <p class="text-lg font-display font-bold text-text-primary">{item.range}</p>
+                 <div class="h-1 w-8 mx-auto mt-2 rounded-full" style={`background:${item.color}`}></div>
+               </div>
+             ))}
+          </div>
         </div>
       </div>
 
       <!-- ③ The Four Pillars -->
-      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-8">
-        <h2 class="font-display font-semibold text-text-primary text-lg border-b border-border pb-3">The 4 Pillars of Your Score</h2>
-
-        <!-- Pillar 1: Load Utilization -->
-        <div class="space-y-3">
-          <div class="flex items-center gap-3">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent text-sm font-mono font-bold flex-shrink-0">30%</span>
-            <h3 class="font-display font-semibold text-text-primary text-base">Load Utilization (30 points)</h3>
-          </div>
-          <div class="pl-11 space-y-3">
-            <p class="text-sm text-text-muted leading-relaxed">
-              This measures your total connected load relative to your home's maximum configured capacity (kW). It evaluates how much "breathing room" your electrical system has.
-            </p>
-            <div class="rounded-lg border border-border bg-base p-4 text-xs text-text-muted space-y-2">
-              <p><strong class="text-text-primary">50% – 80% Utilization:</strong> Optimal range. Awards maximum points. You are using your capacity efficiently without stressing the system.</p>
-              <p><strong class="text-warning">80% – 95% Utilization:</strong> Warning zone. Point deductions begin. Your system is heavily loaded, increasing the risk of tripped breakers if multiple heavy appliances run simultaneously.</p>
-              <p><strong class="text-danger">> 95% Utilization:</strong> Danger zone. Severe point deductions. High risk of overloading and potential fire hazard. Upgrade your sanctioned load or reduce concurrent usage.</p>
-              <p><strong class="text-warning">< 25% Utilization:</strong> Low efficiency. Minor point deduction. You may be paying higher fixed charges for a sanctioned load much larger than you actually need.</p>
-            </div>
-          </div>
+      <div class="space-y-6">
+        <div class="flex items-center gap-4">
+          <h2 class="font-display font-bold text-text-primary text-xl">The 4 Strategic Pillars</h2>
+          <div class="h-px bg-border flex-1"></div>
         </div>
 
-        <!-- Pillar 2: Energy Efficiency -->
-        <div class="space-y-3">
-          <div class="flex items-center gap-3">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent text-sm font-mono font-bold flex-shrink-0">30%</span>
-            <h3 class="font-display font-semibold text-text-primary text-base">Energy Efficiency (30 points)</h3>
-          </div>
-          <div class="pl-11 space-y-3">
-            <p class="text-sm text-text-muted leading-relaxed">
-              This evaluates your load distribution and penalises over-reliance on a single high-consumption appliance. A healthy home has a balanced distribution of energy.
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Pillar 1: Load Utilization -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
+            <div class="flex items-center justify-between mb-6">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+              </span>
+              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">30 POINTS</span>
+            </div>
+            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Load Utilization</h3>
+            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
+              Measures how much of your sanctioned capacity is being taxed. Like a car engine, running at redline (100%) or barely idling (&lt; 25%) is inefficient.
             </p>
-            <div class="rounded-lg border border-border bg-base p-4 text-xs text-text-muted space-y-2">
-              <p><strong class="text-text-primary">Balanced Distribution:</strong> If your highest-consuming appliance uses less than 40% of your total daily energy, you receive maximum points.</p>
-              <p><strong class="text-warning">Heavy Concentration (> 40%):</strong> If a single appliance (like an old AC running 12 hours/day) dominates your energy profile, points are deducted. This indicates a primary target for energy savings (e.g., upgrading to a 5-star inverter AC).</p>
+            <div class="space-y-2 border-t border-border pt-5">
+              <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-tighter">
+                <span class="text-text-primary font-bold">Optimal Range</span>
+                <span class="text-accent">50% – 80%</span>
+              </div>
+              <div class="h-1.5 w-full bg-base rounded-full overflow-hidden">
+                <div class="h-full bg-accent" style="width: 70%"></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Pillar 3: Safety Readiness -->
-        <div class="space-y-3">
-          <div class="flex items-center gap-3">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent text-sm font-mono font-bold flex-shrink-0">20%</span>
-            <h3 class="font-display font-semibold text-text-primary text-base">Safety Readiness (20 points)</h3>
-          </div>
-          <div class="pl-11 space-y-3">
-            <p class="text-sm text-text-muted leading-relaxed">
-              This confirms whether your connected load falls within safe, standard residential engineering margins.
+          <!-- Pillar 2: Energy Efficiency -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
+            <div class="flex items-center justify-between mb-6">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 6v6l4 2"/></svg>
+              </span>
+              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">30 POINTS</span>
+            </div>
+            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Energy Distribution</h3>
+            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
+              Checks for "Power Hogs." If one appliance consumes > 40% of your total energy, your system is unbalanced and ripe for replacement with a 5-star unit.
             </p>
-            <div class="rounded-lg border border-border bg-base p-4 text-xs text-text-muted space-y-2">
-              <p><strong class="text-text-primary">Standard Compliance:</strong> You receive full points if the calculator can successfully determine standard MCB (Miniature Circuit Breaker) and cable sizing recommendations based on your load.</p>
-              <p><strong class="text-danger">Beyond Standard Margins:</strong> If your load exceeds the safe limits of standard residential calculators (e.g., requiring industrial-grade breakers), points are deducted, indicating you urgently need professional electrical planning.</p>
+            <div class="space-y-2 border-t border-border pt-5">
+              <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-tighter">
+                <span class="text-text-primary font-bold">Max Share per Device</span>
+                <span class="text-accent">&lt; 40%</span>
+              </div>
+              <div class="flex gap-1 h-1.5">
+                <div class="h-full bg-accent rounded-full" style="width: 30%"></div>
+                <div class="h-full bg-accent/40 rounded-full" style="width: 20%"></div>
+                <div class="h-full bg-accent/20 rounded-full" style="width: 50%"></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Pillar 4: Renewable Potential -->
-        <div class="space-y-3">
-          <div class="flex items-center gap-3">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent text-sm font-mono font-bold flex-shrink-0">20%</span>
-            <h3 class="font-display font-semibold text-text-primary text-base">Renewable Readiness (20 points)</h3>
-          </div>
-          <div class="pl-11 space-y-3">
-            <p class="text-sm text-text-muted leading-relaxed">
-              This assesses your Return on Investment (ROI) potential for installing a solar panel system.
+          <!-- Pillar 3: Safety Readiness -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
+            <div class="flex items-center justify-between mb-6">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5Z"/></svg>
+              </span>
+              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">20 POINTS</span>
+            </div>
+            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Safety Readiness</h3>
+            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
+              Confirms your load stays within residential limits. If our calculator flags your usage as "Industrial," points are lost to signal a need for professional wiring.
             </p>
-            <div class="rounded-lg border border-border bg-base p-4 text-xs text-text-muted space-y-2">
-              <p><strong class="text-text-primary">High Consumption (> 150 kWh/mo):</strong> Awards maximum points. Homes with higher consumption have the strongest financial case for solar, as the panels will pay for themselves much faster.</p>
-              <p><strong class="text-warning">Low Consumption (< 150 kWh/mo):</strong> Points are reduced on a sliding scale. While solar is always good for the environment, the financial ROI is slower for very low-consumption households.</p>
+            <div class="border-t border-border pt-5 flex items-center justify-between">
+              <span class="text-[11px] font-mono uppercase font-bold text-text-primary tracking-tighter">Standard Compliance</span>
+              <div class="flex gap-1">
+                {[1,2,3,4,5].map(() => <div class="w-4 h-1.5 rounded-full bg-accent"></div>)}
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 4: Renewable Potential -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
+            <div class="flex items-center justify-between mb-6">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+              </span>
+              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">20 POINTS</span>
+            </div>
+            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Solar ROI Potential</h3>
+            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
+              Higher consumption isn't always bad—it makes you the perfect candidate for Solar. High-usage homes get more points here as their "Green ROI" is much faster.
+            </p>
+            <div class="border-t border-border pt-5 flex items-center justify-between">
+              <span class="text-[11px] font-mono uppercase font-bold text-text-primary tracking-tighter">ROI Feasibility</span>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-accent italic">HIGH ROI</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-accent"><path fill-rule="evenodd" d="M12.577 4.878a.75.75 0 0 1 .919-.53l4.792 1.284a.75.75 0 0 1 .53.919l-1.284 4.792a.75.75 0 0 1-1.449-.387l.81-3.022-11.564 11.564a.75.75 0 0 1-1.06-1.06L15.939 6.874l-3.892 1.043a.75.75 0 0 1-.92-.53-.75.75 0 0 1 .53-.92-.75.75 0 0 1 .92-.53Z" clip-rule="evenodd"/></svg>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- ④ Improvement Checklist -->
-      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-4">
-        <h2 class="font-display font-semibold text-text-primary text-lg border-b border-border pb-3">Improvement Checklist</h2>
-        <p class="text-sm text-text-muted mb-6">Actions to dynamically improve your Electrical Health Score across the four pillars.</p>
+      <div class="space-y-6">
+        <div class="flex items-center gap-4">
+          <h2 class="font-display font-bold text-text-primary text-xl">Actionable Checklist</h2>
+          <div class="h-px bg-border flex-1"></div>
+        </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="p-5 rounded-lg bg-base border border-border">
-            <p class="text-xs font-bold text-accent uppercase mb-3 flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
-              Improve Energy Efficiency
-            </p>
-            <ul class="text-xs text-text-muted space-y-3">
-              <li class="flex gap-2"><span>•</span> <strong>Upgrade Appliances:</strong> Replace older refrigerator models and fixed-speed ACs with BEE 5-star inverter equivalents.</li>
-              <li class="flex gap-2"><span>•</span> <strong>Eliminate Standby:</strong> Reduce unnecessary standby consumption by physically unplugging devices.</li>
+          <div class="p-6 rounded-2xl bg-card border border-border hover:border-accent/30 transition-all">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="h-8 w-8 rounded-lg bg-success/10 flex items-center justify-center text-success">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M16.403 12.652a3 3 0 0 0 0-5.304 3 3 0 0 0-3.75-3.751 3 3 0 0 0-5.305 0 3 3 0 0 0-3.751 3.75 3 3 0 0 0 0 5.305 3 3 0 0 0 3.75 3.751 3 3 0 0 0 5.305 0 3 3 0 0 0 3.751-3.75Zm-2.546-4.46a.75.75 0 0 0-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
+              </div>
+              <p class="text-xs font-bold text-text-primary uppercase tracking-widest">Energy Efficiency</p>
+            </div>
+            <ul class="text-xs text-text-muted space-y-4">
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Appliance Audit:</strong> Upgrade old refrigerators and fixed-speed ACs to 5-star inverter models.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Standby Kill:</strong> Unplug non-essential electronics to eliminate "phantom" energy leaks.</span>
+              </li>
             </ul>
           </div>
           
-          <div class="p-5 rounded-lg bg-base border border-border">
-            <p class="text-xs font-bold text-accent uppercase mb-3 flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
-              Improve Load Balance
-            </p>
-            <ul class="text-xs text-text-muted space-y-3">
-              <li class="flex gap-2"><span>•</span> <strong>Shift Usage:</strong> Distribute appliance usage more evenly across the day.</li>
-              <li class="flex gap-2"><span>•</span> <strong>Stagger Operation:</strong> Avoid simultaneous operation of high-load devices (e.g., Water Geyser and AC).</li>
+          <div class="p-6 rounded-2xl bg-card border border-border hover:border-accent/30 transition-all">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M10 2a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 2ZM10 15a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 15ZM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM15.657 5.404a.75.75 0 1 0-1.06-1.06l-1.061 1.06a.75.75 0 0 0 1.06 1.061l1.061-1.06ZM6.464 14.596a.75.75 0 1 0-1.06-1.06l-1.06 1.06a.75.75 0 0 0 1.06 1.061l1.06-1.06ZM18 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 18 10ZM5.5 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 5.5 10ZM15.657 14.596a.75.75 0 1 1-1.06 1.06l-1.06-1.06a.75.75 0 1 1 1.06-1.061l1.06 1.06ZM6.464 5.404a.75.75 0 1 1-1.06 1.06l-1.061-1.06a.75.75 0 1 1 1.06-1.061l1.061 1.06Z"/></svg>
+              </div>
+              <p class="text-xs font-bold text-text-primary uppercase tracking-widest">Load Balancing</p>
+            </div>
+            <ul class="text-xs text-text-muted space-y-4">
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Peak Shift:</strong> Move high-energy tasks (laundry, dishwashing) to non-peak hours.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Anti-Stacking:</strong> Never run your Water Geyser, Microwave, and AC on the same circuit at once.</span>
+              </li>
             </ul>
           </div>
 
-          <div class="p-5 rounded-lg bg-base border border-border sm:col-span-2">
-            <p class="text-xs font-bold text-accent uppercase mb-3 flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
-              Improve Solar Readiness
-            </p>
-            <ul class="text-xs text-text-muted space-y-3">
-              <li class="flex gap-2"><span>•</span> <strong>Strategic Installation:</strong> Consider the recommended solar installation to significantly offset your monthly consumption footprint.</li>
-              <li class="flex gap-2"><span>•</span> <strong>Continuous Monitoring:</strong> Monitor monthly energy usage trends to maximize the ROI of your renewable transition.</li>
+          <div class="p-6 rounded-2xl bg-card border border-border sm:col-span-2 hover:border-accent/30 transition-all">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-11.25a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z" clip-rule="evenodd"/></svg>
+              </div>
+              <p class="text-xs font-bold text-text-primary uppercase tracking-widest">Renewable Readiness</p>
+            </div>
+            <ul class="text-xs text-text-muted grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Solar Sizing:</strong> Use our Solar Recommendation to offset your heaviest consumption periods.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Trend Tracking:</strong> Keep a log of monthly unit trends to calculate your exact ROI for solar panels.</span>
+              </li>
             </ul>
           </div>
         </div>
