@@ -40,6 +40,9 @@ test.describe('Site Pages & Navigation', () => {
   test('Assessment page displays data after configuration', async ({ page }) => {
     await page.goto('/');
     
+    // Expand lighting category first so appliances are visible
+    await page.locator('button.category-toggle[data-category="Lighting"]').click();
+    
     // Add an appliance (LED Bulb) and wait for state to save
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     // Give it a tiny bit of time to save to localStorage
@@ -57,15 +60,6 @@ test.describe('Site Pages & Navigation', () => {
     await expect(content.getByRole('heading', { name: 'Load Summary' })).toBeVisible();
     await expect(content.getByRole('heading', { name: 'Smart Recommendations' })).toBeVisible();
     await expect(content.getByRole('heading', { name: 'Electrical Health Score' })).toBeVisible();
-  });
-
-  test('Insights pages load correctly', async ({ page }) => {
-    const insights = ['cable', 'inverter', 'mcb', 'solar', 'health-score'];
-    for (const insight of insights) {
-      await page.goto(`/insights/${insight}`);
-      // Use more specific selector and wait
-      await expect(page.locator('main h1')).toBeVisible({ timeout: 10000 });
-    }
   });
 
   test('Recommendations pages load correctly', async ({ page }) => {

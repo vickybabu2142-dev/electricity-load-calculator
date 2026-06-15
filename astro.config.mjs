@@ -10,6 +10,7 @@ const SITE_URL = 'https://electricityloadcalculator.com';
 export default defineConfig({
   site: SITE_URL,
   output: 'server',
+  trailingSlash: 'never',
 
   prefetch: {
     prefetchAll: true,
@@ -22,7 +23,7 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: (page) => page !== `${SITE_URL}/404/`,
+      filter: (page) => page !== `${SITE_URL}/404`,
     }),
   ],
 

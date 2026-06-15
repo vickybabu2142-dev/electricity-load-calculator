@@ -13,7 +13,7 @@
 - **Real-time Load Calculation:** Watts, kW, kWh/day, and kWh/month estimates.
 - **Dynamic Assessment:** Instant electrical health score based on load utilization, efficiency, and safety.
 - **Smart Recommendations:** Tailored MCB, Cable, Inverter, and Solar sizing based on your specific load.
-- **Professional Assessment Report:** Comprehensive multi-page assessment (Assessment page) and print-ready PDF reports.
+- **Professional Assessment Report:** Comprehensive multi-page assessment and print-ready PDF reports with QR codes, shareability features, and report verification metadata (V4).
 - **Insight Guides:** Deep-dive education on MCBs, Cables, Inverters, and Solar technology.
 - **Persistent State:** All configurations and custom appliances are saved to `localStorage`.
 - **Industrial Themes:** High-contrast Dark (Industrial) and Light (Stormy Morning) themes.
@@ -24,7 +24,6 @@
 - `src/pages/`: 
   - `index.astro`: Main calculator interface.
   - `assessment.astro`: Deep-dive electrical assessment report.
-  - `insights/`: Educational guides for electrical components.
   - `recommendations/`: Detailed sizing guides based on load.
   - `about-us.astro`, `contact-us.astro`, `privacy-policy.astro`, `terms-conditions.astro`, `404.astro`.
 - `src/styles/`: Global CSS (`global.css`) with Tailwind `@theme` and print overrides.

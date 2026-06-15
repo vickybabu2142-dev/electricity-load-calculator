@@ -1,0 +1,276 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "Understanding Your Electrical Health Score: Safety and Efficiency Metrics",
+    "description": "Learn how we calculate your home's electrical health score based on load utilization, energy efficiency, safety readiness, and renewable potential.",
+    "author": {
+      "@type": "Organization",
+      "name": "Electricity Load Calculator"
+    }
+  }
+];
+---
+
+<BaseLayout
+  title="Electrical Health Score Logic | Electricity Load Calculator"
+  description="Deep dive into the logic behind the Electrical Health Score. Learn how load balance, appliance efficiency, and safety margins impact your score."
+  keywords="electrical health score, energy efficiency metrics, load utilization, electrical safety assessment, residential power health"
+  schemaGraph={schemaGraph}
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Assessment', href: '/assessment' }, { label: 'Health Score Logic' }]} />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-16">
+    <div class="max-w-2xl mx-auto space-y-4">
+
+      <!-- Back link -->
+      <a href="/assessment" class="group inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all hover:shadow-lg active:scale-95" style="color:var(--accent); border-color:color-mix(in srgb,var(--accent),transparent 60%); background:color-mix(in srgb,var(--accent),transparent 92%)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true">
+          <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/>
+        </svg>
+        Back to Assessment
+      </a>
+
+      <!-- ① Header -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <div class="flex items-start gap-4">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-base flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-accent" aria-hidden="true">
+              <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.5 3c1.557 0 3.046.812 3.945 2.027A4.912 4.912 0 0115.395 3c2.786 0 5.25 2.322 5.25 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+            </svg>
+          </span>
+          <div class="pt-0.5">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1.5 text-text-muted">Assessment Logic</p>
+            <h1 class="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">Electrical Health Score</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② Concept -->
+      <div class="rounded-2xl border border-border bg-card p-6 sm:p-10 space-y-6 overflow-hidden relative group">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-accent/10 transition-colors"></div>
+        <div class="relative">
+          <h2 class="font-display font-bold text-text-primary text-xl sm:text-2xl mb-4">The Logic of "Electrical Health"</h2>
+          <p class="text-base text-text-muted leading-relaxed max-w-xl">
+            Think of this score as a <span class="text-text-primary font-medium">fitness tracker for your home</span>. It doesn't just measure how much power you consume—it analyzes the quality, balance, and safety of that consumption.
+          </p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6">
+             {[
+               { label: 'Poor', range: '0-40', color: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
+               { label: 'Fair', range: '41-60', color: '#fb923c', bg: 'rgba(251,146,60,0.1)' },
+               { label: 'Good', range: '61-80', color: '#3ecf6e', bg: 'rgba(62,207,110,0.1)' },
+               { label: 'Excellent', range: '81-100', color: '#22d3ee', bg: 'rgba(34,211,238,0.1)' }
+             ].map(item => (
+               <div class="text-center p-4 rounded-xl border border-border bg-base transition-transform hover:-translate-y-1">
+                 <p class="text-[10px] font-mono font-bold uppercase tracking-widest mb-1.5" style={`color:${item.color}`}>{item.label}</p>
+                 <p class="text-lg font-display font-bold text-text-primary">{item.range}</p>
+                 <div class="h-1 w-8 mx-auto mt-2 rounded-full" style={`background:${item.color}`}></div>
+               </div>
+             ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ The Four Pillars -->
+      <div class="space-y-6">
+        <div class="flex items-center gap-4">
+          <h2 class="font-display font-bold text-text-primary text-xl">The 4 Strategic Pillars</h2>
+          <div class="h-px bg-border flex-1"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Pillar 1: Load Utilization -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
+            <div class="flex items-center justify-between mb-6">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+              </span>
+              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">30 POINTS</span>
+            </div>
+            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Load Utilization</h3>
+            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
+              Measures how much of your sanctioned capacity is being taxed. Like a car engine, running at redline (100%) or barely idling (&lt; 25%) is inefficient.
+            </p>
+            <div class="space-y-2 border-t border-border pt-5">
+              <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-tighter">
+                <span class="text-text-primary font-bold">Optimal Range</span>
+                <span class="text-accent">50% – 80%</span>
+              </div>
+              <div class="h-1.5 w-full bg-base rounded-full overflow-hidden">
+                <div class="h-full bg-accent" style="width: 70%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 2: Energy Efficiency -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
+            <div class="flex items-center justify-between mb-6">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 6v6l4 2"/></svg>
+              </span>
+              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">30 POINTS</span>
+            </div>
+            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Energy Distribution</h3>
+            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
+              Checks for "Power Hogs." If one appliance consumes > 40% of your total energy, your system is unbalanced and ripe for replacement with a 5-star unit.
+            </p>
+            <div class="space-y-2 border-t border-border pt-5">
+              <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-tighter">
+                <span class="text-text-primary font-bold">Max Share per Device</span>
+                <span class="text-accent">&lt; 40%</span>
+              </div>
+              <div class="flex gap-1 h-1.5">
+                <div class="h-full bg-accent rounded-full" style="width: 30%"></div>
+                <div class="h-full bg-accent/40 rounded-full" style="width: 20%"></div>
+                <div class="h-full bg-accent/20 rounded-full" style="width: 50%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 3: Safety Readiness -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
+            <div class="flex items-center justify-between mb-6">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5Z"/></svg>
+              </span>
+              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">20 POINTS</span>
+            </div>
+            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Safety Readiness</h3>
+            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
+              Confirms your load stays within residential limits. If our calculator flags your usage as "Industrial," points are lost to signal a need for professional wiring.
+            </p>
+            <div class="border-t border-border pt-5 flex items-center justify-between">
+              <span class="text-[11px] font-mono uppercase font-bold text-text-primary tracking-tighter">Standard Compliance</span>
+              <div class="flex gap-1">
+                {[1,2,3,4,5].map(() => <div class="w-4 h-1.5 rounded-full bg-accent"></div>)}
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 4: Renewable Potential -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
+            <div class="flex items-center justify-between mb-6">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+              </span>
+              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">20 POINTS</span>
+            </div>
+            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Solar ROI Potential</h3>
+            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
+              Higher consumption isn't always bad—it makes you the perfect candidate for Solar. High-usage homes get more points here as their "Green ROI" is much faster.
+            </p>
+            <div class="border-t border-border pt-5 flex items-center justify-between">
+              <span class="text-[11px] font-mono uppercase font-bold text-text-primary tracking-tighter">ROI Feasibility</span>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-accent italic">HIGH ROI</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-accent"><path fill-rule="evenodd" d="M12.577 4.878a.75.75 0 0 1 .919-.53l4.792 1.284a.75.75 0 0 1 .53.919l-1.284 4.792a.75.75 0 0 1-1.449-.387l.81-3.022-11.564 11.564a.75.75 0 0 1-1.06-1.06L15.939 6.874l-3.892 1.043a.75.75 0 0 1-.92-.53-.75.75 0 0 1 .53-.92-.75.75 0 0 1 .92-.53Z" clip-rule="evenodd"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ④ Improvement Checklist -->
+      <div class="space-y-6">
+        <div class="flex items-center gap-4">
+          <h2 class="font-display font-bold text-text-primary text-xl">Actionable Checklist</h2>
+          <div class="h-px bg-border flex-1"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-6 rounded-2xl bg-card border border-border hover:border-accent/30 transition-all">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="h-8 w-8 rounded-lg bg-success/10 flex items-center justify-center text-success">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M16.403 12.652a3 3 0 0 0 0-5.304 3 3 0 0 0-3.75-3.751 3 3 0 0 0-5.305 0 3 3 0 0 0-3.751 3.75 3 3 0 0 0 0 5.305 3 3 0 0 0 3.75 3.751 3 3 0 0 0 5.305 0 3 3 0 0 0 3.751-3.75Zm-2.546-4.46a.75.75 0 0 0-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
+              </div>
+              <p class="text-xs font-bold text-text-primary uppercase tracking-widest">Energy Efficiency</p>
+            </div>
+            <ul class="text-xs text-text-muted space-y-4">
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Appliance Audit:</strong> Upgrade old refrigerators and fixed-speed ACs to 5-star inverter models.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Standby Kill:</strong> Unplug non-essential electronics to eliminate "phantom" energy leaks.</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="p-6 rounded-2xl bg-card border border-border hover:border-accent/30 transition-all">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M10 2a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 2ZM10 15a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 15ZM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM15.657 5.404a.75.75 0 1 0-1.06-1.06l-1.061 1.06a.75.75 0 0 0 1.06 1.061l1.061-1.06ZM6.464 14.596a.75.75 0 1 0-1.06-1.06l-1.06 1.06a.75.75 0 0 0 1.06 1.061l1.06-1.06ZM18 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 18 10ZM5.5 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 5.5 10ZM15.657 14.596a.75.75 0 1 1-1.06 1.06l-1.06-1.06a.75.75 0 1 1 1.06-1.061l1.06 1.06ZM6.464 5.404a.75.75 0 1 1-1.06 1.06l-1.061-1.06a.75.75 0 1 1 1.06-1.061l1.061 1.06Z"/></svg>
+              </div>
+              <p class="text-xs font-bold text-text-primary uppercase tracking-widest">Load Balancing</p>
+            </div>
+            <ul class="text-xs text-text-muted space-y-4">
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Peak Shift:</strong> Move high-energy tasks (laundry, dishwashing) to non-peak hours.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Anti-Stacking:</strong> Never run your Water Geyser, Microwave, and AC on the same circuit at once.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-card border border-border sm:col-span-2 hover:border-accent/30 transition-all">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-11.25a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z" clip-rule="evenodd"/></svg>
+              </div>
+              <p class="text-xs font-bold text-text-primary uppercase tracking-widest">Renewable Readiness</p>
+            </div>
+            <ul class="text-xs text-text-muted grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Solar Sizing:</strong> Use our Solar Recommendation to offset your heaviest consumption periods.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="text-accent">•</span>
+                <span><strong>Trend Tracking:</strong> Keep a log of monthly unit trends to calculate your exact ROI for solar panels.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ FAQ -->
+      <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
+        <h2 class="font-display font-semibold text-text-primary text-lg">Frequently Asked Questions</h2>
+        <div class="space-y-2">
+          {[
+            {
+              q: 'Does a low score mean my house is dangerous?',
+              a: 'Not necessarily. A low score indicates that your electrical setup is inefficient or that you are pushing your system to its limits. It is a prompt to review your usage habits and consult an electrician to ensure your wiring and breakers (MCB) are sized correctly for your load.',
+            },
+            {
+              q: 'Why did my score drop when I added an AC?',
+              a: 'Air conditioners are high-consumption devices. Adding one increases your load utilization (bringing it closer to capacity) and often makes energy distribution less balanced, both of which can lower the health score.',
+            },
+            {
+              q: 'How often should I check my health score?',
+              a: 'Whenever you add a new major appliance or change your daily usage habits. It helps you keep track of your home\'s "electrical overhead" so you aren\'t surprised by trips or high bills.',
+            },
+          ].map(({ q, a }) => (
+            <details class="rounded-lg border border-border bg-base group">
+              <summary class="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer list-none text-sm font-semibold text-text-primary">
+                <span>{q}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 flex-shrink-0 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+                </svg>
+              </summary>
+              <p class="px-4 pb-4 pt-1 text-sm text-text-muted leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>

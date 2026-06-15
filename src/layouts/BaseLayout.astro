@@ -31,8 +31,8 @@ const {
   schemaGraph = [],
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
-const ogImage = new URL('/site-image.png', Astro.site ?? Astro.url).href;
+const canonicalURL = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site ?? Astro.url);
+const ogImage = new URL('/web-app-manifest-512x512.png', Astro.site ?? Astro.url).href;
 
 // Default software application schema (primarily for the home page)
 const defaultSoftwareSchema = {
@@ -99,14 +99,14 @@ const finalSchema = {
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url.href} />
+    <meta property="twitter:url" content={canonicalURL.href} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={ogImage} />

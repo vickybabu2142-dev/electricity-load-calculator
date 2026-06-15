@@ -524,7 +524,8 @@ button:active:not(:disabled),
     print-color-adjust: exact !important;
   }
 
-  #print-layout {
+  #print-layout,
+  #assess-print-layout {
     display: block !important;
     background-color: white !important;
     color: #0f0f0f !important;
@@ -532,6 +533,7 @@ button:active:not(:disabled),
     max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
+    --accent: #F4A826 !important;
   }
 
   .print-page {
@@ -564,6 +566,19 @@ button:active:not(:disabled),
   #print-layout .text-text-primary,
   #assess-print-layout .text-text-primary {
     color: #0f0f0f !important;
+  }
+
+  /* Global Accent Overrides for Print */
+  .text-accent,
+  [style*="color: var(--accent)"],
+  [style*="color:var(--accent)"] {
+    color: #F4A826 !important;
+  }
+
+  .border-accent,
+  [style*="border-color: var(--accent)"],
+  [style*="border-color:var(--accent)"] {
+    border-color: #F4A826 !important;
   }
 
   #print-layout .text-text-muted,
@@ -601,6 +616,11 @@ button:active:not(:disabled),
   #print-layout [style*="color: var(--warning)"],
   #assess-print-layout [style*="color: var(--warning)"] {
     color: #d97706 !important; /* Darker amber for print */
+  }
+
+  #print-layout .border-accent,
+  #assess-print-layout .border-accent {
+    border-color: #F4A826 !important;
   }
 
   #print-layout .border,
