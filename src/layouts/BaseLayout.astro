@@ -32,7 +32,7 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site ?? Astro.url);
-const ogImage = new URL('/site-image.png', Astro.site ?? Astro.url).href;
+const ogImage = new URL('/web-app-manifest-512x512.png', Astro.site ?? Astro.url).href;
 
 // Default software application schema (primarily for the home page)
 const defaultSoftwareSchema = {

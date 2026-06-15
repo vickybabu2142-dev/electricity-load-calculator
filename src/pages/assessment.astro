@@ -295,7 +295,7 @@ const schemaGraph = [
             <span id="assess-health-label" class="inline-block text-sm font-mono font-semibold px-4 py-1.5 rounded-full border mb-2" style="color:#3ecf6e; background:color-mix(in srgb, #3ecf6e, transparent 85%); border-color:color-mix(in srgb, #3ecf6e, transparent 55%);">Excellent</span>
             <p id="assess-health-desc" class="text-xs text-text-muted leading-relaxed max-w-[220px] mx-auto mb-2">Your electrical setup is well-balanced and efficient.</p>
             
-            <a href="/insights/health-score" class="inline-flex items-center gap-1.5 text-xs font-semibold text-accent/80 hover:text-accent transition-colors">
+            <a href="/recommendations/health-score" class="inline-flex items-center gap-1.5 text-xs font-semibold text-accent/80 hover:text-accent transition-colors">
               View Calculation Logic
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
             </a>
@@ -1410,7 +1410,7 @@ function initAssessment() {
     SECTIONS.forEach(section => {
       const sectionItems = active.filter(a => section.categories.includes(a.category));
       if (sectionItems.length > 0) {
-        html += `<div><h3 class="text-[10px] font-bold text-accent uppercase tracking-widest mb-2 border-l-2 border-accent pl-2">${section.title}</h3><div class="space-y-1">`;
+        html += `<div><h3 class="text-[10px] font-bold uppercase tracking-widest mb-2 border-l-2 pl-2" style="color:#F4A826; border-color:#F4A826">${section.title}</h3><div class="space-y-1">`;
         section.categories.forEach(cat => {
           const catItems = sectionItems.filter(a => a.category === cat);
           if (catItems.length > 0) {

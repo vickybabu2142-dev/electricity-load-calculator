@@ -24,7 +24,6 @@
 - `src/pages/`: 
   - `index.astro`: Main calculator interface.
   - `assessment.astro`: Deep-dive electrical assessment report.
-  - `insights/`: Educational guides for electrical components.
   - `recommendations/`: Detailed sizing guides based on load.
   - `about-us.astro`, `contact-us.astro`, `privacy-policy.astro`, `terms-conditions.astro`, `404.astro`.
 - `src/styles/`: Global CSS (`global.css`) with Tailwind `@theme` and print overrides.
