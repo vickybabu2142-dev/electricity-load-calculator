@@ -48,6 +48,18 @@ const schemaGraph = [
       <div class="flex items-center gap-3 mb-4">
         <p class="text-xs sm:text-sm font-normal uppercase tracking-widest text-text-muted flex-shrink-0">Quick Start</p>
         <div class="flex-1 h-px bg-border/60"></div>
+        <button
+          type="button"
+          data-action="reset-all"
+          class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-danger/20 text-danger bg-danger/5 hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-danger font-display text-sm font-medium active:scale-95 flex-shrink-0"
+          aria-label="Reset all appliances"
+          title="Clear all inputs and start over"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 opacity-80" aria-hidden="true">
+            <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd"/>
+          </svg>
+          Reset Load
+        </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
 
@@ -118,17 +130,6 @@ const schemaGraph = [
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-accent"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 {section.title}
               </h2>
-              <button
-                type="button"
-                data-action="reset-all"
-                class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-lg border border-danger/20 text-danger bg-danger/5 text-lg font-display font-medium hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-danger active:scale-95"
-                aria-label="Reset all appliances"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd"/>
-                </svg>
-                Reset All
-              </button>
             </div>
             <div class="space-y-4">
               {section.groups.map((group, i) => (
@@ -160,7 +161,7 @@ const schemaGraph = [
       id="sticky-reset-btn"
       data-action="reset-all"
       type="button"
-      class="flex items-center justify-center gap-2 px-3 h-10 rounded-lg border border-danger/20 text-danger bg-danger/5 hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-danger flex-shrink-0"
+      class="flex items-center justify-center gap-2 px-3 h-10 rounded-lg border border-danger/20 text-danger bg-danger/5 hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-danger font-display flex-shrink-0"
       aria-label="Reset all appliances"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 opacity-80">
@@ -251,7 +252,10 @@ const schemaGraph = [
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Monthly Consumption</p>
-          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
+          <div class="flex items-baseline gap-2">
+            <span id="print-monthly-kwh-original" class="hidden text-xl line-through text-text-muted font-normal">0</span>
+            <p class="text-4xl font-bold font-display text-text-primary"><span id="print-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
+          </div>
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Health Score</p>
@@ -423,17 +427,29 @@ const schemaGraph = [
       </div>
       <div class="bg-card border border-border rounded-xl p-6">
         <div class="grid grid-cols-3 gap-6 mb-6 border-b border-border pb-6">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
-            <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh(unit)</p>
+          <div class="space-y-4">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
+              <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh(unit)</p>
+            </div>
+            <div class="pt-2 border-t border-border/50">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Subsidized</p>
+              <p class="text-lg font-bold text-text-primary">- <span id="aprint-cost-subsidized">0</span> kWh(unit)</p>
+            </div>
           </div>
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh(unit)</p>
-            <p class="text-xl font-bold text-text-primary" id="aprint-cost-rate">—</p>
+          <div class="space-y-4 border-l border-border pl-6">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Billable Usage</p>
+              <p class="text-xl font-bold text-accent"><span id="aprint-cost-billable">0</span> kWh(unit)</p>
+            </div>
+            <div class="pt-2 border-t border-border/50">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh(unit)</p>
+              <p class="text-lg font-bold text-text-primary" id="aprint-cost-rate">—</p>
+            </div>
           </div>
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Estimated Monthly Cost</p>
-            <p class="text-3xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
+          <div class="flex flex-col justify-center items-center border-l border-border pl-6 bg-accent/5 rounded-r-xl">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Estimated Monthly Cost</p>
+            <p class="text-4xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-6">
@@ -825,7 +841,21 @@ function calculate() {
 
   setText('print-total-kw', (result.totalWatts / 1000).toFixed(2));
   setText('print-daily-kwh', formatNumber(result.dailyKWh, 2));
-  setText('print-monthly-kwh', String(Math.round(result.monthlyKWh)));
+  
+  const subsidy = parseFloat(localStorage.getItem(STORAGE_KEY) ? JSON.parse(localStorage.getItem(STORAGE_KEY)!).subsidyUnits : '0') || 0;
+  const billableUnits = Math.max(0, result.monthlyKWh - subsidy);
+  const pOrigEl = document.getElementById('print-monthly-kwh-original');
+  if (pOrigEl) {
+    if (subsidy > 0) {
+      pOrigEl.classList.remove('hidden');
+      pOrigEl.textContent = Math.round(result.monthlyKWh).toString();
+      setText('print-monthly-kwh', Math.round(billableUnits).toString());
+    } else {
+      pOrigEl.classList.add('hidden');
+      setText('print-monthly-kwh', Math.round(result.monthlyKWh).toString());
+    }
+  }
+
   setText('print-date', new Date().toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' }));
 
   // Hardcode professional branding for PDF
@@ -1120,14 +1150,21 @@ function calculate() {
   if (pCost) {
     if (tariff && tariff > 0) {
       const symbol = currentCurrencySymbol || REGION_SETTINGS[currentCurrency]?.symbol || '₹';
+      const subsidy = parseFloat(localStorage.getItem(STORAGE_KEY) ? JSON.parse(localStorage.getItem(STORAGE_KEY)!).subsidyUnits : '0') || 0;
       const fmt = (v: number) => `${symbol}${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      
+      const billableUnits = Math.max(0, result.monthlyKWh - subsidy);
+
       pCost.style.display = '';
       setText('aprint-cost-monthly-kwh', Math.round(result.monthlyKWh).toString());
       setText('aprint-cost-rate',        `${symbol}${tariff}/kWh(unit)`);
-      setText('aprint-estimated-cost',   fmt(result.monthlyKWh * tariff));
-      setText('aprint-cost-daily',        `${fmt(result.dailyKWh * tariff)} / day`);
-      setText('aprint-cost-yearly',       `${fmt(result.monthlyKWh * tariff * 12)} / year`);
+      setText('aprint-estimated-cost',   fmt(billableUnits * tariff));
+      setText('aprint-cost-daily',        `${fmt((billableUnits * tariff) / 30)} / day`);
+      setText('aprint-cost-yearly',       `${fmt(billableUnits * tariff * 12)} / year`);
+
+      const subsidizedEl = document.getElementById('aprint-cost-subsidized');
+      const billableEl = document.getElementById('aprint-cost-billable');
+      if (subsidizedEl) subsidizedEl.textContent = subsidy.toString();
+      if (billableEl) billableEl.textContent = Math.round(billableUnits).toString();
     } else {
       pCost.style.display = 'none';
     }

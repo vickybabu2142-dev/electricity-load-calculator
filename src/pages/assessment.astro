@@ -91,8 +91,11 @@ const schemaGraph = [
 
         <div class="rounded-xl border border-border bg-card p-5">
           <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Monthly Usage</p>
-          <p class="font-display font-bold text-4xl tabular-nums leading-none mb-1" style="color:var(--accent)"><span id="assess-monthly-kwh">—</span></p>
-          <p class="text-xs font-mono text-text-muted">kWh(unit) per month</p>
+          <div class="flex items-baseline gap-2 mb-1">
+            <span id="assess-monthly-kwh-original" class="hidden text-xl line-through text-text-muted font-normal">—</span>
+            <p class="font-display font-bold text-4xl tabular-nums leading-none" style="color:var(--accent)"><span id="assess-monthly-kwh">—</span></p>
+          </div>
+          <p id="assess-monthly-label" class="text-xs font-mono text-text-muted">kWh(unit) per month</p>
         </div>
 
         <div class="rounded-xl border border-border bg-card p-5">
@@ -431,13 +434,14 @@ const schemaGraph = [
             <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-0.5">Your Monthly Usage</p>
             <p class="text-xs text-text-muted">From your appliance configuration</p>
           </div>
-          <div class="text-right flex-shrink-0 ml-4">
+          <div class="text-right flex-shrink-0 ml-4 flex items-baseline gap-2">
+            <span id="assess-est-monthly-kwh-original" class="hidden text-lg line-through text-text-muted font-normal tabular-nums">0</span>
             <span id="assess-est-monthly-kwh" class="font-display font-bold text-3xl tabular-nums" style="color:var(--accent)">0</span>
-            <span class="font-mono text-xs text-text-muted ml-1">kWh(unit)/mo</span>
+            <span id="assess-est-monthly-label" class="font-mono text-xs text-text-muted ml-1">kWh(unit)/mo</span>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="space-y-1.5">
             <label for="assess-currency" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Currency</label>
             <div class="relative">
@@ -454,6 +458,14 @@ const schemaGraph = [
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
               </div>
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label for="assess-subsidy" class="text-[10px] font-mono uppercase tracking-widest text-text-muted" title="Optional: Number of units provided free of charge (subsidized)">Subsidized kWh(units)</label>
+            <div class="flex items-center gap-2">
+              <input id="assess-subsidy" type="number" min="0" step="1" placeholder="e.g. 200"
+                class="min-w-0 flex-1 bg-base border border-border rounded-lg px-3 py-2 text-sm font-mono focus:border-accent focus:outline-none"
+                aria-label="Subsidized kWh(units) per month" />
             </div>
           </div>
           <div class="space-y-1.5">
@@ -559,7 +571,10 @@ const schemaGraph = [
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Monthly Consumption</p>
-          <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
+          <div class="flex items-baseline gap-2">
+            <span id="aprint-monthly-kwh-original" class="hidden text-xl line-through text-text-muted font-normal">0</span>
+            <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
+          </div>
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Health Score</p>
@@ -731,17 +746,29 @@ const schemaGraph = [
       </div>
       <div class="bg-card border border-border rounded-xl p-6">
         <div class="grid grid-cols-3 gap-6 mb-6 border-b border-border pb-6">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
-            <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh(unit)</p>
+          <div class="space-y-4">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
+              <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh(unit)</p>
+            </div>
+            <div class="pt-2 border-t border-border/50">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Subsidized</p>
+              <p class="text-lg font-bold text-text-primary">- <span id="aprint-cost-subsidized">0</span> kWh(unit)</p>
+            </div>
           </div>
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh(unit)</p>
-            <p class="text-xl font-bold text-text-primary" id="aprint-cost-rate">—</p>
+          <div class="space-y-4 border-l border-border pl-6">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Billable Usage</p>
+              <p class="text-xl font-bold text-accent"><span id="aprint-cost-billable">0</span> kWh(unit)</p>
+            </div>
+            <div class="pt-2 border-t border-border/50">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh(unit)</p>
+              <p class="text-lg font-bold text-text-primary" id="aprint-cost-rate">—</p>
+            </div>
           </div>
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Estimated Monthly Cost</p>
-            <p class="text-3xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
+          <div class="flex flex-col justify-center items-center border-l border-border pl-6 bg-accent/5 rounded-r-xl">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Estimated Monthly Cost</p>
+            <p class="text-4xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-6">
@@ -1224,6 +1251,7 @@ function initAssessment() {
   function updateCost() {
     const sym  = currencySelect?.value ?? '$';
     const rate = parseFloat(rateInput?.value ?? '');
+    const subsidy = parseFloat((document.getElementById('assess-subsidy') as HTMLInputElement)?.value ?? '0') || 0;
     const resEl = document.getElementById('assess-est-result');
     if (!resEl) return;
 
@@ -1234,10 +1262,58 @@ function initAssessment() {
         const currentState = JSON.parse(currentSaved);
         currentState.tariff = rate || 0;
         currentState.currentCurrencySymbol = sym;
+        currentState.subsidyUnits = subsidy;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
       }
     } catch (e) {
       // Ignore storage errors
+    }
+
+    const billableUnits = Math.max(0, result.monthlyKWh - subsidy);
+
+    // Update Load Summary Card based on subsidy
+    const origEl = document.getElementById('assess-monthly-kwh-original');
+    const labelEl = document.getElementById('assess-monthly-label');
+    if (origEl) {
+      if (subsidy > 0) {
+        origEl.classList.remove('hidden');
+        origEl.textContent = Math.round(result.monthlyKWh).toString();
+        setText('assess-monthly-kwh', Math.round(billableUnits).toString());
+        if (labelEl) labelEl.textContent = 'Billable units / month';
+      } else {
+        origEl.classList.add('hidden');
+        setText('assess-monthly-kwh', Math.round(result.monthlyKWh).toString());
+        if (labelEl) labelEl.textContent = 'kWh(unit) per month';
+      }
+    }
+
+    // Update Cost Estimator local usage display
+    const estOrigEl = document.getElementById('assess-est-monthly-kwh-original');
+    const estLabelEl = document.getElementById('assess-est-monthly-label');
+    if (estOrigEl) {
+      if (subsidy > 0) {
+        estOrigEl.classList.remove('hidden');
+        estOrigEl.textContent = Math.round(result.monthlyKWh).toString();
+        setText('assess-est-monthly-kwh', Math.round(billableUnits).toString());
+        if (estLabelEl) estLabelEl.textContent = 'Billable units/mo';
+      } else {
+        estOrigEl.classList.add('hidden');
+        setText('assess-est-monthly-kwh', Math.round(result.monthlyKWh).toString());
+        if (estLabelEl) estLabelEl.textContent = 'kWh(unit)/mo';
+      }
+    }
+
+    // Update Executive Summary in Print layout based on subsidy
+    const pOrigEl = document.getElementById('aprint-monthly-kwh-original');
+    if (pOrigEl) {
+      if (subsidy > 0) {
+        pOrigEl.classList.remove('hidden');
+        pOrigEl.textContent = Math.round(result.monthlyKWh).toString();
+        setText('aprint-monthly-kwh', Math.round(billableUnits).toString());
+      } else {
+        pOrigEl.classList.add('hidden');
+        setText('aprint-monthly-kwh', Math.round(result.monthlyKWh).toString());
+      }
     }
 
     if (!rate || rate <= 0) {
@@ -1249,9 +1325,9 @@ function initAssessment() {
 
     const fmt = (v: number) => `${sym}${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-    setText('assess-est-daily',   fmt(result.dailyKWh   * rate));
-    setText('assess-est-monthly', fmt(result.monthlyKWh * rate));
-    setText('assess-est-yearly',  fmt(result.monthlyKWh * rate * 12));
+    setText('assess-est-daily',   fmt((billableUnits * rate) / 30));
+    setText('assess-est-monthly', fmt(billableUnits * rate));
+    setText('assess-est-yearly',  fmt(billableUnits * rate * 12));
     resEl.style.display = '';
 
     // Update Print layout cost fields
@@ -1260,13 +1336,19 @@ function initAssessment() {
       pCost.style.display = '';
       setText('aprint-cost-monthly-kwh', Math.round(result.monthlyKWh).toString());
       setText('aprint-cost-rate',        `${sym}${rate}/kWh(unit)`);
-      setText('aprint-estimated-cost',   fmt(result.monthlyKWh * rate));
-      setText('aprint-cost-daily',        `${fmt(result.dailyKWh * rate)} / day`);
-      setText('aprint-cost-yearly',       `${fmt(result.monthlyKWh * rate * 12)} / year`);
+      setText('aprint-estimated-cost',   fmt(billableUnits * rate));
+      setText('aprint-cost-daily',        `${fmt((billableUnits * rate) / 30)} / day`);
+      setText('aprint-cost-yearly',       `${fmt(billableUnits * rate * 12)} / year`);
+      
+      const subsidizedEl = document.getElementById('aprint-cost-subsidized');
+      const billableEl = document.getElementById('aprint-cost-billable');
+      if (subsidizedEl) subsidizedEl.textContent = subsidy.toString();
+      if (billableEl) billableEl.textContent = Math.round(billableUnits).toString();
     }
   }
   document.getElementById('assess-currency')?.addEventListener('change', updateCost);
   document.getElementById('assess-rate')?.addEventListener('input', updateCost);
+  document.getElementById('assess-subsidy')?.addEventListener('input', updateCost);
 
   // ── Print layout ──────────────────────────────────────────
   const operatingCurrent = result.totalWatts / 230;
