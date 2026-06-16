@@ -34,7 +34,7 @@ const jsonLd = {
           </svg>
         )}
         {item.href && i < items.length - 1 ? (
-          <a href={item.href} class="hover:text-accent transition-colors">{item.label}</a>
+          <a href={item.href} class="text-accent hover:text-accent-dim transition-colors">{item.label}</a>
         ) : (
           <span class="text-text-primary">{item.label}</span>
         )}

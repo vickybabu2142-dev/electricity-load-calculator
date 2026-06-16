@@ -166,14 +166,63 @@
     0% { opacity: 0; transform: translateY(16px); }
     100% { opacity: 1; transform: translateY(0); }
   }
-  @keyframes slide-up-sticky {
-    0% { transform: translateY(100%); }
-    100% { transform: translateY(0); }
+
+  @keyframes pulse-border-accent {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent), transparent 50%); }
+    70% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent), transparent 100%); }
+    100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent), transparent 100%); }
   }
+
+  @keyframes float-up-down {
+    0% { transform: translate(-50%, 0); }
+    100% { transform: translate(-50%, -4px); }
+  }
+
+  @keyframes slide-up-sticky {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
   @keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
+}
+
+/* ── Onboarding & Empty State ────────────────────────── */
+
+body.is-empty-state .onboarding-hint {
+  display: flex !important;
+  opacity: 1;
+}
+
+body.is-empty-state [data-rows-container] > :first-child {
+  position: relative;
+  z-index: 20;
+}
+
+body.is-empty-state [data-rows-container] > :first-child .stepper-add-btn,
+body.is-empty-state #empty-state-prompt .empty-state-icon-pulse {
+  animation: pulse-border-accent-intense 2s infinite;
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: color-mix(in srgb, var(--accent), transparent 90%);
+  z-index: 10;
+}
+
+body.is-empty-state #empty-state-prompt svg {
+  border-radius: 50%;
+  padding: 4px;
+}
+
+body.is-empty-state [data-rows-container] > :first-child .stepper-hint {
+  display: flex !important;
+}
+
+@keyframes pulse-border-accent-intense {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent), transparent 30%); }
+  70% { box-shadow: 0 0 0 12px color-mix(in srgb, var(--accent), transparent 100%); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent), transparent 100%); }
 }
 
 * {
@@ -335,17 +384,9 @@ textarea:focus {
   outline-offset: 2px;
 }
 
-/* Alternating row backgrounds for better readability */
+/* Appliance row borders */
 .appliance-row {
   border-bottom: 1px solid var(--row-border);
-}
-
-.appliance-row:nth-child(even) {
-  background-color: var(--bg-subtle-raw);
-}
-
-.light .appliance-row:nth-child(even) {
-  background-color: rgba(0, 0, 0, 0.03);
 }
 
 /* UI Enhancements Utility Classes */

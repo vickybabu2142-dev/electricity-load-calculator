@@ -19,6 +19,7 @@ interface Props {
   title?: string;
   description?: string;
   keywords?: string;
+  noindex?: boolean;
   breadcrumbSchema?: any;
   schemaGraph?: any[];
 }
@@ -27,6 +28,7 @@ const {
   title = 'Electricity Load Calculator | Electrical Load Assessment Tool',
   description = "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh, get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
   keywords = "electricity load calculator, electrical load calculator, home load calculator, connected load calculator, power consumption calculator, electrical load assessment, house wiring load calculation, load calculation for AC, load calculation for home in India, appliance power calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, energy cost estimator",
+  noindex = false,
   breadcrumbSchema,
   schemaGraph = [],
 } = Astro.props;
@@ -86,6 +88,7 @@ const finalSchema = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <title>{title}</title>
@@ -138,6 +141,12 @@ const finalSchema = {
     <ClientRouter />
 
     <!-- Google tag (gtag.js) -->
+    <script is:inline>
+      // Disable GA on localhost
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        window['ga-disable-G-N75LMQQ1LE'] = true;
+      }
+    </script>
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-N75LMQQ1LE"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
