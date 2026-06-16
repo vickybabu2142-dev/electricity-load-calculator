@@ -60,7 +60,7 @@ const schemaGraph = [
           <h1 class="font-display font-bold text-3xl sm:text-4xl text-text-primary leading-tight mb-2">Your Electrical Assessment</h1>
           <p class="text-sm text-text-muted">Generated from your appliance configuration &nbsp;·&nbsp; <span id="assess-timestamp" class="font-mono"></span></p>
         </div>
-        <a href="/" class="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors" style="color:var(--accent); border-color:color-mix(in srgb,var(--accent),transparent 60%); background:color-mix(in srgb,var(--accent),transparent 92%)">
+        <a href="/" class="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors" style="color:var(--accent); border-color:color-mix(in srgb,var(--accent),transparent 60%); background:color-mix(in srgb,var(--accent),transparent 92%)" data-astro-prefetch="hover">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true"><path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/></svg>
           Edit Load
         </a>
@@ -86,13 +86,13 @@ const schemaGraph = [
         <div class="rounded-xl border border-border bg-card p-5">
           <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Daily Usage</p>
           <p class="font-display font-bold text-4xl tabular-nums leading-none mb-1" style="color:var(--accent)"><span id="assess-daily-kwh">—</span></p>
-          <p class="text-xs font-mono text-text-muted">kWh per day</p>
+          <p class="text-xs font-mono text-text-muted">kWh(unit) per day</p>
         </div>
 
         <div class="rounded-xl border border-border bg-card p-5">
           <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-3">Monthly Usage</p>
           <p class="font-display font-bold text-4xl tabular-nums leading-none mb-1" style="color:var(--accent)"><span id="assess-monthly-kwh">—</span></p>
-          <p class="text-xs font-mono text-text-muted">kWh per month</p>
+          <p class="text-xs font-mono text-text-muted">kWh(unit) per month</p>
         </div>
 
         <div class="rounded-xl border border-border bg-card p-5">
@@ -244,11 +244,11 @@ const schemaGraph = [
               <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-2">
                 <div id="assess-donut-center-default">
                   <span id="assess-donut-kwh" class="font-display font-bold text-lg tabular-nums leading-tight" style="color:var(--accent)">0.0</span>
-                  <span class="block text-[10px] font-mono text-text-muted leading-tight mt-0.5">kWh/day</span>
+                  <span class="block text-[10px] font-mono text-text-muted leading-tight mt-0.5">kWh(unit)/day</span>
                 </div>
                 <div id="assess-donut-center-hover" style="display:none">
                   <span id="assess-donut-hover-pct" class="font-display font-bold text-xl tabular-nums leading-tight" style="color:var(--accent)">0%</span>
-                  <span id="assess-donut-hover-kwh" class="block text-[10px] font-mono text-text-muted leading-tight mt-0.5">0 kWh</span>
+                  <span id="assess-donut-hover-kwh" class="block text-[10px] font-mono text-text-muted leading-tight mt-0.5">0 kWh(unit)</span>
                 </div>
               </div>
             </div>
@@ -433,7 +433,7 @@ const schemaGraph = [
           </div>
           <div class="text-right flex-shrink-0 ml-4">
             <span id="assess-est-monthly-kwh" class="font-display font-bold text-3xl tabular-nums" style="color:var(--accent)">0</span>
-            <span class="font-mono text-xs text-text-muted ml-1">kWh/mo</span>
+            <span class="font-mono text-xs text-text-muted ml-1">kWh(unit)/mo</span>
           </div>
         </div>
 
@@ -457,12 +457,11 @@ const schemaGraph = [
             </div>
           </div>
           <div class="space-y-1.5">
-            <label for="assess-rate" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Rate per kWh</label>
+            <label for="assess-rate" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Rate per kWh(unit)</label>
             <div class="flex items-center gap-2">
               <input id="assess-rate" type="number" min="0.001" step="0.01" placeholder="e.g. 0.15"
                 class="min-w-0 flex-1 bg-base border border-border rounded-lg px-3 py-2 text-sm font-mono focus:border-accent focus:outline-none"
-                aria-label="Electricity rate per kWh" />
-              <span class="text-xs font-mono text-text-muted flex-shrink-0">/kWh</span>
+                aria-label="Electricity rate per kWh(unit)" />
             </div>
           </div>
         </div>
@@ -556,11 +555,11 @@ const schemaGraph = [
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Daily Consumption</p>
-          <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-daily-kwh">0.00</span> <span class="text-lg text-text-muted font-sans font-normal">kWh</span></p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-daily-kwh">0.00</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Monthly Consumption</p>
-          <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh</span></p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="aprint-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Health Score</p>
@@ -713,7 +712,7 @@ const schemaGraph = [
           <h3 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4 border-b border-border pb-2">Category Breakdown</h3>
           <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-0.5 border-b-2 border-border">
             <span class="flex-1 text-text-primary">Category</span>
-            <span class="w-32 text-right text-text-primary">kWh / day</span>
+            <span class="w-32 text-right text-text-primary">kWh(unit) / day</span>
             <span class="w-20 text-right text-text-primary">Share</span>
           </div>
           <div id="aprint-breakdown-table" class="space-y-0 text-sm"></div>
@@ -734,10 +733,10 @@ const schemaGraph = [
         <div class="grid grid-cols-3 gap-6 mb-6 border-b border-border pb-6">
           <div>
             <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
-            <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh</p>
+            <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh(unit)</p>
           </div>
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh(unit)</p>
             <p class="text-xl font-bold text-text-primary" id="aprint-cost-rate">—</p>
           </div>
           <div>
@@ -884,7 +883,7 @@ const schemaGraph = [
 
   /* ── All other content cards — subtle accent glow on hover ── */
   section div.bg-card {
-    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
   }
   section div.bg-card:hover {
@@ -902,10 +901,30 @@ const schemaGraph = [
       border-color: color-mix(in srgb, var(--accent), transparent 62%);
       box-shadow: 0 0 22px color-mix(in srgb, var(--accent), transparent 80%), 0 4px 14px rgba(0, 0, 0, 0.1);
     }
-    .rec-glow-amber  { box-shadow: 0 0 28px color-mix(in srgb,#F59E0B,transparent 88%), 0 8px 28px color-mix(in srgb,#F59E0B,transparent 92%) !important; }
-    .rec-glow-sky    { box-shadow: 0 0 28px color-mix(in srgb,#38BDF8,transparent 88%), 0 8px 28px color-mix(in srgb,#38BDF8,transparent 92%) !important; }
-    .rec-glow-violet { box-shadow: 0 0 28px color-mix(in srgb,#A78BFA,transparent 88%), 0 8px 28px color-mix(in srgb,#A78BFA,transparent 92%) !important; }
-    .rec-glow-emerald{ box-shadow: 0 0 28px color-mix(in srgb,#4ADE80,transparent 88%), 0 8px 28px color-mix(in srgb,#4ADE80,transparent 92%) !important; }
+    
+    /* Default subtle state for mobile */
+    .rec-glow-amber  { box-shadow: 0 0 28px color-mix(in srgb,#F59E0B,transparent 90%), 0 8px 28px color-mix(in srgb,#F59E0B,transparent 94%) !important; }
+    .rec-glow-sky    { box-shadow: 0 0 28px color-mix(in srgb,#38BDF8,transparent 90%), 0 8px 28px color-mix(in srgb,#38BDF8,transparent 94%) !important; }
+    .rec-glow-violet { box-shadow: 0 0 28px color-mix(in srgb,#A78BFA,transparent 90%), 0 8px 28px color-mix(in srgb,#A78BFA,transparent 94%) !important; }
+    .rec-glow-emerald{ box-shadow: 0 0 28px color-mix(in srgb,#4ADE80,transparent 90%), 0 8px 28px color-mix(in srgb,#4ADE80,transparent 94%) !important; }
+
+    /* Active scroll-glow state - Stronger for visibility */
+    section div.bg-card.mobile-visible {
+      border-color: color-mix(in srgb, var(--accent), transparent 45%) !important;
+      box-shadow: 0 0 32px color-mix(in srgb, var(--accent), transparent 80%), 0 12px 28px rgba(0, 0, 0, 0.12) !important;
+      transform: translateY(-0.125rem);
+    }
+
+    .rec-glow-amber.mobile-visible  { box-shadow: 0 0 42px color-mix(in srgb,#F59E0B,transparent 50%), 0 12px 36px color-mix(in srgb,#F59E0B,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
+    .rec-glow-sky.mobile-visible    { box-shadow: 0 0 42px color-mix(in srgb,#38BDF8,transparent 50%), 0 12px 36px color-mix(in srgb,#38BDF8,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
+    .rec-glow-violet.mobile-visible { box-shadow: 0 0 42px color-mix(in srgb,#A78BFA,transparent 50%), 0 12px 36px color-mix(in srgb,#A78BFA,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
+    .rec-glow-emerald.mobile-visible{ box-shadow: 0 0 42px color-mix(in srgb,#4ADE80,transparent 50%), 0 12px 36px color-mix(in srgb,#4ADE80,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
+
+    /* Force icon and inset-shadow visibility in active scroll-glow state */
+    .rec-card.mobile-visible .opacity-0 {
+      opacity: 1 !important;
+    }
+
     .rec-glow-amber:active  { box-shadow: 0 0 42px color-mix(in srgb,#F59E0B,transparent 80%), 0 12px 36px color-mix(in srgb,#F59E0B,transparent 85%) !important; }
     .rec-glow-sky:active    { box-shadow: 0 0 42px color-mix(in srgb,#38BDF8,transparent 80%), 0 12px 36px color-mix(in srgb,#38BDF8,transparent 85%) !important; }
     .rec-glow-violet:active { box-shadow: 0 0 42px color-mix(in srgb,#A78BFA,transparent 80%), 0 12px 36px color-mix(in srgb,#A78BFA,transparent 85%) !important; }
@@ -964,7 +983,7 @@ function highlightSlice(idx: number) {
   if (def) def.style.display = 'none';
   if (hov) hov.style.display = '';
   if (pct) { pct.textContent = `${Math.round(item.percent)}%`; pct.style.color = item.color; }
-  if (kwh) kwh.textContent = `${item.kWhDay.toFixed(1)} kWh`;
+  if (kwh) kwh.textContent = `${item.kWhDay.toFixed(1)} kWh(unit)`;
 }
 
 function resetSlices() {
@@ -1160,7 +1179,7 @@ function initAssessment() {
           </div>
         </div>
         <div class="text-right flex-shrink-0">
-          <p class="text-sm font-mono font-bold" style="color:var(--danger)">${a.kWhDay.toFixed(1)} kWh/d</p>
+          <p class="text-sm font-mono font-bold" style="color:var(--danger)">${a.kWhDay.toFixed(1)} kWh(unit)/d</p>
           <p class="text-xs font-mono text-text-muted">${Math.round(a.percent)}% of total</p>
         </div>
       </div>`).join('');
@@ -1178,7 +1197,7 @@ function initAssessment() {
 
   // ── S7: Saving tips ───────────────────────────────────────
   setText('assess-saving-top',      savings.topConsumerName);
-  setText('assess-saving-potential', `${savings.potentialSavings.toFixed(1)} kWh/month`);
+  setText('assess-saving-potential', `${savings.potentialSavings.toFixed(1)} kWh(unit)/month`);
   const tipsList = document.getElementById('assess-saving-tips');
   if (tipsList) {
     tipsList.innerHTML = savings.tips.map(tip => `
@@ -1240,7 +1259,7 @@ function initAssessment() {
     if (pCost) {
       pCost.style.display = '';
       setText('aprint-cost-monthly-kwh', Math.round(result.monthlyKWh).toString());
-      setText('aprint-cost-rate',        `${sym}${rate}/kWh`);
+      setText('aprint-cost-rate',        `${sym}${rate}/kWh(unit)`);
       setText('aprint-estimated-cost',   fmt(result.monthlyKWh * rate));
       setText('aprint-cost-daily',        `${fmt(result.dailyKWh * rate)} / day`);
       setText('aprint-cost-yearly',       `${fmt(result.monthlyKWh * rate * 12)} / year`);
@@ -1266,7 +1285,8 @@ function initAssessment() {
   const reportId = `ELC-${now.toISOString().slice(0,10).replace(/-/g, '')}-${Math.floor(Math.random() * 90000 + 10000)}`;
   setText('aprint-report-id', reportId);
   setText('aprint-report-id-cover', reportId);
-  setText('aprint-platform-version', 'v2.0');
+  const version = (document.querySelector('footer div span:last-child') as HTMLElement)?.textContent?.trim() || 'v2.0.4';
+  setText('aprint-platform-version', version);
 
   const siteUrl = window.location.origin;
   document.querySelectorAll<HTMLElement>('.print-brand-url').forEach(el => {
@@ -1396,7 +1416,7 @@ function initAssessment() {
     printBreakdown.innerHTML = breakdown.items.map(item => `
       <div class="flex text-sm py-1.5 border-b border-border">
         <span class="flex-1 text-text-muted">${item.category}</span>
-        <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh/d</span>
+        <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh(unit)/d</span>
         <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
       </div>`).join('');
   }
@@ -1419,7 +1439,7 @@ function initAssessment() {
               html += `
                 <div class="flex justify-between items-center text-[11px]">
                   <div class="flex-1"><span class="font-medium text-text-primary">${escapeHtml(a.name)}</span><span class="text-text-muted ml-2 text-[9px]">${a.qty} × ${a.watts}W</span></div>
-                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)} kWh/d</div>
+                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)} kWh(unit)/d</div>
                 </div>`;
             });
           }
@@ -1432,7 +1452,7 @@ function initAssessment() {
 
   setText('aprint-opt-priority', health.score > 80 ? 'Low' : (health.score > 50 ? 'Medium' : 'High'));
   setText('aprint-opt-target', savings.topConsumerName);
-  setText('aprint-opt-impact', `${savings.potentialSavings.toFixed(1)} kWh/mo`);
+  setText('aprint-opt-impact', `${savings.potentialSavings.toFixed(1)} kWh(unit)/mo`);
 
   const printSaving = document.getElementById('aprint-saving-tips-p');
   if (printSaving) {
@@ -1475,6 +1495,24 @@ function initAssessment() {
   
   // Initial cost update
   updateCost();
+
+  // ── Mobile Scroll Glow Effect (IntersectionObserver) ──
+  if (window.matchMedia('(hover: none)').matches) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('mobile-visible');
+        } else {
+          entry.target.classList.remove('mobile-visible');
+        }
+      });
+    }, {
+      rootMargin: '-15% 0px -15% 0px', // Center 70% trigger
+      threshold: 0.4
+    });
+
+    document.querySelectorAll('.rec-card, section .bg-card').forEach(card => observer.observe(card));
+  }
 }
 
 // ── Global Event Delegation ───────────────────────────────

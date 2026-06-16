@@ -35,7 +35,7 @@ const schemaGraph = [
 
 <BaseLayout
   title="Electricity Load Calculator | Home Electrical Load Assessment"
-  description="Professional electrical load calculator for home. Estimate kW load, kWh consumption, get MCB, cable, inverter & solar recommendations instantly."
+  description="Professional electrical load calculator for home. Estimate kW load, kWh(unit) consumption, get MCB, cable, inverter & solar recommendations instantly."
   keywords="electricity load calculator, electrical load assessment, kw load calculator for home, house wiring load, energy cost estimator, bijli load calculator India"
   schemaGraph={schemaGraph}
 >
@@ -179,7 +179,7 @@ const schemaGraph = [
           <span class="font-mono text-xs text-text-muted">kW</span>
         </div>
         <div class="text-[10px] text-text-primary font-medium truncate w-full opacity-90">
-          Monthly: <span id="sticky-monthly-kwh" class="font-semibold tabular-nums" style="color: var(--accent);">0</span> kWh
+          Monthly: <span id="sticky-monthly-kwh" class="font-semibold tabular-nums" style="color: var(--accent);">0</span> kWh(unit)
         </div>
       </div>
 
@@ -247,11 +247,11 @@ const schemaGraph = [
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Daily Consumption</p>
-          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-daily-kwh">0.00</span> <span class="text-lg text-text-muted font-sans font-normal">kWh</span></p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-daily-kwh">0.00</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Monthly Consumption</p>
-          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh</span></p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Health Score</p>
@@ -285,11 +285,11 @@ const schemaGraph = [
           </div>
           <div class="flex justify-between border-b border-border pb-2">
             <span class="text-text-muted">Daily Consumption</span>
-            <span class="font-bold text-text-primary"><span id="print-analysis-daily">0.00</span> kWh</span>
+            <span class="font-bold text-text-primary"><span id="print-analysis-daily">0.00</span> kWh(unit)</span>
           </div>
           <div class="flex justify-between border-b border-border pb-2">
             <span class="text-text-muted">Monthly Consumption</span>
-            <span class="font-bold text-text-primary"><span id="print-analysis-monthly">0</span> kWh</span>
+            <span class="font-bold text-text-primary"><span id="print-analysis-monthly">0</span> kWh(unit)</span>
           </div>
         </div>
         <div class="bg-card border border-border p-6 rounded-xl flex flex-col justify-center text-sm">
@@ -382,7 +382,7 @@ const schemaGraph = [
           <p class="text-3xl font-bold mb-6" style="color:var(--accent)" id="print-det-solar">—</p>
           <p class="text-xs font-bold uppercase tracking-widest text-text-muted mb-2">Calculation Path</p>
           <div class="space-y-2 text-sm text-text-muted">
-            <div class="flex justify-between"><span>Monthly Units:</span> <span class="font-mono text-text-primary"><span id="print-det-sol-units">0</span> kWh</span></div>
+            <div class="flex justify-between"><span>Monthly Units:</span> <span class="font-mono text-text-primary"><span id="print-det-sol-units">0</span> kWh(unit)</span></div>
           </div>
         </div>
       </div>
@@ -404,7 +404,7 @@ const schemaGraph = [
           <h3 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4 border-b border-border pb-2">Category Breakdown</h3>
           <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-0.5 border-b-2 border-border">
             <span class="flex-1 text-text-primary">Category</span>
-            <span class="w-32 text-right text-text-primary">kWh / day</span>
+            <span class="w-32 text-right text-text-primary">kWh(unit) / day</span>
             <span class="w-20 text-right text-text-primary">Share</span>
           </div>
           <div id="print-breakdown-table" class="space-y-0 text-sm"></div>
@@ -425,10 +425,10 @@ const schemaGraph = [
         <div class="grid grid-cols-3 gap-6 mb-6 border-b border-border pb-6">
           <div>
             <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
-            <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh</p>
+            <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh(unit)</p>
           </div>
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh(unit)</p>
             <p class="text-xl font-bold text-text-primary" id="aprint-cost-rate">—</p>
           </div>
           <div>
@@ -542,10 +542,10 @@ const schemaGraph = [
 
       <h3 class="text-2xl mt-12 mb-6">Optional Energy Cost Estimator: Cost Transparency Without Assumptions</h3>
       <p>
-        Electricity tariffs vary dramatically by country, state, and provider — fixed rate assumptions are inherently misleading for a global audience. That's why our <strong>energy cost estimator</strong> is built as an optional, user-controlled feature. Simply enter your local electricity rate (in your currency per kWh) and instantly see your estimated monthly energy cost calculated from your actual load data.
+        Electricity tariffs vary dramatically by country, state, and provider — fixed rate assumptions are inherently misleading for a global audience. That's why our <strong>energy cost estimator</strong> is built as an optional, user-controlled feature. Simply enter your local electricity rate (in your currency per kWh(unit)) and instantly see your estimated monthly energy cost calculated from your actual load data.
       </p>
       <p>
-        The primary value of this platform is load analysis — understanding your connected load in kW, your daily and monthly energy consumption in kWh, and your electrical health. If you want a cost estimate, you can optionally provide your local rate. For offline use or sharing with an electrician, you can generate a professional <strong>electricity load calculator PDF report</strong> including your full appliance breakdown, smart component recommendations, and your energy cost estimate.
+        The primary value of this platform is load analysis — understanding your connected load in kW, your daily and monthly energy consumption in kWh(unit), and your electrical health. If you want a cost estimate, you can optionally provide your local rate. For offline use or sharing with an electrician, you can generate a professional <strong>electricity load calculator PDF report</strong> including your full appliance breakdown, smart component recommendations, and your energy cost estimate.
       </p>
 
       <h3 class="text-2xl mt-12 mb-6">Conclusion</h3>
@@ -848,7 +848,7 @@ function calculate() {
               html += `
                 <div class="flex justify-between items-center text-[11px]">
                   <div class="flex-1"><span class="font-medium text-text-primary">${escapeHtml(a.name)}</span><span class="text-text-muted ml-2 text-[9px]">${a.qty} × ${a.watts}W</span></div>
-                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)} kWh/d</div>
+                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)} kWh(unit)/d</div>
                 </div>`;
             });
           }
@@ -1041,7 +1041,7 @@ function calculate() {
       printBreakdown.innerHTML = breakdown.items.map(item => `
         <div class="flex text-sm py-1.5 border-b border-border">
           <span class="flex-1 text-text-muted">${item.category}</span>
-          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh/d</span>
+          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh(unit)/d</span>
           <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
         </div>
       `).join('');
@@ -1055,7 +1055,7 @@ function calculate() {
   if (activeCount > 0) {
     setText('print-opt-priority', health.score > 80 ? 'Low' : (health.score > 50 ? 'Medium' : 'High'));
     setText('print-opt-target', savings.topConsumerName);
-    setText('print-opt-impact', `${savings.potentialSavings.toFixed(1)} kWh/mo`);
+    setText('print-opt-impact', `${savings.potentialSavings.toFixed(1)} kWh(unit)/mo`);
 
     const printSaving = document.getElementById('print-saving-tips');
     if (printSaving) {
@@ -1109,7 +1109,7 @@ function calculate() {
             <span class="font-medium text-text-primary">⚠ ${alert.name}</span>
             <span class="text-text-muted ml-2 text-xs">${alert.reason}</span>
           </div>
-          <span class="font-mono font-semibold flex-shrink-0 ml-4" style="color:var(--accent)">${alert.kWhDay.toFixed(1)} kWh/d</span>
+          <span class="font-mono font-semibold flex-shrink-0 ml-4" style="color:var(--accent)">${alert.kWhDay.toFixed(1)} kWh(unit)/d</span>
         </div>
       `).join('');
     }
@@ -1124,7 +1124,7 @@ function calculate() {
       
       pCost.style.display = '';
       setText('aprint-cost-monthly-kwh', Math.round(result.monthlyKWh).toString());
-      setText('aprint-cost-rate',        `${symbol}${tariff}/kWh`);
+      setText('aprint-cost-rate',        `${symbol}${tariff}/kWh(unit)`);
       setText('aprint-estimated-cost',   fmt(result.monthlyKWh * tariff));
       setText('aprint-cost-daily',        `${fmt(result.dailyKWh * tariff)} / day`);
       setText('aprint-cost-yearly',       `${fmt(result.monthlyKWh * tariff * 12)} / year`);
