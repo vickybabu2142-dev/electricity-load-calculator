@@ -426,30 +426,24 @@ const schemaGraph = [
         <h2 class="text-2xl font-display font-bold text-text-primary">Energy Cost Estimator</h2>
       </div>
       <div class="bg-card border border-border rounded-xl p-6">
-        <div class="grid grid-cols-3 gap-6 mb-6 border-b border-border pb-6">
+        <div class="grid grid-cols-2 gap-8 mb-6 border-b border-border pb-6">
           <div class="space-y-4">
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
-              <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh(unit)</p>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Billable Consumption</p>
+              <div class="flex items-baseline gap-2">
+                <span id="aprint-cost-monthly-kwh-original" class="hidden text-xl line-through text-text-muted font-normal">0</span>
+                <p class="text-3xl font-bold text-accent"><span id="aprint-cost-billable">0</span> <span class="text-lg font-normal text-text-muted">kWh(unit)</span></p>
+              </div>
+              <p id="aprint-cost-subsidy-note" class="hidden text-[10px] text-text-muted mt-1 italic">—</p>
             </div>
             <div class="pt-2 border-t border-border/50">
-              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Subsidized</p>
-              <p class="text-lg font-bold text-text-primary">- <span id="aprint-cost-subsidized">0</span> kWh(unit)</p>
-            </div>
-          </div>
-          <div class="space-y-4 border-l border-border pl-6">
-            <div>
-              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Billable Usage</p>
-              <p class="text-xl font-bold text-accent"><span id="aprint-cost-billable">0</span> kWh(unit)</p>
-            </div>
-            <div class="pt-2 border-t border-border/50">
-              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh(unit)</p>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate per kWh(unit)</p>
               <p class="text-lg font-bold text-text-primary" id="aprint-cost-rate">—</p>
             </div>
           </div>
-          <div class="flex flex-col justify-center items-center border-l border-border pl-6 bg-accent/5 rounded-r-xl">
+          <div class="flex flex-col justify-center items-center border-l border-border pl-8 bg-accent/5 rounded-r-xl">
             <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Estimated Monthly Cost</p>
-            <p class="text-4xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
+            <p class="text-5xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-6">
@@ -846,14 +840,8 @@ function calculate() {
   const billableUnits = Math.max(0, result.monthlyKWh - subsidy);
   const pOrigEl = document.getElementById('print-monthly-kwh-original');
   if (pOrigEl) {
-    if (subsidy > 0) {
-      pOrigEl.classList.remove('hidden');
-      pOrigEl.textContent = Math.round(result.monthlyKWh).toString();
-      setText('print-monthly-kwh', Math.round(billableUnits).toString());
-    } else {
-      pOrigEl.classList.add('hidden');
-      setText('print-monthly-kwh', Math.round(result.monthlyKWh).toString());
-    }
+    pOrigEl.classList.add('hidden');
+    setText('print-monthly-kwh', Math.round(result.monthlyKWh).toString());
   }
 
   setText('print-date', new Date().toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' }));
@@ -883,7 +871,7 @@ function calculate() {
               html += `
                 <div class="flex justify-between items-center text-[11px] py-0.5">
                   <div class="flex-1"><span class="font-medium text-text-primary">${escapeHtml(a.name)}</span><span class="text-text-muted ml-2 text-[9px]">${a.qty} × ${a.watts}W</span></div>
-                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)} kWh(unit)/d</div>
+                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)}</div>
                 </div>`;
             });
           }
@@ -895,10 +883,14 @@ function calculate() {
   }
 
   // ── Smart Insights (print only) ──
-  const now = new Date();
-  const reportId = `ELC-${now.toISOString().slice(0,10).replace(/-/g, '')}-${Math.floor(Math.random() * 90000 + 10000)}`;
+  const localDate = new Date();
+  const year = localDate.getFullYear();
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+  const reportId = `ELC-${year}${month}${day}-${Math.floor(Math.random() * 90000 + 10000)}`;
+  
   setText('print-report-id', reportId);
-  setText('print-date', now.toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' }));
+  setText('print-date', localDate.toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' }));
 
   const insights = calculateInsights(result.totalKW, result.monthlyKWh);
   const operatingCurrent = result.totalWatts / 230;
@@ -1081,7 +1073,7 @@ function calculate() {
       printBreakdown.innerHTML = breakdown.items.map(item => `
         <div class="flex text-sm py-1.5 border-b border-border">
           <span class="flex-1 text-text-muted">${item.category}</span>
-          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh(unit)/d</span>
+          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)}</span>
           <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
         </div>
       `).join('');
@@ -1149,7 +1141,7 @@ function calculate() {
             <span class="font-medium text-text-primary">⚠ ${alert.name}</span>
             <span class="text-text-muted ml-2 text-xs">${alert.reason}</span>
           </div>
-          <span class="font-mono font-semibold flex-shrink-0 ml-4" style="color:var(--accent)">${alert.kWhDay.toFixed(1)} kWh(unit)/d</span>
+          <span class="font-mono font-semibold flex-shrink-0 ml-4" style="color:var(--accent)">${alert.kWhDay.toFixed(1)}</span>
         </div>
       `).join('');
     }
@@ -1165,16 +1157,39 @@ function calculate() {
       const billableUnits = Math.max(0, result.monthlyKWh - subsidy);
 
       pCost.style.display = '';
-      setText('aprint-cost-monthly-kwh', Math.round(result.monthlyKWh).toString());
       setText('aprint-cost-rate',        `${symbol}${tariff}/kWh(unit)`);
       setText('aprint-estimated-cost',   fmt(billableUnits * tariff));
       setText('aprint-cost-daily',        `${fmt((billableUnits * tariff) / 30)} / day`);
       setText('aprint-cost-yearly',       `${fmt(billableUnits * tariff * 12)} / year`);
 
-      const subsidizedEl = document.getElementById('aprint-cost-subsidized');
       const billableEl = document.getElementById('aprint-cost-billable');
-      if (subsidizedEl) subsidizedEl.textContent = subsidy.toString();
+      const origEl     = document.getElementById('aprint-cost-monthly-kwh-original');
+      const noteEl     = document.getElementById('aprint-cost-subsidy-note');
+      
       if (billableEl) billableEl.textContent = Math.round(billableUnits).toString();
+      
+      if (subsidy > 0) {
+        if (origEl) {
+          origEl.textContent = Math.round(result.monthlyKWh).toString();
+          origEl.classList.remove('hidden');
+        }
+        if (noteEl) {
+          noteEl.textContent = `Includes ${Math.round(subsidy)} kWh(unit) subsidy reduction`;
+          noteEl.classList.remove('hidden');
+        }
+      } else {
+        if (origEl) origEl.classList.add('hidden');
+        if (noteEl) noteEl.classList.add('hidden');
+      }
+
+      // 4. UPDATE PRINT EXECUTIVE SUMMARY & ANALYSIS (Index)
+      const pSummaryOrigEl = document.getElementById('print-monthly-kwh-original');
+      const pSummaryVal    = document.getElementById('print-monthly-kwh');
+      const pAnalysisVal   = document.getElementById('print-analysis-monthly');
+      
+      if (pSummaryVal)  pSummaryVal.textContent  = Math.round(result.monthlyKWh).toString();
+      if (pAnalysisVal) pAnalysisVal.textContent = Math.round(result.monthlyKWh).toString();
+      if (pSummaryOrigEl) pSummaryOrigEl.classList.add('hidden');
     } else {
       pCost.style.display = 'none';
     }
@@ -1730,18 +1745,6 @@ function initCalculator() {
     });
 
     appliances.forEach(a => updateRowStyle(a));
-  } else {
-    // First time load: auto-expand the first category (Lighting)
-    const bodyId = 'category-body-Lighting';
-    const body = document.getElementById(bodyId);
-    if (body) {
-      body.classList.add('is-open');
-      const section = body.closest('.category-section');
-      const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
-      const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
-      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
-      if (chevron) (chevron as HTMLElement).style.transform = '';
-    }
   }
 
   calculate();

@@ -604,6 +604,36 @@ run('reason string contains the rounded percentage', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Section 7 — Subsidy / Monthly Usage Reduction
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('\n[7] Subsidy Logic (Isolation Test)');
+
+function calculateBillableUnits(monthlyKWh, subsidy) {
+  return Math.max(0, monthlyKWh - subsidy);
+}
+
+run('billable units correctly reduced by subsidy', () => {
+  assert.strictEqual(calculateBillableUnits(500, 200), 300);
+});
+
+run('billable units never go below zero', () => {
+  assert.strictEqual(calculateBillableUnits(100, 200), 0);
+});
+
+run('zero subsidy returns full monthly usage', () => {
+  assert.strictEqual(calculateBillableUnits(450, 0), 450);
+});
+
+run('subsidy does not affect actual monthly consumption (Technical Integrity)', () => {
+  const actualUsage = 500;
+  const subsidy = 200;
+  const billable = calculateBillableUnits(actualUsage, subsidy);
+  
+  assert.strictEqual(billable, 300, 'Billable units should be 300');
+  assert.strictEqual(actualUsage, 500, 'Actual usage must remain 500 (Isolation)');
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Summary
 // ─────────────────────────────────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(56)}`);
