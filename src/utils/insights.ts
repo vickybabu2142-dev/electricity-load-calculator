@@ -1,3 +1,14 @@
+import {
+  VOLTAGE_V,
+  MCB_SAFETY_MARGIN,
+  INVERTER_OVERHEAD,
+  SOLAR_PEAK_SUN_HOURS,
+  DAYS_PER_MONTH,
+  MCB_RATINGS,
+  INVERTER_STANDARDS,
+  CABLE_BY_MCB,
+} from '../data/constants';
+
 export interface InsightResult {
   recommendedMCB: string;
   mcbAmps: number;
@@ -8,32 +19,25 @@ export interface InsightResult {
   solarKW: number;
 }
 
-const MCB_RATINGS = [6, 10, 16, 20, 25, 32, 40, 63, 80, 100];
-const INVERTER_STANDARDS = [1, 2, 3, 5, 7.5, 10, 15];
-
-const CABLE_BY_MCB: Record<number, string> = {
-  6: '1.0', 10: '1.5', 16: '2.5', 20: '2.5', 25: '4',
-  32: '6', 40: '10', 63: '16', 80: '25', 100: '35',
-};
-
 export function calculateInsights(totalLoadKW: number, monthlyKWh: number): InsightResult {
-  // MCB
-  const current = (totalLoadKW * 1000) / 230;
-  const designCurrent = current * 1.25;
+  // MCB — design current includes 25% safety margin per IEC 60898
+  const current = (totalLoadKW * 1000) / VOLTAGE_V;
+  const designCurrent = current * MCB_SAFETY_MARGIN;
   const mcbAmps = MCB_RATINGS.find(r => r >= designCurrent) ?? 100;
   const recommendedMCB = `${mcbAmps}A C-Curve`;
 
-  // Cable (derived from MCB rating)
+  // Cable — derived from MCB rating
   const cableSize = CABLE_BY_MCB[mcbAmps] ?? '35';
   const recommendedCable = `${cableSize} sq mm Copper`;
 
-  // Inverter
-  const rawKVA = totalLoadKW * 1.2;
+  // Inverter — 20% overhead above connected load
+  const rawKVA = totalLoadKW * INVERTER_OVERHEAD;
   const inverterKVA = INVERTER_STANDARDS.find(s => s >= rawKVA) ?? 15;
   const recommendedInverter = `${inverterKVA} kVA`;
 
-  // Solar
-  const rawSolar = monthlyKWh / 120;
+  // Solar — based on monthly kWh and average peak sun hours
+  const monthlyPeakSunHours = SOLAR_PEAK_SUN_HOURS * DAYS_PER_MONTH;
+  const rawSolar = monthlyKWh / monthlyPeakSunHours;
   const solarKW = Math.max(0.5, Math.round(rawSolar * 2) / 2);
   const recommendedSolar = `${solarKW} kW Solar System`;
 

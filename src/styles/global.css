@@ -81,6 +81,7 @@
 }
 
 .light {
+  color-scheme: light;
   /* Industrial Light Theme (Stormy Morning) */
   --bg-base: #EDF1F5; /* Slightly deeper for contrast */
   --bg-card: #FFFFFF;
