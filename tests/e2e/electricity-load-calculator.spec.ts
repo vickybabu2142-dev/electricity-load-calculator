@@ -27,14 +27,12 @@ test.describe('Electricity Load Calculator', () => {
   test('incrementing quantity increases total kW', async ({ page }) => {
     // LED Bulb: 9W × 1qty = 9W → 0.009 kW → "0.01"
     // Lighting category is expanded by default
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
     await expect(page.locator('#active-count')).toHaveText('1');
   });
 
   test('decrementing quantity to zero removes appliance from totals', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
     
@@ -43,7 +41,6 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('decrement button does not go below zero', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Decrease quantity of LED Bulb"]').click();
 
     const qtyDisplay = page.locator('[data-qty-display="app-1"]');
@@ -53,7 +50,6 @@ test.describe('Electricity Load Calculator', () => {
   // ── Watts & Hours Editing ─────────────────────────────────
 
   test('editing watts updates the row kWh display and total load', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     
     const wattsInput = page.locator('input[aria-label="Watts for LED Bulb"]');
@@ -67,7 +63,6 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('editing hours updates the row kWh display', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     
     const hoursInput = page.locator('input[aria-label="Hours per day for LED Bulb"]');
@@ -208,7 +203,6 @@ test.describe('Electricity Load Calculator', () => {
 
   test('navigates to assessment page with the CTA button', async ({ page }) => {
     // Add an appliance to ensure data exists
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await page.waitForTimeout(300);
 
@@ -224,7 +218,6 @@ test.describe('Electricity Load Calculator', () => {
 
   test('Energy Cost Estimator shows result when rate is entered', async ({ page }) => {
     // Add an appliance so data exists
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await page.waitForTimeout(300);
 
@@ -247,8 +240,13 @@ test.describe('Electricity Load Calculator', () => {
   // ── Reset ─────────────────────────────────────────────────
 
   test('reset button restores all defaults', async ({ page }) => {
+    // Expand Kitchen category to make page tall enough to scroll, then scroll down
+    await page.locator('button.category-toggle[data-category="Kitchen"]').click();
+    await page.evaluate(() => window.scrollTo(0, 300));
+    const scrollYBefore = await page.evaluate(() => window.scrollY);
+    expect(scrollYBefore).toBeGreaterThan(0);
+
     // Make several changes first (Lighting is already expanded by default)
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await page.locator('#max-kw-input').fill('30');
     await page.locator('#max-kw-input').dispatchEvent('input');
@@ -258,18 +256,71 @@ test.describe('Electricity Load Calculator', () => {
 
     await expect(page.locator('#total-kw')).toHaveText('0.00');
     await expect(page.locator('#active-count')).toHaveText('0');
+
+    // Verify page scrolled back to top
+    await expect(async () => {
+      const currentScrollY = await page.evaluate(() => window.scrollY);
+      expect(currentScrollY).toBe(0);
+    }).toPass();
+  });
+
+  test('reset popup cancellation keeps state, and confirmation resets it', async ({ page }) => {
+    // Expand Kitchen category to make page tall enough to scroll, then scroll down
+    await page.locator('button.category-toggle[data-category="Kitchen"]').click();
+    await page.evaluate(() => window.scrollTo(0, 300));
+
+    // 1. Increase quantity of LED Bulb (already expanded by default)
+    await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
+    await expect(page.locator('#active-count')).toHaveText('1');
+
+    // 2. Click Reset
+    await page.locator('button[data-action="reset-all"]').filter({ visible: true }).first().click();
+    
+    // 3. Verify popup is visible
+    const modal = page.locator('#confirm-modal');
+    await expect(modal).toBeVisible();
+
+    // 4. Click Cancel button in popup
+    await page.locator('#confirm-cancel-btn').click();
+    
+    // 5. Verify popup is hidden
+    await expect(modal).not.toBeVisible();
+    
+    // 6. Verify state was NOT reset
+    await expect(page.locator('#active-count')).toHaveText('1');
+
+    // Scroll position should still be down (not reset on cancel)
+    const scrollYAfterCancel = await page.evaluate(() => window.scrollY);
+    expect(scrollYAfterCancel).toBeGreaterThan(0);
+
+    // 7. Click Reset again
+    await page.locator('button[data-action="reset-all"]').filter({ visible: true }).first().click();
+    await expect(modal).toBeVisible();
+
+    // 8. Click Confirm (Reset) button in popup
+    await page.locator('#confirm-ok-btn').click();
+
+    // 9. Verify popup is hidden and state IS reset
+    await expect(modal).not.toBeVisible();
+    await expect(page.locator('#active-count')).toHaveText('0');
+
+    // 10. Verify page scrolled back to top after confirmation
+    await expect(async () => {
+      const currentScrollY = await page.evaluate(() => window.scrollY);
+      expect(currentScrollY).toBe(0);
+    }).toPass();
   });
 
   // ── Category Collapse / Expand ────────────────────────────
 
-  test('all categories start collapsed by default', async ({ page }) => {
-    await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
+  test('all categories except Lighting start collapsed by default', async ({ page }) => {
+    await expect(page.locator('#category-body-Lighting')).toBeVisible();
     await expect(page.locator('#category-body-Kitchen')).not.toBeVisible();
     await expect(page.locator('[id="category-body-Fans-&-Cooling"]')).not.toBeVisible();
   });
 
   test('Lighting expands when a Quick Start preset is loaded while others stay collapsed', async ({ page }) => {
-    await expect(page.locator('#category-body-Lighting')).not.toBeVisible();
+    await expect(page.locator('#category-body-Lighting')).toBeVisible();
     await page.locator('button[data-preset-id="budget-home"]').click();
     await expect(page.locator('#category-body-Lighting')).toBeVisible();
     // Others should remain collapsed even if they have active appliances in the preset
@@ -294,7 +345,6 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('shows Moderate Load badge when load is between 30–70%', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
     // Change watts to 2000W: 2000/5000 = 40% → Moderate
@@ -306,7 +356,6 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('shows Heavy Load badge when load exceeds 70% of capacity', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
 
     // Change watts to 5000W: 5000/5000 = 100% → Heavy
@@ -401,7 +450,6 @@ test.describe('Electricity Load Calculator', () => {
   // ── LocalStorage Persistence ──────────────────────────────
 
   test('appliance quantities persist across page reload', async ({ page }) => {
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#total-kw')).toHaveText('0.01');
 

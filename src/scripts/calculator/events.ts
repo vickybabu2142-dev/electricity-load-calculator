@@ -191,6 +191,12 @@ document.addEventListener('click', async (e) => {
     const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement | null;
     if (maxKWInput) maxKWInput.value = String(appState.maxCapacityKW);
     calculate();
+
+    // Reset page scroll to top and clear any focus (emulate first landing)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     return;
   }
 

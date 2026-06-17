@@ -67,6 +67,20 @@ function initCalculator(): void {
     appState.appliances.forEach(a => updateRowStyle(a));
   }
 
+  // Auto-expand Lighting if no appliances are active
+  const activeCount = appState.appliances.filter(a => a.qty > 0).length;
+  if (activeCount === 0) {
+    const body = document.getElementById('category-body-Lighting');
+    if (body) {
+      body.classList.add('is-open');
+      const section = body.closest('.category-section');
+      const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
+      const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+      if (chevron) (chevron as HTMLElement).style.transform = '';
+    }
+  }
+
   calculate();
 }
 

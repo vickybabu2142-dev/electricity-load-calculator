@@ -619,7 +619,7 @@ const schemaGraph = [
         <div class="mt-16 space-y-4">
           <p class="text-sm font-bold uppercase tracking-widest text-text-muted">Prepared by</p>
           <p class="text-2xl font-bold" style="color:var(--accent)">
-            <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:inherit;">ElectricityLoadCalculator.com</a>
+            <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:var(--accent) !important;">ElectricityLoadCalculator.com</a>
           </p>
         </div>
 
@@ -1013,7 +1013,7 @@ const schemaGraph = [
             <div class="text-right">
               <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Official Platform</p>
               <p class="text-sm font-bold text-accent">
-                <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:inherit;">ElectricityLoadCalculator.com</a>
+                <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:var(--accent) !important;">ElectricityLoadCalculator.com</a>
               </p>
               <p class="text-[10px] text-text-muted mt-1">Platform Version: <span id="aprint-platform-version-final">v1.0.3</span></p>
             </div>
@@ -1028,7 +1028,7 @@ const schemaGraph = [
       </div>
 
       <div class="mt-8 pt-6 border-t border-border text-center text-xs text-text-muted">
-         <p>© 2026 <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:inherit;">ElectricityLoadCalculator.com</a> · Professional Electrical Assessment Platform</p>
+         <p>© 2026 <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:var(--accent) !important;">ElectricityLoadCalculator.com</a> · Professional Electrical Assessment Platform</p>
       </div>
     </div>
   </div>
@@ -1520,7 +1520,7 @@ function initAssessment() {
 
   const siteUrl = window.location.origin;
   document.querySelectorAll<HTMLElement>('.print-brand-url').forEach(el => {
-    el.innerHTML = '<a href="https://electricityloadcalculator.com" style="color:inherit;text-decoration:underline;">electricityloadcalculator.com</a>';
+    el.innerHTML = '<a href="https://electricityloadcalculator.com" style="color:var(--accent) !important;text-decoration:underline;">electricityloadcalculator.com</a>';
   });
 
   // KPI & Matrix
