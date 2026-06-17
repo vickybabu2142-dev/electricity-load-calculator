@@ -1,16 +1,56 @@
 ---
+const version = import.meta.env.PUBLIC_VERSION || 'v1.0.3';
 ---
 
-<footer class="border-t border-border print:hidden bg-base">
-  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-    <p class="text-xs text-text-muted">
-      &copy; {new Date().getFullYear()} Electricity Load Calculator — Free online kW &amp; kVA estimator for your home.
-    </p>
-    <nav class="flex items-center gap-4 text-xs text-text-muted">
-      <a href="/about-us" class="hover:text-accent transition-colors">About</a>
-      <a href="/contact-us" class="hover:text-accent transition-colors">Contact</a>
-      <a href="/privacy-policy" class="hover:text-accent transition-colors">Privacy</a>
-      <a href="/terms-conditions" class="hover:text-accent transition-colors">Terms</a>
-    </nav>
+<footer class="border-t border-border bg-card/30 print:hidden no-print">
+  <div class="max-w-[1300px] mx-auto px-4 sm:px-6 py-10 sm:py-12">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10 border-b border-border/50 pb-10">
+      
+      <!-- Brand & Description -->
+      <div class="md:col-span-6 space-y-4">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-accent-text">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+          </div>
+          <span class="font-display font-bold text-lg text-text-primary tracking-tight">ElectricityLoadCalculator<span class="text-accent">.com</span></span>
+        </div>
+        <p class="text-sm text-text-muted leading-relaxed max-w-md">
+          A professional-grade platform designed to simplify household electrical load assessment. Calculate consumption, assess health scores, and receive tailored component recommendations instantly.
+        </p>
+      </div>
+
+      <!-- Quick Navigation -->
+      <div class="md:col-span-3 space-y-4">
+        <h4 class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted">Platform</h4>
+        <nav class="flex flex-col gap-2.5">
+          <a href="/" class="text-sm text-text-muted hover:text-accent transition-colors">Load Calculator</a>
+          <a href="/assessment" class="text-sm text-text-muted hover:text-accent transition-colors">Assessment Report</a>
+        </nav>
+      </div>
+
+      <!-- Legal & Contact -->
+      <div class="md:col-span-3 space-y-4">
+        <h4 class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted">Company</h4>
+        <nav class="flex flex-col gap-2.5">
+          <a href="/about-us" class="text-sm text-text-muted hover:text-accent transition-colors">About Project</a>
+          <a href="/contact-us" class="text-sm text-text-muted hover:text-accent transition-colors">Contact Support</a>
+          <a href="/privacy-policy" class="text-sm text-text-muted hover:text-accent transition-colors">Privacy Policy</a>
+          <a href="/terms-conditions" class="text-sm text-text-muted hover:text-accent transition-colors">Terms of Service</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-text-muted uppercase tracking-widest">
+      <p>&copy; {new Date().getFullYear()} All Rights Reserved</p>
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1 h-1 rounded-full bg-accent"></span>
+          Engineered for Efficiency
+        </span>
+        <span class="hidden sm:inline opacity-20">|</span>
+        <span id="footer-platform-version" class="hidden sm:inline">{version}</span>
+      </div>
+    </div>
   </div>
 </footer>

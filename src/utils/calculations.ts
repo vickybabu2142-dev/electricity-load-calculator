@@ -1,4 +1,6 @@
-import type { Appliance, CalculationResult, CategorySummary, ApplianceCategory } from '../types';
+import type { Appliance, CalculationResult, CategorySummary } from '../types';
+import { CATEGORIES } from '../data/appliances';
+import { DAYS_PER_MONTH } from '../data/constants';
 
 export function calculateRowKWh(appliance: Appliance): number {
   const watts = Math.max(0, appliance.watts);
@@ -17,7 +19,7 @@ export function calculateTotals(
   const totalWatts = included.reduce((s, a) => s + Math.max(0, a.watts) * Math.max(0, a.qty), 0);
   const totalKW = totalWatts / 1000;
   const dailyKWh = included.reduce((s, a) => s + calculateRowKWh(a), 0);
-  const monthlyKWh = dailyKWh * 30;
+  const monthlyKWh = dailyKWh * DAYS_PER_MONTH;
   const monthlyBill = monthlyKWh * tariff;
   const maxWatts = Math.max(0.1, maxCapacityKW) * 1000;
   const loadPercent = Math.min((totalWatts / maxWatts) * 100, 100);
@@ -38,12 +40,8 @@ export function calculateTotals(
     return currentPower > bestPower ? a : best;
   }, null);
 
-  // Calculate category summaries
-  const categories: ApplianceCategory[] = [
-    'Lighting', 'Fans & Cooling', 'Kitchen', 'Entertainment', 'Office & IT', 'Industrial', 'Other'
-  ];
-
-  const categorySummaries: CategorySummary[] = categories.map(cat => {
+  // Calculate category summaries — CATEGORIES imported from data/appliances (single source of truth)
+  const categorySummaries: CategorySummary[] = CATEGORIES.map(cat => {
     const catApps = appliances.filter(a => a.category === cat);
     const activeApps = catApps.filter(a => a.qty > 0);
     

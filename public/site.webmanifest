@@ -1,6 +1,6 @@
 {
   "name": "Electricity Load Calculator",
-  "short_name": "ElectricLoad",
+  "short_name": "ElectricityLoadCalculator",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#F4A826",
+  "background_color": "#F4A826",
   "display": "standalone"
 }

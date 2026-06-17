@@ -26,7 +26,7 @@ const icon = CATEGORY_ICONS[name];
 ---
 
 <section
-  class="category-section rounded-xl border border-border bg-card overflow-hidden"
+  class="category-section rounded-xl border border-border bg-card"
   data-category={name}
 >
   <!-- Category header -->
@@ -112,14 +112,13 @@ const icon = CATEGORY_ICONS[name];
   >
     <div class="category-body-inner">
       <!-- Column headers (desktop only) -->
-      <div class="hidden lg:flex items-center gap-3 px-4 py-2 border-b border-border text-[10px] font-mono uppercase tracking-widest text-text-muted">
-        <div class="w-11 flex-shrink-0">On/Off</div>
-        <div class="flex-1 min-w-[140px]">Appliance</div>
-        <div class="w-[90px] text-center">Watts</div>
-        <div class="w-[100px] text-center">Quantity</div>
-        <div class="w-[80px] text-center">Hrs/Day</div>
-        <div class="w-[80px] text-right">Usage</div>
-        <div class="w-7"></div>
+      <div class="hidden lg:grid grid-cols-[1fr_90px_100px_80px_80px_28px] gap-3 px-4 py-2 border-b border-border text-[10px] font-mono uppercase tracking-widest text-text-muted">
+        <div class="text-left">Appliance</div>
+        <div class="text-center">Watts</div>
+        <div class="text-center">Quantity</div>
+        <div class="text-center">Hrs/Day</div>
+        <div class="text-right">Usage</div>
+        <div></div>
       </div>
 
       <!-- Appliance rows -->

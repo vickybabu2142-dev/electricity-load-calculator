@@ -83,90 +83,200 @@ const schemaGraph = [
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Pillar 1: Load Utilization -->
-          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
-            <div class="flex items-center justify-between mb-6">
-              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
-              </span>
-              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">30 POINTS</span>
-            </div>
-            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Load Utilization</h3>
-            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
-              Measures how much of your sanctioned capacity is being taxed. Like a car engine, running at redline (100%) or barely idling (&lt; 25%) is inefficient.
-            </p>
-            <div class="space-y-2 border-t border-border pt-5">
-              <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-tighter">
-                <span class="text-text-primary font-bold">Optimal Range</span>
-                <span class="text-accent">50% – 80%</span>
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col justify-between hover:border-accent/40 transition-colors">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+                </span>
+                <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">30 POINTS</span>
               </div>
-              <div class="h-1.5 w-full bg-base rounded-full overflow-hidden">
-                <div class="h-full bg-accent" style="width: 70%"></div>
+              <h3 class="font-display font-bold text-text-primary text-lg mb-1">Load Utilization</h3>
+              <p class="text-xs font-mono uppercase tracking-wider text-accent mb-4">Is your power capacity sized right?</p>
+              <div class="bg-base/50 rounded-xl p-4 border border-border/50 mb-6">
+                <p class="text-xs text-text-muted leading-relaxed">
+                  <strong class="text-accent text-[13px] block mb-1">🎒 The Backpack Metaphor:</strong>
+                  If your backpack is empty, it's a waste of a bag. If you pack it 100% full to bursting, the seams will rip. You want it packed comfortably in the sweet spot (50% – 80% full)!
+                </p>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-mono font-bold">
+                <div class="p-2 rounded-lg bg-base border border-border text-text-muted flex flex-col justify-center">
+                  <span class="text-sm">💤</span>
+                  <span class="mt-1">Underloaded</span>
+                  <span class="text-text-muted text-[9px] font-normal">&lt; 30%</span>
+                </div>
+                <div class="p-2 rounded-lg bg-accent/10 border border-accent/30 text-accent flex flex-col justify-center">
+                  <span class="text-sm">⭐</span>
+                  <span class="mt-1">Sweet Spot</span>
+                  <span class="text-accent text-[9px] font-bold">50% – 80%</span>
+                </div>
+                <div class="p-2 rounded-lg bg-base border border-border text-text-muted flex flex-col justify-center">
+                  <span class="text-sm">🔥</span>
+                  <span class="mt-1">Overloaded</span>
+                  <span class="text-text-muted text-[9px] font-normal">&gt; 80%</span>
+                </div>
+              </div>
+              <div class="space-y-1.5 pt-2">
+                <div class="flex items-center justify-between text-[10px] font-mono text-text-muted uppercase tracking-wider">
+                  <span>Usage Level Gauge</span>
+                  <span class="text-accent font-bold">50% - 80% Target</span>
+                </div>
+                <div class="h-2 w-full bg-base rounded-full overflow-hidden relative border border-border">
+                  <div class="absolute top-0 bottom-0 left-[50%] right-[20%] bg-accent/20"></div>
+                  <div class="absolute h-full w-2 bg-accent rounded-full left-[70%] z-10"></div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Pillar 2: Energy Efficiency -->
-          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
-            <div class="flex items-center justify-between mb-6">
-              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 6v6l4 2"/></svg>
-              </span>
-              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">30 POINTS</span>
-            </div>
-            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Energy Distribution</h3>
-            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
-              Checks for "Power Hogs." If one appliance consumes > 40% of your total energy, your system is unbalanced and ripe for replacement with a 5-star unit.
-            </p>
-            <div class="space-y-2 border-t border-border pt-5">
-              <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-tighter">
-                <span class="text-text-primary font-bold">Max Share per Device</span>
-                <span class="text-accent">&lt; 40%</span>
+          <!-- Pillar 2: Energy Distribution -->
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col justify-between hover:border-accent/40 transition-colors">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 6v6l4 2"/></svg>
+                </span>
+                <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">30 POINTS</span>
               </div>
-              <div class="flex gap-1 h-1.5">
-                <div class="h-full bg-accent rounded-full" style="width: 30%"></div>
-                <div class="h-full bg-accent/40 rounded-full" style="width: 20%"></div>
-                <div class="h-full bg-accent/20 rounded-full" style="width: 50%"></div>
+              <h3 class="font-display font-bold text-text-primary text-lg mb-1">Energy Distribution</h3>
+              <p class="text-xs font-mono uppercase tracking-wider text-accent mb-4">Are you harboring any power hogs?</p>
+              <div class="bg-base/50 rounded-xl p-4 border border-border/50 mb-6">
+                <p class="text-xs text-text-muted leading-relaxed">
+                  <strong class="text-accent text-[13px] block mb-1">🍕 The Pizza Metaphor:</strong>
+                  If one person eats 80% of a shared pizza, the others starve. Similarly, if a single appliance hogs more than 40% of your power, it is highly inefficient and needs an upgrade!
+                </p>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="bg-base/40 border border-border rounded-xl p-3 space-y-3">
+                <p class="text-[10px] font-mono uppercase tracking-wider text-text-muted text-center">Appliance Consumption Share</p>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="space-y-2 border-r border-border/50 pr-2">
+                    <div class="flex justify-between text-[9px] font-mono text-text-muted">
+                      <span>⚠️ Power Hog</span>
+                      <span class="text-red-500 font-bold">Bad</span>
+                    </div>
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[8px] font-mono text-text-muted w-6">AC</span>
+                        <div class="h-2 flex-1 bg-red-500/20 rounded-full overflow-hidden">
+                          <div class="h-full bg-red-500" style="width: 65%"></div>
+                        </div>
+                        <span class="text-[8px] font-mono text-red-500 font-bold">65%</span>
+                      </div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[8px] font-mono text-text-muted w-6">Other</span>
+                        <div class="h-2 flex-1 bg-base rounded-full overflow-hidden">
+                          <div class="h-full bg-accent/40" style="width: 35%"></div>
+                        </div>
+                        <span class="text-[8px] font-mono text-text-muted">35%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="space-y-2 pl-2">
+                    <div class="flex justify-between text-[9px] font-mono text-text-muted">
+                      <span>✨ Balanced</span>
+                      <span class="text-emerald-500 font-bold">Good</span>
+                    </div>
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[8px] font-mono text-text-muted w-6">AC</span>
+                        <div class="h-2 flex-1 bg-emerald-500/20 rounded-full overflow-hidden">
+                          <div class="h-full bg-emerald-500" style="width: 30%"></div>
+                        </div>
+                        <span class="text-[8px] font-mono text-emerald-500 font-bold">30%</span>
+                      </div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[8px] font-mono text-text-muted w-6">Other</span>
+                        <div class="h-2 flex-1 bg-base rounded-full overflow-hidden">
+                          <div class="h-full bg-accent" style="width: 70%"></div>
+                        </div>
+                        <span class="text-[8px] font-mono text-text-muted">70%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Pillar 3: Safety Readiness -->
-          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
-            <div class="flex items-center justify-between mb-6">
-              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5Z"/></svg>
-              </span>
-              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">20 POINTS</span>
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col justify-between hover:border-accent/40 transition-colors">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5Z"/></svg>
+                </span>
+                <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">20 POINTS</span>
+              </div>
+              <h3 class="font-display font-bold text-text-primary text-lg mb-1">Safety Readiness</h3>
+              <p class="text-xs font-mono uppercase tracking-wider text-accent mb-4">Are you exceeding residential limits?</p>
+              <div class="bg-base/50 rounded-xl p-4 border border-border/50 mb-6">
+                <p class="text-xs text-text-muted leading-relaxed">
+                  <strong class="text-accent text-[13px] block mb-1">🛣️ The Highway Metaphor:</strong>
+                  A neighborhood street is built for cars, not giant cargo trucks. If your home draws factory-level power (Industrial), your wiring is under major stress and fire risk!
+                </p>
+              </div>
             </div>
-            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Safety Readiness</h3>
-            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
-              Confirms your load stays within residential limits. If our calculator flags your usage as "Industrial," points are lost to signal a need for professional wiring.
-            </p>
-            <div class="border-t border-border pt-5 flex items-center justify-between">
-              <span class="text-[11px] font-mono uppercase font-bold text-text-primary tracking-tighter">Standard Compliance</span>
-              <div class="flex gap-1">
-                {[1,2,3,4,5].map(() => <div class="w-4 h-1.5 rounded-full bg-accent"></div>)}
+            <div class="space-y-4">
+              <div class="bg-base/40 border border-border rounded-xl p-3 flex flex-col justify-center">
+                <div class="flex justify-between items-center text-[10px] font-mono text-text-muted mb-2">
+                  <span>Wiring Stress level</span>
+                  <span class="text-emerald-500 font-bold">Safe Limit &lt; 10kW</span>
+                </div>
+                <div class="grid grid-cols-3 gap-1 h-3">
+                  <div class="h-full bg-emerald-500 rounded-l-md" title="Residential (< 5 kW) - Safe"></div>
+                  <div class="h-full bg-amber-500" title="Moderate (5-10 kW) - Caution"></div>
+                  <div class="h-full bg-red-500/20 rounded-r-md" title="Industrial (> 10 kW) - Overloaded"></div>
+                </div>
+                <div class="flex justify-between text-[8px] font-mono text-text-muted mt-1.5">
+                  <span>Residential (Safe)</span>
+                  <span>Moderate</span>
+                  <span>Industrial (High Risk)</span>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Pillar 4: Renewable Potential -->
-          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/40 transition-colors">
-            <div class="flex items-center justify-between mb-6">
-              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-              </span>
-              <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">20 POINTS</span>
+          <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col justify-between hover:border-accent/40 transition-colors">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                </span>
+                <span class="text-xs font-mono font-bold text-text-muted bg-base px-2.5 py-1 rounded-md border border-border">20 POINTS</span>
+              </div>
+              <h3 class="font-display font-bold text-text-primary text-lg mb-1">Solar ROI Potential</h3>
+              <p class="text-xs font-mono uppercase tracking-wider text-accent mb-4">How fast will Solar pay for itself?</p>
+              <div class="bg-base/50 rounded-xl p-4 border border-border/50 mb-6">
+                <p class="text-xs text-text-muted leading-relaxed">
+                  <strong class="text-accent text-[13px] block mb-1">🛒 The Wholesale Metaphor:</strong>
+                  If you buy groceries in bulk, a warehouse club membership pays for itself instantly. The higher your electricity bills, the faster your solar investment pays off!
+                </p>
+              </div>
             </div>
-            <h3 class="font-display font-bold text-text-primary text-lg mb-3">Solar ROI Potential</h3>
-            <p class="text-sm text-text-muted leading-relaxed mb-6 flex-1">
-              Higher consumption isn't always bad—it makes you the perfect candidate for Solar. High-usage homes get more points here as their "Green ROI" is much faster.
-            </p>
-            <div class="border-t border-border pt-5 flex items-center justify-between">
-              <span class="text-[11px] font-mono uppercase font-bold text-text-primary tracking-tighter">ROI Feasibility</span>
-              <div class="flex items-center gap-1.5">
-                <span class="text-xs font-bold text-accent italic">HIGH ROI</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-accent"><path fill-rule="evenodd" d="M12.577 4.878a.75.75 0 0 1 .919-.53l4.792 1.284a.75.75 0 0 1 .53.919l-1.284 4.792a.75.75 0 0 1-1.449-.387l.81-3.022-11.564 11.564a.75.75 0 0 1-1.06-1.06L15.939 6.874l-3.892 1.043a.75.75 0 0 1-.92-.53-.75.75 0 0 1 .53-.92-.75.75 0 0 1 .92-.53Z" clip-rule="evenodd"/></svg>
+            <div class="space-y-4">
+              <div class="bg-base/40 border border-border rounded-xl p-3 space-y-3">
+                <div class="flex justify-between items-center text-[10px] font-mono text-text-muted">
+                  <span>Solar Payback Timeline</span>
+                  <span class="text-accent font-bold">High Usage = Fast ROI</span>
+                </div>
+                <div class="relative pt-2">
+                  <div class="flex justify-between text-[9px] font-mono text-text-muted z-10 relative">
+                    <div class="flex flex-col items-center bg-base border border-border rounded px-1.5 py-0.5">
+                      <span>Low Usage</span>
+                      <span class="font-bold text-text-muted">7-10 Yrs ⏳</span>
+                    </div>
+                    <div class="flex flex-col items-center bg-accent/20 border border-accent/40 rounded px-1.5 py-0.5 text-accent">
+                      <span>High Usage</span>
+                      <span class="font-bold text-accent">3-4 Yrs 🚀</span>
+                    </div>
+                  </div>
+                  <div class="absolute h-0.5 left-6 right-6 top-[20px] bg-border -z-0"></div>
+                </div>
               </div>
             </div>
           </div>

@@ -19,14 +19,16 @@ interface Props {
   title?: string;
   description?: string;
   keywords?: string;
+  noindex?: boolean;
   breadcrumbSchema?: any;
   schemaGraph?: any[];
 }
 
 const {
   title = 'Electricity Load Calculator | Electrical Load Assessment Tool',
-  description = "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh, get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
+  description = "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh(unit), get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
   keywords = "electricity load calculator, electrical load calculator, home load calculator, connected load calculator, power consumption calculator, electrical load assessment, house wiring load calculation, load calculation for AC, load calculation for home in India, appliance power calculator, electricity load calculator in kw for home, electricity load calculator in kva, electricity load calculator for home, electricity load calculator in kw, bijli load calculator, house electricity load calculator, energy cost estimator",
+  noindex = false,
   breadcrumbSchema,
   schemaGraph = [],
 } = Astro.props;
@@ -42,7 +44,7 @@ const defaultSoftwareSchema = {
   "operatingSystem": "Web",
   "applicationCategory": "UtilitiesApplication",
   "applicationSubCategory": "Engineering/Utility",
-  "description": "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh, get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
+  "description": "Free electrical load calculator for home. Calculate connected load, energy consumption in kW and kWh(unit), get MCB, cable, inverter & solar recommendations, and assess your electrical health score.",
   "screenshot": ogImage,
   "softwareVersion": "1.0.0",
   "author": {
@@ -57,7 +59,7 @@ const defaultSoftwareSchema = {
   },
   "featureList": [
     "Real-time load calculation in Watts and kW",
-    "Daily and monthly energy consumption analysis (kWh)",
+    "Daily and monthly energy consumption analysis (kWh(unit))",
     "MCB, cable, inverter, and solar recommendations",
     "Electrical health score assessment",
     "Optional Energy Cost Estimator (user-provided rate)",
@@ -86,6 +88,7 @@ const finalSchema = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <title>{title}</title>
@@ -129,15 +132,21 @@ const finalSchema = {
     </script>
 
     <!-- Favicon -->
-   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-   <link rel="shortcut icon" href="/favicon.ico" />
-   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-   <meta name="apple-mobile-web-app-title" content="ElectricLoad" />
-   <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="ElectricityLoadCalculator" />
+    <link rel="manifest" href="/site.webmanifest" />
     <ClientRouter />
 
     <!-- Google tag (gtag.js) -->
+    <script is:inline>
+      // Disable GA on localhost
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        window['ga-disable-G-N75LMQQ1LE'] = true;
+      }
+    </script>
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-N75LMQQ1LE"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];

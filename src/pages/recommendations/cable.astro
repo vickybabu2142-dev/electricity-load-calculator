@@ -179,7 +179,7 @@ const schemaGraph = [
       <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
         <h2 class="font-display font-semibold text-text-primary text-lg">Related Recommendations</h2>
         <p class="text-sm text-text-muted">Your load calculation also informs these selections.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <a href="/recommendations/mcb" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
               <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
@@ -205,6 +205,15 @@ const schemaGraph = [
             <div class="min-w-0">
               <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Solar</p>
               <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Panel Size →</p>
+            </div>
+          </a>
+          <a href="/recommendations/stabilizer" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v5h-2V7zm0 7h2v2h-2v-2z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Stabilizer</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Stabilizer Size →</p>
             </div>
           </a>
         </div>

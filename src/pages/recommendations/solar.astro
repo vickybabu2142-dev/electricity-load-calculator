@@ -74,14 +74,14 @@ const schemaGraph = [
               <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">1</span>
               <div class="flex-1 min-w-0">
                 <p class="text-xs text-text-muted">Your monthly electricity consumption</p>
-                <p class="font-mono font-semibold text-text-primary"><span id="solar-monthly">—</span> kWh/month</p>
+                <p class="font-mono font-semibold text-text-primary"><span id="solar-monthly">—</span> kWh(unit)/month</p>
               </div>
             </div>
             <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
               <span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-mono font-bold flex-shrink-0">2</span>
               <div class="flex-1 min-w-0">
-                <p class="text-xs text-text-muted">Daily consumption (<span id="solar-monthly2">—</span> kWh ÷ 30)</p>
-                <p class="font-mono font-semibold text-text-primary">= <span id="solar-daily">—</span> kWh/day</p>
+                <p class="text-xs text-text-muted">Daily consumption (<span id="solar-monthly2">—</span> kWh(unit) ÷ 30)</p>
+                <p class="font-mono font-semibold text-text-primary">= <span id="solar-daily">—</span> kWh(unit)/day</p>
               </div>
             </div>
             <div class="flex items-center gap-3 p-3 rounded-lg bg-base border border-border">
@@ -109,7 +109,7 @@ const schemaGraph = [
         <div class="space-y-3 text-sm text-text-muted leading-relaxed">
           <h3 class="font-display font-semibold text-text-primary">How Solar Sizing Works</h3>
           <p>A solar panel system's size (in kWp — kilowatt-peak) determines how much electricity it generates. The calculation depends on your daily consumption, the number of peak sun hours in your location, and system efficiency losses (~20% typical).</p>
-          <p><strong class="text-text-primary">Formula:</strong> System size (kW) = Daily kWh ÷ (Peak Sun Hours × System Efficiency)</p>
+          <p><strong class="text-text-primary">Formula:</strong> System size (kW) = Daily kWh(unit) ÷ (Peak Sun Hours × System Efficiency)</p>
         </div>
 
         <div class="space-y-3 text-sm text-text-muted leading-relaxed">
@@ -125,11 +125,11 @@ const schemaGraph = [
               </thead>
               <tbody>
                 {[
-                  ['1 kWp', '~90–110 kWh', 'Studio / 1 BHK'],
-                  ['2 kWp', '~180–220 kWh', '1–2 BHK home'],
-                  ['3 kWp', '~270–330 kWh', '2–3 BHK home'],
-                  ['5 kWp', '~450–550 kWh', '3–4 BHK home'],
-                  ['10 kWp', '~900–1100 kWh', 'Large villa / commercial'],
+                  ['1 kWp', '~90–110 kWh(unit)', 'Studio / 1 BHK'],
+                  ['2 kWp', '~180–220 kWh(unit)', '1–2 BHK home'],
+                  ['3 kWp', '~270–330 kWh(unit)', '2–3 BHK home'],
+                  ['5 kWp', '~450–550 kWh(unit)', '3–4 BHK home'],
+                  ['10 kWp', '~900–1100 kWh(unit)', 'Large villa / commercial'],
                 ].map(([size, gen, use]) => (
                   <tr class="border-b border-border last:border-0">
                     <td class="px-3 py-2 text-accent font-bold">{size}</td>
@@ -192,7 +192,7 @@ const schemaGraph = [
       <div class="rounded-xl border border-border bg-card p-6 sm:p-8 space-y-3">
         <h2 class="font-display font-semibold text-text-primary text-lg">Related Recommendations</h2>
         <p class="text-sm text-text-muted">Your load calculation also informs these selections.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <a href="/recommendations/mcb" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
               <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/>
@@ -218,6 +218,15 @@ const schemaGraph = [
             <div class="min-w-0">
               <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Inverter</p>
               <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">UPS Size →</p>
+            </div>
+          </a>
+          <a href="/recommendations/stabilizer" class="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-base hover:border-accent/50 transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v5h-2V7zm0 7h2v2h-2v-2z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-xs font-mono uppercase tracking-widest text-text-muted">Stabilizer</p>
+              <p class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors">Stabilizer Size →</p>
             </div>
           </a>
         </div>
@@ -269,7 +278,7 @@ function initPage() {
   const solarKW  = SOLAR_SIZES.find(s => s >= calcKW) ?? SOLAR_SIZES[SOLAR_SIZES.length - 1];
 
   setText('rec-value',     insights.recommendedSolar);
-  setText('rec-context',   `To offset ~${Math.round(result.monthlyKWh)} kWh/month consumption`);
+  setText('rec-context',   `To offset ~${Math.round(result.monthlyKWh)} kWh(unit)/month consumption`);
   setText('solar-monthly', Math.round(result.monthlyKWh).toString());
   setText('solar-monthly2', Math.round(result.monthlyKWh).toString());
   setText('solar-daily',   dailyKWh.toFixed(2));

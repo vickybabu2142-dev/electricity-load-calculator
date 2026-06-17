@@ -46,6 +46,33 @@
 - **Document Integrity:** Forces a pure white background and high-contrast dark text regardless of the UI's active theme.
 - **Ink Efficiency:** Background colors are restricted to subtle accents and borders via `print-color-adjust: exact`.
 
+## Code Health & Architecture Guidelines (Optimization Principles)
+
+To prevent code smell regression, adhere strictly to these architectural practices when modifying or extending this application:
+
+### 1. Code Duplication & Shared Templates
+- **No HTML template duplication:** Never replicate HTML generation logic between SSR (.astro files) and client-side scripts.
+- **Shared Row Templates:** Dynamic rows must be constructed using a single-source template engine (such as `src/utils/rowTemplate.ts`) which is shared by both client-side DOM builders and server-side components (`ApplianceRow.astro`).
+- Ensure all interactive elements within dynamically generated rows have unique `id`/`label` pairs to maintain proper accessibility (a11y).
+
+### 2. Modularity & Monolithic Files
+- Keep component layout (HTML/CSS) and interactive logic (TypeScript) separated. Do not exceed 600 lines for page templates (e.g. `index.astro`).
+- Client-side logic belongs in dedicated modular directories under `src/scripts/calculator/` (such as `calculate.ts`, `events.ts`, `dom.ts`, `presets.ts`, `print.ts`, `state.ts`).
+- Avoid "God functions" like the original `calculate()`. Break down rendering, DOM updating, printing setup, health evaluation, and computations into small, single-responsibility functions.
+
+### 3. State Management & Data Processing
+- Do not double-parse the local storage context. Manage states in a unified reactive model.
+- Prevent O(N) recalculations on rendering. Pre-group collections or execute single-pass reductions where possible to optimize high-frequency event loops.
+- Report IDs should remain stable per session rather than being regenerated on every keystroke. Regenerate them only when printing or starting a new session.
+
+### 4. DOM Selectors & Styling Rules
+- **Avoid Fragile Selectors:** Do not query elements using nested structural selectors (e.g. `.flex-1 span`). Tag elements with expressive data attributes (e.g., `data-appliance-name`) to isolate DOM query logic from layout shifts.
+- **CSS Variable & Style Consistency:** Avoid static inline style attributes like `style="color: var(--accent)"` when Tailwind utilities (like `text-accent`) exist. Maintain native UI element theme states through `color-scheme` updates in `global.css`.
+- **Typings:** Set explicitly typed timeout handlers instead of using `any` (e.g., `ReturnType<typeof setTimeout> | undefined`).
+
+### 5. Magic Numbers & Configuration
+- All engineering constraints (voltage levels, safety margins, days per month, sun hours, MCB options) must be imported from the central configuration module (`src/data/constants.ts`).
+
 ## Testing & Verification
 
 ### Automated Tests (Implemented)

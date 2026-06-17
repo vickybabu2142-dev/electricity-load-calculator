@@ -1,4 +1,5 @@
 import type { Appliance } from '../types';
+import { CATEGORIES } from '../data/appliances';
 
 // ── Category Colors ───────────────────────────────────────
 export const CATEGORY_COLORS: Record<string, string> = {
@@ -31,9 +32,8 @@ export function calculateCategoryBreakdown(appliances: Appliance[]): CategoryBre
 
   if (totalKWh === 0) return { items: [], topCategory: '—', topPercent: 0 };
 
-  const ORDER = ['Fans & Cooling', 'Kitchen', 'Lighting', 'Entertainment', 'Other', 'Office & IT', 'Industrial'];
-
-  const items: CategoryBreakdownItem[] = ORDER
+  // CATEGORIES imported from data/appliances — single source of truth (was a separate ORDER array)
+  const items: CategoryBreakdownItem[] = CATEGORIES
     .map(cat => {
       const kWhDay = active
         .filter(a => a.category === cat)

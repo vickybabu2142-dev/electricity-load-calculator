@@ -4,6 +4,7 @@ import PageHero from '@/components/PageHero.astro';
 import ApplianceCategory from '@/components/ApplianceCategory.astro';
 import ResultsPanel from '@/components/ResultsPanel.astro';
 import ReportModal from '@/components/ReportModal.astro';
+import ConfirmModal from '@/components/ConfirmModal.astro';
 import FAQSection from '@/components/FAQSection.astro';
 import { FAQS } from '@/data/faqs';
 import { DEFAULT_APPLIANCES, CATEGORIES, SECTIONS } from '@/data/appliances';
@@ -35,7 +36,7 @@ const schemaGraph = [
 
 <BaseLayout
   title="Electricity Load Calculator | Home Electrical Load Assessment"
-  description="Professional electrical load calculator for home. Estimate kW load, kWh consumption, get MCB, cable, inverter & solar recommendations instantly."
+  description="Professional electrical load calculator for home. Estimate kW load, kWh(unit) consumption, get MCB, cable, inverter & solar recommendations instantly."
   keywords="electricity load calculator, electrical load assessment, kw load calculator for home, house wiring load, energy cost estimator, bijli load calculator India"
   schemaGraph={schemaGraph}
 >
@@ -48,52 +49,70 @@ const schemaGraph = [
       <div class="flex items-center gap-3 mb-4">
         <p class="text-xs sm:text-sm font-normal uppercase tracking-widest text-text-muted flex-shrink-0">Quick Start</p>
         <div class="flex-1 h-px bg-border/60"></div>
+        <button
+          type="button"
+          data-action="reset-all"
+          class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-danger/20 text-danger bg-danger/5 hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-danger font-display text-sm font-medium active:scale-95 flex-shrink-0"
+          aria-label="Reset all appliances"
+          title="Clear all inputs and start over"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 opacity-80" aria-hidden="true">
+            <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd"/>
+          </svg>
+          Reset Load
+        </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
 
-        <!-- Typical 2BHK -->
-        <button type="button" data-action="load-preset" data-preset-id="typical-2bhk"
-          class="preset-card text-left px-3.5 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-              <span class="text-accent flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              </span>
-              <span class="text-sm font-normal text-text-primary group-hover:text-accent transition-colors">Typical 2BHK</span>
-            </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-border text-text-primary tabular-nums font-normal">~5 kW</span>
-          </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-1.5 leading-relaxed">Standard home — AC, fridge, TV &amp; kitchen</p>
-        </button>
-
         <!-- Budget Home -->
         <button type="button" data-action="load-preset" data-preset-id="budget-home"
-          class="preset-card text-left px-3.5 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
+          class="preset-card relative text-left px-4 py-3 sm:px-5 sm:py-4 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
+          
+          <!-- Onboarding Hint -->
+          <div class="onboarding-hint absolute -top-3 left-4 bg-accent text-accent-text text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-lg shadow-accent/40 animate-bounce pointer-events-none z-10 hidden">
+            ✨ Start Here
+          </div>
+
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2">
               <span class="text-accent flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M12 22V12"/><path d="m5 12 7-10 7 10"/><path d="M19 15v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 22V12"/><path d="m5 12 7-10 7 10"/><path d="M19 15v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5"/></svg>
               </span>
-              <span class="text-sm font-normal text-text-primary group-hover:text-accent transition-colors">Budget Home</span>
+              <span class="text-base font-normal text-text-primary group-hover:text-accent transition-colors">Budget Home</span>
             </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-border text-text-primary tabular-nums font-normal">~1.3 kW</span>
+            <span class="flex-shrink-0 text-[11px] font-mono px-2 py-1 rounded-full border border-border text-text-primary tabular-nums font-normal">~1.3 kW</span>
           </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-1.5 leading-relaxed">Essentials only — fans, fridge, TV &amp; laptop</p>
+          <p class="hidden sm:block text-xs text-text-muted mt-1.5 leading-relaxed">Essentials only — fans, fridge, TV &amp; laptop</p>
+        </button>
+
+        <!-- Typical 2BHK -->
+        <button type="button" data-action="load-preset" data-preset-id="typical-2bhk"
+          class="preset-card text-left px-4 py-3 sm:px-5 sm:py-4 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-accent flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </span>
+              <span class="text-base font-normal text-text-primary group-hover:text-accent transition-colors">Typical 2BHK</span>
+            </div>
+            <span class="flex-shrink-0 text-[11px] font-mono px-2 py-1 rounded-full border border-border text-text-primary tabular-nums font-normal">~5 kW</span>
+          </div>
+          <p class="hidden sm:block text-xs text-text-muted mt-1.5 leading-relaxed">Standard home — AC, fridge, TV &amp; kitchen</p>
         </button>
 
         <!-- Summer Heavy -->
         <button type="button" data-action="load-preset" data-preset-id="summer-heavy"
-          class="preset-card text-left px-3.5 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
+          class="preset-card text-left px-4 py-3 sm:px-5 sm:py-4 rounded-xl border border-border bg-card hover:border-accent/40 hover:bg-card-hover transition-[border-color,background-color,box-shadow,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent group active:scale-[0.98]">
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2">
               <span class="text-accent flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
               </span>
-              <span class="text-sm font-normal text-text-primary group-hover:text-accent transition-colors">Summer Heavy</span>
+              <span class="text-base font-normal text-text-primary group-hover:text-accent transition-colors">Summer Heavy</span>
             </div>
-            <span class="flex-shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-border text-text-primary tabular-nums font-normal">~10 kW</span>
+            <span class="flex-shrink-0 text-[11px] font-mono px-2 py-1 rounded-full border border-border text-text-primary tabular-nums font-normal">~10 kW</span>
           </div>
-          <p class="hidden sm:block text-[11px] text-text-muted mt-1.5 leading-relaxed">Peak season — dual AC, full kitchen &amp; more</p>
+          <p class="hidden sm:block text-xs text-text-muted mt-1.5 leading-relaxed">Peak season — dual AC, full kitchen &amp; more</p>
         </button>
 
       </div>
@@ -112,17 +131,6 @@ const schemaGraph = [
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-accent"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 {section.title}
               </h2>
-              <button
-                type="button"
-                data-action="reset-all"
-                class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-lg border border-danger/20 text-danger bg-danger/5 text-lg font-display font-medium hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-danger active:scale-95"
-                aria-label="Reset all appliances"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd"/>
-                </svg>
-                Reset All
-              </button>
             </div>
             <div class="space-y-4">
               {section.groups.map((group, i) => (
@@ -154,7 +162,7 @@ const schemaGraph = [
       id="sticky-reset-btn"
       data-action="reset-all"
       type="button"
-      class="flex items-center justify-center gap-2 px-3 h-10 rounded-lg border border-danger/20 text-danger bg-danger/5 hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-danger flex-shrink-0"
+      class="flex items-center justify-center gap-2 px-3 h-10 rounded-lg border border-danger/20 text-danger bg-danger/5 hover:bg-danger/10 transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-danger font-display flex-shrink-0"
       aria-label="Reset all appliances"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 opacity-80">
@@ -173,7 +181,7 @@ const schemaGraph = [
           <span class="font-mono text-xs text-text-muted">kW</span>
         </div>
         <div class="text-[10px] text-text-primary font-medium truncate w-full opacity-90">
-          Monthly: <span id="sticky-monthly-kwh" class="font-semibold tabular-nums" style="color: var(--accent);">0</span> kWh
+          Monthly: <span id="sticky-monthly-kwh" class="font-semibold tabular-nums" style="color: var(--accent);">0</span> kWh(unit)
         </div>
       </div>
 
@@ -218,7 +226,9 @@ const schemaGraph = [
         
         <div class="mt-24 space-y-4">
           <p class="text-sm font-bold uppercase tracking-widest text-text-muted">Prepared by</p>
-          <p class="text-2xl font-bold" style="color:var(--accent)">ElectricityLoadCalculator.com</p>
+          <p class="text-2xl font-bold" style="color:var(--accent)">
+            <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:inherit;">ElectricityLoadCalculator.com</a>
+          </p>
         </div>
 
         <div class="mt-16 space-y-2">
@@ -241,11 +251,14 @@ const schemaGraph = [
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Daily Consumption</p>
-          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-daily-kwh">0.00</span> <span class="text-lg text-text-muted font-sans font-normal">kWh</span></p>
+          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-daily-kwh">0.00</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Monthly Consumption</p>
-          <p class="text-4xl font-bold font-display text-text-primary"><span id="print-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh</span></p>
+          <div class="flex items-baseline gap-2">
+            <span id="print-monthly-kwh-original" class="hidden text-xl line-through text-text-muted font-normal">0</span>
+            <p class="text-4xl font-bold font-display text-text-primary"><span id="print-monthly-kwh">0</span> <span class="text-lg text-text-muted font-sans font-normal">kWh(unit)</span></p>
+          </div>
         </div>
         <div class="bg-card p-6 rounded-xl border border-border">
           <p class="text-xs font-mono uppercase tracking-widest text-text-muted mb-2">Health Score</p>
@@ -279,11 +292,11 @@ const schemaGraph = [
           </div>
           <div class="flex justify-between border-b border-border pb-2">
             <span class="text-text-muted">Daily Consumption</span>
-            <span class="font-bold text-text-primary"><span id="print-analysis-daily">0.00</span> kWh</span>
+            <span class="font-bold text-text-primary"><span id="print-analysis-daily">0.00</span> kWh(unit)</span>
           </div>
           <div class="flex justify-between border-b border-border pb-2">
             <span class="text-text-muted">Monthly Consumption</span>
-            <span class="font-bold text-text-primary"><span id="print-analysis-monthly">0</span> kWh</span>
+            <span class="font-bold text-text-primary"><span id="print-analysis-monthly">0</span> kWh(unit)</span>
           </div>
         </div>
         <div class="bg-card border border-border p-6 rounded-xl flex flex-col justify-center text-sm">
@@ -326,6 +339,10 @@ const schemaGraph = [
             <tr>
               <td class="px-6 py-4 font-semibold text-text-primary">Solar System Size</td>
               <td class="px-6 py-4 font-bold" style="color:var(--accent)" id="print-matrix-solar">—</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 font-semibold text-text-primary">Mainline Stabilizer</td>
+              <td class="px-6 py-4 font-bold" style="color:var(--accent)" id="print-matrix-stabilizer">—</td>
             </tr>
           </tbody>
         </table>
@@ -376,10 +393,22 @@ const schemaGraph = [
           <p class="text-3xl font-bold mb-6" style="color:var(--accent)" id="print-det-solar">—</p>
           <p class="text-xs font-bold uppercase tracking-widest text-text-muted mb-2">Calculation Path</p>
           <div class="space-y-2 text-sm text-text-muted">
-            <div class="flex justify-between"><span>Monthly Units:</span> <span class="font-mono text-text-primary"><span id="print-det-sol-units">0</span> kWh</span></div>
+            <div class="flex justify-between"><span>Monthly Units:</span> <span class="font-mono text-text-primary"><span id="print-det-sol-units">0</span> kWh(unit)</span></div>
+          </div>
+        </div>
+
+        <div class="bg-card border border-border rounded-xl p-6 break-inside-avoid col-span-2 sm:col-span-1">
+          <h3 class="text-lg font-bold text-text-primary border-b border-border pb-3 mb-4">Stabilizer Recommendation</h3>
+          <p class="text-3xl font-bold mb-6" style="color:var(--accent)" id="print-det-stabilizer">—</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-text-muted mb-2">Calculation Path</p>
+          <div class="space-y-2 text-sm text-text-muted">
+            <div class="flex justify-between"><span>Load:</span> <span class="font-mono text-text-primary"><span id="print-det-stab-load">0</span> kW</span></div>
+            <div class="flex justify-between"><span>Sizing Factor:</span> <span class="font-mono text-text-primary">1.3 (30% margin)</span></div>
+            <div class="flex justify-between"><span>Required Capacity:</span> <span class="font-mono text-text-primary"><span id="print-det-stab-req">0</span> kVA</span></div>
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- SECTION 7: Consumption Analysis -->
@@ -398,7 +427,7 @@ const schemaGraph = [
           <h3 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4 border-b border-border pb-2">Category Breakdown</h3>
           <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-0.5 border-b-2 border-border">
             <span class="flex-1 text-text-primary">Category</span>
-            <span class="w-32 text-right text-text-primary">kWh / day</span>
+            <span class="w-32 text-right text-text-primary">kWh(unit)/day</span>
             <span class="w-20 text-right text-text-primary">Share</span>
           </div>
           <div id="print-breakdown-table" class="space-y-0 text-sm"></div>
@@ -416,18 +445,24 @@ const schemaGraph = [
         <h2 class="text-2xl font-display font-bold text-text-primary">Energy Cost Estimator</h2>
       </div>
       <div class="bg-card border border-border rounded-xl p-6">
-        <div class="grid grid-cols-3 gap-6 mb-6 border-b border-border pb-6">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Monthly Usage</p>
-            <p class="text-xl font-bold text-text-primary"><span id="aprint-cost-monthly-kwh">0</span> kWh</p>
+        <div class="grid grid-cols-2 gap-8 mb-6 border-b border-border pb-6">
+          <div class="space-y-4">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Billable Consumption</p>
+              <div class="flex items-baseline gap-2">
+                <span id="aprint-cost-monthly-kwh-original" class="hidden text-xl line-through text-text-muted font-normal">0</span>
+                <p class="text-3xl font-bold text-accent"><span id="aprint-cost-billable">0</span> <span class="text-lg font-normal text-text-muted">kWh(unit)</span></p>
+              </div>
+              <p id="aprint-cost-subsidy-note" class="hidden text-[10px] text-text-muted mt-1 italic">—</p>
+            </div>
+            <div class="pt-2 border-t border-border/50">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate per kWh(unit)</p>
+              <p class="text-lg font-bold text-text-primary" id="aprint-cost-rate">—</p>
+            </div>
           </div>
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Rate / kWh</p>
-            <p class="text-xl font-bold text-text-primary" id="aprint-cost-rate">—</p>
-          </div>
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Estimated Monthly Cost</p>
-            <p class="text-3xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
+          <div class="flex flex-col justify-center items-center border-l border-border pl-8 bg-accent/5 rounded-r-xl">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">Estimated Monthly Cost</p>
+            <p class="text-5xl font-bold" style="color:var(--accent)" id="aprint-estimated-cost">—</p>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-6">
@@ -501,51 +536,106 @@ const schemaGraph = [
 
       <!-- SECTION 11: Report Footer -->
       <div class="mt-24 pt-6 border-t border-border text-center text-sm text-text-muted break-inside-avoid">
-        <p class="font-bold text-text-primary mb-1">Generated by <span style="color:var(--accent)">ElectricityLoadCalculator.com</span></p>
+        <p class="font-bold text-text-primary mb-1">Generated by <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:var(--accent);">ElectricityLoadCalculator.com</a></p>
         <p>Electrical Assessment Platform</p>
       </div>
-    </div>
-  </div>
+      </div>
+      </div>
 
   <ReportModal />
+  <ConfirmModal />
 
   <!-- SEO CONTENT SECTION -->
   <section class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-12 print:hidden border-t border-border mt-12 pt-16">
     <div class="max-w-4xl mx-auto prose prose-invert prose-headings:font-display prose-headings:font-bold prose-headings:text-text-primary prose-p:text-text-muted prose-p:leading-relaxed">
-      <h2 class="text-3xl sm:text-4xl mb-8">Electricity Load Calculator & Comprehensive Component Assessment: The Complete Guide to Home Power Planning</h2>
       
-      <p>
-        In today’s technology-driven world, managing residential energy consumption is more critical than ever. Whether you are setting up a new apartment or managing a large residential complex, using an <strong>electricity load calculator</strong> is the first step toward efficiency. Our tool is designed to simplify the complex process of <strong>electrical load calculation</strong>, evolving into a full assessment platform that provides instant insights into your household power needs and infrastructure requirements.
-      </p>
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-4 font-bold">Complete Guide to Home Electrical Sizing & Safety</h2>
+        <p class="text-lg text-text-muted max-w-2xl mx-auto">Learn how to calculate your home's energy footprint, size critical protective components, and plan for sustainable backup power.</p>
+      </div>
 
-      <h3 class="text-2xl mt-12 mb-6">Why Use an Electricity Load Calculator in kW for Home?</h3>
-      <p>
-        Every household has a unique "energy signature." From the humble LED bulb to heavy-duty air conditioners and kitchen appliances, every device adds to your total demand. A dedicated <strong>electricity load calculator in kw for home</strong> helps homeowners understand their peak demand. This is essential when applying for a new connection, upgrading your existing meter, or planning for a solar installation. 
-      </p>
-      <p>
-        Using a <strong>house electricity load calculator</strong> ensures that you don't underestimate your needs, which could lead to frequent circuit trips or equipment damage. Conversely, it prevents overestimating, which might result in paying higher fixed charges to your utility provider. For many, this is often referred to as a <strong>bijli load calculator</strong>, serving as a vital tool for household budgeting and electrical safety.
-      </p>
+      <!-- Expanded Content Layout -->
+      <div class="space-y-10 not-prose">
+        
+        <!-- Section 1: Intro -->
+        <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
+          <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
+            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">🔌</span>
+            <span>Mastering Household Energy: The Role of an Electricity Load Calculator</span>
+          </h3>
+          <p class="text-sm text-text-muted leading-relaxed">
+            In today’s technology-driven homes, energy management is no longer just about paying a monthly bill. From heavy air conditioners and electric geysers to smart TVs and home servers, each device contributes to your home's total peak power draw. An <strong>electricity load calculator</strong> is a crucial diagnostic tool for any homeowner. Whether you are moving into a new apartment, upgrading your utility meter, or experiencing frequent circuit breaker trips, understanding your electrical load in kW ensures your home infrastructure remains safe, cost-efficient, and fully optimized.
+          </p>
+        </div>
 
-      <h3 class="text-2xl mt-12 mb-6">More Than a Calculator: Full Electrical Component Sizing</h3>
-      <p>
-        Our platform has moved beyond being just a basic <strong>electricity load calculator</strong>. It now acts as an intelligent assistant for your entire electrical system. By analyzing your specific appliance load, the tool automatically calculates the proper <strong>MCB rating</strong> for your main distribution board and recommends the correct <strong>cable size (sq mm)</strong> to ensure safe and efficient power delivery without overheating.
-      </p>
-      <p>
-        Planning for power backups or renewable energy? The <strong>electricity load calculator</strong> also provides precision recommendations for <strong>inverter capacity (kVA)</strong> and <strong>solar panel sizing (kW)</strong>. This integrated approach ensures that every component of your home’s electrical infrastructure is perfectly matched to your actual consumption patterns, maximizing both safety and cost-effectiveness.
-      </p>
+        <!-- Section 2: Connected vs Sanctioned -->
+        <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
+          <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
+            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">📊</span>
+            <span>Connected Load vs. Sanctioned Load: Avoiding Utility Overload Penalties</span>
+          </h3>
+          <div class="space-y-4">
+            <p class="text-sm text-text-muted leading-relaxed">
+              Many homeowners confuse their total connected appliances with their legal sanctioned load limit. 
+              <strong>Connected Load</strong> is the cumulative wattage of every single electrical device installed in your house (bulbs, fans, microwave, ACs, geysers, etc.), regardless of whether they are turned on. In contrast, <strong>Sanctioned Load</strong> is the maximum continuous power capacity approved by your local electricity board or utility provider for your meter connection (usually 3 kW, 5 kW, or 10 kW).
+            </p>
+            <p class="text-sm text-text-muted leading-relaxed">
+              Since you rarely run every single appliance simultaneously, your sanctioned load limit is normally lower than your total connected load. However, if your concurrent appliance usage exceeds your meter's sanctioned capacity, you risk tripping the utility mains, damaging your meter, or incurring heavy financial penalties on your electricity bill. By utilizing a **house electricity load calculator**, you can run simulations to balance your active appliances and keep your simultaneous load comfortably within safety parameters.
+            </p>
+          </div>
+        </div>
 
-      <h3 class="text-2xl mt-12 mb-6">Optional Energy Cost Estimator: Cost Transparency Without Assumptions</h3>
-      <p>
-        Electricity tariffs vary dramatically by country, state, and provider — fixed rate assumptions are inherently misleading for a global audience. That's why our <strong>energy cost estimator</strong> is built as an optional, user-controlled feature. Simply enter your local electricity rate (in your currency per kWh) and instantly see your estimated monthly energy cost calculated from your actual load data.
-      </p>
-      <p>
-        The primary value of this platform is load analysis — understanding your connected load in kW, your daily and monthly energy consumption in kWh, and your electrical health. If you want a cost estimate, you can optionally provide your local rate. For offline use or sharing with an electrician, you can generate a professional <strong>electricity load calculator PDF report</strong> including your full appliance breakdown, smart component recommendations, and your energy cost estimate.
-      </p>
+        <!-- Section 3: MCB & Wire Sizing -->
+        <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
+          <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
+            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">⚡</span>
+            <span>Safe Sizing: Determining the Correct MCB Rating and Cable Size</span>
+          </h3>
+          <div class="space-y-4">
+            <p class="text-sm text-text-muted leading-relaxed">
+              Electrical safety is built on a simple rule: your wiring must safely carry the current drawn by your appliances, and your safety breakers must trip before the wires overheat. If you run a high-wattage appliance (like a 2.0-ton AC or a 3 kW geyser) on thin, low-gauge wires, the electrical resistance causes the cables to overheat, leading to insulation melt and serious fire hazards.
+            </p>
+            <p class="text-sm text-text-muted leading-relaxed">
+              Similarly, Miniature Circuit Breakers (MCBs) protect your circuits. If an MCB rating is too high, it won't trip during an overload; if it's too low, it will trip constantly during normal operation. Our calculator analyzes the peak load of each circuit to recommend the exact standard wire cross-section (e.g., 2.5 sq mm, 4 sq mm, 6 sq mm) and corresponding MCB rating (e.g., 16A, 25A, 32A) required to protect your home.
+            </p>
+          </div>
+        </div>
 
-      <h3 class="text-2xl mt-12 mb-6">Conclusion</h3>
-      <p>
-        Whether you are planning a new home, upgrading your wiring, sizing a solar system, or simply understanding your energy footprint, our <strong>electricity load calculator</strong> gives you the engineering-grade data you need. Add your appliances today for an instant load assessment, precise MCB and cable recommendations, an electrical health score, and smart energy-saving insights — a complete electrical planning tool at your fingertips.
-      </p>
+        <!-- Section 4: Solar & Inverter Sizing -->
+        <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
+          <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
+            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">🌱</span>
+            <span>Renewable Energy & Backups: Inverter Sizing and Solar Panel Capacity</span>
+          </h3>
+          <div class="space-y-4">
+            <p class="text-sm text-text-muted leading-relaxed">
+              If you are planning to insulate your home against power outages or transition to renewable green energy, our load calculations provide the exact blueprints you need. Sized in kVA, an inverter must support the peak starting current of your essential appliances. An under-sized inverter will collapse under load during a power cut.
+            </p>
+            <p class="text-sm text-text-muted leading-relaxed">
+              In solar installations, your solar panel array (sized in kW) must produce enough daily and monthly units (kWh) to offset your household consumption. By calculating your daily unit requirements, our tool estimates both the inverter capacity (kVA) needed to run your simultaneous backup appliances and the solar panel array size (kW) needed to reduce your grid electricity bill to zero.
+            </p>
+          </div>
+        </div>
+
+        <!-- Section 5: Cost & Tariff -->
+        <div class="bg-accent/5 border border-accent/20 rounded-2xl p-6 sm:p-8">
+          <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
+            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">💡</span>
+            <span>Tariff Transparency and Cost Optimization</span>
+          </h3>
+          <p class="text-sm text-text-muted leading-relaxed">
+            Electricity tariffs vary dramatically by country, state, and utility provider — fixed rate assumptions are inherently misleading for a global audience. That's why our <strong>energy cost estimator</strong> is built as an optional, user-controlled feature. Simply enter your local electricity rate per kWh(unit) to see your estimated monthly bill, identify your top energy-consuming appliances, and target optimization opportunities instantly. Generating a professional PDF report lets you share these details with your electrician, solar installer, or local electricity board.
+          </p>
+        </div>
+
+        <!-- Section 6: PDF Export Summary -->
+        <div class="text-center bg-card border border-border rounded-2xl p-6">
+          <h3 class="font-display font-bold text-text-primary text-base mb-1">Generate & Share Professional PDF Reports</h3>
+          <p class="text-xs text-text-muted mb-4">You can export your completed appliance audits, calculations, and safety recommendations into print-ready PDF files for electricians, solar installers, or utility applications.</p>
+        </div>
+
+      </div>
+
     </div>
   </section>
 
@@ -555,1121 +645,20 @@ const schemaGraph = [
 <script>
 // ─────────────────────────────────────────────────────────
 // ELECTRICITY LOAD CALCULATOR — CLIENT-SIDE LOGIC
+// All logic is split into focused modules under:
+//   src/scripts/calculator/
+//
+//   constants.ts   — STORAGE_KEY, REGION_SETTINGS, PRESETS
+//   state.ts       — appState object, saveState, loadState
+//   dom.ts         — setText, animateCounter, formatNumber
+//   rowUpdaters.ts — updateRowKWh, updateRowQtyDisplay, updateRowStyle
+//   panel.ts       — updateMainPanel, updateCategoryBadges, updateHealthScoreUI
+//   print.ts       — all print layout population functions
+//   presets.ts     — loadPreset, updatePresetButtons
+//   calculate.ts   — calculate() orchestrator + debounce
+//   events.ts      — all document event handlers
+//   init.ts        — initCalculator + astro:page-load registration
 // ─────────────────────────────────────────────────────────
-
-import { DEFAULT_APPLIANCES, CATEGORIES, SECTIONS } from '@/data/appliances';
-import type { Appliance, ApplianceCategory } from '@/types';
-import { calculateRowKWh, calculateTotals } from '@/utils/calculations';
-import { calculateInsights } from '@/utils/insights';
-import { calculateHealthScore, calculateCategoryBreakdown, generateSavingsTips, getHighConsumptionAlerts } from '@/utils/health';
-
-// ── State & Settings ──────────────────────────────────────
-const STORAGE_KEY = 'electricity_load_calculator_state';
-
-const REGION_SETTINGS: Record<string, { locale: string, symbol: string, defaultTariff: number, step: number, defaultMaxKW: number }> = {
-  INR: { locale: 'en-IN', symbol: '₹', defaultTariff: 8,    step: 0.5,  defaultMaxKW: 5  },
-  USD: { locale: 'en-US', symbol: '$', defaultTariff: 0.15, step: 0.01, defaultMaxKW: 20 },
-  EUR: { locale: 'de-DE', symbol: '€', defaultTariff: 0.35, step: 0.01, defaultMaxKW: 15 },
-  GBP: { locale: 'en-GB', symbol: '£', defaultTariff: 0.28, step: 0.01, defaultMaxKW: 15 },
-  CAD: { locale: 'en-CA', symbol: '$', defaultTariff: 0.14, step: 0.01, defaultMaxKW: 20 },
-  AUD: { locale: 'en-AU', symbol: '$', defaultTariff: 0.30, step: 0.01, defaultMaxKW: 20 },
-};
-
-let appliances: Appliance[] = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
-let tariff = 0;
-let currentCurrency = 'INR';
-let currentCurrencySymbol = '₹';
-let maxCapacityKW = 5;
-let customIdCounter = 1000;
-let activePresetId: string | null = null;
-
-const PRESETS: Record<string, Record<string, number>> = {
-  'typical-2bhk': {
-    'LED Bulb': 4, 'Tube Light': 2,
-    'Ceiling Fan': 3, 'Air Conditioner (1.5T)': 1,
-    'Refrigerator': 1, 'Microwave Oven': 1, 'Mixer / Grinder': 1, 'Water Purifier (RO)': 1,
-    'LED TV (32")': 1, 'Set-top Box': 1, 'Wi-Fi Router': 1,
-    'Washing Machine': 1, 'Laptop / Charger': 1, 'Water Pump (0.5 HP)': 1,
-  },
-  'budget-home': {
-    'LED Bulb': 3, 'Tube Light': 1,
-    'Ceiling Fan': 2, 'Table Fan': 1,
-    'Refrigerator': 1, 'Mixer / Grinder': 1,
-    'LED TV (32")': 1, 'Wi-Fi Router': 1, 'Laptop / Charger': 1,
-  },
-  'summer-heavy': {
-    'LED Bulb': 6, 'Spotlight / Downlight': 2,
-    'Ceiling Fan': 3, 'Air Conditioner (1.5T)': 2, 'Air Cooler': 1, 'Exhaust Fan': 2,
-    'Refrigerator': 1, 'Microwave Oven': 1, 'Water Purifier (RO)': 1, 'Induction Cooktop': 1,
-    'LED TV (55")': 1, 'Wi-Fi Router': 1,
-    'Washing Machine': 1, 'Laptop / Charger': 2, 'Geyser / Water Heater': 1, 'Water Pump (0.5 HP)': 1,
-  },
-};
-
-// ── Helpers ───────────────────────────────────────────────
-function saveState() {
-  const state = {
-    appliances,
-    tariff,
-    currentCurrency,
-    currentCurrencySymbol,
-    maxCapacityKW,
-    customIdCounter
-  };
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    // QuotaExceededError or SecurityError in private browsing — ignore silently
-  }
-}
-
-function loadState(): boolean {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) return false;
-  try {
-    const state = JSON.parse(saved);
-    if (!Array.isArray(state.appliances) || state.appliances.length === 0) return false;
-    appliances = state.appliances;
-    if (typeof state.tariff === 'number' && state.tariff > 0) tariff = state.tariff;
-    if (typeof state.currentCurrency === 'string' && REGION_SETTINGS[state.currentCurrency]) currentCurrency = state.currentCurrency;
-    if (typeof state.currentCurrencySymbol === 'string') currentCurrencySymbol = state.currentCurrencySymbol;
-    if (typeof state.maxCapacityKW === 'number' && state.maxCapacityKW > 0) maxCapacityKW = state.maxCapacityKW;
-    if (typeof state.customIdCounter === 'number') customIdCounter = state.customIdCounter;
-    return true;
-  } catch (e) {
-    appliances = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
-    localStorage.removeItem(STORAGE_KEY);
-    return false;
-  }
-}
-
-function getAppliance(id: string): Appliance | undefined {
-  return appliances.find(a => a.id === id);
-}
-
-function formatCurrency(amount: number): string {
-  const { locale, symbol } = REGION_SETTINGS[currentCurrency];
-  const decimals = currentCurrency === 'INR' ? 0 : 2;
-  
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currentCurrency,
-    maximumFractionDigits: decimals,
-    minimumFractionDigits: decimals,
-  }).format(amount);
-}
-
-function formatNumber(val: number, decimals = 0): string {
-  return new Intl.NumberFormat(navigator.language || 'en', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(val);
-}
-
-function animateCounter(id: string, target: number, decimals: number) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const startText = el.textContent?.replace(/[^0-9.]/g, '') || '0';
-  const start = parseFloat(startText) || 0;
-  const duration = 350;
-  const startTime = performance.now();
-
-  function step(now: number) {
-    const progress = Math.min((now - startTime) / duration, 1);
-    const ease = 1 - Math.pow(1 - progress, 3);
-    const value = start + (target - start) * ease;
-    el.textContent = formatNumber(value, decimals);
-    if (progress < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-function setText(id: string, value: string) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = value;
-}
-
-
-function updateRowKWh(a: Appliance) {
-  const kwhEl = document.querySelector(`[data-kwh-display="${a.id}"]`);
-  if (kwhEl) kwhEl.textContent = formatNumber(calculateRowKWh(a), 2);
-}
-
-function updateRowQtyDisplay(a: Appliance) {
-  const el = document.querySelector(`[data-qty-display="${a.id}"]`);
-  if (el) el.textContent = String(a.qty);
-}
-
-function updateRowStyle(a: Appliance) {
-  const row = document.querySelector<HTMLElement>(`[data-id="${a.id}"]`);
-  if (!row) return;
-
-  const nameEl = row.querySelector<HTMLElement>('.flex-1 span');
-  if (nameEl) nameEl.style.color = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
-
-  // 1. Active Row Highlighting
-  row.classList.toggle('border-accent', a.qty > 0);
-  row.classList.toggle('border-transparent', a.qty === 0);
-
-  // 3. Progressive Dimming
-  const controlsRow = row.querySelector<HTMLElement>('[data-controls-row]');
-  if (controlsRow) {
-    controlsRow.classList.toggle('opacity-40', a.qty === 0);
-    controlsRow.classList.toggle('grayscale-[50%]', a.qty === 0);
-    controlsRow.classList.toggle('opacity-100', a.qty > 0);
-  }
-
-  // 4. Selection Iconography
-  const icon = row.querySelector<HTMLElement>('[data-selection-icon]');
-  if (icon) icon.classList.toggle('hidden', a.qty === 0);
-}
-
-// ── Calculation ───────────────────────────────────────────
-function calculate() {
-  const result = calculateTotals(appliances, tariff, maxCapacityKW);
-
-  animateCounter('total-kw', result.totalKW, 2);
-  animateCounter('sticky-total-kw', result.totalKW, 2);
-  animateCounter('total-watts', result.totalWatts, 0);
-  animateCounter('daily-kwh', result.dailyKWh, 2);
-  animateCounter('monthly-kwh', result.monthlyKWh, 0);
-  setText('sticky-monthly-kwh', String(Math.round(result.monthlyKWh)));
-
-  setText('top-consumer-name', result.topConsumerName);
-  setText('top-consumer-watts', formatNumber(result.topConsumerWatts));
-  setText('load-percent', `${Math.round(result.loadPercent)}%`);
-  setText('max-kw-label', `${maxCapacityKW} kW max`);
-
-  const bar = document.getElementById('load-bar');
-  if (bar) {
-    bar.style.width = `max(4px, ${Math.min(result.loadPercent, 100)}%)`;
-  }
-  const progress = document.getElementById('load-progress');
-  if (progress) progress.setAttribute('aria-valuenow', String(Math.round(result.loadPercent)));
-
-  const badge = document.getElementById('load-level-badge');
-  if (badge) {
-    badge.style.boxShadow = 'none';
-    if (result.loadPercent < 30) {
-      badge.textContent = 'Light Load';
-      badge.style.borderColor = 'var(--success)';
-      badge.style.color = 'var(--success)';
-    } else if (result.loadPercent < 70) {
-      badge.textContent = 'Moderate Load';
-      badge.style.borderColor = 'var(--warning)';
-      badge.style.color = 'var(--warning)';
-    } else {
-      badge.textContent = 'Heavy Load';
-      badge.style.borderColor = 'transparent';
-      badge.style.color = 'var(--danger)';
-      badge.style.boxShadow = 'var(--danger-glow)';
-    }
-  }
-
-  const activeCount = appliances.filter(a => a.qty > 0).length;
-  const totalCount  = appliances.filter(a => !a.hidden).length;
-  setText('active-count', String(activeCount));
-  setText('total-count',  String(totalCount));
-  setText('hero-total-count', String(totalCount));
-
-  const emptyPrompt = document.getElementById('empty-state-prompt');
-  if (emptyPrompt) emptyPrompt.style.display = activeCount === 0 ? '' : 'none';
-
-  const stickySummary = document.getElementById('sticky-summary');
-  const stickyHint = document.getElementById('sticky-empty-hint');
-  if (stickySummary) stickySummary.style.display = activeCount === 0 ? 'none' : '';
-  if (stickyHint) stickyHint.style.display = activeCount === 0 ? 'flex' : 'none';
-
-
-  CATEGORIES.forEach(cat => {
-    const catAppliances = appliances.filter(a => a.category === cat);
-    const activeCatAppliances = catAppliances.filter(a => a.qty > 0);
-    const catWatts = activeCatAppliances.reduce((s, a) => s + a.watts * a.qty, 0);
-    const catKWh   = activeCatAppliances.reduce((s, a) => s + calculateRowKWh(a), 0);
-    
-    const activeCount = activeCatAppliances.length;
-    const totalCount  = catAppliances.length;
-
-    // Use slugified ID to find the category body, then get the section parent
-    const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
-    const body = document.getElementById(bodyId);
-    const section = body?.closest('.category-section');
-
-    const wattEl = section?.querySelector('[data-category-watts]');
-    const kwhEl  = section?.querySelector('[data-category-kwh]');
-    const cntEl  = section?.querySelector('[data-category-count]');
-    const cntBadge = section?.querySelector('[data-category-count-badge]');
-
-    const wattTextEl = wattEl?.querySelector('span:last-child');
-    const kwhTextEl  = kwhEl?.querySelector('span:last-child');
-    if (wattTextEl) wattTextEl.textContent = `${catWatts.toLocaleString()} W`;
-    if (kwhTextEl)  kwhTextEl.textContent  = `${catKWh.toFixed(2)} kWh(unit)/d`;
-    if (cntEl)  cntEl.textContent  = `${activeCount}/${totalCount}`;
-
-    if (cntBadge) {
-      if (activeCount > 0) {
-        cntBadge.classList.add('bg-accent', 'text-accent-text', 'px-2', 'py-0.5', 'rounded-full', 'font-bold');
-      } else {
-        cntBadge.classList.remove('bg-accent', 'text-accent-text', 'px-2', 'py-0.5', 'rounded-full', 'font-bold');
-      }
-    }
-  });
-
-  setText('print-total-kw', (result.totalWatts / 1000).toFixed(2));
-  setText('print-daily-kwh', formatNumber(result.dailyKWh, 2));
-  setText('print-monthly-kwh', String(Math.round(result.monthlyKWh)));
-  setText('print-date', new Date().toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' }));
-
-  // Hardcode professional branding for PDF
-  document.querySelectorAll<HTMLElement>('.print-brand-url').forEach(el => {
-    el.innerHTML = '<a href="https://electricityloadcalculator.com" style="color:inherit;text-decoration:underline;">electricityloadcalculator.com</a>';
-  });
-
-  const printList = document.getElementById('print-appliances-list');
-  if (printList) {
-    let html = '';
-    const included = appliances.filter(a => a.qty > 0);
-    SECTIONS.forEach(section => {
-      const sectionItems = included.filter(a => section.categories.includes(a.category));
-      if (sectionItems.length > 0) {
-        html += `<div><h3 class="text-[10px] font-bold uppercase tracking-widest mb-2 border-l-2 pl-2" style="color:#F4A826; border-color:#F4A826">${section.title}</h3><div class="space-y-1">`;
-        section.categories.forEach(cat => {
-          const catItems = sectionItems.filter(a => a.category === cat);
-          if (catItems.length > 0) {
-            catItems.forEach(a => {
-              html += `
-                <div class="flex justify-between items-center text-[11px]">
-                  <div class="flex-1"><span class="font-medium text-text-primary">${escapeHtml(a.name)}</span><span class="text-text-muted ml-2 text-[9px]">${a.qty} × ${a.watts}W</span></div>
-                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)} kWh/d</div>
-                </div>`;
-            });
-          }
-        });
-        html += `</div></div>`;
-      }
-    });
-    printList.innerHTML = html || '<p class="text-text-muted italic">No active appliances selected.</p>';
-  }
-
-  // ── Smart Insights (print only) ──
-  const insights = calculateInsights(result.totalKW, result.monthlyKWh);
-  const operatingCurrent = result.totalWatts / 230;
-
-  if (activeCount > 0) {
-    // KPI & Matrix
-    setText('print-health-score', String(health.score));
-    setText('print-health-score-large', String(health.score));
-    setText('print-health-label', health.label);
-    
-    setText('print-analysis-load', result.totalKW.toFixed(2));
-    setText('print-analysis-daily', result.dailyKWh.toFixed(2));
-    setText('print-analysis-monthly', Math.round(result.monthlyKWh).toString());
-    setText('print-analysis-current', operatingCurrent.toFixed(1));
-
-    setText('print-matrix-mcb', insights.recommendedMCB);
-    setText('print-matrix-cable', insights.recommendedCable);
-    setText('print-matrix-inverter', insights.recommendedInverter);
-    setText('print-matrix-solar', insights.recommendedSolar);
-
-    // Detailed
-    setText('print-det-mcb', insights.recommendedMCB);
-    setText('print-det-mcb-load', result.totalKW.toFixed(2));
-    setText('print-det-mcb-curr', operatingCurrent.toFixed(1));
-
-    setText('print-det-cable', insights.recommendedCable);
-    setText('print-det-cab-curr', operatingCurrent.toFixed(1));
-    setText('print-det-cab-mcb', insights.recommendedMCB);
-
-    setText('print-det-inverter', insights.recommendedInverter);
-    setText('print-det-inv-load', result.totalKW.toFixed(2));
-    setText('print-det-inv-req', (result.totalKW * 1.2).toFixed(2));
-
-    setText('print-det-solar', insights.recommendedSolar);
-    setText('print-det-sol-units', Math.round(result.monthlyKWh).toString());
-  }
-
-  // ── Electrical Health Score ────────────────────────────
-  const topConsumerDailyKWh = appliances
-    .filter(a => a.qty > 0)
-    .reduce((best, a) => Math.max(best, calculateRowKWh(a)), 0);
-
-  const health = calculateHealthScore({
-    loadPercent: result.loadPercent,
-    dailyKWh: result.dailyKWh,
-    topConsumerDailyKWh,
-    monthlyKWh: result.monthlyKWh,
-    hasMCB: activeCount > 0,
-    hasCable: activeCount > 0,
-  });
-
-  const healthCompact = document.getElementById('health-score-compact');
-  if (healthCompact) healthCompact.style.display = activeCount === 0 ? 'none' : '';
-
-  if (activeCount > 0) {
-    const scoreEl = document.getElementById('health-score-value');
-    if (scoreEl) scoreEl.style.color = health.color;
-    animateCounter('health-score-value', health.score, 0);
-
-    const scoreCard = document.getElementById('health-score-card');
-    if (scoreCard) {
-      scoreCard.style.borderColor = `color-mix(in srgb, ${health.color}, transparent 62%)`;
-      scoreCard.style.background   = `color-mix(in srgb, ${health.color}, transparent 93%)`;
-    }
-
-    const iconEl = document.getElementById('health-score-icon');
-    if (iconEl) (iconEl as HTMLElement).style.color = health.color;
-
-    const labelEl = document.getElementById('health-score-label');
-    if (labelEl) {
-      labelEl.textContent = health.label;
-      labelEl.style.color = health.color;
-      labelEl.style.background   = `color-mix(in srgb, ${health.color}, transparent 85%)`;
-      labelEl.style.borderColor  = `color-mix(in srgb, ${health.color}, transparent 55%)`;
-    }
-
-    // Health Assessment Section (Print)
-    const HEALTH_DESC: Record<string, string> = {
-      'Excellent': 'Your electrical setup is highly efficient and safe. Load distribution is well-balanced across appliances.',
-      'Good':      'Overall healthy configuration. Some minor energy optimization opportunities identified.',
-      'Fair':      'Functional but inefficient. High reliance on specific appliances or near-capacity load levels detected.',
-      'Poor':      'Immediate attention recommended. System is operating at inefficient levels with potential safety risks.',
-    };
-    setText('print-health-desc', HEALTH_DESC[health.label] ?? '');
-
-    const printDetails = document.getElementById('print-health-details');
-    const sub = health.subScores;
-    if (printDetails) {
-      printDetails.innerHTML = `
-        <div class="space-y-1"><p class="text-[10px] text-text-muted uppercase font-bold">Load Utilization</p><div class="flex items-center gap-4"><div class="flex-1 h-1.5 bg-border/40 rounded-full overflow-hidden"><div class="h-full bg-accent" style="width:${(sub.utilization/30)*100}%"></div></div><span class="text-xs font-mono font-bold">${sub.utilization}/30</span></div></div>
-        <div class="space-y-1"><p class="text-[10px] text-text-muted uppercase font-bold">Energy Efficiency</p><div class="flex items-center gap-4"><div class="flex-1 h-1.5 bg-border/40 rounded-full overflow-hidden"><div class="h-full bg-accent" style="width:${(sub.efficiency/30)*100}%"></div></div><span class="text-xs font-mono font-bold">${sub.efficiency}/30</span></div></div>
-        <div class="space-y-1"><p class="text-[10px] text-text-muted uppercase font-bold">Safety Readiness</p><div class="flex items-center gap-4"><div class="flex-1 h-1.5 bg-border/40 rounded-full overflow-hidden"><div class="h-full bg-accent" style="width:${(sub.safety/20)*100}%"></div></div><span class="text-xs font-mono font-bold">${sub.safety}/20</span></div></div>
-        <div class="space-y-1"><p class="text-[10px] text-text-muted uppercase font-bold">Solar Readiness</p><div class="flex items-center gap-4"><div class="flex-1 h-1.5 bg-border/40 rounded-full overflow-hidden"><div class="h-full bg-accent" style="width:${(sub.renewable/20)*100}%"></div></div><span class="text-xs font-mono font-bold">${sub.renewable}/20</span></div></div>
-      `;
-    }
-    
-    // V3 Explainability Logic
-    const reasons = [];
-    const improvements = [];
-    let potentialGain = 0;
-
-    // Load Utilization Analysis
-    if (sub.utilization < 30) {
-      const deduction = 30 - sub.utilization;
-      if (result.loadPercent > 80) {
-        reasons.push(`<li class="flex items-start gap-2"><span class="text-danger font-bold">⚠</span><span><strong>Load Utilization:</strong> High connected load concentration near maximum capacity reduced the score by ${deduction} points.</span></li>`);
-        improvements.push(`<li class="flex items-start gap-2"><span class="text-accent font-bold">✓</span><span><strong>Improve Load Balance:</strong> Avoid simultaneous operation of high-load devices (e.g., AC and Geyser together).</span></li>`);
-      } else if (result.loadPercent < 20) {
-        reasons.push(`<li class="flex items-start gap-2"><span class="text-warning font-bold">⚠</span><span><strong>Load Utilization:</strong> Very low utilization of sanctioned capacity resulted in a ${deduction} point deduction.</span></li>`);
-        improvements.push(`<li class="flex items-start gap-2"><span class="text-accent font-bold">✓</span><span><strong>Improve Load Balance:</strong> Consider downgrading sanctioned load if future expansion is not planned to save on fixed charges.</span></li>`);
-      }
-      potentialGain += deduction;
-    } else {
-      reasons.push(`<li class="flex items-start gap-2"><span class="text-success font-bold">✓</span><span class="text-text-muted"><strong>Load Utilization:</strong> Load is optimally balanced. Full points awarded.</span></li>`);
-    }
-
-    // Energy Efficiency Analysis
-    if (sub.efficiency < 30) {
-      const deduction = 30 - sub.efficiency;
-      reasons.push(`<li class="flex items-start gap-2"><span class="text-warning font-bold">⚠</span><span><strong>Energy Efficiency:</strong> Specific appliances contribute disproportionately to total energy use, causing a ${deduction} point deduction.</span></li>`);
-      improvements.push(`<li class="flex items-start gap-2"><span class="text-accent font-bold">✓</span><span><strong>Improve Energy Efficiency:</strong> Replace older models of the top consumer (${result.topConsumerName}) with BEE 5-star rated equivalents.</span></li>`);
-      improvements.push(`<li class="flex items-start gap-2"><span class="text-accent font-bold">✓</span><span><strong>Improve Energy Efficiency:</strong> Reduce unnecessary standby consumption by unplugging devices when not in use.</span></li>`);
-      potentialGain += deduction;
-    } else {
-      reasons.push(`<li class="flex items-start gap-2"><span class="text-success font-bold">✓</span><span class="text-text-muted"><strong>Energy Efficiency:</strong> Energy distribution is efficient. Full points awarded.</span></li>`);
-    }
-    
-    // Safety & Solar Readiness
-    if (sub.safety === 20) {
-       reasons.push(`<li class="flex items-start gap-2"><span class="text-success font-bold">✓</span><span class="text-text-muted"><strong>Safety Readiness:</strong> Electrical recommendations are within acceptable residential standards. No major safety concerns detected.</span></li>`);
-    }
-    if (sub.renewable === 20) {
-       reasons.push(`<li class="flex items-start gap-2"><span class="text-success font-bold">✓</span><span class="text-text-muted"><strong>Solar Readiness:</strong> Current energy profile is highly suitable for solar integration.</span></li>`);
-    } else {
-       const deduction = 20 - sub.renewable;
-       reasons.push(`<li class="flex items-start gap-2"><span class="text-warning font-bold">⚠</span><span><strong>Solar Readiness:</strong> Low monthly consumption reduces the immediate ROI of a solar installation (-${deduction} points).</span></li>`);
-       improvements.push(`<li class="flex items-start gap-2"><span class="text-accent font-bold">✓</span><span><strong>Improve Solar Readiness:</strong> Monitor monthly energy usage trends before considering solar installation.</span></li>`);
-       potentialGain += deduction;
-    }
-
-    const printReasons = document.getElementById('print-health-reasons');
-    if (printReasons) printReasons.innerHTML = reasons.join('');
-    
-    const printImprovements = document.getElementById('print-health-improvements');
-    if (printImprovements) printImprovements.innerHTML = improvements.length > 0 ? improvements.join('') : '<li class="text-text-muted italic">Your system is highly optimized. Maintain current usage patterns.</li>';
-
-    // Calculate potential score (assume we can recover about 80% of lost points)
-    const potentialScore = Math.min(100, health.score + Math.round(potentialGain * 0.8));
-    setText('print-health-potential-score', `${potentialScore} / 100`);
-
-    // Verdict Logic
-    const verdictList = document.getElementById('print-verdict-findings');
-    if (verdictList) {
-      const findings = [];
-      if (result.loadPercent < 50) findings.push('✓ Electrical load is within normal residential range.');
-      else if (result.loadPercent < 80) findings.push('✓ Electrical load is moderate but within safe operating limits.');
-      else findings.push('⚠ High load density detected; ensure main breaker is rated correctly.');
-
-      findings.push('✓ Existing electrical sizing recommendations are suitable for your load profile.');
-      
-      if (health.subScores.renewable > 10) findings.push('✓ Solar adoption is highly feasible based on consumption units.');
-      if (result.totalKW > 2) findings.push('✓ Inverter backup planning is recommended for essential services.');
-      
-      const breakdown = calculateCategoryBreakdown(appliances);
-      if (breakdown.items[0]) {
-        findings.push(`⚠ ${breakdown.items[0].category} contributes significant energy usage (${Math.round(breakdown.items[0].percent)}%).`);
-      }
-      findings.push('⚠ Energy optimization opportunities identified in your consumption profile.');
-
-      verdictList.innerHTML = findings.map(f => `<li>${f}</li>`).join('');
-    }
-  }
-
-  // ── Consumption Breakdown (print only) ──
-  const breakdown = calculateCategoryBreakdown(appliances);
-
-  if (activeCount > 0 && result.dailyKWh > 0) {
-    const printBreakdown = document.getElementById('print-breakdown-table');
-    if (printBreakdown) {
-      printBreakdown.innerHTML = breakdown.items.map(item => `
-        <div class="flex text-sm py-1.5 border-b border-border">
-          <span class="flex-1 text-text-muted">${item.category}</span>
-          <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh/d</span>
-          <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
-        </div>
-      `).join('');
-    }
-    setText('print-consumption-observation', `${breakdown.topCategory} contributes ${Math.round(breakdown.topPercent)}% of total energy consumption, representing the largest optimization opportunity.`);
-  }
-
-  // ── Energy Saving Opportunities (print only) ──
-  const savings = generateSavingsTips(appliances, result.monthlyKWh);
-
-  if (activeCount > 0) {
-    setText('print-opt-priority', health.score > 80 ? 'Low' : (health.score > 50 ? 'Medium' : 'High'));
-    setText('print-opt-target', savings.topConsumerName);
-    setText('print-opt-impact', `${savings.potentialSavings.toFixed(1)} kWh/mo`);
-
-    const printSaving = document.getElementById('print-saving-tips');
-    if (printSaving) {
-      printSaving.innerHTML = savings.tips.map(tip => `
-        <div class="flex items-start gap-2 text-sm text-text-muted"><span class="text-accent font-bold">✓</span><span>${tip}</span></div>
-      `).join('');
-    }
-
-    // Action Plan
-    const actionPlan = document.getElementById('print-action-plan');
-    if (actionPlan) {
-      const topApp = appliances.filter(a => a.qty > 0).sort((a,b) => calculateRowKWh(b) - calculateRowKWh(a))[0];
-      actionPlan.innerHTML = `
-        <div class="space-y-4">
-          <p class="text-xs font-bold uppercase tracking-widest text-accent">Immediate</p>
-          <ul class="text-xs space-y-2 text-text-primary">
-            <li>✓ Review ${topApp?.name || 'top appliance'} usage patterns</li>
-            <li>✓ Implement standby power reduction</li>
-            <li>✓ Verify MCB & Cable sizes with electrician</li>
-          </ul>
-        </div>
-        <div class="space-y-4 border-l border-border pl-6">
-          <p class="text-xs font-bold uppercase tracking-widest text-accent">Short-Term</p>
-          <ul class="text-xs space-y-2 text-text-primary">
-            <li>✓ Consider inverter sizing for backup</li>
-            <li>✓ Improve energy efficiency of lighting</li>
-            <li>✓ Monitor weekly unit consumption</li>
-          </ul>
-        </div>
-        <div class="space-y-4 border-l border-border pl-6">
-          <p class="text-xs font-bold uppercase tracking-widest text-accent">Long-Term</p>
-          <ul class="text-xs space-y-2 text-text-primary">
-            <li>✓ Evaluate rooftop solar installation</li>
-            <li>✓ Upgrade to 5-star rated appliances</li>
-            <li>✓ Plan for future expansion capacity</li>
-          </ul>
-        </div>
-      `;
-    }
-  }
-
-  // ── High Consumption Alerts (print only — sidebar section removed) ──
-  const alerts = getHighConsumptionAlerts(appliances, result.dailyKWh);
-
-  if (alerts.length > 0) {
-    const printAlerts = document.getElementById('print-high-consumption');
-    if (printAlerts) {
-      printAlerts.innerHTML = alerts.map(alert => `
-        <div class="flex justify-between text-sm py-1.5 border-b border-border">
-          <div>
-            <span class="font-medium text-text-primary">⚠ ${alert.name}</span>
-            <span class="text-text-muted ml-2 text-xs">${alert.reason}</span>
-          </div>
-          <span class="font-mono font-semibold flex-shrink-0 ml-4" style="color:var(--accent)">${alert.kWhDay.toFixed(1)} kWh/d</span>
-        </div>
-      `).join('');
-    }
-  }
-
-  // ── Cost Estimator (print only) ──
-  const pCost = document.getElementById('aprint-cost-estimator');
-  if (pCost) {
-    if (tariff && tariff > 0) {
-      const symbol = currentCurrencySymbol || REGION_SETTINGS[currentCurrency]?.symbol || '₹';
-      const fmt = (v: number) => `${symbol}${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      
-      pCost.style.display = '';
-      setText('aprint-cost-monthly-kwh', Math.round(result.monthlyKWh).toString());
-      setText('aprint-cost-rate',        `${symbol}${tariff}/kWh`);
-      setText('aprint-estimated-cost',   fmt(result.monthlyKWh * tariff));
-      setText('aprint-cost-daily',        `${fmt(result.dailyKWh * tariff)} / day`);
-      setText('aprint-cost-yearly',       `${fmt(result.monthlyKWh * tariff * 12)} / year`);
-    } else {
-      pCost.style.display = 'none';
-    }
-  }
-}
-
-
-// ── Debounce ──────────────────────────────────────────────
-function debounce<T extends (...args: any[]) => void>(fn: T, ms: number): T {
-  let timer: any;
-  return ((...args: any[]) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), ms);
-  }) as T;
-}
-
-const debouncedCalculate = debounce(calculate, 80);
-
-// ── DOM Event Delegation ──────────────────────────────────
-document.addEventListener('change', (e) => {
-  const target = e.target as HTMLElement;
-  const action = target.dataset.action;
-  const id     = target.dataset.id;
-
-  if (!action) return;
-
-  // Appliance updates
-  if (id) {
-    const a = getAppliance(id);
-    if (!a) return;
-
-    if (action === 'update-watts') {
-      const val = parseFloat((target as HTMLInputElement).value);
-      if (!isNaN(val) && val >= 1) {
-        a.watts = val;
-        updateRowKWh(a);
-        saveState();
-        debouncedCalculate();
-      }
-      return;
-    }
-
-    if (action === 'update-hours') {
-      const val = parseFloat((target as HTMLInputElement).value);
-      const errorEl = document.querySelector(`[data-error-id="${id}"]`);
-      
-      if (!isNaN(val)) {
-        if (val > 24) {
-          target.classList.add('border-danger');
-          target.classList.remove('border-border');
-          errorEl?.classList.remove('hidden');
-        } else {
-          target.classList.remove('border-danger');
-          target.classList.add('border-border');
-          errorEl?.classList.add('hidden');
-        }
-        
-        // Still update the state but cap at 24 for calculation safety
-        a.hours = Math.min(24, val);
-        updateRowKWh(a);
-        saveState();
-        debouncedCalculate();
-      }
-      return;
-    }
-  }
-
-});
-
-document.addEventListener('click', (e) => {
-  const target = e.target as HTMLElement;
-
-  if (target.dataset.action === 'close-modal' || target.closest('[data-action="close-modal"]')) {
-    closeModal();
-    return;
-  }
-
-  const btn = target.closest<HTMLElement>('[data-action]');
-  if (!btn) return;
-
-  const action = btn.dataset.action;
-  const id     = btn.dataset.id;
-
-  if (!action) return;
-
-  if (action === 'load-preset') {
-    const presetId = btn.dataset.presetId;
-    if (presetId) loadPreset(presetId);
-    return;
-  }
-
-  if (action === 'toggle-category') {
-    const category = btn.dataset.category!;
-    const bodyId   = `category-body-${category.replace(/\s/g, '-')}`;
-    const body     = document.getElementById(bodyId);
-    const chevron  = btn.querySelector<SVGElement>('.chevron');
-    if (!body) return;
-    const isOpen = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-    body.classList.toggle('is-open', !isOpen);
-    if (chevron) chevron.style.transform = isOpen ? 'rotate(-90deg)' : '';
-    return;
-  }
-
-  if (action === 'toggle-add-form') {
-    const wrapper  = btn.closest('.add-appliance-wrapper');
-    const form     = wrapper?.querySelector<HTMLFormElement>('.add-appliance-form');
-    if (!form) return;
-    const isHidden = form.classList.contains('hidden');
-    form.classList.toggle('hidden', !isHidden);
-    btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-    return;
-  }
-
-  if (action === 'cancel-add-form') {
-    const wrapper = btn.closest('.add-appliance-wrapper');
-    const form = wrapper?.querySelector<HTMLFormElement>('.add-appliance-form');
-    const toggleBtn = wrapper?.querySelector<HTMLButtonElement>('.add-toggle-btn');
-    form?.classList.add('hidden');
-    form?.reset();
-    toggleBtn?.setAttribute('aria-expanded', 'false');
-    return;
-  }
-
-  if ((action === 'increment-qty' || action === 'decrement-qty') && id) {
-    const a = getAppliance(id);
-    if (!a) return;
-    if (action === 'increment-qty') a.qty = Math.min(a.qty + 1, 500);
-    if (action === 'decrement-qty') a.qty = Math.max(a.qty - 1, 0);
-    updateRowQtyDisplay(a);
-    updateRowKWh(a);
-    updateRowStyle(a);
-    saveState();
-    calculate();
-    return;
-  }
-
-  if (action === 'delete-appliance' && id) {
-    appliances = appliances.filter(a => a.id !== id);
-    const row = document.querySelector(`[data-id="${id}"]`);
-    row?.remove();
-    saveState();
-    calculate();
-    return;
-  }
-
-  if (action === 'reset-all') {
-    if (!confirm('Reset all appliances to their default values?')) return;
-    
-    // Clear persisted state
-    localStorage.removeItem(STORAGE_KEY);
-    
-    // Restore default state variables
-    appliances = structuredClone(DEFAULT_APPLIANCES).filter(a => !a.hidden);
-    customIdCounter = 1000;
-    
-    // Re-render UI
-    CATEGORIES.forEach(cat => {
-      const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
-      const body = document.getElementById(bodyId);
-      const container = body?.querySelector('[data-rows-container]');
-      if (!container) return;
-      container.innerHTML = '';
-      const catAppliances = appliances.filter(a => a.category === cat);
-      catAppliances.forEach(a => {
-        container.insertAdjacentHTML('beforeend', buildRowHTML(a));
-      });
-      
-      // Collapse the category on reset
-      if (body) {
-        body.classList.remove('is-open');
-        const section = body.closest('.category-section');
-        const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
-        const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
-        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
-        if (chevron) chevron.style.transform = 'rotate(-90deg)';
-      }
-    });
-    
-    appliances.forEach(a => updateRowStyle(a));
-    activePresetId = null;
-    updatePresetButtons();
-    maxCapacityKW = REGION_SETTINGS.INR.defaultMaxKW;
-    const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
-    if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
-    
-    calculate();
-
-    return;
-  }
-
-  if (action === 'download-report') {
-    const included = appliances.filter(a => a.qty > 0);
-    const totalWatts  = included.reduce((s, a) => s + a.watts * a.qty, 0);
-    const dailyKWh    = included.reduce((s, a) => s + calculateRowKWh(a), 0);
-    const monthlyKWh  = dailyKWh * 30;
-    const date = new Date().toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' });
-
-    let report = `ELECTRICITY LOAD CALCULATOR REPORT\n`;
-    report += `Generated: ${date}\n`;
-    report += `${'─'.repeat(48)}\n\n`;
-    report += `SUMMARY\n`;
-    report += `  Total Load          : ${formatNumber(totalWatts)} W (${(totalWatts / 1000).toFixed(2)} kW)\n`;
-    report += `  Daily Consumption   : ${formatNumber(dailyKWh, 2)} kWh(unit)/day\n`;
-    report += `  Monthly Estimate    : ${formatNumber(monthlyKWh)} kWh(unit)/month\n`;
-    report += `  Max Load Capacity   : ${maxCapacityKW} kW\n\n`;
-    report += `${'─'.repeat(48)}\n\n`;
-    const reportInsights = calculateInsights(totalWatts / 1000, monthlyKWh);
-    report += `SMART INSIGHTS\n`;
-    report += `  Recommended MCB         : ${reportInsights.recommendedMCB}\n`;
-    report += `  Recommended Cable       : ${reportInsights.recommendedCable}\n`;
-    report += `  Recommended Inverter    : ${reportInsights.recommendedInverter}\n`;
-    report += `  Recommended Solar       : ${reportInsights.recommendedSolar}\n\n`;
-    report += `${'─'.repeat(48)}\n\n`;
-    report += `APPLIANCE BREAKDOWN\n\n`;
-    SECTIONS.forEach(section => {
-      const sectionItems = included.filter(a => section.categories.includes(a.category));
-      if (!sectionItems.length) return;
-      report += `[ ${section.title.toUpperCase()} ]\n`;
-      section.categories.forEach(cat => {
-        const catItems = sectionItems.filter(a => a.category === cat);
-        if (!catItems.length) return;
-        report += `  ${cat.toUpperCase()}\n`;
-        catItems.forEach(a => {
-          report += `    ${a.name.padEnd(28)} ${String(a.qty).padStart(2)}× ${String(a.watts).padStart(5)}W  ${calculateRowKWh(a).toFixed(2)} kWh(unit)/d\n`;
-        });
-        report += '\n';
-      });
-      report += '\n';
-    });
-
-    report += `${'─'.repeat(48)}\n`;
-    report += `Source: ${window.location.origin}\n`;
-    report += `© ${new Date().getFullYear()} Electricity Load Calculator\n`;
-
-    const modal   = document.getElementById('report-modal');
-    const content = document.getElementById('report-content');
-    if (modal && content) {
-      content.textContent = report;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-    return;
-  }
-
-  if (action === 'print-report') {
-    e.stopImmediatePropagation();
-    const originalTitle = document.title;
-    const dateStr = new Date().toISOString().split('T')[0];
-    document.title = `electricity-load-calculator-assessment-report-${dateStr}`;
-    window.print();
-    document.title = originalTitle;
-    return;
-  }
-
-  if (action === 'download-txt') {
-    const content = document.getElementById('report-content')?.textContent || '';
-    if (!content) return;
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `electricity-load-report-${new Date().toISOString().split('T')[0]}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-    return;
-  }
-});
-
-document.addEventListener('input', (e) => {
-  const target = e.target as HTMLElement;
-  const action = target.dataset.action;
-
-  if (!action) return;
-
-  if (action === 'update-max-kw') {
-    const val = parseFloat((target as HTMLInputElement).value);
-    if (!isNaN(val) && val > 0) {
-      maxCapacityKW = val;
-      saveState();
-      calculate();
-    }
-  }
-
-});
-
-document.addEventListener('submit', (e) => {
-  const form = e.target as HTMLFormElement;
-  if (!form.classList.contains('add-appliance-form')) return;
-  e.preventDefault();
-  e.stopImmediatePropagation(); // Prevent Astro's ClientRouter from intercepting this as a navigation
-  const nameInput  = form.querySelector<HTMLInputElement>('[data-field="name"]');
-  const wattsInput = form.querySelector<HTMLInputElement>('[data-field="watts"]');
-  const hoursInput = form.querySelector<HTMLInputElement>('[data-field="hours"]');
-  const catSelect  = form.querySelector<HTMLSelectElement>('[data-field="category"]');
-  const errorEl    = form.querySelector<HTMLParagraphElement>('.form-error');
-  const name  = nameInput?.value.trim();
-  const watts = parseFloat(wattsInput?.value || '0');
-  const hours = parseFloat(hoursInput?.value || '0');
-  const cat   = (catSelect?.value || 'Other') as ApplianceCategory;
-  if (!name) {
-    if (errorEl) { errorEl.textContent = 'Please enter an appliance name.'; errorEl.classList.remove('hidden'); }
-    nameInput?.focus();
-    return;
-  }
-  if (!watts || watts < 1) {
-    if (errorEl) { errorEl.textContent = 'Watts must be at least 1.'; errorEl.classList.remove('hidden'); }
-    wattsInput?.focus();
-    return;
-  }
-  if (isNaN(hours) || hours < 0 || hours > 24) {
-    if (errorEl) { errorEl.textContent = 'Hours must be between 0 and 24.'; errorEl.classList.remove('hidden'); }
-    hoursInput?.focus();
-    return;
-  }
-  errorEl?.classList.add('hidden');
-  const newAppliance: Appliance = {
-    id: `custom-${++customIdCounter}`,
-    category: cat,
-    name,
-    defaultWatts: watts,
-    defaultQty: 1,
-    defaultHours: hours,
-    watts,
-    qty: 1,
-    hours,
-    custom: true,
-  };
-  appliances.push(newAppliance);
-  
-  // Use slugified ID to find the correct container
-  const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
-  const body = document.getElementById(bodyId);
-  const container = body?.querySelector('[data-rows-container]');
-  
-  if (container) {
-    const rowHtml = buildRowHTML(newAppliance);
-    container.insertAdjacentHTML('beforeend', rowHtml);
-    
-    // Auto-expand category if hidden
-    if (body && !body.classList.contains('is-open')) {
-      body.classList.add('is-open');
-      const section = body.closest('.category-section');
-      const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
-      const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
-      toggleBtn?.setAttribute('aria-expanded', 'true');
-      if (chevron) chevron.style.transform = '';
-    }
-  }
-  
-  form.reset();
-  form.classList.add('hidden');
-  const toggleBtn = form.closest('.add-appliance-wrapper')?.querySelector<HTMLButtonElement>('.add-toggle-btn');
-  toggleBtn?.setAttribute('aria-expanded', 'false');
-  saveState();
-  calculate();
-}, true);
-
-function updatePresetButtons() {
-  document.querySelectorAll<HTMLElement>('.preset-card').forEach(btn => {
-    const isActive = btn.dataset.presetId === activePresetId;
-    btn.style.borderColor = '';
-    btn.style.boxShadow  = isActive ? '0 0 0 1px color-mix(in srgb, var(--accent), transparent 65%)' : '';
-    btn.style.background  = isActive ? 'color-mix(in srgb, var(--accent), transparent 93%)' : '';
-  });
-}
-
-function loadPreset(presetId: string) {
-  const quantities = PRESETS[presetId];
-  if (!quantities) return;
-
-  // Reset all quantities then apply preset
-  appliances.forEach(a => { a.qty = 0; });
-  appliances.forEach(a => { if (quantities[a.name] !== undefined) a.qty = quantities[a.name]; });
-
-  activePresetId = presetId;
-
-  // Re-render every category and expand/collapse based on active appliances
-  CATEGORIES.forEach(cat => {
-    const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
-    const body = document.getElementById(bodyId);
-    const container = body?.querySelector('[data-rows-container]');
-    if (!container) return;
-
-    container.innerHTML = '';
-    const catAppliances = appliances.filter(a => a.category === cat);
-    catAppliances.forEach(a => container.insertAdjacentHTML('beforeend', buildRowHTML(a)));
-
-    if (body) {
-      const hasActive = catAppliances.some(a => a.qty > 0);
-      // Only auto-expand Lighting category when loading presets
-      const shouldExpand = (cat === 'Lighting' && hasActive);
-      body.classList.toggle('is-open', shouldExpand);
-      const section = body.closest('.category-section');
-      const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
-      const chevron   = toggleBtn?.querySelector<SVGElement>('.chevron');
-      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
-      if (chevron)   chevron.style.transform = shouldExpand ? '' : 'rotate(-90deg)';
-    }
-  });
-
-  appliances.forEach(a => updateRowStyle(a));
-  updatePresetButtons();
-  saveState();
-  calculate();
-}
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-function buildRowHTML(a: Appliance): string {
-  const kwh = formatNumber(calculateRowKWh(a), 2);
-  const nameColor = a.qty > 0 ? 'var(--text-primary)' : 'var(--text-muted)';
-  const safeName = escapeHtml(a.name);
-  const isActive = a.qty > 0;
-
-  return `
-    <div class="appliance-row group flex flex-wrap lg:flex-nowrap items-center gap-y-3 gap-x-4 px-4 py-5 hover:bg-card-hover transition-colors duration-150 border-l-4 ${isActive ? 'border-accent' : 'border-transparent'}"
-      data-id="${a.id}">
-
-      <!-- Name & Reading Row -->
-      <div class="flex items-center justify-between gap-3 flex-1 min-w-[200px] lg:min-w-0 lg:contents">
-        <!-- Name -->
-        <div class="flex-1 lg:order-1 flex items-center gap-2">
-          <span class="text-sm font-normal transition-colors duration-150" style="color: ${nameColor};">${safeName}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-success transition-opacity duration-150 ${isActive ? '' : 'hidden'}" data-selection-icon="${a.id}">
-            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-          </svg>
-          ${a.custom ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-border text-accent">CUSTOM</span>` : ''}
-        </div>
-
-        <!-- kWh display (Shown on mobile line 1, on desktop after hours) -->
-        <div class="flex-shrink-0 text-right min-w-[65px] sm:min-w-[80px] lg:order-5">
-          <span class="font-mono text-xs sm:text-sm font-semibold tabular-nums" style="color: var(--accent);" data-kwh-display="${a.id}">${kwh}</span>
-          <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh(unit)</span>
-        </div>
-      </div>
-
-      <!-- Controls Row -->
-      <div class="flex items-center justify-between w-full lg:w-auto lg:contents gap-2 lg:gap-3 order-3 mt-1 lg:mt-0 transition-opacity duration-150 ${isActive ? 'opacity-100' : 'opacity-40 grayscale-[50%]'}" data-controls-row="${a.id}">
-        <!-- Watts -->
-        <div class="flex items-center gap-1 flex-1 lg:flex-none justify-center lg:justify-start lg:order-2">
-          <input type="number" value="${a.watts}" min="1" max="99999"
-            class="w-full sm:w-20 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
-            data-action="update-watts" data-id="${a.id}" aria-label="Watts for ${safeName}" />
-          <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-3 text-center">W</span>
-        </div>
-
-        <!-- Qty stepper -->
-        <div class="flex items-center flex-1 lg:flex-none justify-center lg:order-3">
-          <button type="button" class="stepper-btn flex-1 lg:flex-none max-w-[40px]" data-action="decrement-qty" data-id="${a.id}" aria-label="Decrease quantity">−</button>
-          <span class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
-          <button type="button" class="stepper-btn flex-1 lg:flex-none max-w-[40px]" data-action="increment-qty" data-id="${a.id}" aria-label="Increase quantity">+</button>
-        </div>
-
-        <!-- Hours -->
-        <div class="flex flex-col items-center gap-1 flex-1 lg:flex-none justify-center lg:order-4">
-          <div class="flex items-center gap-1 w-full justify-center">
-            <input type="number" value="${a.hours}" min="0" max="24" step="0.25"
-              class="w-full sm:w-16 rounded-lg px-1.5 h-11 sm:h-8 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors"
-              data-action="update-hours" data-id="${a.id}" aria-label="Hours per day for ${safeName}" />
-            <span class="text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-5 text-center">h/d</span>
-          </div>
-          <span class="hours-error hidden text-[8px] sm:text-[9px] text-danger font-mono font-bold uppercase absolute mt-6" data-error-id="${a.id}">Max 24h</span>
-        </div>
-
-        <!-- Actions -->
-        <div class="flex-shrink-0 w-8 h-11 sm:w-8 sm:h-8 flex items-center justify-center lg:order-6 ml-auto">
-          ${a.custom ? `
-            <button type="button"
-              class="w-10 h-10 sm:w-8 sm:h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
-              data-action="delete-appliance" data-id="${a.id}" aria-label="Remove ${safeName}" title="Remove appliance">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mx-auto">
-                <path d="M3 6h18"></path>
-                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-              </svg>
-            </button>
-          ` : ''}
-        </div>
-      </div>
-    </div>`;
-}
-
-function closeModal() {
-  const modal = document.getElementById('report-modal');
-  modal?.classList.add('hidden');
-  modal?.classList.remove('flex');
-}
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
-});
-
-function onStickyDetailsClick(e: Event) {
-  e.preventDefault();
-  document.getElementById('results-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function initCalculator() {
-  if (!document.getElementById('results-panel')) return;
-
-  const stickyLink = document.getElementById('sticky-details-link');
-  if (stickyLink) {
-    stickyLink.removeEventListener('click', onStickyDetailsClick);
-    stickyLink.addEventListener('click', onStickyDetailsClick);
-  }
-
-  const hasSavedState = loadState();
-
-  if (hasSavedState) {
-    // Re-hydrate settings inputs
-    const maxKWInput = document.getElementById('max-kw-input') as HTMLInputElement;
-    if (maxKWInput) maxKWInput.value = String(maxCapacityKW);
-
-    // Re-hydrate appliance rows
-    CATEGORIES.forEach(cat => {
-      const bodyId = `category-body-${cat.replace(/\s/g, '-')}`;
-      const body = document.getElementById(bodyId);
-      const container = body?.querySelector('[data-rows-container]');
-      if (!container) return;
-
-      container.innerHTML = '';
-      const catAppliances = appliances.filter(a => a.category === cat);
-      catAppliances.forEach(a => {
-        container.insertAdjacentHTML('beforeend', buildRowHTML(a));
-      });
-
-      // Auto-expand Lighting category if it contains active appliances
-      if (cat === 'Lighting' && catAppliances.some(a => a.qty > 0) && body) {
-        body.classList.add('is-open');
-        const section = body.closest('.category-section');
-        const toggleBtn = section?.querySelector<HTMLButtonElement>('[data-action="toggle-category"]');
-        const chevron = toggleBtn?.querySelector<SVGElement>('.chevron');
-        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
-        if (chevron) chevron.style.transform = '';
-      }
-    });
-
-    appliances.forEach(a => updateRowStyle(a));
-  }
-
-  calculate();
-}
-
-document.addEventListener('astro:page-load', initCalculator);
+import '@/scripts/calculator/init';
 </script>
+
