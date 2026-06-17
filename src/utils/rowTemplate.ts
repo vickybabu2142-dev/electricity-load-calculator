@@ -38,12 +38,12 @@ export function buildRowHTML(a: Appliance): string {
 
   return `
     <div
-      class="appliance-row group grid grid-cols-2 lg:grid-cols-[1fr_90px_100px_80px_80px_28px] items-center gap-y-3 gap-x-4 lg:gap-3 px-4 py-5 hover:bg-card-hover transition-colors duration-150 border-l-4 ${isActive ? 'border-accent' : 'border-transparent'}"
+      class="appliance-row group grid grid-cols-[1fr_1fr_1fr_40px] lg:grid-cols-[1fr_90px_100px_80px_80px_28px] items-center gap-y-3 gap-x-2 sm:gap-x-4 lg:gap-3 px-4 py-4 hover:bg-card-hover transition-colors duration-150 border-l-4 ${isActive ? 'border-accent' : 'border-transparent'}"
       data-id="${a.id}"
     >
       <!-- Mobile header: Name & Reading Row -->
       <!-- Name -->
-      <div class="flex items-center gap-2 col-span-1 lg:col-span-1 min-w-0">
+      <div class="flex items-center gap-2 col-span-3 lg:col-span-1 min-w-0">
         <span
           class="text-sm font-normal text-text-primary transition-colors duration-150 truncate"
           data-appliance-name
@@ -73,7 +73,7 @@ export function buildRowHTML(a: Appliance): string {
           <input
             id="watts-${a.id}"
             type="number" value="${a.watts}" min="1" max="99999"
-            class="w-full sm:w-20 rounded-lg px-1 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors border border-accent/20 hover:border-accent cursor-pointer bg-input/50 h-11 sm:h-8"
+            class="w-full sm:w-20 rounded-lg px-1 text-center font-mono text-xs sm:text-sm focus:outline-none cursor-text h-9 sm:h-8"
             data-action="update-watts" data-id="${a.id}"
             aria-label="Watts for ${safeName}"
           />
@@ -86,13 +86,13 @@ export function buildRowHTML(a: Appliance): string {
         <span class="lg:hidden text-[9px] font-mono uppercase tracking-wider text-text-muted">Qty</span>
         <div class="flex items-center w-full justify-center" role="group" aria-label="Quantity for ${safeName}">
           <button type="button"
-            class="stepper-btn flex-1 lg:flex-none max-w-[40px]"
+            class="stepper-btn flex-1 lg:flex-none max-w-[32px] !h-9 sm:max-w-none sm:!h-8"
             data-action="decrement-qty" data-id="${a.id}"
             aria-label="Decrease quantity of ${safeName}"
           >−</button>
           <span class="w-6 sm:w-8 text-center font-mono text-xs sm:text-sm font-semibold tabular-nums" data-qty-display="${a.id}">${a.qty}</span>
           <button type="button"
-            class="stepper-btn stepper-add-btn flex-1 lg:flex-none max-w-[40px] relative"
+            class="stepper-btn stepper-add-btn flex-1 lg:flex-none max-w-[32px] !h-9 sm:max-w-none sm:!h-8 relative"
             data-action="increment-qty" data-id="${a.id}"
             aria-label="Increase quantity of ${safeName}"
           >+</button>
@@ -107,7 +107,7 @@ export function buildRowHTML(a: Appliance): string {
           <input
             id="hours-${a.id}"
             type="number" value="${a.hours}" min="0" max="24" step="0.25"
-            class="w-full sm:w-16 rounded-lg px-1 text-center font-mono text-xs sm:text-sm focus:outline-none transition-colors border border-accent/20 hover:border-accent cursor-pointer bg-input/50 h-11 sm:h-8"
+            class="w-full sm:w-16 rounded-lg px-1 text-center font-mono text-xs sm:text-sm focus:outline-none cursor-text h-9 sm:h-8"
             data-action="update-hours" data-id="${a.id}"
             aria-label="Hours per day for ${safeName}"
           />
@@ -126,20 +126,23 @@ export function buildRowHTML(a: Appliance): string {
       </div>
 
       <!-- Delete action (custom appliances only) (Col 6) -->
-      <div class="col-span-2 lg:col-span-1 flex items-center justify-center h-11 sm:h-8 mt-1 lg:mt-0">
-        ${a.custom ? `
-          <button type="button"
-            class="w-10 h-10 sm:w-8 sm:h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
-            data-action="delete-appliance" data-id="${a.id}"
-            aria-label="Remove ${safeName}" title="Remove appliance"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mx-auto" aria-hidden="true">
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-            </svg>
-          </button>
-        ` : ''}
+      <div class="col-span-1 lg:col-span-1 flex flex-col items-center justify-center lg:justify-start">
+        <span class="lg:hidden text-[9px] font-mono uppercase tracking-wider text-transparent select-none">Del</span>
+        <div class="flex items-center w-full justify-center h-9 sm:h-8">
+          ${a.custom ? `
+            <button type="button"
+              class="w-9 h-9 sm:w-8 sm:h-8 rounded-md text-text-muted hover:text-danger active:text-danger hover:bg-border transition-colors focus:outline-none"
+              data-action="delete-appliance" data-id="${a.id}"
+              aria-label="Remove ${safeName}" title="Remove appliance"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mx-auto" aria-hidden="true">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              </svg>
+            </button>
+          ` : ''}
+        </div>
       </div>
     </div>`;
 }

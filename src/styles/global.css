@@ -473,9 +473,9 @@ button:active:not(:disabled),
 }
 
 .stepper-btn {
-  background-color: var(--btn-stepper-bg);
-  color: var(--btn-stepper-text);
-  border: 1px solid var(--border);
+  background-color: color-mix(in srgb, var(--accent), transparent 92%);
+  color: var(--accent);
+  border: 1px solid var(--accent);
   width: 2.5rem;
   height: 2.5rem;
   display: flex;
@@ -497,7 +497,7 @@ button:active:not(:disabled),
 }
 
 .stepper-btn:hover {
-  background-color: var(--btn-stepper-hover);
+  background-color: color-mix(in srgb, var(--accent), transparent 80%);
   border-color: var(--accent);
   color: var(--accent);
   transform: scale(1.05);

@@ -11,6 +11,7 @@
 // ─────────────────────────────────────────────────────────
 
 let activeResolve: ((value: boolean) => void) | null = null;
+let activeCleanup: (() => void) | null = null;
 
 function getElements() {
   return {
@@ -23,13 +24,11 @@ function getElements() {
   };
 }
 
-function closeConfirm(result: boolean): void {
+function closeConfirm(): void {
   const { modal } = getElements();
   if (!modal) return;
   modal.classList.remove('flex');
   modal.classList.add('hidden');
-  activeResolve?.(result);
-  activeResolve = null;
 }
 
 export interface ConfirmOptions {
@@ -45,7 +44,9 @@ export function showConfirm(message: string, options: ConfirmOptions = {}): Prom
   }
 
   // Cancel any previous unresolved confirm
-  if (activeResolve) activeResolve(false);
+  if (activeCleanup) {
+    activeCleanup();
+  }
 
   return new Promise(resolve => {
     activeResolve = resolve;
@@ -54,6 +55,60 @@ export function showConfirm(message: string, options: ConfirmOptions = {}): Prom
     if (titleEl) titleEl.textContent = options.title   ?? 'Confirm Action';
     if (okBtn)   okBtn.textContent   = options.okLabel ?? 'Confirm';
 
+    const cleanUpListeners = () => {
+      okBtn?.removeEventListener('click', onOk);
+      cancelBtn?.removeEventListener('click', onCancel);
+      backdrop?.removeEventListener('click', onBackdrop);
+      document.removeEventListener('keydown', onKeyDown, { capture: true });
+    };
+
+    activeCleanup = () => {
+      cleanUpListeners();
+      resolve(false);
+      activeResolve = null;
+      activeCleanup = null;
+    };
+
+    const onOk = () => {
+      cleanUpListeners();
+      closeConfirm();
+      resolve(true);
+      activeResolve = null;
+      activeCleanup = null;
+    };
+
+    const onCancel = () => {
+      cleanUpListeners();
+      closeConfirm();
+      resolve(false);
+      activeResolve = null;
+      activeCleanup = null;
+    };
+
+    const onBackdrop = () => {
+      cleanUpListeners();
+      closeConfirm();
+      resolve(false);
+      activeResolve = null;
+      activeCleanup = null;
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        e.stopPropagation();
+        cleanUpListeners();
+        closeConfirm();
+        resolve(false);
+        activeResolve = null;
+        activeCleanup = null;
+      }
+    };
+
+    okBtn?.addEventListener('click', onOk);
+    cancelBtn?.addEventListener('click', onCancel);
+    backdrop?.addEventListener('click', onBackdrop);
+    document.addEventListener('keydown', onKeyDown, { capture: true });
+
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 
@@ -61,19 +116,3 @@ export function showConfirm(message: string, options: ConfirmOptions = {}): Prom
     cancelBtn?.focus();
   });
 }
-
-// ── One-time event wiring (runs on first import) ──────────
-(function wireConfirmModal() {
-  const { okBtn, cancelBtn, backdrop } = getElements();
-  okBtn?.addEventListener('click',     () => closeConfirm(true));
-  cancelBtn?.addEventListener('click', () => closeConfirm(false));
-  backdrop?.addEventListener('click',  () => closeConfirm(false));
-
-  document.addEventListener('keydown', (e) => {
-    const { modal } = getElements();
-    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
-      e.stopPropagation();
-      closeConfirm(false);
-    }
-  }, { capture: true });
-})();
