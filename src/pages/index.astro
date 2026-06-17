@@ -338,6 +338,10 @@ const schemaGraph = [
               <td class="px-6 py-4 font-semibold text-text-primary">Solar System Size</td>
               <td class="px-6 py-4 font-bold" style="color:var(--accent)" id="print-matrix-solar">—</td>
             </tr>
+            <tr>
+              <td class="px-6 py-4 font-semibold text-text-primary">Mainline Stabilizer</td>
+              <td class="px-6 py-4 font-bold" style="color:var(--accent)" id="print-matrix-stabilizer">—</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -390,7 +394,19 @@ const schemaGraph = [
             <div class="flex justify-between"><span>Monthly Units:</span> <span class="font-mono text-text-primary"><span id="print-det-sol-units">0</span> kWh(unit)</span></div>
           </div>
         </div>
+
+        <div class="bg-card border border-border rounded-xl p-6 break-inside-avoid col-span-2 sm:col-span-1">
+          <h3 class="text-lg font-bold text-text-primary border-b border-border pb-3 mb-4">Stabilizer Recommendation</h3>
+          <p class="text-3xl font-bold mb-6" style="color:var(--accent)" id="print-det-stabilizer">—</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-text-muted mb-2">Calculation Path</p>
+          <div class="space-y-2 text-sm text-text-muted">
+            <div class="flex justify-between"><span>Load:</span> <span class="font-mono text-text-primary"><span id="print-det-stab-load">0</span> kW</span></div>
+            <div class="flex justify-between"><span>Sizing Factor:</span> <span class="font-mono text-text-primary">1.3 (30% margin)</span></div>
+            <div class="flex justify-between"><span>Required Capacity:</span> <span class="font-mono text-text-primary"><span id="print-det-stab-req">0</span> kVA</span></div>
+          </div>
+        </div>
       </div>
+
     </div>
 
     <!-- SECTION 7: Consumption Analysis -->

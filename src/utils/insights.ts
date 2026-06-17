@@ -7,6 +7,8 @@ import {
   MCB_RATINGS,
   INVERTER_STANDARDS,
   CABLE_BY_MCB,
+  STABILIZER_STANDARDS,
+  STABILIZER_OVERHEAD,
 } from '../data/constants';
 
 export interface InsightResult {
@@ -17,6 +19,8 @@ export interface InsightResult {
   inverterKVA: number;
   recommendedSolar: string;
   solarKW: number;
+  recommendedStabilizer: string;
+  stabilizerKVA: number;
 }
 
 export function calculateInsights(totalLoadKW: number, monthlyKWh: number): InsightResult {
@@ -41,5 +45,21 @@ export function calculateInsights(totalLoadKW: number, monthlyKWh: number): Insi
   const solarKW = Math.max(0.5, Math.round(rawSolar * 2) / 2);
   const recommendedSolar = `${solarKW} kW Solar System`;
 
-  return { recommendedMCB, mcbAmps, recommendedCable, recommendedInverter, inverterKVA, recommendedSolar, solarKW };
+  // Stabilizer — 30% overhead above connected load
+  const rawStabilizer = totalLoadKW * STABILIZER_OVERHEAD;
+  const stabilizerKVA = STABILIZER_STANDARDS.find(s => s >= rawStabilizer) ?? 15;
+  const recommendedStabilizer = `${stabilizerKVA} kVA Mainline`;
+
+  return {
+    recommendedMCB,
+    mcbAmps,
+    recommendedCable,
+    recommendedInverter,
+    inverterKVA,
+    recommendedSolar,
+    solarKW,
+    recommendedStabilizer,
+    stabilizerKVA,
+  };
 }
+

@@ -212,7 +212,8 @@ document.addEventListener('click', async (e) => {
     report += `  Recommended MCB         : ${insights.recommendedMCB}\n`;
     report += `  Recommended Cable       : ${insights.recommendedCable}\n`;
     report += `  Recommended Inverter    : ${insights.recommendedInverter}\n`;
-    report += `  Recommended Solar       : ${insights.recommendedSolar}\n\n${'─'.repeat(48)}\n\nAPPLIANCE BREAKDOWN\n\n`;
+    report += `  Recommended Solar       : ${insights.recommendedSolar}\n`;
+    report += `  Recommended Stabilizer  : ${insights.recommendedStabilizer}\n\n${'─'.repeat(48)}\n\nAPPLIANCE BREAKDOWN\n\n`;
 
     SECTIONS.forEach(section => {
       const sectionItems = included.filter(a => section.categories.includes(a.category));

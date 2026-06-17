@@ -35,8 +35,15 @@ export const MCB_RATINGS = [6, 10, 16, 20, 25, 32, 40, 63, 80, 100] as const;
 /** Standard inverter kVA ratings available in market */
 export const INVERTER_STANDARDS = [1, 2, 3, 5, 7.5, 10, 15] as const;
 
+/** Standard mainline stabilizer kVA ratings available in market */
+export const STABILIZER_STANDARDS = [1, 2, 3, 5, 7.5, 10, 15] as const;
+
+/** Sizing safety factor overhead for mainline stabilizer */
+export const STABILIZER_OVERHEAD = 1.3;
+
 /** Copper cable size (sq mm) recommended per MCB rating */
 export const CABLE_BY_MCB: Record<number, string> = {
   6: '1.0', 10: '1.5', 16: '2.5', 20: '2.5', 25: '4',
   32: '6',  40: '10',  63: '16',  80: '25',   100: '35',
 };
+

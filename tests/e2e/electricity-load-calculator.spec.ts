@@ -253,8 +253,8 @@ test.describe('Electricity Load Calculator', () => {
     await page.locator('#max-kw-input').fill('30');
     await page.locator('#max-kw-input').dispatchEvent('input');
 
-    page.on('dialog', dialog => dialog.accept());
     await page.locator('button[data-action="reset-all"]').filter({ visible: true }).first().click();
+    await page.locator('#confirm-ok-btn').click();
 
     await expect(page.locator('#total-kw')).toHaveText('0.00');
     await expect(page.locator('#active-count')).toHaveText('0');
@@ -389,8 +389,8 @@ test.describe('Electricity Load Calculator', () => {
   test('reset clears active preset highlight', async ({ page }) => {
     await page.locator('[data-preset-id="budget-home"]').click();
 
-    page.on('dialog', dialog => dialog.accept());
     await page.locator('button[data-action="reset-all"]').filter({ visible: true }).click();
+    await page.locator('#confirm-ok-btn').click();
 
     const shadow = await page.locator('[data-preset-id="budget-home"]').evaluate(
       el => (el as HTMLElement).style.boxShadow

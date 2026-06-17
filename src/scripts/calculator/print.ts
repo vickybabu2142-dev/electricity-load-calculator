@@ -100,6 +100,7 @@ export function populatePrintInsights(result: CalculationResult, insights: Insig
   setText('print-matrix-cable', insights.recommendedCable);
   setText('print-matrix-inverter', insights.recommendedInverter);
   setText('print-matrix-solar', insights.recommendedSolar);
+  setText('print-matrix-stabilizer', insights.recommendedStabilizer);
 
   setText('print-det-mcb', insights.recommendedMCB);
   setText('print-det-mcb-load', result.totalKW.toFixed(2));
@@ -115,6 +116,10 @@ export function populatePrintInsights(result: CalculationResult, insights: Insig
 
   setText('print-det-solar', insights.recommendedSolar);
   setText('print-det-sol-units', Math.round(result.monthlyKWh).toString());
+
+  setText('print-det-stabilizer', insights.recommendedStabilizer);
+  setText('print-det-stab-load', result.totalKW.toFixed(2));
+  setText('print-det-stab-req', (result.totalKW * 1.3).toFixed(2));
 }
 
 const HEALTH_DESC: Record<string, string> = {

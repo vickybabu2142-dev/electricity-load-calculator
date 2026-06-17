@@ -136,7 +136,7 @@ const schemaGraph = [
         <h2 class="text-lg font-display font-bold text-text-primary uppercase tracking-wide flex-shrink-0">Smart Recommendations</h2>
         <div class="flex-1 h-px bg-border"></div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
 
         <!-- MCB — Amber -->
         <a href="/recommendations/mcb"
@@ -186,6 +186,33 @@ const schemaGraph = [
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
           </div>
           <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style="box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#38BDF8,transparent 48%)"></div>
+        </a>
+
+        <!-- Stabilizer — Rose -->
+        <a href="/recommendations/stabilizer"
+          class="rec-card rec-glow-rose group relative flex flex-col gap-4 rounded-2xl p-6 no-underline overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:-translate-y-0.5"
+          style="background:color-mix(in srgb,#F43F5E,transparent 96%); border:1px solid color-mix(in srgb,#F43F5E,transparent 84%); box-shadow:0 0 20px color-mix(in srgb,#F43F5E,transparent 88%),0 8px 24px color-mix(in srgb,#F43F5E,transparent 94%);"
+          aria-label="View stabilizer recommendation"
+          title="Voltage Stabilizer: Protects the whole house from high/low voltage fluctuations and utility line surges.">
+          <div class="flex items-start justify-between">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0"
+              style="background:color-mix(in srgb,#F43F5E,transparent 82%); border:1px solid color-mix(in srgb,#F43F5E,transparent 65%)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="color:#F43F5E" aria-hidden="true">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v5h-2V7zm0 7h2v2h-2v-2z"/>
+              </svg>
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity mt-1" style="color:#F43F5E" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-[10px] font-mono uppercase tracking-widest mb-1" style="color:color-mix(in srgb,#F43F5E,transparent 30%)">Mainline Stabilizer</p>
+            <p id="assess-stabilizer-value" class="font-display font-bold text-3xl leading-tight mb-2" style="color:#F43F5E">—</p>
+            <p class="text-xs leading-relaxed" style="color:color-mix(in srgb,#F43F5E,transparent 40%)">Protects your home appliances from voltage surges.</p>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs font-semibold" style="color:color-mix(in srgb,#F43F5E,transparent 25%)">
+            View Details
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style="box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#F43F5E,transparent 48%)"></div>
         </a>
 
         <!-- Inverter — Violet -->
@@ -554,6 +581,12 @@ const schemaGraph = [
             <button id="share-whatsapp" class="p-2.5 rounded-lg border border-border bg-base hover:bg-white/5 transition-colors group" title="Share on WhatsApp">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-text-muted group-hover:text-accent" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.554 4.197 1.604 6.02L0 24l6.111-1.603a11.803 11.803 0 005.94 1.603h.005c6.634 0 12.044-5.413 12.048-12.049a11.829 11.829 0 00-3.49-8.423Z"/></svg>
             </button>
+            <button id="share-facebook" class="p-2.5 rounded-lg border border-border bg-base hover:bg-white/5 transition-colors group" title="Share on Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-text-muted group-hover:text-accent" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+            </button>
+            <button id="share-instagram" class="p-2.5 rounded-lg border border-border bg-base hover:bg-white/5 transition-colors group" title="Share on Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-text-muted group-hover:text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </button>
             <button id="share-twitter" class="p-2.5 rounded-lg border border-border bg-base hover:bg-white/5 transition-colors group" title="Share on Twitter">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-text-muted group-hover:text-accent" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </button>
@@ -703,6 +736,10 @@ const schemaGraph = [
               <td class="px-6 py-4 font-semibold text-text-primary">Solar System Size</td>
               <td class="px-6 py-4 font-bold" style="color:var(--accent)" id="aprint-matrix-solar">—</td>
             </tr>
+            <tr>
+              <td class="px-6 py-4 font-semibold text-text-primary">Mainline Stabilizer</td>
+              <td class="px-6 py-4 font-bold" style="color:var(--accent)" id="aprint-matrix-stabilizer">—</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -753,6 +790,17 @@ const schemaGraph = [
           <p class="text-xs font-bold uppercase tracking-widest text-text-muted mb-2">Calculation Path</p>
           <div class="space-y-2 text-sm text-text-muted">
             <div class="flex justify-between"><span>Monthly Units:</span> <span class="font-mono text-text-primary"><span id="aprint-det-sol-units">0</span> kWh</span></div>
+          </div>
+        </div>
+
+        <div class="bg-card border border-border rounded-xl p-6 break-inside-avoid col-span-2 sm:col-span-1">
+          <h3 class="text-lg font-bold text-text-primary border-b border-border pb-3 mb-4">Stabilizer Recommendation</h3>
+          <p class="text-3xl font-bold mb-6" style="color:var(--accent)" id="aprint-det-stabilizer">—</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-text-muted mb-2">Calculation Path</p>
+          <div class="space-y-2 text-sm text-text-muted">
+            <div class="flex justify-between"><span>Load:</span> <span class="font-mono text-text-primary"><span id="aprint-det-stab-load">0</span> kW</span></div>
+            <div class="flex justify-between"><span>Sizing Factor:</span> <span class="font-mono text-text-primary">1.3 (30% margin)</span></div>
+            <div class="flex justify-between"><span>Required Capacity:</span> <span class="font-mono text-text-primary"><span id="aprint-det-stab-req">0</span> kVA</span></div>
           </div>
         </div>
       </div>
@@ -983,9 +1031,13 @@ const schemaGraph = [
 
 <style>
   /* ── Insight cards — strong per-color glow ── */
-  .rec-card { transition: box-shadow 0.25s ease, transform 0.2s ease; }
+  .rec-card {
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+    background: var(--bg-card) !important;
+  }
   .rec-glow-amber:hover  { box-shadow: 0 0 38px color-mix(in srgb,#F59E0B,transparent 50%), 0 12px 40px color-mix(in srgb,#F59E0B,transparent 62%) !important; }
   .rec-glow-sky:hover    { box-shadow: 0 0 38px color-mix(in srgb,#38BDF8,transparent 50%), 0 12px 40px color-mix(in srgb,#38BDF8,transparent 62%) !important; }
+  .rec-glow-rose:hover   { box-shadow: 0 0 38px color-mix(in srgb,#F43F5E,transparent 50%), 0 12px 40px color-mix(in srgb,#F43F5E,transparent 62%) !important; }
   .rec-glow-violet:hover { box-shadow: 0 0 38px color-mix(in srgb,#A78BFA,transparent 50%), 0 12px 40px color-mix(in srgb,#A78BFA,transparent 62%) !important; }
   .rec-glow-emerald:hover{ box-shadow: 0 0 38px color-mix(in srgb,#4ADE80,transparent 50%), 0 12px 40px color-mix(in srgb,#4ADE80,transparent 62%) !important; }
 
@@ -1013,6 +1065,7 @@ const schemaGraph = [
     /* Default subtle state for mobile */
     .rec-glow-amber  { box-shadow: 0 0 28px color-mix(in srgb,#F59E0B,transparent 90%), 0 8px 28px color-mix(in srgb,#F59E0B,transparent 94%) !important; }
     .rec-glow-sky    { box-shadow: 0 0 28px color-mix(in srgb,#38BDF8,transparent 90%), 0 8px 28px color-mix(in srgb,#38BDF8,transparent 94%) !important; }
+    .rec-glow-rose   { box-shadow: 0 0 28px color-mix(in srgb,#F43F5E,transparent 90%), 0 8px 28px color-mix(in srgb,#F43F5E,transparent 94%) !important; }
     .rec-glow-violet { box-shadow: 0 0 28px color-mix(in srgb,#A78BFA,transparent 90%), 0 8px 28px color-mix(in srgb,#A78BFA,transparent 94%) !important; }
     .rec-glow-emerald{ box-shadow: 0 0 28px color-mix(in srgb,#4ADE80,transparent 90%), 0 8px 28px color-mix(in srgb,#4ADE80,transparent 94%) !important; }
 
@@ -1025,6 +1078,7 @@ const schemaGraph = [
 
     .rec-glow-amber.mobile-visible  { box-shadow: 0 0 42px color-mix(in srgb,#F59E0B,transparent 50%), 0 12px 36px color-mix(in srgb,#F59E0B,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
     .rec-glow-sky.mobile-visible    { box-shadow: 0 0 42px color-mix(in srgb,#38BDF8,transparent 50%), 0 12px 36px color-mix(in srgb,#38BDF8,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
+    .rec-glow-rose.mobile-visible   { box-shadow: 0 0 42px color-mix(in srgb,#F43F5E,transparent 50%), 0 12px 36px color-mix(in srgb,#F43F5E,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
     .rec-glow-violet.mobile-visible { box-shadow: 0 0 42px color-mix(in srgb,#A78BFA,transparent 50%), 0 12px 36px color-mix(in srgb,#A78BFA,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
     .rec-glow-emerald.mobile-visible{ box-shadow: 0 0 42px color-mix(in srgb,#4ADE80,transparent 50%), 0 12px 36px color-mix(in srgb,#4ADE80,transparent 65%) !important; transform: scale(1.02) translateY(-0.125rem); }
 
@@ -1035,6 +1089,7 @@ const schemaGraph = [
 
     .rec-glow-amber:active  { box-shadow: 0 0 42px color-mix(in srgb,#F59E0B,transparent 80%), 0 12px 36px color-mix(in srgb,#F59E0B,transparent 85%) !important; }
     .rec-glow-sky:active    { box-shadow: 0 0 42px color-mix(in srgb,#38BDF8,transparent 80%), 0 12px 36px color-mix(in srgb,#38BDF8,transparent 85%) !important; }
+    .rec-glow-rose:active   { box-shadow: 0 0 42px color-mix(in srgb,#F43F5E,transparent 80%), 0 12px 36px color-mix(in srgb,#F43F5E,transparent 85%) !important; }
     .rec-glow-violet:active { box-shadow: 0 0 42px color-mix(in srgb,#A78BFA,transparent 80%), 0 12px 36px color-mix(in srgb,#A78BFA,transparent 85%) !important; }
     .rec-glow-emerald:active{ box-shadow: 0 0 42px color-mix(in srgb,#4ADE80,transparent 80%), 0 12px 36px color-mix(in srgb,#4ADE80,transparent 85%) !important; }
   }
@@ -1168,6 +1223,7 @@ function initAssessment() {
   setText('assess-cable-value',    insights.recommendedCable);
   setText('assess-inverter-value', insights.recommendedInverter);
   setText('assess-solar-value',    insights.recommendedSolar);
+  setText('assess-stabilizer-value', insights.recommendedStabilizer);
 
   // ── S4: Consumption Analysis ──────────────────────────────
   if (breakdown.items.length > 0) {
@@ -1477,6 +1533,7 @@ function initAssessment() {
   setText('aprint-matrix-cable', insights.recommendedCable);
   setText('aprint-matrix-inverter', insights.recommendedInverter);
   setText('aprint-matrix-solar', insights.recommendedSolar);
+  setText('aprint-matrix-stabilizer', insights.recommendedStabilizer);
 
   // Detailed
   setText('aprint-det-mcb', insights.recommendedMCB);
@@ -1493,6 +1550,10 @@ function initAssessment() {
 
   setText('aprint-det-solar', insights.recommendedSolar);
   setText('aprint-det-sol-units', Math.round(result.monthlyKWh).toString());
+
+  setText('aprint-det-stabilizer', insights.recommendedStabilizer);
+  setText('aprint-det-stab-load', result.totalKW.toFixed(2));
+  setText('aprint-det-stab-req', (result.totalKW * 1.3).toFixed(2));
 
   // Verdict Logic
   const verdictList = document.getElementById('aprint-verdict-findings');
@@ -1742,6 +1803,19 @@ document.addEventListener('click', (e) => {
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     } else if (shareType === 'share-twitter') {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+    } else if (shareType === 'share-facebook') {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`, '_blank');
+    } else if (shareType === 'share-instagram') {
+      // Instagram doesn't support direct web sharing links. Copy context automatically and navigate user to platform.
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('share-instagram');
+        if (btn) {
+          const originalHtml = btn.innerHTML;
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-accent" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>';
+          setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
+        }
+        window.open('https://www.instagram.com', '_blank');
+      });
     } else if (shareType === 'share-copy') {
       navigator.clipboard.writeText(text).then(() => {
         const btn = document.getElementById('share-copy');

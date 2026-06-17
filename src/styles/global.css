@@ -3,40 +3,29 @@
 :root {
   color-scheme: dark;
   /* Industrial Dark Palette Variables */
-  --bg-base-raw: #0f0f0f;
-  --bg-surface-raw: #111111;
-  --bg-elevated-raw: #141414;
-  --bg-subtle-raw: #1a1a1a;
+  --bg-base: #0f0f0f;
+  --bg-card: #111111;
+  --bg-card-hover: #141414;
+  --bg-subtle: #1a1a1a;
 
-  --border-default-raw: #1e1e1e;
-  --border-hover-raw: #2a2a2a;
-  --border-strong-raw: #333333;
+  --border: #1e1e1e;
+  --border-hover: #2a2a2a;
+  --border-strong: #333333;
 
-  --text-primary-raw: #f0ebe2;
-  --text-secondary-raw: #d4cfc8;
-  --text-muted-raw: #a1a1aa;
-  --text-faint-raw: #71717a;
-  --text-ghost-raw: #3f3f46;
+  --text-primary: #f0ebe2;
+  --text-secondary: #d4cfc8;
+  --text-muted: #a1a1aa;
+  --text-faint: #71717a;
+  --text-ghost: #3f3f46;
 
-  --accent-raw: #F4A826;
-  --accent-text-raw: #0f0f0f;
-
-  --status-green-raw: #3ecf6e;
-  --status-green-glow-raw: #3ecf6e88;
-
-  /* Theme mappings for compatibility with existing HTML classes */
-  --bg-base: var(--bg-base-raw);
-  --bg-card: var(--bg-surface-raw);
-  --bg-card-hover: var(--bg-elevated-raw);
-  --accent: var(--accent-raw);
+  --accent: #F4A826;
   --accent-dim: color-mix(in srgb, var(--accent), black 20%);
-  --accent-text: var(--accent-text-raw);
-  --text-primary: var(--text-primary-raw);
-  --text-muted: var(--text-secondary-raw);
-  --border: var(--border-default-raw);
+  --accent-text: #0f0f0f;
+
+  --success: #3ecf6e;
+  --status-green-glow: #3ecf6e88;
   --danger: #ef4444;
   --warning: #f59e0b;
-  --success: var(--status-green-raw);
 
   /* New variables for UI enhancements */
   --panel-shadow: none;
@@ -45,8 +34,8 @@
   --badge-border: rgba(255, 255, 255, 0.05);
   --progress-gradient: linear-gradient(90deg, #eab308 0%, #f97316 50%, #ef4444 100%);
   --danger-glow: 0 0 8px rgba(255, 50, 50, 0.4);
-  --hero-gradient-from: var(--text-primary-raw);
-  --hero-gradient-to: var(--text-primary-raw);
+  --hero-gradient-from: var(--text-primary);
+  --hero-gradient-to: var(--text-primary);
 
   /* Select specific variables */
   --select-bg: #1e1e1e;
@@ -54,9 +43,9 @@
   --select-text: #ffffff;
 
   /* Toggle specifics (Dark) */
-  --toggle-off: var(--bg-subtle-raw);
-  --toggle-off-border: var(--border-strong-raw);
-  --toggle-knob: var(--text-primary-raw);
+  --toggle-off: var(--bg-subtle);
+  --toggle-off-border: var(--border-strong);
+  --toggle-knob: var(--text-primary);
 
   /* Button specifics (Dark) */
   --btn-primary-bg: var(--accent);
@@ -77,7 +66,7 @@
   --input-placeholder: #71717a;
 
   /* Grid dots for dark mode */
-  --grid-color: var(--border-hover-raw);
+  --grid-color: var(--border-hover);
 }
 
 .light {
