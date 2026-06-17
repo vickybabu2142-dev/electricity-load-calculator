@@ -529,19 +529,19 @@ const schemaGraph = [
         <h1 class="text-5xl font-display font-bold text-accent mb-6">Electrical Assessment Report</h1>
         <p class="text-xl text-text-muted mb-12">Electrical Load Analysis, Safety Recommendations, Energy Assessment and Planning Report</p>
         
-        <div class="mt-16 flex flex-col items-center justify-center gap-3">
+        <div class="mt-12 flex flex-col items-center justify-center gap-3">
           <div class="p-2 border border-border rounded-xl bg-white">
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://electricityloadcalculator.com" width="100" height="100" alt="QR Code" class="print:block" />
           </div>
           <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Scan to revisit this platform</p>
         </div>
 
-        <div class="mt-20 space-y-4">
+        <div class="mt-16 space-y-4">
           <p class="text-sm font-bold uppercase tracking-widest text-text-muted">Prepared by</p>
           <p class="text-2xl font-bold" style="color:var(--accent)">ElectricityLoadCalculator.com</p>
         </div>
 
-        <div class="mt-16 grid grid-cols-2 gap-12 max-w-lg mx-auto border-t border-border pt-12">
+        <div class="mt-12 grid grid-cols-2 gap-12 max-w-lg mx-auto border-t border-border pt-12">
           <div class="space-y-1">
             <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted">Report ID</p>
             <p class="text-sm font-mono text-text-primary" id="aprint-report-id-cover">—</p>
@@ -1206,7 +1206,7 @@ function initAssessment() {
           </div>
         </div>
         <div class="text-right flex-shrink-0">
-          <p class="text-sm font-mono font-bold" style="color:var(--danger)">${a.kWhDay.toFixed(1)} kWh(unit)/d</p>
+          <p class="text-sm font-mono font-bold" style="color:var(--danger)">${a.kWhDay.toFixed(1)}</p>
           <p class="text-xs font-mono text-text-muted">${Math.round(a.percent)}% of total</p>
         </div>
       </div>`).join('');
@@ -1367,7 +1367,7 @@ function initAssessment() {
   const reportId = `ELC-${now.toISOString().slice(0,10).replace(/-/g, '')}-${Math.floor(Math.random() * 90000 + 10000)}`;
   setText('aprint-report-id', reportId);
   setText('aprint-report-id-cover', reportId);
-  const version = (document.querySelector('footer div span:last-child') as HTMLElement)?.textContent?.trim() || 'v2.0.4';
+  const version = document.getElementById('footer-platform-version')?.textContent?.trim() || 'v2.0.4';
   setText('aprint-platform-version', version);
 
   const siteUrl = window.location.origin;
@@ -1496,7 +1496,7 @@ function initAssessment() {
   const printBreakdown = document.getElementById('aprint-breakdown-table');
   if (printBreakdown) {
     printBreakdown.innerHTML = breakdown.items.map(item => `
-      <div class="flex text-sm py-1.5 border-b border-border">
+      <div class="flex text-sm py-1.5 border-b border-border last:border-0">
         <span class="flex-1 text-text-muted">${item.category}</span>
         <span class="w-32 text-right font-mono">${item.kWhDay.toFixed(2)} kWh(unit)/d</span>
         <span class="w-20 text-right font-mono font-semibold" style="color:var(--accent)">${Math.round(item.percent)}%</span>
@@ -1509,19 +1509,24 @@ function initAssessment() {
 
   const printList = document.getElementById('aprint-appliances-list');
   if (printList) {
-    let html = '';
+    let html = `
+      <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-1 border-b-2 border-border text-text-muted">
+        <span class="flex-1">Home Appliance</span>
+        <span class="w-32 text-right">Usage (kWh/day)</span>
+      </div>
+    `;
     SECTIONS.forEach(section => {
       const sectionItems = active.filter(a => section.categories.includes(a.category));
       if (sectionItems.length > 0) {
-        html += `<div><h3 class="text-[10px] font-bold uppercase tracking-widest mb-2 border-l-2 pl-2" style="color:#F4A826; border-color:#F4A826">${section.title}</h3><div class="space-y-1">`;
+        html += `<div class="pt-2"><h3 class="text-[10px] font-bold uppercase tracking-widest mb-2 border-l-2 pl-2" style="color:#F4A826; border-color:#F4A826">${section.title}</h3><div class="space-y-1">`;
         section.categories.forEach(cat => {
           const catItems = sectionItems.filter(a => a.category === cat);
           if (catItems.length > 0) {
             catItems.forEach(a => {
               html += `
-                <div class="flex justify-between items-center text-[11px]">
+                <div class="flex justify-between items-center text-[11px] py-0.5">
                   <div class="flex-1"><span class="font-medium text-text-primary">${escapeHtml(a.name)}</span><span class="text-text-muted ml-2 text-[9px]">${a.qty} × ${a.watts}W</span></div>
-                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)} kWh(unit)/d</div>
+                  <div class="text-right font-mono font-medium text-text-primary">${calculateRowKWh(a).toFixed(2)}</div>
                 </div>`;
             });
           }
@@ -1575,6 +1580,13 @@ function initAssessment() {
     `;
   }
   
+  // SECTION 11 & 12 cleanup for spacing
+  const shareSec = document.querySelector('.mt-16.pt-8.border-t.border-border.break-inside-avoid');
+  if (shareSec) shareSec.classList.replace('mt-16', 'mt-10');
+  
+  const finalFooter = document.querySelector('.mt-12.pt-6.border-t.border-border.text-center.text-xs.text-text-muted.break-inside-avoid');
+  if (finalFooter) finalFooter.classList.replace('mt-12', 'mt-8');
+
   // Initial cost update
   updateCost();
 
