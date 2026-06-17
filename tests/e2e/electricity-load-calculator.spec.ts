@@ -61,7 +61,7 @@ test.describe('Electricity Load Calculator', () => {
     await wattsInput.dispatchEvent('change');
 
     // kWh: 100W × 1qty × 8h / 1000 = 0.80 kWh/d
-    await expect(page.locator('[data-kwh-display="app-1"]')).toHaveText('0.80');
+    await expect(page.locator('[data-kwh-display="app-1"]').first()).toHaveText('0.80');
     // total kW: 100W / 1000 = 0.10 kW
     await expect(page.locator('#total-kw')).toHaveText('0.10');
   });
@@ -75,7 +75,7 @@ test.describe('Electricity Load Calculator', () => {
     await hoursInput.dispatchEvent('change');
 
     // kWh: 9W × 1qty × 10h / 1000 = 0.09 kWh/d
-    await expect(page.locator('[data-kwh-display="app-1"]')).toHaveText('0.09');
+    await expect(page.locator('[data-kwh-display="app-1"]').first()).toHaveText('0.09');
   });
 
   // ── Capacity & Energy Cost Estimator ─────────────────────

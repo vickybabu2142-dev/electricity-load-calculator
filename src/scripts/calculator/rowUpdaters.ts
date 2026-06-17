@@ -9,8 +9,9 @@ import { calculateRowKWh } from '@/utils/calculations';
 import { formatNumber } from './dom';
 
 export function updateRowKWh(a: Appliance): void {
-  const kwhEl = document.querySelector(`[data-kwh-display="${a.id}"]`);
-  if (kwhEl) kwhEl.textContent = formatNumber(calculateRowKWh(a), 2);
+  document.querySelectorAll(`[data-kwh-display="${a.id}"]`).forEach(el => {
+    el.textContent = formatNumber(calculateRowKWh(a), 2);
+  });
 }
 
 export function updateRowQtyDisplay(a: Appliance): void {
