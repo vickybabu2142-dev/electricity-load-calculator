@@ -40,9 +40,6 @@ test.describe('Site Pages & Navigation', () => {
   test('Assessment page displays data after configuration', async ({ page }) => {
     await page.goto('/');
     
-    // Expand lighting category first so appliances are visible
-    await page.locator('button.category-toggle[data-category="Lighting"]').click();
-    
     // Add an appliance (LED Bulb) and wait for state to save
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     // Give it a tiny bit of time to save to localStorage
