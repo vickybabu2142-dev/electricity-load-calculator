@@ -618,7 +618,9 @@ const schemaGraph = [
 
         <div class="mt-16 space-y-4">
           <p class="text-sm font-bold uppercase tracking-widest text-text-muted">Prepared by</p>
-          <p class="text-2xl font-bold" style="color:var(--accent)">ElectricityLoadCalculator.com</p>
+          <p class="text-2xl font-bold" style="color:var(--accent)">
+            <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:inherit;">ElectricityLoadCalculator.com</a>
+          </p>
         </div>
 
         <div class="mt-12 grid grid-cols-2 gap-12 max-w-lg mx-auto border-t border-border pt-12">
@@ -822,7 +824,7 @@ const schemaGraph = [
           <h3 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4 border-b border-border pb-2">Usage by Category</h3>
           <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-0.5 border-b-2 border-border">
             <span class="flex-1 text-text-primary">Category</span>
-            <span class="w-24 text-right text-text-primary">kWh / day</span>
+            <span class="w-24 text-right text-text-primary">kWh(unit)/day</span>
             <span class="w-16 text-right text-text-primary">Share</span>
           </div>
           <div id="aprint-breakdown-table" class="space-y-0 text-sm"></div>
@@ -1010,7 +1012,9 @@ const schemaGraph = [
           <div class="flex items-center justify-end gap-6">
             <div class="text-right">
               <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Official Platform</p>
-              <p class="text-sm font-bold text-accent">ElectricityLoadCalculator.com</p>
+              <p class="text-sm font-bold text-accent">
+                <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:inherit;">ElectricityLoadCalculator.com</a>
+              </p>
               <p class="text-[10px] text-text-muted mt-1">Platform Version: <span id="aprint-platform-version-final">v2.0</span></p>
             </div>
             <div class="flex flex-col items-center justify-center gap-2">
@@ -1024,7 +1028,7 @@ const schemaGraph = [
       </div>
 
       <div class="mt-8 pt-6 border-t border-border text-center text-xs text-text-muted">
-         <p>© 2026 ElectricityLoadCalculator.com · Professional Electrical Assessment Platform</p>
+         <p>© 2026 <a href="https://electricityloadcalculator.com" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:inherit;">ElectricityLoadCalculator.com</a> · Professional Electrical Assessment Platform</p>
       </div>
     </div>
   </div>
@@ -1661,7 +1665,7 @@ function initAssessment() {
     let html = `
       <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-1 border-b-2 border-border text-text-muted">
         <span class="flex-1 text-text-primary">Home Appliance</span>
-        <span class="w-24 text-right text-text-primary">kWh / day</span>
+        <span class="w-24 text-right text-text-primary">kWh(unit)/day</span>
       </div>
     `;
     let totalQty = 0;
@@ -1702,7 +1706,7 @@ function initAssessment() {
         </div>
         <div class="text-right">
           <p class="text-lg font-bold font-mono text-accent">${totalKWh.toFixed(2)}</p>
-          <p class="text-[8px] font-bold uppercase tracking-tighter text-text-muted">kWh / Day</p>
+          <p class="text-[8px] font-bold uppercase tracking-tighter text-text-muted">kWh(unit)/day</p>
         </div>
       </div>
     `;

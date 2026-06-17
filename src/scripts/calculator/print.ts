@@ -64,7 +64,7 @@ export function populatePrintAppliances(appliances: Appliance[]): void {
   let html = `
     <div class="flex text-[10px] font-bold uppercase tracking-widest py-2 mb-1 border-b-2 border-border text-text-muted">
       <span class="flex-1">Home Appliance</span>
-      <span class="w-32 text-right">Usage (kWh/day)</span>
+      <span class="w-32 text-right">kWh(unit)/day</span>
     </div>
   `;
 

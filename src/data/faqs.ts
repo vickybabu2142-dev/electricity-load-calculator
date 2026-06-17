@@ -1,66 +1,50 @@
 export const FAQS = [
   {
-    question: "How to calculate electricity load?",
-    answer: "To calculate your total electricity load, sum the wattage of all appliances you intend to run simultaneously. The formula is: Total Load (Watts) = Σ (Appliance Wattage × Quantity). To find energy consumption in units (kWh), use: (Total Watts × Hours of Usage) / 1000."
+    question: "1. What is a kWh (Kilowatt-hour) or \"Unit\" of electricity?",
+    answer: "In utility billing, 1 'unit' of electricity is exactly equal to 1 kWh (Kilowatt-Hour). This measures the total quantity of energy consumed. If a 1,000-Watt (1 kW) appliance runs continuously for 1 hour, it consumes exactly 1 unit (1 kWh) of electricity."
   },
   {
-    question: "How much kWh is in 1 unit?",
-    answer: "In the context of electricity billing, 1 unit is exactly equal to 1 kilowatt-hour (kWh). If an appliance with a 1,000-watt (1 kW) rating runs for one hour, it consumes exactly 1 unit of electricity."
+    question: "2. What is 1 kW load?",
+    answer: "A 1 kW load represents a simultaneous power draw of 1,000 Watts at any single moment. It is a measure of instantaneous demand. For example, running a 1,000W electric iron or ten 100W bulbs at the exact same time creates a 1 kW load on your home's electrical system."
   },
   {
-    question: "What is 1 kW load?",
-    answer: "A 1 kW load represents a power demand of 1,000 watts. This is a measure of instantaneous power. For example, running a 1,000W heater or ten 100W bulbs simultaneously creates a 1 kW load on your electrical system."
+    question: "3. How do I calculate my electricity load?",
+    answer: "List all electrical appliances you intend to run at the same time, find their wattage ratings (usually printed on a label on the back), multiply by quantity, and add them up. Divide the total watts by 1,000 to get your active load in kW. For example, a 1,500W AC and a 500W Refrigerator running together create a 2,000W (or 2 kW) load."
   },
   {
-    question: "How much unit does 3000 watts consume in 1 hour?",
-    answer: "A 3,000-watt load is equivalent to 3 kW. Running this load for 1 hour results in a consumption of 3 units (3 kWh) of electricity. Formula: (3000W × 1h) / 1000 = 3 kWh."
+    question: "4. How much unit does 3000 watts consume in 1 hour?",
+    answer: "A 3,000-Watt load is equal to 3 kW of power demand. Running this load for 1 hour consumes exactly 3 units (or 3 kWh) of electricity. Formula: (3,000 Watts × 1 Hour) / 1,000 = 3 kWh (Units)."
   },
   {
-    question: "What is the load capacity of a 5 kW meter?",
-    answer: "A 5 kW meter is designed to handle a maximum simultaneous demand of 5,000 watts. This capacity allows you to run multiple appliances like an AC (1.5 kW), a refrigerator (0.5 kW), and several lights/fans, provided their combined instantaneous wattage stays below 5 kW."
+    question: "5. What is the load capacity of a 5 kW meter?",
+    answer: "A 5 kW meter is designed to support a maximum simultaneous demand of 5,000 Watts. This allows you to run multiple heavy appliances together—such as a 1.5 kW AC, a 2 kW water geyser, and 1.5 kW of lights and fans—as long as their combined wattage at any single moment stays below 5 kW."
   },
   {
-    question: "How much is 1 kWh per hour?",
-    answer: "1 kWh per hour describes a continuous power draw of 1 kilowatt (1,000 watts). If you consume 1 kWh every hour, your steady-state load is 1,000 watts."
+    question: "6. How do I choose the correct wire (cable) and MCB size for my load?",
+    answer: "Determine your load current by dividing its watts by voltage (Amps = Watts / 230V). Following electrical safety codes, size your breaker to be 125% of this current draw (e.g., 15A current requires a 20A MCB). Choose a copper wire cross-section (in sq mm) rated to handle more current than the MCB to prevent wire overheating."
   },
   {
-    question: "How many watts is 1.5 ton AC?",
-    answer: "A 1.5 ton air conditioner typically consumes between 1,200 to 1,800 watts. Modern 5-star inverter ACs are more efficient and may consume around 1,200-1,400W at peak, while older or non-inverter models can exceed 1,800W."
+    question: "7. How do I determine the right size for a home Inverter and battery backup?",
+    answer: "Sum the wattages of all essential appliances you need during a power cut (e.g., lights, fans, router). Size your Inverter capacity (in kVA) to be 20% to 30% higher than this peak simultaneous load. Select your battery capacity (in Ah) based on the number of backup hours you require."
   },
   {
-    question: "How many watts to run a house for 24 hours?",
-    answer: "Wattage is instantaneous, so you don't 'run watts for 24 hours'—you consume energy (kWh). An average energy-conscious home might consume 12-15 kWh per day. This equates to an average continuous load of approximately 500-600 watts over a 24-hour period."
+    question: "8. How do I calculate the solar panel capacity needed to offset my electricity units?",
+    answer: "Check your monthly utility bill for your average monthly unit consumption in kWh. Divide this monthly consumption by 120 (the average monthly units generated by 1 kW of solar panels in standard climates). For example, consuming 600 units a month requires a 5 kW solar panel array (600 / 120 = 5 kW) to bring your grid bill to zero."
   },
   {
-    question: "What runs up your electric bill the most?",
-    answer: "The biggest contributors to high electric bills are typically heating and cooling appliances: Air Conditioners, Electric Geysers (Water Heaters), Space Heaters, and old, inefficient Refrigerators that run 24/7."
+    question: "9. What runs up your electricity bill the most at home?",
+    answer: "The largest contributors to high utility bills are cooling and heating appliances. Air Conditioners, Water Geysers, Space Heaters, and old double-door Refrigerators (which run 24/7) consume over 75% of your home's total electricity. Switch-level standby leaks (phantom load) account for another 5–10%."
   },
   {
-    question: "How do I choose the right MCB and cable size for my home?",
-    answer: "Choosing the correct MCB (Miniature Circuit Breaker) and cable depends on your total connected load and peak current draw. For safety, the MCB must be rated to protect the wire gauge being used. Our electricity load calculator automatically analyzes your appliance list to recommend specific MCB ratings (e.g., 32A, 63A) and safe cable sizes (e.g., 4mm², 6mm²) based on standard electrical safety guidelines."
+    question: "10. How many watts does a 1.5 Ton AC consume, and how many units does it use?",
+    answer: "A typical 1.5 Ton air conditioner consumes between 1,200W and 1,800W. A modern 5-star inverter AC runs at around 1,200 Watts. If run for 8 hours daily: (1,200W × 1 AC × 8 Hours) / 1,000 = 9.6 kWh (units) consumed per day, or roughly 288 units per month."
   },
   {
-    question: "How can I calculate the inverter and solar panel capacity I need?",
-    answer: "To size an inverter or solar system, you first need to know your total peak load (kW) and daily energy consumption (kWh). A complete assessment with our electricity load calculator provides these values instantly. We recommend an inverter capacity (kVA) that covers your essential peak load and a solar panel array (kW) sized to offset your monthly unit consumption, helping you achieve energy independence."
+    question: "11. Do I need a single-phase or three-phase meter connection for my house?",
+    answer: "Single-phase meters (230V) are standard for connected loads under 5 kW to 7 kW (typical for small apartments/homes). If your calculated load exceeds 7 kW (e.g., you have multiple ACs, a water pump, and induction cooktops running at once), you must upgrade to a three-phase meter (415V) to distribute the load evenly."
   },
   {
-    question: "What is the 3 formula of electricity?",
-    answer: "The three fundamental electrical formulas are: 1. Power (P) = Voltage (V) × Current (I); 2. Voltage (V) = Current (I) × Resistance (R) [Ohm's Law]; 3. Energy (E) = Power (P) × Time (T)."
-  },
-  {
-    question: "How to calculate connected load for a home?",
-    answer: "Connected load is the total wattage of all electrical appliances and equipment installed in a home, regardless of whether they are switched on. To calculate it, list every appliance and its rated wattage, then sum them all up. For example, a home with a 1,500W AC, 200W refrigerator, 500W geyser, and 100W of lights has a connected load of 2,300W (2.3 kW). This value is used by the electricity board to size your meter and set your sanctioned load."
-  },
-  {
-    question: "How to calculate AC load for a room?",
-    answer: "Air conditioner load depends on room size, insulation, and climate. A rough rule: multiply the room area (sq ft) by 25 BTU/hr, then divide by 3,412 to get kW. For a 150 sq ft room: 150 × 25 = 3,750 BTU/hr ≈ 1.1 kW, so a 1 ton inverter AC is sufficient. In hot Indian climates, add 10–15% to the estimate. Our calculator includes pre-loaded wattage values for 1-ton, 1.5-ton, and 2-ton ACs so you can add them directly and see their impact on your total load and electricity bill."
-  },
-  {
-    question: "What is the power consumption of common home appliances?",
-    answer: "Typical appliance power consumption: Air Conditioner 1.5 ton – 1,200–1,800W; Refrigerator (double door) – 150–250W; Geyser/Water Heater – 1,000–3,000W; Washing Machine – 500–800W; Microwave – 800–1,200W; LED Bulb – 7–15W; Ceiling Fan – 40–75W; LED TV 43″ – 60–100W; Laptop – 45–100W; Electric Iron – 1,000–2,000W. Use our appliance power calculator above to select your specific devices and get an accurate total load and monthly electricity bill estimate."
-  },
-  {
-    question: "How to reduce electricity bill at home in India?",
-    answer: "The most effective ways to reduce your electricity bill are: 1. Replace old appliances with BEE 5-star rated models — especially AC, refrigerator, and geyser which account for 60–70% of the bill. 2. Use a 1.5-ton inverter AC instead of a fixed-speed AC. 3. Set AC temperature to 24°C instead of 18°C — each degree saves ~6% energy. 4. Switch to LED lighting throughout the house. 5. Avoid standby power drain by switching off devices at the socket. Use this electricity load calculator to identify your top power consumers, get a customized electrical health score, and discover smart energy-saving insights tailored to your home."
+    question: "12. How do I convert electrical current (Amps) back to power load (kW)?",
+    answer: "For a standard single-phase residential supply (230V), use the formula: Watts = Amps × 230. To get kW, divide the result by 1,000. For example, if your appliance draws 16 Amps: 16 × 230 = 3,680W, which is equal to 3.68 kW of instantaneous load."
   }
 ];
