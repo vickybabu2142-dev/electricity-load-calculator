@@ -53,7 +53,7 @@ export function populatePrintBasic(result: CalculationResult): void {
   if (pOrigEl) pOrigEl.classList.add('hidden');
 
   document.querySelectorAll<HTMLElement>('.print-brand-url').forEach(el => {
-    el.innerHTML = '<a href="https://electricityloadcalculator.com" style="color:inherit;text-decoration:underline;">electricityloadcalculator.com</a>';
+    el.innerHTML = '<a href="https://electricityloadcalculator.com" style="color:var(--accent) !important;text-decoration:underline;">electricityloadcalculator.com</a>';
   });
 }
 

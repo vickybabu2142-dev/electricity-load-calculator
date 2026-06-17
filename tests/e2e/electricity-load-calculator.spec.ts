@@ -240,6 +240,12 @@ test.describe('Electricity Load Calculator', () => {
   // ── Reset ─────────────────────────────────────────────────
 
   test('reset button restores all defaults', async ({ page }) => {
+    // Expand Kitchen category to make page tall enough to scroll, then scroll down
+    await page.locator('button.category-toggle[data-category="Kitchen"]').click();
+    await page.evaluate(() => window.scrollTo(0, 300));
+    const scrollYBefore = await page.evaluate(() => window.scrollY);
+    expect(scrollYBefore).toBeGreaterThan(0);
+
     // Make several changes first (Lighting is already expanded by default)
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await page.locator('#max-kw-input').fill('30');
@@ -250,9 +256,19 @@ test.describe('Electricity Load Calculator', () => {
 
     await expect(page.locator('#total-kw')).toHaveText('0.00');
     await expect(page.locator('#active-count')).toHaveText('0');
+
+    // Verify page scrolled back to top
+    await expect(async () => {
+      const currentScrollY = await page.evaluate(() => window.scrollY);
+      expect(currentScrollY).toBe(0);
+    }).toPass();
   });
 
   test('reset popup cancellation keeps state, and confirmation resets it', async ({ page }) => {
+    // Expand Kitchen category to make page tall enough to scroll, then scroll down
+    await page.locator('button.category-toggle[data-category="Kitchen"]').click();
+    await page.evaluate(() => window.scrollTo(0, 300));
+
     // 1. Increase quantity of LED Bulb (already expanded by default)
     await page.locator('button[aria-label="Increase quantity of LED Bulb"]').click();
     await expect(page.locator('#active-count')).toHaveText('1');
@@ -273,6 +289,10 @@ test.describe('Electricity Load Calculator', () => {
     // 6. Verify state was NOT reset
     await expect(page.locator('#active-count')).toHaveText('1');
 
+    // Scroll position should still be down (not reset on cancel)
+    const scrollYAfterCancel = await page.evaluate(() => window.scrollY);
+    expect(scrollYAfterCancel).toBeGreaterThan(0);
+
     // 7. Click Reset again
     await page.locator('button[data-action="reset-all"]').filter({ visible: true }).first().click();
     await expect(modal).toBeVisible();
@@ -283,6 +303,12 @@ test.describe('Electricity Load Calculator', () => {
     // 9. Verify popup is hidden and state IS reset
     await expect(modal).not.toBeVisible();
     await expect(page.locator('#active-count')).toHaveText('0');
+
+    // 10. Verify page scrolled back to top after confirmation
+    await expect(async () => {
+      const currentScrollY = await page.evaluate(() => window.scrollY);
+      expect(currentScrollY).toBe(0);
+    }).toPass();
   });
 
   // ── Category Collapse / Expand ────────────────────────────
