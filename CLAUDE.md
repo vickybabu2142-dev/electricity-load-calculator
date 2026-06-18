@@ -55,13 +55,12 @@ A Phase 1-complete SEO content cluster. URL hierarchy:
 - **Base font-size:** `html { font-size: clamp(16px, 1vw + 13px, 18px) }` — fluid 16→18px.
 - **Body:** `line-height: 1.75; letter-spacing: 0.01em` — compensates for Hind's condensed glyphs.
 - **Tailwind text scale** is bumped one step up in `@theme` (global.css) — `text-sm` = 15px, `text-base` = 16–18px fluid.
-- Font roles: `font-display` = Khand (headings/UI), `font-body` = Hind (body text), `font-mono` = Geist Mono (data, FAQ answers).
+- Font roles: `font-display` = Khand (headings/UI), `font-body` = Hind (body text), `font-mono` = Geist Mono (data, code, technical readouts).
 
 ### FAQ Answer Convention
-- All FAQ answer `<p>` tags **must** use `.faq-answer` class (defined in `global.css`).
-- Applies Geist Mono, `text-sm`, `line-height: 1.8` — calm and readable.
-- **Never** use ad-hoc `text-sm text-text-muted leading-relaxed` on FAQ answers.
-- Applies to: `FAQSection.astro`, all `recommendations/*.astro`, `knowledge-hub/index.astro`, `knowledge-hub/load-calculation/index.astro`, all Knowledge Hub articles.
+- FAQ answers are styled standardly across pages:
+  - In `FAQSection.astro` and `/recommendations/*.astro` pages: standard `<p class="text-sm text-text-muted leading-relaxed">` elements.
+  - In Knowledge Hub articles: `<div class="faq-body">` elements containing description copy (styled via layout rules).
 
 ## Testing
 

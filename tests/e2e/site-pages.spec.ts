@@ -60,7 +60,7 @@ test.describe('Site Pages & Navigation', () => {
   });
 
   test('Recommendations pages load correctly', async ({ page }) => {
-    const recommendations = ['cable', 'inverter', 'mcb', 'solar'];
+    const recommendations = ['cable', 'inverter', 'mcb', 'solar', 'health-score', 'stabilizer'];
     for (const rec of recommendations) {
       await page.goto(`/recommendations/${rec}`);
       await expect(page.locator('main h1')).toBeVisible({ timeout: 10000 });

@@ -121,13 +121,13 @@ Every article includes: `Article` + `FAQPage` + `BreadcrumbList` + `HowTo` JSON-
 |---|---|---|
 | **Khand** | `font-display` | Headings, labels, buttons, UI chrome |
 | **Hind** | `font-body` | Body copy, descriptions, paragraph text |
-| **Geist Mono** | `font-mono` | Data values, FAQ answers, code, technical readouts |
+| **Geist Mono** | `font-mono` | Data values, code, technical readouts |
 
 ### FAQ Answer Convention
-- All FAQ answer `<p>` elements **must** use the `.faq-answer` utility class (defined in `global.css`).
-- This applies Geist Mono at `text-sm` with `line-height: 1.8` — calm and readable.
-- **Never** use ad-hoc `text-sm text-text-muted leading-relaxed` on FAQ answers; always use `.faq-answer`.
-- Locations: `FAQSection.astro`, all `/recommendations/*.astro` pages, `knowledge-hub/index.astro`, `knowledge-hub/load-calculation/index.astro`, and all Knowledge Hub articles.
+- FAQ answers are styled standardly across pages:
+  - In `FAQSection.astro` and `/recommendations/*.astro` pages: standard `<p class="text-sm text-text-muted leading-relaxed">` elements.
+  - In Knowledge Hub articles: `<div class="faq-body">` elements containing description copy (styled via layout rules).
+
 
 ---
 

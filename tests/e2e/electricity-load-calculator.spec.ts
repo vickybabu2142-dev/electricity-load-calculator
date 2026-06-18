@@ -265,6 +265,9 @@ test.describe('Electricity Load Calculator', () => {
   });
 
   test('reset popup cancellation keeps state, and confirmation resets it', async ({ page }) => {
+    // Set small viewport height to guarantee scrollable page height
+    await page.setViewportSize({ width: 1280, height: 400 });
+
     // Expand Kitchen category to make page tall enough to scroll, then scroll down
     await page.locator('button.category-toggle[data-category="Kitchen"]').click();
     await page.evaluate(() => window.scrollTo(0, 300));

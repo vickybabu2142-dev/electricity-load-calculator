@@ -168,6 +168,21 @@ const {
       <!-- ═══ SIDEBAR (desktop only) ═══ -->
       <aside class="hidden xl:flex flex-col gap-6 w-72 flex-shrink-0 sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pb-4">
 
+        <!-- Sidebar Calculator CTA -->
+        <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+            </div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</p>
+          </div>
+          <p class="font-display font-bold text-base text-text-primary mb-1.5">Electricity Load Calculator</p>
+          <p class="text-xs text-text-muted leading-relaxed mb-4">Get instant load calculation with MCB, cable, inverter & solar recommendations.</p>
+          <a href="/" class="btn-primary w-full text-sm py-2.5 justify-center" data-astro-prefetch="hover">
+            Try Free →
+          </a>
+        </div>
+
         <!-- TOC Widget -->
         {toc.length > 0 && (
           <div class="rounded-xl border border-border bg-card p-5">
@@ -199,38 +214,6 @@ const {
             </nav>
           </div>
         )}
-
-        <!-- Sidebar Calculator CTA -->
-        <div
-          class="rounded-xl border border-border bg-card p-5 relative overflow-hidden"
-          style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);"
-        >
-          <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full pointer-events-none" style="background: radial-gradient(circle, color-mix(in srgb, var(--accent), transparent 75%) 0%, transparent 70%);" aria-hidden="true"></div>
-          <div class="relative">
-            <div class="flex items-center gap-2 mb-3">
-              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true">
-                  <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
-                </svg>
-              </div>
-              <p class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</p>
-            </div>
-            <p class="font-display font-bold text-base text-text-primary mb-1.5">Electricity Load Calculator</p>
-            <p class="text-xs text-text-muted leading-relaxed mb-4">
-              Get your total load in kW, daily kWh, health score, and MCB/cable/solar recommendations instantly.
-            </p>
-            <a
-              href="/"
-              class="btn-primary w-full text-sm py-2.5 justify-center"
-              data-astro-prefetch="hover"
-            >
-              Try Free Calculator
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true">
-                <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd" />
-              </svg>
-            </a>
-          </div>
-        </div>
 
         <!-- Cluster nav widget -->
         <div class="rounded-xl border border-border bg-card p-5">
