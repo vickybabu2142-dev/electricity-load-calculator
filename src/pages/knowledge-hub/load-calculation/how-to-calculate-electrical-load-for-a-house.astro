@@ -1,0 +1,333 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { LOAD_CALC_ARTICLES } from '@/data/knowledgeHub';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 as const },
+  { id: 'why-calculate', label: 'Why Calculate Your Load?', depth: 2 as const },
+  { id: 'step-by-step', label: 'Step-by-Step Guide', depth: 2 as const },
+  { id: 'real-example', label: 'Real Example: 3 BHK Home', depth: 2 as const },
+  { id: 'appliance-table', label: 'Appliance Wattage Reference', depth: 2 as const },
+  { id: 'common-mistakes', label: 'Common Mistakes', depth: 2 as const },
+  { id: 'use-the-calculator', label: 'Use the Calculator', depth: 2 as const },
+  { id: 'faqs', label: 'FAQs', depth: 2 as const },
+];
+
+const relatedArticles = LOAD_CALC_ARTICLES.filter(a => !a.isPillar).slice(0, 4);
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "How to Calculate Electrical Load for a House",
+    "description": "A complete, practical guide to calculating your home electrical load step by step.",
+    "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
+    "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
+    "datePublished": "2025-06-18",
+    "dateModified": "2025-06-18",
+    "url": `${SITE}/knowledge-hub/load-calculation/how-to-calculate-electrical-load-for-a-house`,
+  },
+  {
+    "@type": "HowTo",
+    "name": "How to Calculate Electrical Load for a House",
+    "description": "Step-by-step method to calculate total electrical load for any home.",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "List all appliances", "text": "Write down every electrical appliance and device in your home." },
+      { "@type": "HowToStep", "position": 2, "name": "Find the wattage", "text": "Check the nameplate label on each appliance for its wattage (W) rating." },
+      { "@type": "HowToStep", "position": 3, "name": "Multiply by quantity", "text": "Multiply the wattage by the number of units of each appliance." },
+      { "@type": "HowToStep", "position": 4, "name": "Add all loads together", "text": "Sum up all the individual wattages to get your total load in Watts." },
+      { "@type": "HowToStep", "position": 5, "name": "Convert to kilowatts", "text": "Divide the total Watts by 1,000 to get kilowatts (kW). This is your connected load." },
+    ],
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "How do I calculate electrical load for my house?", "acceptedAnswer": { "@type": "Answer", "text": "List all appliances, note the wattage from the nameplate label, multiply each by quantity, add all together to get total watts, then divide by 1,000 to get kW. This is your connected load." }},
+      { "@type": "Question", "name": "What is a typical home electrical load in India?", "acceptedAnswer": { "@type": "Answer", "text": "A typical 2–3 BHK Indian home without AC has a connected load of 2–4 kW. With 1–2 ACs, it rises to 5–9 kW. Larger homes with multiple ACs can exceed 10 kW." }},
+      { "@type": "Question", "name": "What is connected load?", "acceptedAnswer": { "@type": "Answer", "text": "Connected load is the sum of the wattage ratings of all electrical devices in your home if they were all running simultaneously. It is the maximum possible power demand of your home." }},
+      { "@type": "Question", "name": "How do I find the wattage of an appliance?", "acceptedAnswer": { "@type": "Answer", "text": "Check the silver or white nameplate label on the appliance — it lists wattage (W) or current (A) and voltage (V). For ACs, the label usually shows cooling capacity in tons or BTU; 1 ton = approximately 1,200 W." }},
+      { "@type": "Question", "name": "What happens if I exceed my sanctioned load?", "acceptedAnswer": { "@type": "Answer", "text": "If your actual demand regularly exceeds your sanctioned load from the utility, your MCB or main switch may trip frequently. The utility can also impose penalties. You should apply for a load enhancement from your electricity provider." }},
+    ],
+  },
+];
+
+const applianceData = [
+  { appliance: 'Ceiling Fan', range: '60–80 W', typical: 75 },
+  { appliance: 'LED Bulb (9W)', range: '7–15 W', typical: 10 },
+  { appliance: 'Tube Light (LED)', range: '18–22 W', typical: 20 },
+  { appliance: '1 Ton AC', range: '900–1,200 W', typical: 1100 },
+  { appliance: '1.5 Ton AC', range: '1,400–1,800 W', typical: 1600 },
+  { appliance: '2 Ton AC', range: '1,800–2,400 W', typical: 2000 },
+  { appliance: 'Refrigerator (250L)', range: '150–300 W', typical: 200 },
+  { appliance: 'Washing Machine', range: '300–600 W', typical: 500 },
+  { appliance: 'TV (40" LED)', range: '60–120 W', typical: 90 },
+  { appliance: 'Microwave', range: '800–1,200 W', typical: 1000 },
+  { appliance: 'Electric Geyser', range: '1,500–3,000 W', typical: 2000 },
+  { appliance: 'Laptop', range: '40–80 W', typical: 60 },
+  { appliance: 'Mixer/Grinder', range: '500–750 W', typical: 600 },
+  { appliance: 'Electric Iron', range: '1,000–2,000 W', typical: 1200 },
+  { appliance: 'Water Pump (0.5 HP)', range: '400–500 W', typical: 450 },
+  { appliance: 'Induction Cooktop', range: '1,200–2,000 W', typical: 1400 },
+];
+---
+
+<KnowledgeHubLayout
+  title="How to Calculate Electrical Load for a House | Electrical Knowledge Hub"
+  description="A complete, practical guide to calculating your home's electrical load step by step. Learn the formula, see a real 3 BHK example, and use our free calculator."
+  keywords="how to calculate electrical load for a house, home electrical load calculation, connected load calculation, electrical load formula, kW load calculation home"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+    { label: 'How to Calculate Electrical Load' },
+  ]}
+  toc={toc}
+  readingTime={8}
+  datePublished="2025-06-18"
+  dateModified="2025-06-18"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="load-calculation"
+  clusterTitle="Load Calculation"
+>
+
+  <!-- ① QUICK ANSWER -->
+  <QuickAnswerBox id="quick-answer" heading="Quick Answer">
+    <p>To calculate your home's electrical load: <strong>add up the wattage of every appliance</strong>, multiply each by quantity, sum them all, then divide by 1,000 to get <strong>kilowatts (kW)</strong>. That number is your <strong>connected load</strong>.</p>
+    <p class="mt-2">Example: 3 fans (225W) + 10 bulbs (100W) + 1 fridge (200W) + 1 AC (1,600W) = <strong>2,125W = 2.13 kW connected load.</strong></p>
+  </QuickAnswerBox>
+
+  <!-- ② WHY CALCULATE -->
+  <h2 id="why-calculate">Why Do You Need to Calculate Your Electrical Load?</h2>
+  <p>Most people only think about their electrical load when something goes wrong — the main switch trips, the inverter shuts off, or the electricity bill shoots up. But knowing your load ahead of time helps you:</p>
+  <ul>
+    <li><strong>Choose the right MCB</strong> — size it correctly so it doesn't trip unnecessarily or fail to protect your wiring</li>
+    <li><strong>Select the correct wire gauge</strong> — undersized cables overheat and are a fire risk</li>
+    <li><strong>Plan an inverter or solar system</strong> — you need the load to know what backup capacity you need</li>
+    <li><strong>Apply for the right sanctioned load</strong> from your electricity provider</li>
+    <li><strong>Estimate your monthly electricity bill</strong> and find savings opportunities</li>
+  </ul>
+  <p>Whether you're building a new home, buying a new AC, or planning a solar installation — this calculation is your starting point.</p>
+
+  <!-- ③ STEP BY STEP -->
+  <h2 id="step-by-step">Step-by-Step: How to Calculate Electrical Load</h2>
+  <p>Follow these 5 steps to calculate the total electrical load for any home or building. No engineering background required.</p>
+
+  <div class="step-card">
+    <div class="step-number">1</div>
+    <div>
+      <strong class="text-text-primary block mb-1">List all electrical appliances</strong>
+      <p class="text-text-muted text-sm m-0">Go room by room and list every electrical device — fans, lights, AC, TV, fridge, washing machine, geysers, pumps, and everything else. Don't forget small devices like phone chargers, routers, and set-top boxes.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">2</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Find the wattage of each appliance</strong>
+      <p class="text-text-muted text-sm m-0">Check the <strong>nameplate label</strong> on the appliance — it will show the wattage in watts (W) or you can calculate it from voltage × current (V × A). For ACs: 1 ton = ~1,200W, 1.5 ton = ~1,600W. Use our <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances">Appliance Wattage Chart</a> if you can't find the label.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">3</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Multiply wattage by quantity</strong>
+      <p class="text-text-muted text-sm m-0">If you have 3 ceiling fans at 75W each, the total for fans = 3 × 75 = 225W. Repeat for each appliance type.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">4</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Add up all the loads</strong>
+      <p class="text-text-muted text-sm m-0">Sum all the individual wattages from Step 3. The result is your <strong>total connected load in Watts</strong>.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">5</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Convert to kilowatts (kW)</strong>
+      <p class="text-text-muted text-sm m-0">Divide the total Watts by 1,000. The result is your <strong>connected load in kW</strong> — the standard unit used by electricians and utilities. This is the number you use for MCB sizing, cable sizing, and inverter planning.</p>
+      <p class="text-text-muted text-sm mt-2 font-mono">kW = Total Watts ÷ 1,000</p>
+    </div>
+  </div>
+
+  <!-- ④ REAL EXAMPLE -->
+  <h2 id="real-example">Real Example: Calculating Load for a 3 BHK Home</h2>
+  <p>Let's walk through a real calculation for a typical 3-bedroom home in India with one 1.5-ton AC.</p>
+
+  <div class="example-box">
+    <p class="example-label">📋 Real Example — 3 BHK Home (with 1 AC)</p>
+    <div class="table-wrap" style="margin: 0;">
+      <table style="margin: 0;">
+        <thead>
+          <tr>
+            <th>Appliance</th>
+            <th>Quantity</th>
+            <th>Watts Each</th>
+            <th>Total Watts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Ceiling Fan</td><td>4</td><td>75W</td><td><strong>300W</strong></td></tr>
+          <tr><td>LED Bulb</td><td>12</td><td>10W</td><td><strong>120W</strong></td></tr>
+          <tr><td>Tube Light (LED)</td><td>4</td><td>20W</td><td><strong>80W</strong></td></tr>
+          <tr><td>Refrigerator (250L)</td><td>1</td><td>200W</td><td><strong>200W</strong></td></tr>
+          <tr><td>1.5 Ton AC</td><td>1</td><td>1,600W</td><td><strong>1,600W</strong></td></tr>
+          <tr><td>Television (43")</td><td>1</td><td>90W</td><td><strong>90W</strong></td></tr>
+          <tr><td>Washing Machine</td><td>1</td><td>500W</td><td><strong>500W</strong></td></tr>
+          <tr><td>Water Pump (0.5 HP)</td><td>1</td><td>450W</td><td><strong>450W</strong></td></tr>
+          <tr><td>Laptop</td><td>2</td><td>60W</td><td><strong>120W</strong></td></tr>
+          <tr><td>Mixer/Grinder</td><td>1</td><td>600W</td><td><strong>600W</strong></td></tr>
+          <tr style="background: color-mix(in srgb, var(--accent), transparent 92%);"><td colspan="3"><strong>Total Connected Load</strong></td><td><strong style="color: var(--accent); font-size: 1.1em;">4,060W</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-4 p-3 rounded-lg bg-base border border-border">
+      <p class="font-mono text-sm text-text-primary m-0">4,060 W ÷ 1,000 = <strong class="text-accent text-base">4.06 kW</strong> Connected Load</p>
+      <p class="text-xs text-text-muted mt-1 m-0">This home would typically need a 32A MCB and 4 sq mm main cable. Use our calculator for exact recommendations.</p>
+    </div>
+  </div>
+
+  <KnowledgeHubCTA variant="inline" />
+
+  <!-- ⑤ APPLIANCE TABLE -->
+  <h2 id="appliance-table">Appliance Wattage Reference Table</h2>
+  <p>Use this quick reference when listing your appliances. For a complete chart with all categories, see our <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances">Electrical Load Chart for Home Appliances</a>.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th>Power Range</th>
+          <th>Typical Wattage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {applianceData.map((row, i) => (
+          <tr>
+            <td>{row.appliance}</td>
+            <td class="text-text-muted">{row.range}</td>
+            <td><code>{row.typical}W</code></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ⑥ COMMON MISTAKES -->
+  <h2 id="common-mistakes">Common Load Calculation Mistakes</h2>
+  <p>Avoid these errors that lead to wrong MCB sizing, cable selection, and inverter planning:</p>
+
+  <div class="mistake-card">
+    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Forgetting the starting current surge</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">Motors (ACs, pumps, refrigerators) draw 3–7× their rated current at startup. This doesn't affect connected load calculation but matters when sizing MCBs. Always add a 25–30% safety margin to your total load when selecting an MCB.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Using wrong wattage for ACs</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">Air conditioner capacity is listed in tons or BTU/hr, not watts. 1 ton ≠ 1,000 watts. 1 ton of AC = approximately 1,100–1,200W of electrical consumption. Check the actual input power on the AC's nameplate or manual.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Ignoring future appliances</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">If you plan to add an AC, geyser, or EV charger in the next year, include their load now. Undersizing your main connection today means applying for a load enhancement later — which takes time and costs money.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Confusing connected load with demand load</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">Connected load assumes everything runs simultaneously — which never actually happens. Demand load accounts for diversity (not all devices run at once). Learn more in our <a href="/knowledge-hub/load-calculation/connected-load-vs-demand-load">Connected Load vs Demand Load guide</a>.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Not accounting for old, inefficient appliances</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">An old 5-star refrigerator from 2010 might consume 350W, while a new one consumes 150W. Old appliances can significantly inflate your load. When calculating, use the actual wattage from the label — not generic values from the internet.</p>
+    </div>
+  </div>
+
+  <!-- ⑦ CALCULATOR CTA -->
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <!-- ⑧ FAQs -->
+  <h2 id="faqs">Frequently Asked Questions</h2>
+  <div class="kh-faq">
+    <details>
+      <summary>
+        What is connected load vs demand load?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">Connected load is the total wattage if every device in your home runs at the same time. Demand load (or maximum demand) is the actual peak power drawn in practice — typically 60–80% of connected load, since not all devices run simultaneously. Read our full guide on <a href="/knowledge-hub/load-calculation/connected-load-vs-demand-load">Connected Load vs Demand Load</a>.</div>
+    </details>
+    <details>
+      <summary>
+        What is a typical home electrical load in India?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">A typical 2 BHK home without AC has a connected load of 2–3 kW. With 1 AC, it rises to 4–5 kW. A 3 BHK with 2 ACs can have 6–8 kW. The exact number depends on the number, type, and ratings of your specific appliances.</div>
+    </details>
+    <details>
+      <summary>
+        How do I find the wattage of an appliance?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">Check the silver or white nameplate label on the appliance body — it shows rated power in Watts (W). If it shows Amperes (A) and Voltage (V), multiply them: Watts = Volts × Amps. For ACs, look at "Input Power" in the specification sheet, not the cooling capacity. You can also use our <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances">Appliance Wattage Chart</a> for quick estimates.</div>
+    </details>
+    <details>
+      <summary>
+        What happens if my load exceeds my sanctioned load?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">If your actual demand regularly exceeds your sanctioned load (the load approved by the utility), your MCB or main switch may trip frequently. The utility can also impose penalties for running loads higher than sanctioned. You should apply for a load enhancement from your electricity distribution company (DISCOM).</div>
+    </details>
+    <details>
+      <summary>
+        How many units (kWh) does my load consume per month?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">Monthly units = (Total Watts × Average hours/day × 30) ÷ 1,000. For example: 4,000W running on average 6 hours/day = 4,000 × 6 × 30 ÷ 1,000 = 720 kWh/month. Our calculator shows you both kW (load) and kWh (consumption) instantly. See also: <a href="/knowledge-hub/load-calculation/how-many-units-of-electricity-does-a-home-use">How Many Units Does a Home Use?</a></div>
+    </details>
+    <details>
+      <summary>
+        Do I need a single-phase or three-phase connection?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">For most Indian homes with a connected load under 10 kW, a single-phase connection (230V) is sufficient. If your total load exceeds 10 kW, or you have heavy three-phase equipment, you'll need a three-phase connection (415V). Learn more in our <a href="/knowledge-hub/load-calculation/single-phase-vs-three-phase-load">Single Phase vs Three Phase guide</a>.</div>
+    </details>
+  </div>
+
+  <!-- Sidebar nav slot -->
+  <Fragment slot="sidebar-nav">
+    {LOAD_CALC_ARTICLES.map(a => (
+      <a
+        href={`/knowledge-hub/load-calculation/${a.slug}`}
+        class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.isPillar ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+        data-astro-prefetch="hover"
+      >
+        <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.isPillar ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+        {a.title}
+      </a>
+    ))}
+  </Fragment>
+</KnowledgeHubLayout>

@@ -1,0 +1,255 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { LOAD_CALC_ARTICLES } from '@/data/knowledgeHub';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 as const },
+  { id: 'what-is-connected-load', label: 'What Is Connected Load?', depth: 2 as const },
+  { id: 'what-is-demand-load', label: 'What Is Demand Load?', depth: 2 as const },
+  { id: 'diversity-factor', label: 'The Diversity Factor', depth: 2 as const },
+  { id: 'real-example', label: 'Real Example', depth: 2 as const },
+  { id: 'comparison-table', label: 'Comparison Table', depth: 2 as const },
+  { id: 'why-it-matters', label: 'Why It Matters for Planning', depth: 2 as const },
+  { id: 'common-mistakes', label: 'Common Mistakes', depth: 2 as const },
+  { id: 'faqs', label: 'FAQs', depth: 2 as const },
+];
+
+const relatedArticles = LOAD_CALC_ARTICLES.filter(a =>
+  ['how-to-calculate-electrical-load-for-a-house', 'electrical-load-chart-for-home-appliances', 'single-phase-vs-three-phase-load'].includes(a.slug)
+);
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "Connected Load vs Demand Load Explained",
+    "description": "Understand the difference between connected load and demand load — and why it matters for electrical planning, MCB sizing, and utility billing.",
+    "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
+    "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
+    "datePublished": "2025-06-18",
+    "dateModified": "2025-06-18",
+    "url": `${SITE}/knowledge-hub/load-calculation/connected-load-vs-demand-load`,
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is connected load in electricity?", "acceptedAnswer": { "@type": "Answer", "text": "Connected load is the sum of the wattage ratings of all electrical devices in a building if they were all switched on simultaneously. It represents the maximum possible power demand." }},
+      { "@type": "Question", "name": "What is maximum demand in electricity?", "acceptedAnswer": { "@type": "Answer", "text": "Maximum demand (or demand load) is the highest actual power drawn by a building at any given moment. It is typically 60–80% of the connected load because not all devices run at the same time." }},
+      { "@type": "Question", "name": "What is the diversity factor in electrical load?", "acceptedAnswer": { "@type": "Answer", "text": "The diversity factor is the ratio of connected load to maximum demand. A diversity factor of 0.7 means the actual peak demand is 70% of the theoretical connected load. Typical residential diversity factors are 0.6–0.8." }},
+    ],
+  },
+];
+---
+
+<KnowledgeHubLayout
+  title="Connected Load vs Demand Load Explained | Electrical Knowledge Hub"
+  description="Learn the difference between connected load and demand load in simple terms. Understand the diversity factor and why it matters for MCB sizing, cable selection, and utility billing."
+  keywords="connected load vs demand load, maximum demand, diversity factor electrical, connected load definition, demand load electricity, electrical load planning"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+    { label: 'Connected Load vs Demand Load' },
+  ]}
+  toc={toc}
+  readingTime={5}
+  datePublished="2025-06-18"
+  dateModified="2025-06-18"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="load-calculation"
+  clusterTitle="Load Calculation"
+>
+
+  <QuickAnswerBox id="quick-answer">
+    <p><strong>Connected load</strong> = total wattage of ALL appliances if switched on simultaneously (the theoretical maximum).</p>
+    <p class="mt-2"><strong>Demand load (Maximum Demand)</strong> = the actual highest power drawn at any time in practice — typically <strong>60–80% of connected load</strong>, because not everything runs at once.</p>
+    <p class="mt-2">The ratio between them is called the <strong>diversity factor</strong>.</p>
+  </QuickAnswerBox>
+
+  <h2 id="what-is-connected-load">What Is Connected Load?</h2>
+  <p>Connected load is the <strong>total rated wattage of all electrical equipment</strong> in a building or installation, assuming every single device is switched on at the same time.</p>
+  <p>It is calculated by simply adding up the nameplate wattage of every appliance:</p>
+  <div class="example-box">
+    <p class="example-label">Formula</p>
+    <p class="font-mono text-text-primary m-0">Connected Load (W) = Sum of all appliance wattages</p>
+    <p class="font-mono text-accent text-sm mt-1 m-0">Connected Load (kW) = Connected Load (W) ÷ 1,000</p>
+  </div>
+  <p>Connected load is the number used when:</p>
+  <ul>
+    <li>Applying for a new electricity connection from the utility</li>
+    <li>Calculating the maximum wire size needed for the main cable</li>
+    <li>Determining the rated capacity for an electrical panel</li>
+    <li>Planning for worst-case electrical safety (fire protection, overload protection)</li>
+  </ul>
+  <p>Think of connected load as the <strong>ceiling</strong> — the maximum power your home could ever draw simultaneously.</p>
+
+  <h2 id="what-is-demand-load">What Is Demand Load (Maximum Demand)?</h2>
+  <p>Demand load — also called <strong>maximum demand</strong> or <strong>actual demand</strong> — is the <strong>highest power actually drawn</strong> by a building at any given point in time.</p>
+  <p>In real life, you never run all your appliances simultaneously. While the AC is on, the geyser is off. While the washing machine runs, the iron is put away. This natural variation means demand load is <strong>always lower than connected load</strong>.</p>
+  <p>Demand load matters for:</p>
+  <ul>
+    <li><strong>MCB sizing</strong> — your main circuit breaker protects against sustained overloads, not theoretical maximums</li>
+    <li><strong>Inverter and generator sizing</strong> — you need to power your actual running load, not your entire connected load</li>
+    <li><strong>Utility billing</strong> — large commercial and industrial consumers are billed on maximum demand (in kVA) measured over 15-minute intervals</li>
+    <li><strong>Transformer sizing</strong> — distribution engineers use demand load, not connected load, to size transformers for neighborhoods</li>
+  </ul>
+
+  <h2 id="diversity-factor">The Diversity Factor — The Key to Understanding Both</h2>
+  <p>The diversity factor (or demand factor) is the number that bridges connected load and demand load:</p>
+
+  <div class="example-box">
+    <p class="example-label">Diversity Factor Formula</p>
+    <p class="font-mono text-text-primary m-0">Diversity Factor = Maximum Demand ÷ Connected Load</p>
+    <p class="text-sm mt-3 m-0" style="color: var(--text-muted);">A diversity factor of 0.7 means the actual peak demand is 70% of the total connected load.</p>
+  </div>
+
+  <p>Typical diversity factors for different building types:</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Building Type</th>
+          <th>Typical Diversity Factor</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Residential (home)</td><td><code>0.6 – 0.8</code></td><td>60–80% of total load runs at peak</td></tr>
+        <tr><td>Small commercial shop</td><td><code>0.7 – 0.9</code></td><td>More devices run simultaneously</td></tr>
+        <tr><td>Office building</td><td><code>0.65 – 0.75</code></td><td>Work hours create moderate peaks</td></tr>
+        <tr><td>Hotel / Hospital</td><td><code>0.8 – 0.95</code></td><td>High simultaneity; safety critical</td></tr>
+        <tr><td>Industrial facility</td><td><code>0.75 – 0.95</code></td><td>Production loads are predictable</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="real-example">Real Example: A 3 BHK Home</h2>
+  <p>Let's say the 3 BHK home from our <a href="/knowledge-hub/load-calculation/how-to-calculate-electrical-load-for-a-house">load calculation guide</a> has a total connected load of 4,060W (4.06 kW).</p>
+
+  <div class="example-box">
+    <p class="example-label">📋 Connected Load vs Demand Load — 3 BHK Home</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem;">
+      <div style="padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border); background: var(--bg-base);">
+        <p style="font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin: 0 0 0.5rem 0;">Connected Load</p>
+        <p style="font-family: var(--font-display); font-weight: 700; font-size: 1.75rem; color: var(--text-primary); margin: 0 0 0.25rem 0;">4.06 kW</p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">All appliances running simultaneously (theoretical)</p>
+      </div>
+      <div style="padding: 1rem; border-radius: 0.5rem; border: 1px solid color-mix(in srgb, var(--accent), transparent 50%); background: color-mix(in srgb, var(--accent), transparent 94%);">
+        <p style="font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin: 0 0 0.5rem 0;">Max Demand (0.7 factor)</p>
+        <p style="font-family: var(--font-display); font-weight: 700; font-size: 1.75rem; color: var(--accent); margin: 0 0 0.25rem 0;">2.84 kW</p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Actual peak load in practice</p>
+      </div>
+    </div>
+    <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0.75rem 0 0 0;">4.06 kW × 0.7 diversity factor = 2.84 kW maximum demand</p>
+  </div>
+
+  <p><strong>What this means in practice:</strong></p>
+  <ul>
+    <li>You'd size your <strong>main cable</strong> for the connected load (4.06 kW) for safety</li>
+    <li>You'd size your <strong>MCB</strong> with a 25% safety margin over max demand: 2.84 × 1.25 = 3.55 kW → a 32A MCB at 230V ≈ 7.36 kW, which is adequate</li>
+    <li>You'd size an <strong>inverter</strong> for max demand plus startup surge: ~3.5–4 kW inverter</li>
+  </ul>
+
+  <h2 id="comparison-table">Connected Load vs Demand Load — Full Comparison</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>Connected Load</th>
+          <th>Demand Load (Max Demand)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Definition</strong></td><td>Sum of all device wattages at full capacity</td><td>Highest actual power drawn at any moment</td></tr>
+        <tr><td><strong>Value</strong></td><td>Fixed (doesn't change)</td><td>Variable (depends on usage pattern)</td></tr>
+        <tr><td><strong>vs. Connected Load</strong></td><td>—</td><td>Always lower (60–95% of connected load)</td></tr>
+        <tr><td><strong>Unit</strong></td><td>W or kW</td><td>W, kW, or kVA</td></tr>
+        <tr><td><strong>Used for</strong></td><td>Utility application, safety fusing, cable sizing</td><td>MCB sizing, inverter sizing, billing (HT consumers)</td></tr>
+        <tr><td><strong>Measured by</strong></td><td>Calculated from nameplate data</td><td>Measured by demand meter or energy analyzer</td></tr>
+        <tr><td><strong>Indian context</strong></td><td>Required for new connection application (kW)</td><td>Used in industrial/commercial tariff billing</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="why-it-matters">Why It Matters for Electrical Planning</h2>
+  <p>Understanding both values helps you make smarter decisions:</p>
+  <ul>
+    <li><strong>Applying for a new connection:</strong> Electricity boards ask for your connected load. Be accurate — if you understate it, your MCB may trip when you run multiple appliances. If you overstate it, you pay higher fixed charges.</li>
+    <li><strong>Sizing an inverter or generator:</strong> Use demand load — you don't need to power everything simultaneously. A 4 kW inverter is often sufficient for a home with 6+ kW connected load.</li>
+    <li><strong>Designing wiring:</strong> Size cables for the connected load with safety margins. Size MCBs for expected demand load with a startup surge factor.</li>
+    <li><strong>Solar system sizing:</strong> Plan solar based on average demand load during the day, not peak connected load.</li>
+  </ul>
+
+  <KnowledgeHubCTA variant="inline" />
+
+  <h2 id="common-mistakes">Common Mistakes</h2>
+  <div class="mistake-card">
+    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Sizing an inverter for connected load instead of demand load</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">If your connected load is 6 kW, you don't need a 6 kW inverter. Your actual peak demand might be 4 kW. A well-designed 5 kW inverter with startup surge capacity would be sufficient and cost less.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Applying for too little sanctioned load</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">Some people understate their connected load to pay lower fixed charges. If demand regularly exceeds the sanctioned load, the MCB trips — causing inconvenience and potentially damaging sensitive electronics.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Ignoring startup (inrush) current</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">Motors (AC compressors, pumps) draw 3–7× rated current at startup. This is a very short spike — but it contributes to peak demand and must be factored into MCB and inverter sizing. This is why you add a 25–30% safety margin above calculated demand load.</p>
+    </div>
+  </div>
+
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <h2 id="faqs">Frequently Asked Questions</h2>
+  <div class="kh-faq">
+    <details>
+      <summary>What is connected load in electricity?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Connected load is the sum of the wattage ratings of all electrical devices in a building if they were all switched on at the same time. For example, if you have 10 lights at 10W each, 1 AC at 1,600W, and 1 fridge at 200W, your connected load = 100 + 1,600 + 200 = 1,900W = 1.9 kW.</div>
+    </details>
+    <details>
+      <summary>What is maximum demand in electricity?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Maximum demand is the highest actual power drawn by a building at any given moment, measured over a short interval (typically 15–30 minutes). For residential users, it's usually 60–80% of connected load. Large commercial consumers are billed based on maximum demand in kVA.</div>
+    </details>
+    <details>
+      <summary>What is a good diversity factor for a home?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">A diversity factor of 0.6–0.8 is typical for a residential home. This means the actual peak demand is 60–80% of the total connected load. Homes with more occupants and consistent usage patterns tend to have higher diversity factors.</div>
+    </details>
+    <details>
+      <summary>Does the electricity board charge based on connected load or demand load?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">For residential consumers in India, billing is primarily based on energy consumed (kWh units). However, the fixed monthly charge (demand charge) is linked to the sanctioned connected load (kW). Large HT commercial/industrial consumers are additionally billed on maximum demand (kVA) using a demand meter.</div>
+    </details>
+    <details>
+      <summary>How do I use connected load vs demand load when sizing an inverter?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Size your inverter based on the maximum demand load plus a 25% startup surge buffer — not on the connected load. For example, if your connected load is 5 kW and diversity factor is 0.7, your demand load is 3.5 kW. Add 25%: 3.5 × 1.25 = 4.375 kW. Choose the next standard size — a 5 kW inverter.</div>
+    </details>
+  </div>
+
+  <Fragment slot="sidebar-nav">
+    {LOAD_CALC_ARTICLES.map(a => (
+      <a
+        href={`/knowledge-hub/load-calculation/${a.slug}`}
+        class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.slug === 'connected-load-vs-demand-load' ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+        data-astro-prefetch="hover"
+      >
+        <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.slug === 'connected-load-vs-demand-load' ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+        {a.title}
+      </a>
+    ))}
+  </Fragment>
+</KnowledgeHubLayout>

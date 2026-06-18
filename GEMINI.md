@@ -23,8 +23,9 @@
 - `src/layouts/`: Global HTML shell (`BaseLayout.astro`) with immediate theme injection.
 - `src/pages/`: 
   - `index.astro`: Main calculator interface.
-  - `assessment.astro`: Deep-dive electrical assessment report.
+  - `assessment.astro`: Deep-dive electrical assessment report (noindex, excluded from sitemap — no meaningful content without calculator data).
   - `recommendations/`: Detailed sizing guides based on load.
+  - `knowledge-hub/`: SEO content cluster (see Knowledge Hub section below).
   - `about-us.astro`, `contact-us.astro`, `privacy-policy.astro`, `terms-conditions.astro`, `404.astro`.
 - `src/styles/`: Global CSS (`global.css`) with Tailwind `@theme` and print overrides.
 - `src/utils/`: 
@@ -81,6 +82,63 @@ To prevent code smell regression, adhere strictly to these architectural practic
 3. **Site Navigation:** Playwright tests for all static pages, 404, and cross-page data persistence (Assessment).
 4. **Theme Logic:** Verification of theme toggling and persistence.
 5. **Load Level Logic:** Verification of badge updates (Light/Moderate/Heavy Load).
+
+## Knowledge Hub
+
+### URL Structure
+```
+/knowledge-hub                          → Hub Homepage
+/knowledge-hub/load-calculation         → Cluster Landing Page
+/knowledge-hub/load-calculation/[slug]  → Individual Articles (6 articles)
+/knowledge-hub/mcb-sizing               → Phase 2 stub
+/knowledge-hub/wire-sizing              → Phase 2 stub
+/knowledge-hub/solar-inverter           → Phase 2 stub
+```
+
+### Phase Status
+- **Phase 1 (Complete):** Hub homepage + Load Calculation cluster (6 full articles) + 3 Phase 2 stubs.
+- **Phase 2 (Pending):** MCB Sizing, Wire Sizing, Solar & Inverter clusters — full articles.
+
+### Key Files
+- `src/data/knowledgeHub.ts` — Cluster metadata & article registry (single source of truth).
+- `src/layouts/KnowledgeHubLayout.astro` — Article layout with sticky TOC sidebar, breadcrumbs, reading time.
+- `src/components/ClusterCard.astro`, `QuickAnswerBox.astro`, `KnowledgeHubCTA.astro` — Shared hub components.
+
+### SEO Per Article
+Every article includes: `Article` + `FAQPage` + `BreadcrumbList` + `HowTo` JSON-LD schemas, single H1, descriptive meta description, internal links to calculator and cluster page.
+
+---
+
+## Typography & Readability
+
+### Base Font Scale
+- `html { font-size: clamp(16px, 1vw + 13px, 18px) }` — fluid, scales 16px (mobile) → 18px (desktop).
+- `body { line-height: 1.75; letter-spacing: 0.01em }` — open tracking compensates for Hind's condensed glyphs.
+- All Tailwind `text-*` utilities are overridden in `@theme` (global.css) to sit one step larger than defaults.
+
+### Font Roles
+| Font | Variable | Usage |
+|---|---|---|
+| **Khand** | `font-display` | Headings, labels, buttons, UI chrome |
+| **Hind** | `font-body` | Body copy, descriptions, paragraph text |
+| **Geist Mono** | `font-mono` | Data values, FAQ answers, code, technical readouts |
+
+### FAQ Answer Convention
+- All FAQ answer `<p>` elements **must** use the `.faq-answer` utility class (defined in `global.css`).
+- This applies Geist Mono at `text-sm` with `line-height: 1.8` — calm and readable.
+- **Never** use ad-hoc `text-sm text-text-muted leading-relaxed` on FAQ answers; always use `.faq-answer`.
+- Locations: `FAQSection.astro`, all `/recommendations/*.astro` pages, `knowledge-hub/index.astro`, `knowledge-hub/load-calculation/index.astro`, and all Knowledge Hub articles.
+
+---
+
+## Sitemap & Indexing Rules
+
+- Sitemap filter is in `astro.config.mjs`. Currently excludes: `/404` and `/assessment`.
+- `/assessment` is **excluded** from sitemap and has `noindex={true}` — Google rejected it (no data without calculator state).
+- All `/knowledge-hub/**` pages are **included** in the sitemap (SEO content).
+- When adding new pages: indexable content pages need no action (included by default). Add to the filter exclusion list only for pages that are dynamic/stateless like assessment.
+
+---
 
 ## Commands
 - `npm run dev`: Start local development server

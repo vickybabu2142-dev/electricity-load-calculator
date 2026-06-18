@@ -132,6 +132,22 @@
   --font-body: "Hind", "system-ui", sans-serif;
   --font-mono: "Geist Mono", monospace;
 
+  /* ── Fluid Type Scale ──────────────────────────────────────────
+     Bumped one step up from Tailwind defaults to correct for
+     Hind's visual density. All units relative to the fluid html
+     font-size so they scale automatically with the viewport.
+  ─────────────────────────────────────────────────────────────── */
+  --text-xs:   0.8125rem;   /* ~13px  (was 12px) */
+  --text-sm:   0.9375rem;   /* ~15px  (was 14px) */
+  --text-base: 1rem;        /* ~16-18px fluid    */
+  --text-md:   1.0625rem;   /* ~17px  new rung   */
+  --text-lg:   1.1875rem;   /* ~19px  (was 18px) */
+  --text-xl:   1.3125rem;   /* ~21px  (was 20px) */
+  --text-2xl:  1.5625rem;   /* ~25px  (was 24px) */
+  --text-3xl:  1.9375rem;   /* ~31px  (was 30px) */
+  --text-4xl:  2.3125rem;   /* ~37px  (was 36px) */
+  --text-5xl:  3rem;        /* ~48-54px fluid    */
+
   --color-base: var(--bg-base);
   --color-card: var(--bg-card);
   --color-card-hover: var(--bg-card-hover);
@@ -222,10 +238,15 @@ body.is-empty-state [data-rows-container] > :first-child .stepper-hint {
 
 html {
   scroll-behavior: smooth;
+  /* Fluid base: scales from 16px on mobile → 18px on wide desktop */
+  font-size: clamp(16px, 1vw + 13px, 18px);
 }
 
 body {
   font-family: 'Hind', sans-serif;
+  font-size: 1rem;          /* inherits fluid html font-size */
+  line-height: 1.75;        /* comfortable reading rhythm */
+  letter-spacing: 0.01em;   /* slight open-tracking for Hind at body size */
   background-color: var(--bg-base);
   color: var(--text-primary);
   min-height: 100vh;
@@ -404,6 +425,26 @@ textarea:focus {
 /* Ensure hidden forms stay hidden even with md:flex */
 .add-appliance-form.hidden {
   display: none !important;
+}
+
+/* ── FAQ Answer Typography ───────────────────────────────────────
+   Geist Mono gives FAQ answers a calm, technical-document feel —
+   easier to read than the condensed Hind body font at small sizes.
+──────────────────────────────────────────────────────────────── */
+.faq-question {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);   /* ~15px fluid */
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0;
+}
+
+.faq-answer {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);   /* ~15px fluid */
+  line-height: 1.8;
+  color: var(--text-muted);
+  letter-spacing: 0;           /* mono already has good glyph spacing */
 }
 
 /* Global Interactive Elements */

@@ -1,0 +1,79 @@
+---
+/**
+ * ClusterCard — Topic cluster card used on the Knowledge Hub homepage.
+ */
+interface Props {
+  slug: string;
+  title: string;
+  shortTitle: string;
+  description: string;
+  iconPath: string;
+  articleCount: number;
+  comingSoon?: boolean;
+}
+const { slug, title, shortTitle, description, iconPath, articleCount, comingSoon = false } = Astro.props;
+const href = `/knowledge-hub/${slug}`;
+---
+
+<a
+  href={comingSoon ? undefined : href}
+  class:list={[
+    'group block rounded-xl border border-border bg-card p-6 transition-all duration-300',
+    comingSoon
+      ? 'opacity-60 cursor-not-allowed'
+      : 'hover:border-accent/40 hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+  ]}
+  style={!comingSoon ? 'box-shadow: 0 2px 16px -6px color-mix(in srgb, var(--accent), transparent 85%);' : ''}
+  aria-label={comingSoon ? `${title} — Coming Soon` : `Explore ${title}`}
+  tabindex={comingSoon ? -1 : 0}
+>
+  <!-- Icon + Coming soon badge -->
+  <div class="flex items-start justify-between mb-4">
+    <div
+      class="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-base transition-colors duration-300"
+      style={!comingSoon ? 'group-hover:border-color: color-mix(in srgb, var(--accent), transparent 50%);' : ''}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill={slug === 'load-calculation' ? 'currentColor' : 'none'}
+        stroke={slug !== 'load-calculation' ? 'currentColor' : undefined}
+        stroke-width={slug !== 'load-calculation' ? '2' : undefined}
+        stroke-linecap={slug !== 'load-calculation' ? 'round' : undefined}
+        stroke-linejoin={slug !== 'load-calculation' ? 'round' : undefined}
+        class="w-5 h-5 text-accent"
+        aria-hidden="true"
+      >
+        <path d={iconPath} />
+      </svg>
+    </div>
+    {comingSoon && (
+      <span class="text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-border text-text-faint">
+        Coming Soon
+      </span>
+    )}
+    {!comingSoon && (
+      <span class="text-[10px] font-mono text-text-faint">
+        {articleCount} {articleCount === 1 ? 'guide' : 'guides'}
+      </span>
+    )}
+  </div>
+
+  <!-- Title -->
+  <h3 class:list={['font-display font-bold text-lg text-text-primary mb-2 transition-colors duration-200', !comingSoon && 'group-hover:text-accent']}>
+    {shortTitle}
+  </h3>
+
+  <!-- Description -->
+  <p class="text-sm text-text-muted leading-relaxed line-clamp-3">{description}</p>
+
+  <!-- Arrow -->
+  {!comingSoon && (
+    <div class="mt-4 flex items-center gap-1.5 text-accent text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <span>Explore guides</span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true">
+        <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd" />
+      </svg>
+    </div>
+  )}
+</a>

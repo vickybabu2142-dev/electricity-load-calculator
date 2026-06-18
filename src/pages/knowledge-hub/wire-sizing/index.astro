@@ -1,0 +1,231 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+
+export const prerender = true;
+
+const comingTopics = [
+  {
+    icon: '📐',
+    title: 'How to Choose the Right Wire Gauge',
+    desc: 'A practical guide to selecting copper wire cross-section (sq.mm) based on current load, cable run length, and Indian wiring standards.',
+  },
+  {
+    icon: '❄️',
+    title: 'Cable Sizing for Air Conditioners',
+    desc: 'Correct wire sizes for 1 Ton, 1.5 Ton, and 2 Ton AC units — including outdoor-to-indoor run cable, main feed, and circuit breaker requirements.',
+  },
+  {
+    icon: '🔶',
+    title: 'Copper vs Aluminium Wiring: What to Use',
+    desc: 'The pros, cons, cost differences, and safety implications of copper vs aluminium conductors for Indian residential and commercial wiring.',
+  },
+  {
+    icon: '📏',
+    title: 'Voltage Drop Calculation for Long Cable Runs',
+    desc: 'How to calculate voltage drop over distance and ensure your appliances at the far end of a long cable run receive adequate voltage.',
+  },
+  {
+    icon: '🏗️',
+    title: 'Cable Sizing for a Full Home Wiring Plan',
+    desc: 'A complete worked example of sizing cables for a 3 BHK flat — power circuits, lighting circuits, AC circuits, and the main incoming feeder.',
+  },
+  {
+    icon: '🌡️',
+    title: 'Current Ratings & Derating Factors Explained',
+    desc: 'How ambient temperature, cable grouping, conduit installation, and soil temperature affect the safe current-carrying capacity of cables.',
+  },
+];
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const schemaGraph = [
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Knowledge Hub', item: `${SITE}/knowledge-hub` },
+      { '@type': 'ListItem', position: 3, name: 'Wire Sizing' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Wire Sizing Guides — Coming Soon | Electrical Knowledge Hub"
+  description="In-depth guides on wire gauge selection, cable sizing for AC and home wiring, copper vs aluminium conductors, voltage drop calculations, and derating factors. Coming soon."
+  keywords="wire sizing, cable sizing, wire gauge selection, copper wire for home, cable size for AC, voltage drop calculation, wiring standards India"
+  schemaGraph={schemaGraph}
+>
+  <Breadcrumb items={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Wire Sizing' },
+  ]} />
+
+  <main class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-8 pb-24">
+
+    <!-- Hero -->
+    <div class="text-center mb-16 relative">
+      <div
+        class="absolute inset-0 -z-10 pointer-events-none"
+        aria-hidden="true"
+        style="background: radial-gradient(ellipse 60% 40% at 50% 30%, color-mix(in srgb, var(--accent), transparent 88%), transparent);"
+      ></div>
+
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent/10 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+        <span class="text-[11px] font-mono uppercase tracking-widest text-accent">Coming Soon</span>
+      </div>
+
+      <h1 class="font-display font-bold text-4xl sm:text-5xl text-text-primary mb-4 leading-tight">
+        Wire &amp; Cable Sizing
+      </h1>
+      <p class="text-text-secondary text-lg max-w-2xl mx-auto leading-relaxed">
+        Engineering-accurate, beginner-friendly guides on selecting the right cable size for every
+        circuit in your home — from lighting to air conditioners to main supply feeders.
+      </p>
+    </div>
+
+    <!-- Topics preview grid -->
+    <section aria-labelledby="topics-heading" class="mb-16">
+      <h2 id="topics-heading" class="font-display font-bold text-2xl text-text-primary mb-2 text-center">
+        What's Coming
+      </h2>
+      <p class="text-text-muted text-sm text-center mb-8">
+        These guides are being researched and written to Indian wiring standards (IS 732, IS 694). Bookmark this page to read them first.
+      </p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {comingTopics.map((topic) => (
+          <div class="group relative rounded-2xl border border-border bg-card p-5 overflow-hidden hover:border-accent/30 transition-all duration-300 hover:-translate-y-0.5">
+            <div
+              class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
+              style="background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent), transparent 94%), transparent 70%);"
+              aria-hidden="true"
+            ></div>
+
+            <div class="relative">
+              <div class="text-2xl mb-3" aria-hidden="true">{topic.icon}</div>
+              <span class="inline-block text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-border text-text-faint mb-2">
+                Upcoming
+              </span>
+              <h3 class="font-display font-semibold text-base text-text-primary mb-1.5 leading-snug">
+                {topic.title}
+              </h3>
+              <p class="text-xs text-text-muted leading-relaxed">{topic.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="grid md:grid-cols-2 gap-6 mb-16">
+
+      <div
+        class="rounded-2xl border border-accent/30 bg-card p-6 relative overflow-hidden"
+        style="box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 85%), 0 4px 24px -6px color-mix(in srgb, var(--accent), transparent 80%);"
+      >
+        <div
+          class="absolute top-0 right-0 w-32 h-32 pointer-events-none"
+          aria-hidden="true"
+          style="background: radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--accent), transparent 80%), transparent 60%);"
+        ></div>
+        <div class="relative">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent">
+                <path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-accent">Stay Updated</span>
+          </div>
+          <h2 class="font-display font-bold text-lg text-text-primary mb-2">
+            Want to know when it's ready?
+          </h2>
+          <p class="text-sm text-text-muted leading-relaxed mb-4">
+            Bookmark this page or check back regularly. Wire &amp; Cable Sizing guides will be published
+            here as soon as they pass our editorial and technical review process.
+          </p>
+          <p class="text-xs text-text-faint leading-relaxed">
+            💡 <strong class="text-text-muted">In the meantime:</strong> Our free calculator already
+            recommends the correct cable size for your specific load — try it now.
+          </p>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-border bg-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true">
+                <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
+              </svg>
+            </div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</span>
+          </div>
+          <h2 class="font-display font-bold text-lg text-text-primary mb-2">
+            Get Cable Size Recommendations Now
+          </h2>
+          <p class="text-sm text-text-muted leading-relaxed mb-4">
+            Our Electricity Load Calculator gives you instant cable sizing recommendations based on
+            your actual connected load — completely free, no sign-up required.
+          </p>
+          <ul class="text-xs text-text-muted space-y-1 mb-5">
+            <li class="flex items-center gap-2">
+              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+              Recommended cable cross-section in sq.mm
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+              MCB rating for each circuit
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+              Full electrical health assessment
+            </li>
+          </ul>
+        </div>
+        <a
+          href="/"
+          class="btn-primary w-full text-sm py-3 justify-center"
+          data-astro-prefetch="hover"
+        >
+          Try Free Calculator
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true">
+            <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Other clusters -->
+    <section aria-labelledby="other-clusters-wire">
+      <h2 id="other-clusters-wire" class="font-display font-semibold text-lg text-text-primary mb-4">
+        Explore Published Guides
+      </h2>
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="/knowledge-hub/load-calculation"
+          class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:text-accent transition-all text-sm text-text-secondary font-medium"
+          data-astro-prefetch="hover"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true">
+            <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
+          </svg>
+          Load Calculation Guides
+          <span class="text-[10px] font-mono text-text-faint ml-1">6 articles</span>
+        </a>
+        <a
+          href="/knowledge-hub"
+          class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:text-accent transition-all text-sm text-text-secondary font-medium"
+          data-astro-prefetch="hover"
+        >
+          All Knowledge Hubs
+        </a>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>

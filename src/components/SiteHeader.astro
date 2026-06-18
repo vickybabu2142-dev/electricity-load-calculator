@@ -1,6 +1,7 @@
 ---
 import ThemeToggle from '@/components/ThemeToggle.astro';
 const isAssessment = Astro.url.pathname.startsWith('/assessment') || Astro.url.pathname.startsWith('/recommendations');
+const isKnowledgeHub = Astro.url.pathname.startsWith('/knowledge-hub');
 ---
 
 <header class="sticky top-0 z-50 bg-base/80 backdrop-blur-md border-b border-border print:hidden">
@@ -27,6 +28,17 @@ const isAssessment = Astro.url.pathname.startsWith('/assessment') || Astro.url.p
     <div class="flex items-center gap-3 sm:gap-6">
       <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-text-primary">
         <a
+          href="/knowledge-hub"
+          class={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold transition-all ${isKnowledgeHub ? 'bg-accent text-accent-text border-accent shadow-lg shadow-accent/25' : 'border-border text-text-muted hover:border-accent/50 hover:text-accent'}`}
+          data-astro-prefetch="hover"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true">
+            <path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z" />
+            <path fill-rule="evenodd" d="M.25 14.25A.75.75 0 0 1 1 13.5h14a.75.75 0 0 1 0 1.5H1a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+          </svg>
+          Knowledge Hub
+        </a>
+        <a
           href="/assessment"
           class={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-semibold transition-all ${isAssessment ? 'bg-accent text-accent-text border-accent shadow-lg shadow-accent/25' : 'border-border text-text-muted hover:border-accent/50 hover:text-accent'}`}
           data-astro-prefetch="hover"
@@ -38,8 +50,6 @@ const isAssessment = Astro.url.pathname.startsWith('/assessment') || Astro.url.p
         </a>
         <a href="/about-us" class="hover:text-accent transition-colors" data-astro-prefetch="hover">About</a>
         <a href="/contact-us" class="hover:text-accent transition-colors" data-astro-prefetch="hover">Contact</a>
-        <a href="/privacy-policy" class="hover:text-accent transition-colors" data-astro-prefetch="hover">Privacy</a>
-        <a href="/terms-conditions" class="hover:text-accent transition-colors" data-astro-prefetch="hover">Terms</a>
       </nav>
       <div class="w-px h-5 bg-border hidden md:block"></div>
       
@@ -78,6 +88,8 @@ const isAssessment = Astro.url.pathname.startsWith('/assessment') || Astro.url.p
     class="hidden md:hidden border-t border-border bg-base/95 backdrop-blur-md overflow-hidden transition-all duration-300 ease-in-out"
   >
     <nav class="flex flex-col p-4 gap-1">
+      <a href="/knowledge-hub" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>Knowledge Hub</a>
+      <a href="/assessment" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>Assessment</a>
       <a href="/about-us" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>About Us</a>
       <a href="/contact-us" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>Contact Us</a>
       <a href="/privacy-policy" class="px-4 py-3 text-base font-medium text-text-primary hover:bg-accent/10 hover:text-accent rounded-lg transition-colors" data-astro-prefetch>Privacy Policy</a>

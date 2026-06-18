@@ -1,0 +1,279 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { LOAD_CALC_ARTICLES, CLUSTERS } from '@/data/knowledgeHub';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+const cluster = CLUSTERS.find(c => c.slug === 'load-calculation')!;
+const pillar = LOAD_CALC_ARTICLES.find(a => a.isPillar)!;
+const supporting = LOAD_CALC_ARTICLES.filter(a => !a.isPillar);
+
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+    { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+    { "@type": "ListItem", "position": 3, "name": "Load Calculation" },
+  ],
+};
+
+const schemaGraph = [
+  {
+    "@type": "CollectionPage",
+    "name": "Electrical Load Calculation Guides",
+    "description": "A complete collection of practical guides on calculating electrical load for homes, offices, and other buildings.",
+    "url": `${SITE}/knowledge-hub/load-calculation`,
+    "breadcrumb": breadcrumbSchema,
+    "hasPart": LOAD_CALC_ARTICLES.map(a => ({
+      "@type": "Article",
+      "name": a.title,
+      "url": `${SITE}/knowledge-hub/load-calculation/${a.slug}`,
+      "description": a.description,
+    })),
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "How do I calculate electrical load for my house?", "acceptedAnswer": { "@type": "Answer", "text": "List all appliances and their wattage ratings, multiply by quantity, sum all values to get total watts, then divide by 1,000 to get kW. Our free Electricity Load Calculator does this instantly." }},
+      { "@type": "Question", "name": "What is a typical home connected load in India?", "acceptedAnswer": { "@type": "Answer", "text": "A typical 2–3 bedroom Indian home has a connected load of 3–6 kW, depending on whether AC units are installed. Homes with 2 ACs can have loads of 7–10 kW." }},
+      { "@type": "Question", "name": "What is the difference between connected load and demand load?", "acceptedAnswer": { "@type": "Answer", "text": "Connected load is the total wattage if every device runs simultaneously. Demand load (or maximum demand) is the actual peak power drawn at any given time, which is usually 60–80% of connected load due to the diversity factor." }},
+      { "@type": "Question", "name": "How do I read an appliance wattage label?", "acceptedAnswer": { "@type": "Answer", "text": "Look for the 'W' or 'Watt' rating on the product label or in the owner's manual. Air conditioners show capacity in tons — 1 ton = approximately 1,200 W." }},
+      { "@type": "Question", "name": "When do I need three-phase power for my home?", "acceptedAnswer": { "@type": "Answer", "text": "Three-phase power is typically needed for homes with connected loads above 10 kW, or when you run heavy industrial equipment, lifts, or multiple large ACs. Most residential homes in India use single-phase connections." }},
+    ],
+  },
+];
+
+const wattageChart = [
+  { appliance: 'Ceiling Fan', watts: '60–80', typical: 75 },
+  { appliance: 'LED Bulb', watts: '7–15', typical: 10 },
+  { appliance: 'Tube Light (LED)', watts: '18–22', typical: 20 },
+  { appliance: '1 Ton AC', watts: '900–1200', typical: 1100 },
+  { appliance: '1.5 Ton AC', watts: '1400–1800', typical: 1600 },
+  { appliance: '2 Ton AC', watts: '1800–2400', typical: 2000 },
+  { appliance: 'Refrigerator (250L)', watts: '150–300', typical: 200 },
+  { appliance: 'Washing Machine', watts: '300–600', typical: 500 },
+  { appliance: 'Television (40")', watts: '60–120', typical: 90 },
+  { appliance: 'Microwave', watts: '800–1200', typical: 1000 },
+  { appliance: 'Electric Geyser', watts: '1500–3000', typical: 2000 },
+  { appliance: 'Laptop', watts: '40–80', typical: 60 },
+  { appliance: 'Mixer/Grinder', watts: '500–750', typical: 600 },
+  { appliance: 'Iron', watts: '1000–2000', typical: 1200 },
+];
+---
+
+<BaseLayout
+  title="Load Calculation Guides — Electrical Knowledge Hub"
+  description="Learn how to calculate electrical load for any home or building. Practical step-by-step guides on connected load, demand load, kW vs kWh, and more."
+  keywords="electrical load calculation, connected load, demand load, home load calculation, kW vs kWh, single phase load, three phase load, appliance wattage chart"
+  schemaGraph={schemaGraph}
+  breadcrumbSchema={breadcrumbSchema}
+>
+  <Breadcrumb items={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation' },
+  ]} />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-6 pb-20">
+
+    <!-- Cluster Hero -->
+    <div class="max-w-4xl mb-12">
+      <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted mb-2 flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+        Knowledge Hub / Load Calculation
+      </p>
+      <h1 class="font-display font-bold text-4xl sm:text-5xl text-text-primary leading-tight tracking-tight mb-4">
+        Electrical Load <span class="text-accent">Calculation</span> Guides
+      </h1>
+      <p class="text-text-muted text-base sm:text-lg leading-relaxed max-w-2xl mb-6">
+        Everything you need to understand, calculate, and plan your home's electrical load. From basics to real-world examples — practical guides with no engineering jargon.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href={`/knowledge-hub/load-calculation/${pillar.slug}`} class="btn-primary px-5 py-2.5 text-sm">
+          Start with the Pillar Guide
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+        </a>
+        <a href="/" class="btn-secondary px-5 py-2.5 text-sm">Use Load Calculator</a>
+      </div>
+    </div>
+
+    <div class="flex gap-8 xl:gap-12 items-start">
+      <!-- Main Content -->
+      <div class="min-w-0 flex-1">
+
+        <!-- Pillar Article (featured) -->
+        <section class="mb-10" aria-labelledby="pillar-heading">
+          <h2 id="pillar-heading" class="font-mono text-[10px] uppercase tracking-[0.2em] text-accent mb-4 flex items-center gap-2">
+            <span class="w-4 h-px bg-accent" aria-hidden="true"></span>
+            Featured Guide
+          </h2>
+          <a
+            href={`/knowledge-hub/load-calculation/${pillar.slug}`}
+            class="group block rounded-xl border border-border bg-card p-6 sm:p-8 hover:border-accent/40 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            style="box-shadow: 0 4px 32px -8px color-mix(in srgb, var(--accent), transparent 85%);"
+            data-astro-prefetch="hover"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-[9px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent">
+                ⭐ Pillar Guide
+              </span>
+              <span class="text-[10px] font-mono text-text-faint">{pillar.readingTime} min read</span>
+            </div>
+            <h3 class="font-display font-bold text-2xl text-text-primary group-hover:text-accent transition-colors mb-3 leading-tight">
+              {pillar.title}
+            </h3>
+            <p class="text-text-muted leading-relaxed mb-5">{pillar.description}</p>
+            <div class="flex items-center gap-2 text-sm text-accent font-medium">
+              Read complete guide
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+            </div>
+          </a>
+        </section>
+
+        <!-- All Guides -->
+        <section aria-labelledby="guides-heading">
+          <h2 id="guides-heading" class="font-display font-bold text-2xl text-text-primary mb-5 flex items-center gap-3">
+            <span class="w-1 h-6 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            All Load Calculation Guides
+          </h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {supporting.map((article, i) => (
+              <a
+                href={`/knowledge-hub/load-calculation/${article.slug}`}
+                class="group block rounded-xl border border-border bg-card p-5 hover:border-accent/40 hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                data-astro-prefetch="hover"
+              >
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-[10px] font-mono text-text-faint">Guide {String(i + 2).padStart(2, '0')}</span>
+                  <span class="text-[10px] font-mono text-text-faint">{article.readingTime} min</span>
+                </div>
+                <h3 class="font-display font-semibold text-base text-text-primary group-hover:text-accent transition-colors mb-2 leading-snug">
+                  {article.title}
+                </h3>
+                <p class="text-xs text-text-muted leading-relaxed line-clamp-2">{article.description}</p>
+                <p class="mt-3 text-xs text-accent flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Read
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="currentColor" class="w-3 h-3" aria-hidden="true"><path fill-rule="evenodd" d="M3.22 8.53a.75.75 0 0 1 0-1.06l2.22-2.22-2.22-2.22a.75.75 0 1 1 1.06-1.06l2.75 2.75a.75.75 0 0 1 0 1.06l-2.75 2.75a.75.75 0 0 1-1.06 0Z" clip-rule="evenodd"/></svg>
+                </p>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <!-- Quick Reference Table -->
+        <section class="mt-12" aria-labelledby="ref-table-heading">
+          <h2 id="ref-table-heading" class="font-display font-bold text-2xl text-text-primary mb-2 flex items-center gap-3">
+            <span class="w-1 h-6 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            Quick Appliance Wattage Reference
+          </h2>
+          <p class="text-text-muted text-sm mb-5">Common appliance power ratings for quick load estimation. For exact calculations, use the <a href="/" class="text-accent hover:underline">Electricity Load Calculator</a>.</p>
+          <div class="rounded-xl border border-border overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="bg-card border-b border-border">
+                    <th class="text-left p-3 font-display font-semibold text-[11px] uppercase tracking-wider text-text-muted">Appliance</th>
+                    <th class="text-left p-3 font-display font-semibold text-[11px] uppercase tracking-wider text-text-muted">Range (Watts)</th>
+                    <th class="text-left p-3 font-display font-semibold text-[11px] uppercase tracking-wider text-text-muted">Typical (W)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {wattageChart.map((row, i) => (
+                    <tr class={`border-b border-border/50 ${i % 2 === 1 ? 'bg-card/40' : ''} hover:bg-accent/5 transition-colors`}>
+                      <td class="p-3 text-text-secondary font-medium">{row.appliance}</td>
+                      <td class="p-3 text-text-muted">{row.watts}</td>
+                      <td class="p-3 font-mono text-accent font-semibold">{row.typical}W</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Calculator CTA -->
+        <KnowledgeHubCTA />
+
+        <!-- FAQs -->
+        <section class="mt-6" aria-labelledby="cluster-faq-heading">
+          <h2 id="cluster-faq-heading" class="font-display font-bold text-2xl text-text-primary mb-5 flex items-center gap-3">
+            <span class="w-1 h-6 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            Frequently Asked Questions
+          </h2>
+          <div class="grid gap-3">
+            {[
+              { q: "How do I calculate electrical load for my house?", a: "List all appliances and their wattage ratings, multiply by quantity, sum all values to get total watts, then divide by 1,000 to get kW. Our free Electricity Load Calculator does this instantly — just add your appliances and get results." },
+              { q: "What is a typical home connected load in India?", a: "A typical 2–3 bedroom Indian home has a connected load of 3–6 kW without AC, and 6–10 kW with 1–2 AC units. The exact load depends on appliance count, types, and ratings." },
+              { q: "What is the difference between connected load and demand load?", a: "Connected load is the total wattage if every device runs simultaneously. Demand load is the actual peak power at any time — typically 60–80% of connected load." },
+              { q: "How do I read an appliance wattage label?", a: "Look for 'W' or 'Watt' on the product label or manual. Air conditioners show tonnage — 1 ton = approximately 1,200 W. Energy star labels also show annual kWh consumption." },
+              { q: "When do I need three-phase power for my home?", a: "Three-phase power is needed for homes with loads above 10 kW, or when running heavy equipment, lifts, or multiple large ACs. Most Indian residences use single-phase connections." },
+            ].map(faq => (
+              <details class="bg-card border border-border rounded-xl group">
+                <summary class="flex items-center justify-between p-4 cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-xl">
+                  <span class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors pr-6">{faq.q}</span>
+                  <span class="flex-shrink-0 text-text-muted group-open:rotate-180 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polyline points="6 9 12 15 18 9"/></svg>
+                  </span>
+                </summary>
+                <div class="px-4 pb-4 pt-0 border-t border-border/50 mt-1">
+                  <p class="text-sm text-text-muted leading-relaxed mt-3">{faq.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <!-- Other Clusters -->
+        <section class="mt-12 pt-8 border-t border-border" aria-labelledby="other-clusters-heading">
+          <h2 id="other-clusters-heading" class="font-display font-bold text-lg text-text-primary mb-4">Explore Other Topics</h2>
+          <div class="flex flex-wrap gap-3">
+            {[
+              { label: 'MCB Sizing', href: '/knowledge-hub/mcb-sizing' },
+              { label: 'Wire Sizing', href: '/knowledge-hub/wire-sizing' },
+              { label: 'Solar & Inverter', href: '/knowledge-hub/solar-inverter' },
+              { label: 'All Topics', href: '/knowledge-hub' },
+            ].map(link => (
+              <a href={link.href} class="btn-secondary text-sm px-4 py-2" data-astro-prefetch="hover">{link.label} →</a>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="hidden xl:block w-72 flex-shrink-0 sticky top-24">
+        <div class="rounded-xl border border-border bg-card p-5 mb-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+            </div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</p>
+          </div>
+          <p class="font-display font-bold text-base text-text-primary mb-1.5">Electricity Load Calculator</p>
+          <p class="text-xs text-text-muted leading-relaxed mb-4">Get instant load calculation with MCB, cable, inverter & solar recommendations.</p>
+          <a href="/" class="btn-primary w-full text-sm py-2.5 justify-center" data-astro-prefetch="hover">
+            Try Free →
+          </a>
+        </div>
+
+        <div class="rounded-xl border border-border bg-card p-5">
+          <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted mb-3">Quick Links</p>
+          <nav class="flex flex-col gap-1" aria-label="Load Calculation quick links">
+            {LOAD_CALC_ARTICLES.map(a => (
+              <a
+                href={`/knowledge-hub/load-calculation/${a.slug}`}
+                class="text-sm text-text-muted hover:text-accent transition-colors py-1.5 flex items-center gap-2"
+                data-astro-prefetch="hover"
+              >
+                <span class="w-1 h-1 rounded-full bg-border flex-shrink-0" aria-hidden="true"></span>
+                {a.title}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </aside>
+    </div>
+  </main>
+</BaseLayout>
