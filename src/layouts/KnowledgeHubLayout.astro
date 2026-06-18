@@ -60,6 +60,10 @@ const {
       <!-- ═══ MAIN CONTENT ═══ -->
       <article class="min-w-0 flex-1 max-w-3xl">
 
+        <h1 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-text-primary mb-4 leading-tight">
+          {title.split(' | ')[0]}
+        </h1>
+
         <!-- Article meta bar -->
         <div class="flex flex-wrap items-center gap-3 mb-6 text-[11px] font-mono text-text-faint uppercase tracking-wider">
           <a
@@ -185,7 +189,7 @@ const {
 
         <!-- TOC Widget -->
         {toc.length > 0 && (
-          <div class="rounded-xl border border-border bg-card p-5">
+          <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
             <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted mb-4 flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true">
                 <path fill-rule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 3.5A.75.75 0 0 1 2.75 7.5h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 2 8.25Zm0 3.5A.75.75 0 0 1 2.75 11h5a.75.75 0 0 1 0 1.5h-5A.75.75 0 0 1 2 11.75Z" clip-rule="evenodd" />
@@ -216,7 +220,7 @@ const {
         )}
 
         <!-- Cluster nav widget -->
-        <div class="rounded-xl border border-border bg-card p-5">
+        <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
           <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted mb-3">
             More in {clusterTitle}
           </p>

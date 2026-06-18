@@ -33,8 +33,8 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
       'A complete, practical guide to calculating your home electrical load step by step — no engineering degree required.',
     readingTime: 8,
     isPillar: true,
-    datePublished: '2025-06-18',
-    dateModified: '2025-06-18',
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
   },
   {
     slug: 'electrical-load-chart-for-home-appliances',
@@ -42,8 +42,8 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
     description:
       'A complete wattage reference chart for every common home appliance — from ceiling fans to air conditioners.',
     readingTime: 5,
-    datePublished: '2025-06-18',
-    dateModified: '2025-06-18',
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
   },
   {
     slug: 'connected-load-vs-demand-load',
@@ -51,8 +51,8 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
     description:
       'Understand the difference between connected load and demand load — and why it matters for your electrical planning.',
     readingTime: 5,
-    datePublished: '2025-06-18',
-    dateModified: '2025-06-18',
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
   },
   {
     slug: 'single-phase-vs-three-phase-load',
@@ -60,8 +60,8 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
     description:
       'Learn when to use single-phase and when three-phase power is needed — explained simply for homeowners and contractors.',
     readingTime: 6,
-    datePublished: '2025-06-18',
-    dateModified: '2025-06-18',
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
   },
   {
     slug: 'how-many-units-of-electricity-does-a-home-use',
@@ -69,8 +69,8 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
     description:
       'Find out how many kWh (units) a typical home uses per day and per month, and what factors drive up your consumption.',
     readingTime: 5,
-    datePublished: '2025-06-18',
-    dateModified: '2025-06-18',
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
   },
   {
     slug: 'kw-vs-kva-vs-kwh-explained',
@@ -78,8 +78,8 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
     description:
       'kW, kVA, and kWh confuse most people. This guide explains all three clearly with real-world examples.',
     readingTime: 5,
-    datePublished: '2025-06-18',
-    dateModified: '2025-06-18',
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
   },
 ];
 

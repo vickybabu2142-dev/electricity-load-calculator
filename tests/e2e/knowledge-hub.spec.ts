@@ -59,11 +59,15 @@ test.describe('Knowledge Hub E2E Tests', () => {
   ];
 
   for (const slug of articles) {
-    test(`Article Page [${slug}] loads and renders layout correctly`, async ({ page }) => {
+    test(`Article Page [${slug}] loads, renders layout, and satisfies SEO standards`, async ({ page }) => {
       await page.goto(`/knowledge-hub/load-calculation/${slug}`);
 
-      // Verify article title exists (inside the layout, typically h1 or h2)
-      await expect(page.locator('main')).toBeVisible();
+      // Verify article title exists as exactly one h1 tag inside the main content
+      await expect(page.locator('main h1')).toHaveCount(1);
+
+      // Verify meta description is present and populated
+      const metaDesc = page.locator('meta[name="description"]');
+      await expect(metaDesc).toHaveAttribute('content', /.+/);
 
       // Verify Table of Contents (TOC) is present in sidebar
       const desktopSidebar = page.locator('aside');
@@ -84,6 +88,23 @@ test.describe('Knowledge Hub E2E Tests', () => {
       // Verify main content has at least one of the body CTA blocks (block or inline)
       const bodyCTA = page.locator('main a[href="/"]').filter({ hasText: /Calculator/i });
       await expect(bodyCTA.first()).toBeVisible();
+
+      // Verify JSON-LD structured data is present in head and valid
+      const jsonLdScript = page.locator('head script[type="application/ld+json"]').first();
+      await expect(jsonLdScript).toBeAttached();
+      
+      const jsonLdContent = await jsonLdScript.textContent();
+      expect(jsonLdContent).toBeTruthy();
+      
+      const parsed = JSON.parse(jsonLdContent!);
+      expect(parsed).toHaveProperty('@context', 'https://schema.org');
+      expect(parsed).toHaveProperty('@graph');
+      
+      const types = parsed['@graph'].map((item: any) => item['@type']);
+      expect(types).toContain('Article');
+      expect(types).toContain('FAQPage');
+      expect(types).toContain('BreadcrumbList');
+      expect(types).toContain('WebSite');
     });
   }
 
