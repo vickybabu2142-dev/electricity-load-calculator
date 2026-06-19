@@ -578,6 +578,7 @@ button:active:not(:disabled),
   box-shadow: 0 0 18px -3px color-mix(in srgb, var(--accent), transparent 52%);
 }
 
+
 /* Print styles */
 @media print {
   @page {

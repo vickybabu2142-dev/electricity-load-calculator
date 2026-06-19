@@ -560,7 +560,14 @@ const schemaGraph = [
         <!-- Section 1: Intro -->
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">🔌</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <path d="M9 17v-4" />
+                <path d="M12 17V10" />
+                <path d="M15 17v-2" />
+              </svg>
+            </span>
             <span>Mastering Household Energy: The Role of an Electricity Load Calculator</span>
           </h3>
           <p class="text-sm text-text-muted leading-relaxed">
@@ -571,7 +578,14 @@ const schemaGraph = [
         <!-- Section 2: Connected vs Sanctioned -->
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">📊</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M3 3v18h18" />
+                <rect x="7" y="7" width="3" height="14" rx="1" />
+                <rect x="14" y="12" width="3" height="9" rx="1" />
+                <path d="M6 12h14" stroke-dasharray="3 3" />
+              </svg>
+            </span>
             <span>Connected Load vs. Sanctioned Load: Avoiding Utility Overload Penalties</span>
           </h3>
           <div class="space-y-4">
@@ -588,7 +602,12 @@ const schemaGraph = [
         <!-- Section 3: MCB & Wire Sizing -->
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">⚡</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="m12 7-3 5h6l-3 5" />
+              </svg>
+            </span>
             <span>Safe Sizing: Determining the Correct MCB Rating and Cable Size</span>
           </h3>
           <div class="space-y-4">
@@ -604,7 +623,16 @@ const schemaGraph = [
         <!-- Section 4: Solar & Inverter Sizing -->
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">🌱</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M1 22h6" />
+                <path d="M2 22l4-4" />
+                <path d="M6 18c0-8 8-16 16-16-1 9-9 17-16 16Z" />
+                <path d="M15 6l-4.5 5h5L11 16" />
+                <path d="M6 18l5-2" />
+                <path d="M15 6l7-4" />
+              </svg>
+            </span>
             <span>Renewable Energy & Backups: Inverter Sizing and Solar Panel Capacity</span>
           </h3>
           <div class="space-y-4">
@@ -620,7 +648,15 @@ const schemaGraph = [
         <!-- Section 5: Cost & Tariff -->
         <div class="bg-accent/5 border border-accent/20 rounded-2xl p-6 sm:p-8">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">💡</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .6 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                <path d="M9 18h6" />
+                <path d="M10 22h4" />
+                <path d="M12 6v8" />
+                <path d="M10 8h3.5a1.2 1.2 0 0 1 0 2.4H10.5a1.2 1.2 0 0 0 0 2.4H14" />
+              </svg>
+            </span>
             <span>Tariff Transparency and Cost Optimization</span>
           </h3>
           <p class="text-sm text-text-muted leading-relaxed">
