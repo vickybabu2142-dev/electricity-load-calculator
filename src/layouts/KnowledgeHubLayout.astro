@@ -1,0 +1,551 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import { getArticle } from '@/data/knowledgeHub';
+import type { SchemaNode } from '@/types';
+
+interface TOCItem {
+  id: string;
+  label: string;
+  depth?: 2 | 3;
+}
+
+interface RelatedArticle {
+  title: string;
+  slug: string;
+  description: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  keywords: string;
+  breadcrumb: Array<{ label: string; href?: string }>;
+  toc: TOCItem[];
+  readingTime?: number;
+  datePublished?: string;
+  dateModified?: string;
+  schemaGraph?: SchemaNode[];
+  relatedArticles?: RelatedArticle[];
+  clusterSlug?: string;
+  clusterTitle?: string;
+  showProgressBar?: boolean;
+  nextStep?: {
+    clusterSlug: string;
+    slug: string;
+    caption?: string;
+  };
+}
+
+const {
+  title,
+  description,
+  keywords,
+  breadcrumb,
+  toc,
+  readingTime,
+  datePublished,
+  dateModified,
+  schemaGraph = [],
+  relatedArticles = [],
+  clusterSlug = 'load-calculation',
+  clusterTitle = 'Load Calculation',
+  showProgressBar = false,
+  nextStep,
+} = Astro.props;
+
+const nextArticle = nextStep ? getArticle(nextStep.clusterSlug, nextStep.slug) : undefined;
+const nextCaption = nextStep?.caption || "Next Step";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  schemaGraph={schemaGraph}
+>
+  {showProgressBar && (
+    <div class="fixed top-16 left-0 w-full h-[3px] z-50 pointer-events-none bg-transparent print:hidden">
+      <div id="reading-progress" class="h-full bg-accent w-0 transition-all duration-75 ease-out" style="width: 0%" aria-hidden="true"></div>
+    </div>
+  )}
+
+  <!-- Breadcrumb -->
+  <Breadcrumb items={breadcrumb} />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-6 pb-20">
+    <div class="flex gap-8 xl:gap-12 items-start">
+
+      <!-- ═══ MAIN CONTENT ═══ -->
+      <article class="min-w-0 flex-1 max-w-3xl">
+
+        <h1 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-text-primary mb-4 leading-tight">
+          {title.split(' | ')[0]}
+        </h1>
+
+        <!-- Article meta bar -->
+        <div class="flex flex-wrap items-center gap-3 mb-6 text-[11px] font-mono text-text-faint uppercase tracking-wider">
+          <a
+            href={`/knowledge-hub/${clusterSlug}`}
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-border hover:border-accent/50 hover:text-accent transition-colors"
+            data-astro-prefetch="hover"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 text-accent flex-shrink-0" aria-hidden="true">
+              <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
+            </svg>
+            {clusterTitle}
+          </a>
+          {readingTime && (
+            <span class="flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3" aria-hidden="true">
+                <path fill-rule="evenodd" d="M1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8Zm7.75-4.25a.75.75 0 0 0-1.5 0V8c0 .414.336.75.75.75h3.25a.75.75 0 0 0 0-1.5h-2.5v-3.5Z" clip-rule="evenodd" />
+              </svg>
+              {readingTime} min read
+            </span>
+          )}
+          {datePublished && (
+            <time datetime={datePublished}>
+              {new Date(datePublished).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
+            </time>
+          )}
+        </div>
+
+        <!-- Mobile TOC — collapsible -->
+        {toc.length > 0 && (
+          <details class="xl:hidden mb-8 rounded-xl border border-border bg-card group">
+            <summary class="flex items-center justify-between p-4 cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-xl">
+              <span class="flex items-center gap-2 text-sm font-display font-semibold text-text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 text-accent" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 3.5A.75.75 0 0 1 2.75 7.5h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 2 8.25Zm0 3.5A.75.75 0 0 1 2.75 11h5a.75.75 0 0 1 0 1.5h-5A.75.75 0 0 1 2 11.75Z" clip-rule="evenodd" />
+                </svg>
+                Table of Contents
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-text-muted group-open:rotate-180 transition-transform" aria-hidden="true">
+                <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              </svg>
+            </summary>
+            <nav class="px-4 pb-4 pt-1 border-t border-border/50">
+              <ol class="space-y-1 mt-3">
+                {toc.map((item) => (
+                  <li class={item.depth === 3 ? 'pl-4' : ''}>
+                    <a
+                      href={`#${item.id}`}
+                      class="text-sm text-text-muted hover:text-accent transition-colors flex items-center gap-2 py-0.5"
+                    >
+                      {item.depth !== 3 && (
+                        <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+                      )}
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </details>
+        )}
+
+        <!-- Article content slot -->
+        <div class="kh-prose">
+          <slot />
+        </div>
+
+        <!-- Bottom Next Step or Related Guides -->
+        {nextArticle ? (
+          <section class="mt-12 pt-8 border-t border-border" aria-labelledby="next-heading">
+            <h2 id="next-heading" class="font-display font-bold text-xl text-text-primary mb-5 flex items-center gap-2">
+              <span class="w-1 h-5 rounded-full bg-accent" aria-hidden="true"></span>
+              Recommended Next Step
+            </h2>
+            <a
+              href={`/knowledge-hub/${nextStep.clusterSlug}/${nextStep.slug}`}
+              class="group block rounded-2xl border border-border bg-card p-6 hover:border-accent/40 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden"
+              style="box-shadow: 0 4px 20px -6px color-mix(in srgb, var(--accent), transparent 90%);"
+              data-astro-prefetch="hover"
+            >
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style="background: radial-gradient(circle at 90% 50%, color-mix(in srgb, var(--accent), transparent 96%), transparent 70%);"></div>
+              <div class="flex items-center justify-between gap-6 relative">
+                <div>
+                  <span class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.2em] text-accent mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true"><path fill-rule="evenodd" d="M12.5 9.75A2.75 2.75 0 0 0 9.75 7H4.56l2.22 2.22a.75.75 0 1 1-1.06 1.06l-3.5-3.5a.75.75 0 0 1 0-1.06l3.5-3.5a.75.75 0 0 1 1.06 1.06L4.56 5.5h5.19a4.25 4.25 0 0 1 4.25 4.25v1.5a.75.75 0 0 1-1.5 0v-1.5Z" clip-rule="evenodd"/></svg>
+                    {nextCaption}
+                  </span>
+                  <h3 class="font-display font-bold text-xl sm:text-2xl text-text-primary group-hover:text-accent transition-colors leading-tight mb-2">
+                    {nextArticle.title}
+                  </h3>
+                  <p class="text-sm text-text-muted leading-relaxed max-w-xl line-clamp-2 m-0">
+                    {nextArticle.description}
+                  </p>
+                </div>
+                <div class="flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-base border border-border group-hover:border-accent/40 group-hover:bg-accent/10 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-text-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+                </div>
+              </div>
+            </a>
+          </section>
+        ) : (
+          relatedArticles.length > 0 && (
+            <section class="mt-12 pt-8 border-t border-border" aria-labelledby="related-heading">
+              <h2 id="related-heading" class="font-display font-bold text-xl text-text-primary mb-5 flex items-center gap-2">
+                <span class="w-1 h-5 rounded-full bg-accent" aria-hidden="true"></span>
+                Related Guides
+              </h2>
+              <div class="grid sm:grid-cols-2 gap-4">
+                {relatedArticles.map((a) => (
+                  <a
+                    href={`/knowledge-hub/${clusterSlug}/${a.slug}`}
+                    class="group block rounded-xl border border-border bg-card p-4 hover:border-accent/40 hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    data-astro-prefetch="hover"
+                  >
+                    <p class="font-display font-semibold text-sm text-text-primary group-hover:text-accent transition-colors mb-1 leading-snug">
+                      {a.title}
+                    </p>
+                    <p class="text-xs text-text-muted leading-relaxed line-clamp-2">{a.description}</p>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )
+        )}
+
+        <!-- Back to cluster -->
+        <div class="mt-10 pt-6 border-t border-border">
+          <a
+            href={`/knowledge-hub/${clusterSlug}`}
+            class="inline-flex items-center gap-2 text-sm font-medium text-text-muted hover:text-accent transition-colors"
+            data-astro-prefetch="hover"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4" aria-hidden="true">
+              <path fill-rule="evenodd" d="M14 8a.75.75 0 0 1-.75.75H4.56l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 1.06L4.56 7.25h8.69A.75.75 0 0 1 14 8Z" clip-rule="evenodd" />
+            </svg>
+            Back to {clusterTitle} Guides
+          </a>
+        </div>
+      </article>
+
+      <!-- ═══ SIDEBAR (desktop only) ═══ -->
+      <aside class="hidden xl:flex flex-col gap-6 w-72 flex-shrink-0 sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pb-4">
+
+        <!-- Sidebar Calculator CTA -->
+        <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+            </div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</p>
+          </div>
+          <p class="font-display font-bold text-base text-text-primary mb-1.5">Electricity Load Calculator</p>
+          <p class="text-xs text-text-muted leading-relaxed mb-4">Get instant load calculation with MCB, cable, inverter & solar recommendations.</p>
+          <a href="/" class="btn-primary w-full text-sm py-2.5 justify-center" data-astro-prefetch="hover">
+            Try Free →
+          </a>
+        </div>
+
+        <!-- TOC Widget -->
+        {toc.length > 0 && (
+          <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+            <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted mb-4 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true">
+                <path fill-rule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 3.5A.75.75 0 0 1 2.75 7.5h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 2 8.25Zm0 3.5A.75.75 0 0 1 2.75 11h5a.75.75 0 0 1 0 1.5h-5A.75.75 0 0 1 2 11.75Z" clip-rule="evenodd" />
+              </svg>
+              On This Page
+            </p>
+            <nav aria-label="Table of contents">
+              <ol class="space-y-1.5">
+                {toc.map((item) => (
+                  <li class={item.depth === 3 ? 'pl-3' : ''}>
+                    <a
+                      href={`#${item.id}`}
+                      class="kh-toc-link text-sm text-text-muted hover:text-accent transition-colors flex items-start gap-2 py-0.5 leading-snug"
+                    >
+                      {item.depth !== 3 && (
+                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0" aria-hidden="true"></span>
+                      )}
+                      {item.depth === 3 && (
+                        <span class="mt-2 w-1 h-1 rounded-full bg-border/60 flex-shrink-0" aria-hidden="true"></span>
+                      )}
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </div>
+        )}
+
+        <!-- Cluster nav widget -->
+        <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted mb-3">
+            More in {clusterTitle}
+          </p>
+          <nav aria-label={`More ${clusterTitle} guides`}>
+            <slot name="sidebar-nav" />
+          </nav>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  let scrollListener: (() => void) | null = null;
+
+  function initProgressBar() {
+    // Remove previous listener if exists to prevent duplicate event handlers
+    if (scrollListener) {
+      window.removeEventListener('scroll', scrollListener);
+      scrollListener = null;
+    }
+
+    const progress = document.getElementById('reading-progress');
+    if (!progress) return;
+
+    scrollListener = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const percent = Math.min(100, Math.max(0, (window.scrollY / totalHeight) * 100));
+        progress.style.width = `${percent}%`;
+      } else {
+        progress.style.width = '0%';
+      }
+    };
+
+    window.addEventListener('scroll', scrollListener, { passive: true });
+    // Run once initially in case page is pre-scrolled
+    scrollListener();
+  }
+
+  document.addEventListener('astro:page-load', initProgressBar);
+</script>
+
+<style>
+  /* Article prose styles */
+  .kh-prose :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: 6rem;
+  }
+
+  .kh-prose :global(h3) {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    scroll-margin-top: 6rem;
+  }
+
+  .kh-prose :global(p) {
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .kh-prose :global(ul),
+  .kh-prose :global(ol) {
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .kh-prose :global(ul) { list-style-type: disc; }
+  .kh-prose :global(ol) { list-style-type: decimal; }
+
+  .kh-prose :global(li) { margin-bottom: 0.4rem; }
+
+  .kh-prose :global(strong) {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .kh-prose :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Exempt CTA buttons from prose link override */
+  .kh-prose :global(a.btn-primary),
+  .kh-prose :global(a.btn-secondary) {
+    color: var(--btn-primary-text);
+    text-decoration: none;
+  }
+
+  .kh-prose :global(a:hover) { opacity: 0.8; }
+
+  .kh-prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.875rem;
+  }
+
+  .kh-prose :global(thead) {
+    background-color: var(--bg-card);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .kh-prose :global(th) {
+    text-align: left;
+    padding: 0.625rem 0.875rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .kh-prose :global(td) {
+    padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+
+  .kh-prose :global(tr:last-child td) { border-bottom: none; }
+
+  .kh-prose :global(tr:hover td) {
+    background-color: color-mix(in srgb, var(--accent), transparent 95%);
+  }
+
+  .kh-prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.825rem;
+    background-color: color-mix(in srgb, var(--accent), transparent 90%);
+    border: 1px solid color-mix(in srgb, var(--accent), transparent 70%);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* Scrollable table wrapper on mobile */
+  .kh-prose :global(.table-wrap) {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .kh-prose :global(.table-wrap table) { margin: 0; }
+
+  /* Step cards */
+  .kh-prose :global(.step-card) {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    margin-bottom: 0.75rem;
+  }
+
+  .kh-prose :global(.step-number) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: color-mix(in srgb, var(--accent), transparent 88%);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Mistake cards */
+  .kh-prose :global(.mistake-card) {
+    display: flex;
+    gap: 0.875rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--danger), transparent 70%);
+    background-color: color-mix(in srgb, var(--danger), transparent 95%);
+    margin-bottom: 0.75rem;
+  }
+
+  /* Example / highlight box */
+  .kh-prose :global(.example-box) {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .kh-prose :global(.example-box .example-label) {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  /* FAQ section */
+  .kh-prose :global(.kh-faq details) {
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--bg-card);
+    transition: border-color 0.2s;
+  }
+
+  .kh-prose :global(.kh-faq details[open]) {
+    border-color: color-mix(in srgb, var(--accent), transparent 60%);
+  }
+
+  .kh-prose :global(.kh-faq summary) {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
+  }
+
+  .kh-prose :global(.kh-faq details:hover) {
+    border-color: color-mix(in srgb, var(--accent), transparent 60%);
+  }
+
+  .kh-prose :global(.kh-faq details:hover summary) {
+    color: var(--accent);
+  }
+
+  .kh-prose :global(.kh-faq summary::-webkit-details-marker) { display: none; }
+
+  .kh-prose :global(.kh-faq .faq-body) {
+    padding: 0 1.25rem 1rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    margin-top: 0;
+    padding-top: 0.875rem;
+  }
+
+  .kh-prose :global(.kh-faq .faq-chevron) {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: transform 0.25s;
+  }
+
+  .kh-prose :global(.kh-faq details[open] .faq-chevron) { transform: rotate(180deg); }
+</style>

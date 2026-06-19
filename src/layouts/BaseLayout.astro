@@ -3,6 +3,7 @@ import SiteHeader from '@/components/SiteHeader.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
 import { ClientRouter } from 'astro:transitions';
 import '@/styles/global.css';
+import type { SchemaNode } from '@/types';
 
 // Self-host fonts for performance
 import '@fontsource/khand/400.css';
@@ -20,8 +21,8 @@ interface Props {
   description?: string;
   keywords?: string;
   noindex?: boolean;
-  breadcrumbSchema?: any;
-  schemaGraph?: any[];
+  breadcrumbSchema?: SchemaNode;
+  schemaGraph?: SchemaNode[];
 }
 
 const {

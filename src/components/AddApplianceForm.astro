@@ -12,7 +12,7 @@ const { category } = Astro.props;
 <div class="add-appliance-wrapper px-4 py-3 border-t border-border border-dashed">
   <button
     type="button"
-    class="add-toggle-btn flex items-center gap-2 text-sm text-text-faint hover:text-accent active:text-accent transition-colors focus:outline-none group"
+    class="add-toggle-btn flex items-center gap-2 text-sm text-text-secondary font-medium hover:text-accent active:text-accent transition-colors focus:outline-none group"
     data-action="toggle-add-form"
     data-category={category}
     aria-expanded="false"
@@ -28,7 +28,7 @@ const { category } = Astro.props;
     novalidate
   >
     <div class="flex flex-col gap-1 col-span-6 md:col-auto md:flex-[2] min-w-0">
-      <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-name-${category}`}>Name</label>
+      <label class="text-[11px] font-mono uppercase tracking-widest text-text-secondary font-medium" for={`new-name-${category}`}>Name</label>
       <input
         id={`new-name-${category}`}
         type="text"
@@ -40,7 +40,7 @@ const { category } = Astro.props;
     </div>
 
     <div class="flex flex-col gap-1 col-span-3 md:col-auto md:flex-1 min-w-0">
-      <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-watts-${category}`}>Watts</label>
+      <label class="text-[11px] font-mono uppercase tracking-widest text-text-secondary font-medium" for={`new-watts-${category}`}>Watts</label>
       <input
         id={`new-watts-${category}`}
         type="number"
@@ -54,7 +54,7 @@ const { category } = Astro.props;
     </div>
 
     <div class="flex flex-col gap-1 col-span-3 md:col-auto md:flex-1 min-w-0">
-      <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-hours-${category}`}>Hrs/Day</label>
+      <label class="text-[11px] font-mono uppercase tracking-widest text-text-secondary font-medium" for={`new-hours-${category}`}>Hrs/Day</label>
       <input
         id={`new-hours-${category}`}
         type="number"
@@ -69,7 +69,7 @@ const { category } = Astro.props;
     </div>
 
     <div class="flex flex-col gap-1 col-span-6 md:col-auto md:flex-[1.5] min-w-0">
-      <label class="text-[10px] font-mono uppercase tracking-widest text-text-muted" for={`new-category-${category}`}>Category</label>
+      <label class="text-[11px] font-mono uppercase tracking-widest text-text-secondary font-medium" for={`new-category-${category}`}>Category</label>
       <div class="relative group w-full">
         <select
           id={`new-category-${category}`}

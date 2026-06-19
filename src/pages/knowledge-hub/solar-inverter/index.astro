@@ -1,0 +1,277 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+
+export const prerender = true;
+
+const comingTopics = [
+  {
+    icon: 'sun',
+    title: 'How to Size a Solar Panel System for Your Home',
+    desc: 'Calculate exactly how many solar panels you need based on your daily kWh consumption, roof area, sun hours, and panel efficiency.',
+  },
+  {
+    icon: 'battery',
+    title: 'Inverter Selection: Which Capacity is Right?',
+    desc: 'Choose the correct VA/kVA inverter rating for your backup needs — covering pure sine wave vs modified sine wave, battery compatibility, and load types.',
+  },
+  {
+    icon: 'plug',
+    title: 'Battery Backup Calculation for Home Inverters',
+    desc: 'How to calculate the battery bank size (Ah) needed for your desired backup hours, accounting for depth of discharge and efficiency losses.',
+  },
+  {
+    icon: 'bolt',
+    title: 'On-Grid vs Off-Grid vs Hybrid Solar Systems',
+    desc: 'A plain-language comparison of on-grid (net metering), off-grid, and hybrid solar setups — and which makes economic sense for Indian homes in 2026.',
+  },
+  {
+    icon: 'money',
+    title: 'Solar ROI Calculator: When Does It Pay Off?',
+    desc: 'A step-by-step financial analysis showing payback period, 25-year savings, and NPV for rooftop solar in major Indian cities.',
+  },
+  {
+    icon: 'chart',
+    title: 'Understanding MNRE Subsidy & Net Metering in India',
+    desc: "How to claim PM Surya Ghar subsidies, calculate net metering credits on your DISCOM bill, and what documentation you'll need.",
+  },
+];
+
+function getTopicIcon(icon: string) {
+  switch (icon) {
+    case 'sun':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+    case 'battery':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" y1="11" x2="22" y2="13"/></svg>`;
+    case 'plug':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><path d="M12 2v10"/><path d="M18 8V6a4 4 0 0 0-8 0v2"/><path d="M5 8h14a2 2 0 0 1 2 2v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3a2 2 0 0 1 2-2Z"/><path d="M10 16v4a2 2 0 0 0 4 0v-4"/></svg>`;
+    case 'bolt':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><path d="m13 2-2 10h9L9 22l2-10H3Z"/></svg>`;
+    case 'money':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`;
+    case 'chart':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`;
+    default:
+      return '';
+  }
+}
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const schemaGraph = [
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Knowledge Hub', item: `${SITE}/knowledge-hub` },
+      { '@type': 'ListItem', position: 3, name: 'Solar & Inverter' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Solar & Inverter Sizing Guides — Coming Soon | Electrical Knowledge Hub"
+  description="In-depth guides on solar panel sizing, inverter selection, battery backup calculation, on-grid vs off-grid systems, and solar ROI for Indian homes. Coming soon."
+  keywords="solar panel sizing, inverter selection, battery backup calculation, on-grid solar, off-grid solar, solar ROI India, home inverter size, PM Surya Ghar subsidy"
+  schemaGraph={schemaGraph}
+>
+  <Breadcrumb items={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Solar & Inverter' },
+  ]} />
+
+  <main class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-8 pb-24">
+
+    <!-- Hero -->
+    <div class="text-center mb-16 relative">
+      <div
+        class="absolute inset-0 -z-10 pointer-events-none"
+        aria-hidden="true"
+        style="background: radial-gradient(ellipse 60% 40% at 50% 30%, color-mix(in srgb, var(--accent), transparent 88%), transparent);"
+      ></div>
+
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent/10 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+        <span class="text-[11px] font-mono uppercase tracking-widest text-accent">Coming Soon</span>
+      </div>
+
+      <h1 class="font-display font-bold text-4xl sm:text-5xl text-text-primary mb-4 leading-tight">
+        Solar &amp; Inverter Sizing
+      </h1>
+      <p class="text-text-secondary text-lg max-w-2xl mx-auto leading-relaxed">
+        Data-driven guides to help Indian homeowners size their solar rooftop systems and home inverters
+        correctly — based on actual load, sun hours, budget, and government subsidy eligibility.
+      </p>
+    </div>
+
+    <!-- Topics preview grid -->
+    <section aria-labelledby="solar-topics-heading" class="mb-16">
+      <h2 id="solar-topics-heading" class="font-display font-bold text-2xl text-text-primary mb-2 text-center">
+        What's Coming
+      </h2>
+      <p class="text-text-muted text-sm text-center mb-8">
+        These guides will be published with real financial models, city-specific solar irradiance data, and current subsidy rates. Bookmark this page to access them first.
+      </p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {comingTopics.map((topic) => (
+          <div class="group relative rounded-2xl border border-border bg-card p-5 overflow-hidden hover:border-accent/30 transition-all duration-300 hover:-translate-y-0.5">
+            <div
+              class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
+              style="background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent), transparent 94%), transparent 70%);"
+              aria-hidden="true"
+            ></div>
+
+            <div class="relative">
+              <div class="mb-3" aria-hidden="true" set:html={getTopicIcon(topic.icon)} />
+              <span class="inline-block text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-border text-text-faint mb-2">
+                Upcoming
+              </span>
+              <h3 class="font-display font-semibold text-base text-text-primary mb-1.5 leading-snug">
+                {topic.title}
+              </h3>
+              <p class="text-xs text-text-muted leading-relaxed">{topic.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Solar stat highlight -->
+    <section class="rounded-2xl border border-border bg-card p-6 mb-8 grid sm:grid-cols-3 gap-6 text-center">
+      <div>
+        <p class="font-display font-bold text-3xl text-accent mb-1">78,000+</p>
+        <p class="text-sm text-text-muted">MW installed solar capacity in India (2024)</p>
+      </div>
+      <div>
+        <p class="font-display font-bold text-3xl text-accent mb-1">₹78,000 cr</p>
+        <p class="text-sm text-text-muted">PM Surya Ghar Muft Bijli Yojana budget</p>
+      </div>
+      <div>
+        <p class="font-display font-bold text-3xl text-accent mb-1">5–7 yrs</p>
+        <p class="text-sm text-text-muted">Typical solar payback period in India</p>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="grid md:grid-cols-2 gap-6 mb-16">
+
+      <div
+        class="rounded-2xl border border-accent/30 bg-card p-6 relative overflow-hidden"
+        style="box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 85%), 0 4px 24px -6px color-mix(in srgb, var(--accent), transparent 80%);"
+      >
+        <div
+          class="absolute top-0 right-0 w-32 h-32 pointer-events-none"
+          aria-hidden="true"
+          style="background: radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--accent), transparent 80%), transparent 60%);"
+        ></div>
+        <div class="relative">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent">
+                <path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-accent">Stay Updated</span>
+          </div>
+          <h2 class="font-display font-bold text-lg text-text-primary mb-2">
+            Want to know when it's ready?
+          </h2>
+          <p class="text-sm text-text-muted leading-relaxed mb-4">
+            Bookmark this page — Solar &amp; Inverter Sizing guides will appear here as they are published.
+            We're targeting practical, accurate articles based on real Indian market data.
+          </p>
+          <p class="text-xs text-text-faint leading-relaxed">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-middle -translate-y-[1px]" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2" />
+              <path d="M12 20v2" />
+              <path d="m4.93 4.93 1.41 1.41" />
+              <path d="m17.66 17.66 1.41 1.41" />
+              <path d="M2 12h2" />
+              <path d="M20 12h2" />
+              <path d="m6.34 17.66-1.41 1.41" />
+              <path d="m19.07 4.93-1.41 1.41" />
+            </svg>
+            <strong class="text-text-muted">Did you know?</strong> You can already get solar panel
+            and inverter size recommendations from our free calculator — based on your actual load profile.
+          </p>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-border bg-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true">
+                <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
+              </svg>
+            </div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</span>
+          </div>
+          <h2 class="font-display font-bold text-lg text-text-primary mb-2">
+            Get Solar &amp; Inverter Size Recommendations Now
+          </h2>
+          <p class="text-sm text-text-muted leading-relaxed mb-4">
+            Enter your appliances into our free calculator and get instant recommendations for solar
+            panel capacity, inverter size, and battery backup — tailored to your exact load.
+          </p>
+          <ul class="text-xs text-text-muted space-y-1 mb-5">
+            <li class="flex items-center gap-2">
+              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+              Recommended solar panel capacity (kW)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+              Inverter VA rating for your load
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+              Daily kWh consumption for battery sizing
+            </li>
+          </ul>
+        </div>
+        <a
+          href="/"
+          class="btn-primary w-full text-sm py-3 justify-center"
+          data-astro-prefetch="hover"
+        >
+          Try Free Calculator
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true">
+            <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Other clusters -->
+    <section aria-labelledby="other-clusters-solar">
+      <h2 id="other-clusters-solar" class="font-display font-semibold text-lg text-text-primary mb-4">
+        Explore Published Guides
+      </h2>
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="/knowledge-hub/load-calculation"
+          class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:text-accent transition-all text-sm text-text-secondary font-medium"
+          data-astro-prefetch="hover"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true">
+            <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
+          </svg>
+          Load Calculation Guides
+          <span class="text-[10px] font-mono text-text-faint ml-1">6 articles</span>
+        </a>
+        <a
+          href="/knowledge-hub"
+          class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:text-accent transition-all text-sm text-text-secondary font-medium"
+          data-astro-prefetch="hover"
+        >
+          All Knowledge Hubs
+        </a>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>

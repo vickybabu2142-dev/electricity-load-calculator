@@ -22,7 +22,7 @@
       </svg>
       <div>
         <h2 class="font-display font-bold text-lg tracking-wide text-text-primary leading-tight">Your Load Summary</h2>
-        <p class="text-[10px] font-mono text-text-muted uppercase tracking-wider">
+        <p class="text-[10px] font-mono text-text-secondary font-medium uppercase tracking-wider">
           <span id="active-count" class="text-accent font-bold">0</span> active / <span id="total-count">0</span> appliances
         </p>
       </div>
@@ -41,18 +41,18 @@
 
     <!-- Total Load -->
     <div>
-      <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-1">Total Load</p>
+      <p class="text-[11px] font-mono uppercase tracking-widest text-text-secondary font-medium mb-1">Total Load</p>
 
       <!-- Primary: kW (more useful unit) — large -->
       <div class="flex items-end gap-1.5 mb-0.5">
         <span id="total-kw" class="font-display font-bold text-5xl tabular-nums leading-none text-accent">0.00</span>
-        <span class="font-mono text-lg text-text-muted mb-1">kW</span>
+        <span class="font-mono text-lg text-text-secondary font-medium mb-1">kW</span>
       </div>
 
       <!-- Secondary: Watts — smaller, muted -->
       <div class="flex items-center gap-1">
-        <span id="total-watts" class="font-mono text-sm tabular-nums text-text-muted">0</span>
-        <span class="font-mono text-xs text-text-muted">watts</span>
+        <span id="total-watts" class="font-mono text-sm tabular-nums text-text-secondary font-medium">0</span>
+        <span class="font-mono text-xs text-text-secondary font-medium">watts</span>
       </div>
 
       <!-- Progress bar -->
@@ -68,15 +68,15 @@
       </div>
       <!-- Threshold labels -->
       <div class="flex justify-between mt-1.5">
-        <span class="font-mono text-[10px] text-text-muted">0 W</span>
+        <span class="font-mono text-[10px] text-text-secondary font-medium">0 W</span>
         <span id="load-percent" class="font-mono text-[10px] tabular-nums text-accent">0%</span>
-        <span id="max-kw-label" class="font-mono text-[10px] text-text-muted">5 kW max</span>
+        <span id="max-kw-label" class="font-mono text-[10px] text-text-secondary font-medium">5 kW max</span>
       </div>
     </div>
 
     <!-- Global Settings -->
     <div class="space-y-1.5">
-      <label for="max-kw-input" class="text-[10px] font-mono uppercase tracking-widest text-text-muted">Max Capacity</label>
+      <label for="max-kw-input" class="text-[11px] font-mono uppercase tracking-widest text-text-secondary font-medium">Max Capacity</label>
       <div class="flex items-center gap-1.5">
         <input
           id="max-kw-input"
@@ -87,7 +87,7 @@
           max="100"
           class="flex-1 bg-base border border-border rounded-lg px-2 py-1.5 text-xs text-text-primary text-center focus:border-accent focus:outline-none font-mono"
         />
-        <span class="text-[10px] font-mono text-text-muted uppercase">kW</span>
+        <span class="text-[10px] font-mono text-text-secondary font-medium uppercase">kW</span>
       </div>
     </div>
 
@@ -97,17 +97,17 @@
     <!-- Energy stats -->
     <div class="space-y-3">
       <div class="flex items-center justify-between">
-        <span class="text-sm text-text-muted">Daily Consumption</span>
+        <span class="text-sm text-text-secondary font-medium">Daily Consumption</span>
         <div>
           <span id="daily-kwh" class="font-mono font-semibold tabular-nums text-accent">0.00</span>
-          <span class="font-mono text-xs text-text-muted ml-1">kWh(unit)/day</span>
+          <span class="font-mono text-xs text-text-secondary font-medium ml-1">kWh(unit)/day</span>
         </div>
       </div>
       <div class="flex items-center justify-between">
-        <span class="text-sm text-text-muted">Monthly Estimate</span>
+        <span class="text-sm text-text-secondary font-medium">Monthly Estimate</span>
         <div>
           <span id="monthly-kwh" class="font-mono font-semibold tabular-nums text-accent">0</span>
-          <span class="font-mono text-xs text-text-muted ml-1">kWh(unit)/mo</span>
+          <span class="font-mono text-xs text-text-secondary font-medium ml-1">kWh(unit)/mo</span>
         </div>
       </div>
     </div>
@@ -124,7 +124,7 @@
             <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"/>
           </svg>
           <div>
-            <p class="text-[10px] font-mono uppercase tracking-widest text-text-muted leading-none mb-1">Health Score</p>
+            <p class="text-[11px] font-mono uppercase tracking-widest text-text-secondary font-medium leading-none mb-1">Health Score</p>
             <span
               id="health-score-label"
               class="inline-block text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border"
@@ -134,7 +134,7 @@
         </div>
         <div class="text-right flex-shrink-0">
           <span id="health-score-value" class="font-display font-bold text-3xl tabular-nums leading-none" style="color:#3ecf6e; transition: color 0.2s ease;">0</span>
-          <span class="font-mono text-xs text-text-muted">/100</span>
+          <span class="font-mono text-xs text-text-secondary font-medium">/100</span>
         </div>
       </div>
     </div>

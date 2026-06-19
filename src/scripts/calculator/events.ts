@@ -16,6 +16,7 @@ import { updateRowKWh, updateRowQtyDisplay, updateRowStyle } from './rowUpdaters
 import { updatePresetButtons, loadPreset } from './presets';
 import { calculate, debouncedCalculate } from './calculate';
 import { REGION_SETTINGS, STORAGE_KEY } from './constants';
+import { DAYS_PER_MONTH } from '@/data/constants';
 import { showConfirm } from './confirm';
 
 // ── Modal ─────────────────────────────────────────────────
@@ -204,7 +205,7 @@ document.addEventListener('click', async (e) => {
     const included = appState.appliances.filter(a => a.qty > 0);
     const totalWatts = included.reduce((s, a) => s + a.watts * a.qty, 0);
     const dailyKWh = included.reduce((s, a) => s + calculateRowKWh(a), 0);
-    const monthlyKWh = dailyKWh * 30;
+    const monthlyKWh = dailyKWh * DAYS_PER_MONTH;
     const date = new Date().toLocaleDateString(navigator.language || 'en', { dateStyle: 'long' });
     const insights = calculateInsights(totalWatts / 1000, monthlyKWh);
 

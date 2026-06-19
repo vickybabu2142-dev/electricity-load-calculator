@@ -1,0 +1,626 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 },
+  { id: 'visual-explanation', label: 'The Beer Mug Analogy', depth: 2 },
+  { id: 'step-by-step', label: 'Converting Between kW, kVA & kWh', depth: 2 },
+  { id: 'real-example', label: 'Real Example: Generator Sizing', depth: 2 },
+  { id: 'reference-table', label: 'Quick Reference Table', depth: 2 },
+  { id: 'common-mistakes', label: 'Common Mistakes', depth: 2 },
+  { id: 'faqs', label: 'Frequently Asked Questions', depth: 2 },
+];
+
+const relatedArticles = [
+  {
+    title: 'How to Calculate Electrical Load for a House',
+    slug: 'how-to-calculate-electrical-load-for-a-house',
+    description: 'A complete, practical guide to calculating your home electrical load step by step.',
+  },
+  {
+    title: 'How Many Units of Electricity Does a Home Use?',
+    slug: 'how-many-units-of-electricity-does-a-home-use',
+    description: 'Find out how many kWh a typical home uses per day and per month.',
+  },
+  {
+    title: 'Connected Load vs Demand Load Explained',
+    slug: 'connected-load-vs-demand-load',
+    description: 'Understand the difference between connected load and demand load.',
+  },
+];
+
+const schemaGraph = [
+  {
+    '@type': 'Article',
+    headline: 'kW vs kVA vs kWh — The Simple Explanation',
+    description:
+      'Confused about kW, kVA, and kWh? This guide explains all three in plain language with real examples, a comparison table, and practical advice on when each matters.',
+    url: `${SITE}/knowledge-hub/load-calculation/kw-vs-kva-vs-kwh-explained`,
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
+    author: { '@type': 'Organization', name: 'Electricity Load Calculator' },
+    publisher: { '@type': 'Organization', name: 'Electricity Load Calculator', url: SITE },
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Knowledge Hub', item: `${SITE}/knowledge-hub` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'Load Calculation',
+        item: `${SITE}/knowledge-hub/load-calculation`,
+      },
+      { '@type': 'ListItem', position: 4, name: 'kW vs kVA vs kWh Explained' },
+    ],
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is the difference between kW and kVA?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'kW is real (active) power — the actual work done by electricity to run appliances. kVA is apparent power — the total power the supply must provide, including reactive power that does no useful work. kVA = kW ÷ Power Factor. For example, a 5 kVA generator with 0.8 power factor delivers only 4 kW of usable power.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is kWh on an electricity bill?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'kWh (kilowatt-hour) is the unit of electrical energy on your bill. 1 kWh means 1,000 watts (1 kW) consumed for 1 hour. If you use a 2,000-watt air conditioner for 5 hours, it consumes 10 kWh (10 units). Your electricity bill charges you in kWh — each unit costs ₹4–10 depending on your state and slab.',
+        },
+      },
+    ],
+  },
+];
+---
+
+<KnowledgeHubLayout
+  title="kW vs kVA vs kWh — The Simple Explanation | Electrical Knowledge Hub"
+  description="Confused about kW, kVA, and kWh? This guide explains all three in plain language with real examples, a comparison table, and practical advice on when each matters."
+  keywords="kW vs kVA vs kWh, difference between kW and kVA, kWh meaning, kilowatt vs kilovolt ampere, power factor explained, electrical units explained"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+    { label: 'kW vs kVA vs kWh Explained' },
+  ]}
+  toc={toc}
+  readingTime={5}
+  datePublished="2026-06-18"
+  dateModified="2026-06-18"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="load-calculation"
+  clusterTitle="Load Calculation"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'mcb-sizing', slug: 'how-to-choose-the-right-mcb-rating', caption: 'Circuit Protection' }}
+>
+
+  <!-- ─── Quick Answer ─── -->
+  <QuickAnswerBox id="quick-answer">
+    <p>
+      <strong>kW (kilowatt)</strong> = real power actually doing useful work (running your appliances).
+      <strong>kVA (kilovolt-ampere)</strong> = apparent power — what the electrical supply must provide,
+      including "wasted" reactive power. <strong>kWh (kilowatt-hour)</strong> = energy consumed over time —
+      this is what your electricity bill measures. The bridge between kW and kVA is the
+      <strong>Power Factor (PF)</strong>: <code>kW = kVA × PF</code>.
+      A 5 kVA generator at 0.8 PF delivers only <strong>4 kW</strong> of usable power.
+    </p>
+  </QuickAnswerBox>
+
+  <!-- ─── Visual Explanation ─── -->
+  <h2 id="visual-explanation">The Beer Mug Analogy — Understanding kW, kVA, and Reactive Power</h2>
+
+  <p>
+    The easiest way to understand these three terms is through the classic "beer mug" analogy used
+    by electrical engineers worldwide:
+  </p>
+
+  <div class="example-box">
+    <p class="example-label">The Beer Mug Analogy</p>
+    <p>
+      Imagine pouring beer into a tall mug. You get two things in the mug:
+    </p>
+    <ul>
+      <li>
+        🍺 <strong>The liquid beer</strong> = <strong>kW (Real Power)</strong> — this is what you actually
+        wanted and what does the work. It runs your motors, lights, and appliances.
+      </li>
+      <li>
+        🫧 <strong>The foam on top</strong> = <strong>Reactive Power (kVAR)</strong> — this is wasteful.
+        It's generated by inductive loads (motors, transformers, compressors) and does no useful work,
+        but the electrical supply has to accommodate it.
+      </li>
+      <li>
+        🥛 <strong>The total contents of the mug</strong> = <strong>kVA (Apparent Power)</strong> — beer
+        plus foam combined. Your generator, transformer, and supply cables must be sized to handle
+        this total, even though only the beer fraction is useful.
+      </li>
+    </ul>
+    <p>
+      The ratio of beer to total contents is the <strong>Power Factor</strong>: a mug that's 80% beer
+      and 20% foam has a power factor of 0.80. A perfectly filled mug (100% beer, 0% foam) would have
+      a power factor of 1.0 — perfectly efficient but rarely achieved in practice.
+    </p>
+  </div>
+
+  <p>
+    In practical terms: <strong>resistive loads</strong> like electric heaters, incandescent bulbs, and
+    ovens have a power factor of 1.0 (pure beer — no foam). <strong>Inductive loads</strong> like AC
+    compressors, ceiling fan motors, refrigerators, and pumps have power factors of 0.7–0.9. This is
+    why generators and UPS systems are always rated in kVA — they must supply both the useful kW and
+    the reactive kVAR that motors demand.
+  </p>
+
+  <!-- ─── Step-by-Step ─── -->
+  <h2 id="step-by-step">Step-by-Step: Converting Between kW, kVA, and kWh</h2>
+
+  <div class="step-card">
+    <div class="step-number">1</div>
+    <div>
+      <strong>kW → kVA (to size your generator or UPS)</strong>
+      <p>
+        Formula: <code>kVA = kW ÷ Power Factor</code>
+        <br />
+        Example: Your load is 3.5 kW with a typical home PF of 0.85.
+        <br />
+        Required kVA = 3.5 ÷ 0.85 = <strong>4.12 kVA</strong>.
+        Choose the next standard generator size: a <strong>5 kVA generator</strong>.
+        This gives a 20% safety headroom, which is recommended.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">2</div>
+    <div>
+      <strong>kVA → kW (to find usable power from a generator)</strong>
+      <p>
+        Formula: <code>kW = kVA × Power Factor</code>
+        <br />
+        Example: You have a 7.5 kVA generator and the manufacturer specifies PF = 0.8.
+        <br />
+        Usable real power = 7.5 × 0.8 = <strong>6 kW</strong>.
+        You can run appliances totalling up to 6,000W safely.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">3</div>
+    <div>
+      <strong>kW → kWh (to calculate energy consumed / units on bill)</strong>
+      <p>
+        Formula: <code>kWh = kW × Hours</code>
+        <br />
+        Example: A 2 kW load (two 1 Ton ACs) running for 6 hours.
+        <br />
+        Energy consumed = 2 kW × 6 hours = <strong>12 kWh = 12 units</strong>.
+        At ₹6/unit, that's ₹72 for one day of AC usage.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">4</div>
+    <div>
+      <strong>kWh → kW (to find average load from a bill)</strong>
+      <p>
+        Formula: <code>kW = kWh ÷ Hours</code>
+        <br />
+        Example: Your bill shows 300 kWh consumed over 30 days.
+        <br />
+        Assuming 10 hours of active use per day: Average load = 300 ÷ (30 × 10) = <strong>1 kW average</strong>.
+        This helps you understand typical load behaviour and right-size an inverter.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">5</div>
+    <div>
+      <strong>Finding Power Factor from kW and kVA</strong>
+      <p>
+        Formula: <code>PF = kW ÷ kVA</code>
+        <br />
+        Example: A UPS spec says it provides 1 kVA output and the load is 850W (0.85 kW).
+        <br />
+        Power Factor = 0.85 ÷ 1.0 = <strong>0.85</strong>.
+        This UPS is operating at a healthy power factor — right in the typical residential range.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── Real Example ─── -->
+  <h2 id="real-example">Real Example: Sizing a Generator for Your Home</h2>
+
+  <div class="example-box">
+    <p class="example-label">Scenario — Generator for a 2 BHK Home During Power Cut</p>
+    <p>
+      You want to run the following appliances during a power cut: 1 × 1.5 Ton AC, 4 × ceiling fans,
+      6 × LED bulbs, 1 × refrigerator, and 1 × TV.
+    </p>
+
+    <p><strong>Step 1: Add up the watts</strong></p>
+    <ul>
+      <li>1.5 Ton AC: 1,600W</li>
+      <li>4 × Ceiling Fan (75W): 300W</li>
+      <li>6 × LED Bulb (10W): 60W</li>
+      <li>Refrigerator: 200W</li>
+      <li>TV (40"): 90W</li>
+    </ul>
+    <p><strong>Total: 2,250W = 2.25 kW</strong></p>
+
+    <p><strong>Step 2: Convert kW → kVA</strong></p>
+    <p>
+      Mixed home load (fans + AC + compressors) has a typical PF of about 0.80–0.85.
+      Using PF = 0.82: Required kVA = 2.25 ÷ 0.82 = <strong>2.74 kVA</strong>
+    </p>
+
+    <p><strong>Step 3: Add 20% safety headroom</strong></p>
+    <p>
+      2.74 × 1.20 = <strong>3.29 kVA</strong> minimum generator size.
+    </p>
+
+    <p><strong>Step 4: Choose from standard sizes</strong></p>
+    <p>
+      Common generator sizes: 2 kVA, 3 kVA, <strong>3.5 kVA</strong>, 5 kVA, 7.5 kVA, 10 kVA.
+      → Choose a <strong>3.5 kVA generator</strong> (adequate with some headroom) or a <strong>5 kVA</strong>
+      if you want comfort margin for future additions or motor starting surges.
+    </p>
+
+    <p><strong>Why does the AC motor matter?</strong></p>
+    <p>
+      AC compressors draw 3–5× their running current for the first few seconds on startup (inrush current).
+      A 1,600W AC might briefly demand 5,000–7,000W during startup. Generators with "surge capacity" ratings
+      handle this; always check the generator's peak surge power spec alongside its continuous kVA rating.
+    </p>
+
+    <p>
+      <strong>Verdict:</strong> A <strong>5 kVA generator</strong> (4 kW real power at 0.8 PF) is the
+      comfortable, reliable choice for this home. It handles the AC startup surge and allows some headroom
+      for additional small loads.
+    </p>
+  </div>
+
+  <!-- ─── Reference Table ─── -->
+  <h2 id="reference-table">Quick Reference Table: kW vs kVA vs kWh</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Term</th>
+          <th>Full Name</th>
+          <th>What It Measures</th>
+          <th>Formula</th>
+          <th>Typical Use Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>kW</strong></td>
+          <td>Kilowatt</td>
+          <td>Real (active) power — actual work done</td>
+          <td><code>kW = kVA × PF</code></td>
+          <td>Load calculation, appliance ratings, billing</td>
+        </tr>
+        <tr>
+          <td><strong>kVA</strong></td>
+          <td>Kilovolt-Ampere</td>
+          <td>Apparent power — total demand on supply</td>
+          <td><code>kVA = kW ÷ PF</code></td>
+          <td>Generator, UPS, inverter, transformer sizing</td>
+        </tr>
+        <tr>
+          <td><strong>kWh</strong></td>
+          <td>Kilowatt-hour</td>
+          <td>Energy consumed over time</td>
+          <td><code>kWh = kW × Hours</code></td>
+          <td>Electricity bills, solar/battery sizing</td>
+        </tr>
+        <tr>
+          <td><strong>PF</strong></td>
+          <td>Power Factor</td>
+          <td>Efficiency of power use (0 to 1)</td>
+          <td><code>PF = kW ÷ kVA</code></td>
+          <td>Generator selection, tariff optimisation</td>
+        </tr>
+        <tr>
+          <td><strong>kVAR</strong></td>
+          <td>Kilovolt-Ampere Reactive</td>
+          <td>Reactive power — the "foam" in the mug</td>
+          <td><code>kVAR = √(kVA² − kW²)</code></td>
+          <td>Power factor correction capacitor sizing</td>
+        </tr>
+        <tr>
+          <td><strong>W</strong></td>
+          <td>Watt</td>
+          <td>Real power (same as kW, smaller unit)</td>
+          <td><code>1 kW = 1,000 W</code></td>
+          <td>Individual appliance ratings</td>
+        </tr>
+        <tr>
+          <td><strong>VA</strong></td>
+          <td>Volt-Ampere</td>
+          <td>Apparent power (same as kVA, smaller)</td>
+          <td><code>1 kVA = 1,000 VA</code></td>
+          <td>Small UPS ratings (home inverters)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    <strong>Typical Power Factor values in Indian homes:</strong>
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Load Type</th>
+          <th>Typical Power Factor</th>
+          <th>Examples</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Purely resistive</td>
+          <td>1.0</td>
+          <td>Electric heater, incandescent bulb, geyser</td>
+        </tr>
+        <tr>
+          <td>LED lighting</td>
+          <td>0.90–0.95</td>
+          <td>Quality LED bulbs and tube lights</td>
+        </tr>
+        <tr>
+          <td>Ceiling fans</td>
+          <td>0.70–0.85</td>
+          <td>Standard induction motor fans</td>
+        </tr>
+        <tr>
+          <td>Refrigerator</td>
+          <td>0.75–0.85</td>
+          <td>Compressor-based cooling</td>
+        </tr>
+        <tr>
+          <td>AC (non-inverter)</td>
+          <td>0.75–0.85</td>
+          <td>Fixed-speed compressor ACs</td>
+        </tr>
+        <tr>
+          <td>AC (inverter type)</td>
+          <td>0.85–0.95</td>
+          <td>Variable-speed inverter ACs</td>
+        </tr>
+        <tr>
+          <td>Mixed home load</td>
+          <td>0.80–0.85</td>
+          <td>Typical residential mixture</td>
+        </tr>
+        <tr>
+          <td>Industrial motors</td>
+          <td>0.70–0.85</td>
+          <td>Large 3-phase induction motors</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── Common Mistakes ─── -->
+  <h2 id="common-mistakes">Common Mistakes to Avoid</h2>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Using kVA and kW interchangeably</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        This is the most common mistake. A "5 kVA generator" does NOT mean you can run 5 kW of appliances.
+        At a typical PF of 0.8, it delivers only 4 kW. Ignoring this means you'll overload your generator,
+        causing it to cut out under load or damage your appliances. Always ask for both kVA and kW ratings
+        when shopping for generators and UPS systems.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Confusing kWh with kW on your electricity bill</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Your bill shows consumption in kWh (units) — not kW. A common question is "My bill says 300 units —
+        is that my load?" No — 300 kWh is the energy consumed over a billing period. Your actual load in kW
+        depends on how many hours you used electricity. If you want to know your average load:
+        Load (kW) = Bill Units ÷ (Days × Hours per day of use).
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Selecting inverter capacity in VA without checking power factor</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Home inverters (Luminous, Microtek, etc.) are sold by VA rating: 850VA, 1100VA, 1500VA, etc.
+        But the usable watt capacity depends on the power factor. A 1,100 VA inverter at PF 0.8 can
+        power only 880W of load. If you're running an AC along with fans and lights, calculate the total
+        kVA required first, then choose the inverter with the next higher VA rating for safety margin.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Assuming power factor is always 1.0</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Every electrical formula without a power factor term is implicitly assuming PF = 1.0 — which
+        is only true for purely resistive loads. The moment you have motors, compressors, or fluorescent
+        ballasts, PF drops to 0.7–0.9. Always use PF = 0.85 as a conservative estimate for mixed
+        residential loads when you don't have the exact value.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Thinking higher kVA always means better performance</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        A 10 kVA generator with PF 0.7 gives only 7 kW — less usable power than an 8 kVA generator
+        with PF 0.9 (7.2 kW). Look at the kW (real power) specification, not just the kVA headline.
+        Premium generators and inverters advertise their kW output alongside kVA for this reason.
+        Also check total harmonic distortion (THD%) for sensitive electronics.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── CTA ─── -->
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <!-- ─── FAQs ─── -->
+  <h2 id="faqs">Frequently Asked Questions</h2>
+
+  <div class="kh-faq">
+    <details>
+      <summary>
+        Why does my inverter shut down even though my load seems within its VA rating?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        Most home inverters have both a VA (apparent power) limit and a watt (real power) limit —
+        sometimes a third limit on peak current. If your load has a poor power factor (lots of motors),
+        the inverter might hit its watt limit before the VA limit. Or, the startup surge of an AC
+        compressor or pump may briefly exceed the peak current rating. Check your inverter's spec sheet
+        for "rated output power in watts" separately from "VA rating." Also ensure the battery is
+        fully charged — low battery voltage causes early shutdown even before rated load is reached.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        What power factor should I use for sizing a home generator?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        Use PF = 0.80 as a conservative default for a typical Indian home with a mix of ACs, fans,
+        and lighting. If you have mostly resistive loads (geysers, heaters, irons) and LED lighting,
+        you can use PF = 0.90. If you have many induction motors or an older non-inverter AC, use
+        PF = 0.75 to be safe. Most generator manufacturers rate their machines at PF = 0.8, so a
+        "5 kVA generator" is expected to deliver 4 kW at PF 0.8 — this is the standard assumption.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Is kWh the same as "units" on my electricity bill?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        Yes — 1 kWh = 1 unit of electricity on your bill. "Unit" is the colloquial Indian term for
+        kilowatt-hour. Your electricity meter accumulates kWh and your DISCOM bills you per unit consumed
+        in the billing period. If you consume 250 units in a month, that means 250 kWh of energy was
+        drawn from the grid.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Can a poor power factor increase my electricity bill?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        For residential consumers in India, most DISCOMs bill purely on kWh consumed — the meter measures
+        active energy only, so poor PF doesn't directly increase your per-unit bill. However, poor PF
+        causes higher current to flow through your home wiring for the same real power, leading to more
+        resistive heating losses in cables, potential nuisance tripping of MCBs, and faster aging of wires.
+        For commercial and industrial consumers, most DISCOMs impose a "power factor surcharge" or penalty
+        when PF drops below 0.85, making power factor correction economically significant at scale.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        What is a good power factor for my home?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        A power factor above 0.85 is considered good for residential applications. Modern inverter ACs,
+        high-quality LED drivers, and inverter-type appliances have better built-in power factor correction
+        (PFC) circuits and typically achieve 0.90–0.99 PF. Older non-inverter appliances, cheap LED bulbs,
+        and induction motors without PFC tend to pull the household average down to 0.75–0.82.
+        You don't need to obsess about PF at home — just be aware of it when sizing a generator or inverter.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        How does kWh relate to CO₂ emissions and environmental impact?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        In India, the current grid emission factor is approximately <strong>0.82 kg CO₂ per kWh</strong>
+        (Central Electricity Authority, 2023). This means every 1 unit (kWh) of electricity you consume
+        from the grid results in about 820 grams of CO₂ being emitted at the power plant level. A home
+        consuming 300 units/month generates roughly 246 kg of CO₂ monthly — about 2.95 tonnes per year.
+        Solar rooftop generation offsets this directly: 1 kWh of solar generated = 0.82 kg CO₂ avoided.
+      </div>
+    </details>
+  </div>
+
+  <!-- ─── Sidebar nav ─── -->
+  <Fragment slot="sidebar-nav">
+    <ol class="space-y-1">
+      <li>
+        <a href="/knowledge-hub/load-calculation/how-to-calculate-electrical-load-for-a-house" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          How to Calculate Electrical Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          Appliance Load Chart
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/connected-load-vs-demand-load" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          Connected vs Demand Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/single-phase-vs-three-phase-load" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          Single vs Three Phase Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/how-many-units-of-electricity-does-a-home-use" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          How Many Units Does a Home Use?
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/kw-vs-kva-vs-kwh-explained" class="flex items-start gap-2 text-sm text-accent transition-colors py-1.5 leading-snug font-medium" data-astro-prefetch="hover" aria-current="page">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></span>
+          kW vs kVA vs kWh Explained
+        </a>
+      </li>
+    </ol>
+  </Fragment>
+
+</KnowledgeHubLayout>

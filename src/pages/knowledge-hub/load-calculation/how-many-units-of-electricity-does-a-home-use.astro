@@ -1,0 +1,681 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 },
+  { id: 'visual-explanation', label: 'Home Size vs Consumption', depth: 2 },
+  { id: 'step-by-step', label: 'Step-by-Step Calculation', depth: 2 },
+  { id: 'real-example', label: 'Real Example: 2BHK Home', depth: 2 },
+  { id: 'reference-table', label: 'Appliance Consumption Table', depth: 2 },
+  { id: 'common-mistakes', label: 'Common Mistakes', depth: 2 },
+  { id: 'faqs', label: 'Frequently Asked Questions', depth: 2 },
+];
+
+const relatedArticles = [
+  {
+    title: 'How to Calculate Electrical Load for a House',
+    slug: 'how-to-calculate-electrical-load-for-a-house',
+    description: 'A complete, practical guide to calculating your home electrical load step by step.',
+  },
+  {
+    title: 'Electrical Load Chart for Home Appliances',
+    slug: 'electrical-load-chart-for-home-appliances',
+    description: 'A complete wattage reference chart for every common home appliance.',
+  },
+  {
+    title: 'kW vs kVA vs kWh — The Simple Explanation',
+    slug: 'kw-vs-kva-vs-kwh-explained',
+    description: 'kW, kVA, and kWh confuse most people. This guide explains all three clearly.',
+  },
+];
+
+const schemaGraph = [
+  {
+    '@type': 'Article',
+    headline: 'How Many Units of Electricity Does a Home Use?',
+    description:
+      'Find out how many kWh (electricity units) a typical Indian home uses per day and per month, what drives consumption, and how to estimate your own usage.',
+    url: `${SITE}/knowledge-hub/load-calculation/how-many-units-of-electricity-does-a-home-use`,
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
+    author: { '@type': 'Organization', name: 'Electricity Load Calculator' },
+    publisher: { '@type': 'Organization', name: 'Electricity Load Calculator', url: SITE },
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Knowledge Hub', item: `${SITE}/knowledge-hub` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'Load Calculation',
+        item: `${SITE}/knowledge-hub/load-calculation`,
+      },
+      { '@type': 'ListItem', position: 4, name: 'How Many Units Does a Home Use?' },
+    ],
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How many units of electricity does a typical Indian home use per month?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A typical Indian home uses 100–300 units (kWh) per month. A 1 BHK without AC uses about 80–120 units. A 2 BHK with one AC uses 250–400 units. A 3 BHK with two ACs can use 400–700 units per month.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What uses the most electricity in a home?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Air conditioners are by far the biggest electricity consumers, using 8–15 units per day each. Geysers (2–4 units per use), refrigerators (3–5 units per day), and washing machines (0.5 units per cycle) are next. Lighting and fans contribute minimally in comparison.',
+        },
+      },
+    ],
+  },
+];
+---
+
+<KnowledgeHubLayout
+  title="How Many Units of Electricity Does a Home Use? | Electrical Knowledge Hub"
+  description="Find out how many kWh (electricity units) a typical Indian home uses per day and per month, what drives consumption, and how to estimate your own usage."
+  keywords="how many units of electricity does a home use, electricity units per month, kWh per month home, electricity consumption India, average electricity bill units"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+    { label: 'How Many Units Does a Home Use?' },
+  ]}
+  toc={toc}
+  readingTime={5}
+  datePublished="2026-06-18"
+  dateModified="2026-06-18"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="load-calculation"
+  clusterTitle="Load Calculation"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'load-calculation', slug: 'kw-vs-kva-vs-kwh-explained', caption: 'Technical Explanation' }}
+>
+
+  <!-- ─── Quick Answer ─── -->
+  <QuickAnswerBox id="quick-answer">
+    <p>
+      An average Indian home uses <strong>100–300 units (kWh) of electricity per month</strong>, which works out
+      to roughly <strong>3–10 units per day</strong>. The biggest variable is air conditioning — a single 1.5 Ton AC
+      running 8 hours a day adds ~13 units daily (about 400 units/month) all by itself. A 1 BHK without AC
+      typically uses 80–120 units/month; a 3 BHK with two ACs can easily consume 400–700 units/month.
+    </p>
+  </QuickAnswerBox>
+
+  <!-- ─── Visual Explanation ─── -->
+  <h2 id="visual-explanation">Home Size vs Typical Monthly Electricity Consumption</h2>
+
+  <p>
+    One "unit" of electricity is 1 kilowatt-hour (kWh) — the energy consumed when a 1,000-watt appliance
+    runs for exactly one hour. Your electricity bill states how many units you've consumed in the billing cycle.
+    The table below shows typical monthly consumption ranges for different Indian home configurations.
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Home Type</th>
+          <th>Bedrooms</th>
+          <th>Monthly Units (kWh)</th>
+          <th>Monthly Cost (₹5/unit)</th>
+          <th>Annual Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1 BHK, No AC</td>
+          <td>1</td>
+          <td>80–120 units</td>
+          <td>₹400–600</td>
+          <td>₹4,800–7,200</td>
+        </tr>
+        <tr>
+          <td>2 BHK, No AC</td>
+          <td>2</td>
+          <td>120–200 units</td>
+          <td>₹600–1,000</td>
+          <td>₹7,200–12,000</td>
+        </tr>
+        <tr>
+          <td>2 BHK, 1 AC (1.5 Ton)</td>
+          <td>2</td>
+          <td>250–400 units</td>
+          <td>₹1,250–2,000</td>
+          <td>₹15,000–24,000</td>
+        </tr>
+        <tr>
+          <td>3 BHK, 2 ACs</td>
+          <td>3</td>
+          <td>400–700 units</td>
+          <td>₹2,000–3,500</td>
+          <td>₹24,000–42,000</td>
+        </tr>
+        <tr>
+          <td>4 BHK, 3+ ACs</td>
+          <td>4</td>
+          <td>700–1,200 units</td>
+          <td>₹3,500–6,000</td>
+          <td>₹42,000–72,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    <strong>Note:</strong> These are estimates based on typical Indian urban usage patterns. Actual consumption
+    varies significantly with climate (hotter cities use more AC), appliance efficiency ratings (5-star vs
+    1-star), occupancy hours, and individual habits. Slab tariffs also mean per-unit cost rises as you
+    consume more.
+  </p>
+
+  <p>
+    The AC is the single biggest lever in your electricity bill. In most Indian climates, switching from
+    a 1-star to a 5-star rated 1.5 Ton AC saves approximately 600–800 units per year — worth ₹3,000–4,000
+    annually at average tariff rates.
+  </p>
+
+  <!-- ─── Step-by-Step ─── -->
+  <h2 id="step-by-step">Step-by-Step: How to Calculate Your Monthly Consumption</h2>
+
+  <p>
+    You don't need to wait for your electricity bill to understand your consumption. Here's how to estimate
+    your monthly kWh (units) for any appliance or your entire home using a simple formula:
+  </p>
+
+  <p style="text-align:center;font-family:var(--font-mono);background:var(--bg-card);border:1px solid var(--border);border-radius:0.75rem;padding:1rem;margin:1.5rem 0;">
+    <strong>Monthly Units = (Watts × Hours per Day × 30) ÷ 1,000</strong>
+  </p>
+
+  <div class="step-card">
+    <div class="step-number">1</div>
+    <div>
+      <strong>List every appliance and its wattage</strong>
+      <p>
+        Find the wattage rating on the product label or user manual. For ACs, a 1 Ton AC uses ~1,100W,
+        a 1.5 Ton uses ~1,600W, and a 2 Ton uses ~2,000W. Refrigerators use about 150–250W on average
+        (they cycle on and off, so "average" watts matter more than peak watts).
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">2</div>
+    <div>
+      <strong>Estimate daily usage hours for each appliance</strong>
+      <p>
+        Be realistic. A ceiling fan might run 10–12 hours. An AC might run 6–10 hours in summer and
+        0–2 hours in winter. Your refrigerator runs 24 hours but only actively cools for about 8–10 hours
+        (compressor on-time). A TV might run 4–6 hours. A geyser typically runs 30–60 minutes per day.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">3</div>
+    <div>
+      <strong>Calculate daily kWh for each appliance</strong>
+      <p>
+        Daily kWh = Watts × Hours ÷ 1,000. Example: 1.5 Ton AC (1,600W) running 8 hours =
+        1,600 × 8 ÷ 1,000 = <strong>12.8 kWh per day</strong>. A ceiling fan (75W, 10 hours) =
+        75 × 10 ÷ 1,000 = <strong>0.75 kWh per day</strong>.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">4</div>
+    <div>
+      <strong>Multiply by 30 for monthly units</strong>
+      <p>
+        Monthly kWh = Daily kWh × 30. The AC from the example: 12.8 × 30 = <strong>384 units/month</strong>.
+        The ceiling fan: 0.75 × 30 = <strong>22.5 units/month</strong>. Add up all appliances for your
+        total monthly consumption estimate.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">5</div>
+    <div>
+      <strong>Add standby / phantom loads (5–10% extra)</strong>
+      <p>
+        Every device with a standby mode (TV with remote, set-top box, phone chargers, WiFi router,
+        microwave with clock display) consumes 1–5W continuously. For a typical home, these "vampire
+        loads" add up to 50–100W running 24/7 — that's 36–72 kWh per month. Add 5–10% to your
+        calculated total to account for this.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">6</div>
+    <div>
+      <strong>Use our free calculator to verify</strong>
+      <p>
+        Our <a href="/" data-astro-prefetch="hover">Electricity Load Calculator</a> lets you add every
+        appliance with quantity and usage hours, and instantly shows your total connected load in kW,
+        daily kWh, and monthly units — no spreadsheet needed.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── Real Example ─── -->
+  <h2 id="real-example">Real Example: A 2BHK Home Calculation</h2>
+
+  <div class="example-box">
+    <p class="example-label">2 BHK Home — Monthly Electricity Breakdown</p>
+    <p>
+      Let's walk through a typical 2BHK home in a tier-1 Indian city with a family of 4,
+      with 1 × 1.5 Ton AC in the bedroom (used 8 hours/day during summer, say 5 months/year),
+      and standard appliances running year-round.
+    </p>
+
+    <p><strong>Year-round appliances (monthly consumption):</strong></p>
+    <ul>
+      <li>4 × Ceiling Fan (75W, 10 hr/day): 4 × 75 × 10 × 30 ÷ 1000 = <strong>90 units</strong></li>
+      <li>8 × LED Bulb (10W, 6 hr/day): 8 × 10 × 6 × 30 ÷ 1000 = <strong>14.4 units</strong></li>
+      <li>1 × Refrigerator (200W avg, 24 hr/day): 200 × 24 × 30 ÷ 1000 = <strong>144 units</strong></li>
+      <li>1 × TV 40" (90W, 5 hr/day): 90 × 5 × 30 ÷ 1000 = <strong>13.5 units</strong></li>
+      <li>1 × Washing Machine (500W, 1 hr/day): 500 × 1 × 30 ÷ 1000 = <strong>15 units</strong></li>
+      <li>1 × Laptop (60W, 6 hr/day): 60 × 6 × 30 ÷ 1000 = <strong>10.8 units</strong></li>
+      <li>Standby loads (~80W, 24 hr/day): 80 × 24 × 30 ÷ 1000 = <strong>57.6 units</strong></li>
+    </ul>
+    <p><strong>Year-round subtotal: ~345 units/month</strong></p>
+
+    <p><strong>Summer months only (May–Sep, ~5 months):</strong></p>
+    <ul>
+      <li>1 × 1.5 Ton AC (1,600W, 8 hr/day): 1600 × 8 × 30 ÷ 1000 = <strong>384 units</strong></li>
+      <li>1 × Geyser (2,000W, 0.5 hr/day in winter) → Negligible in summer</li>
+    </ul>
+    <p><strong>Summer months total: ~729 units/month</strong></p>
+
+    <p><strong>Winter months only (Nov–Feb, ~4 months):</strong></p>
+    <ul>
+      <li>1 × Geyser (2,000W, 0.5 hr/day): 2000 × 0.5 × 30 ÷ 1000 = <strong>30 units</strong></li>
+    </ul>
+    <p><strong>Winter months total: ~375 units/month</strong></p>
+
+    <p>
+      <strong>Annual consumption:</strong> (345 × 12) + (384 × 5) + (30 × 4) = 4,140 + 1,920 + 120 = <strong>~6,180 units/year</strong>
+    </p>
+    <p>
+      <strong>Average monthly: ~515 units</strong> — consistent with the 2 BHK + 1 AC range of 250–700 units/month.
+      At ₹6/unit average (after slab tariff), that's approximately <strong>₹3,100/month</strong>.
+    </p>
+  </div>
+
+  <!-- ─── Reference Table ─── -->
+  <h2 id="reference-table">Appliance Consumption Reference Table</h2>
+
+  <p>
+    Use this table to quickly look up how many units your individual appliances consume per day and per month.
+    All figures assume typical Indian usage patterns. Actual consumption depends on usage hours and appliance efficiency rating.
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th>Typical Watts</th>
+          <th>Typical Hours/Day</th>
+          <th>Units/Day (kWh)</th>
+          <th>Units/Month</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ceiling Fan</td>
+          <td>75W</td>
+          <td>8 hr</td>
+          <td>0.6</td>
+          <td>18</td>
+        </tr>
+        <tr>
+          <td>LED Bulb</td>
+          <td>10W</td>
+          <td>6 hr</td>
+          <td>0.06</td>
+          <td>1.8</td>
+        </tr>
+        <tr>
+          <td>Tube Light (LED)</td>
+          <td>20W</td>
+          <td>6 hr</td>
+          <td>0.12</td>
+          <td>3.6</td>
+        </tr>
+        <tr>
+          <td>1 Ton AC (1-star)</td>
+          <td>1,200W</td>
+          <td>8 hr</td>
+          <td>9.6</td>
+          <td>288</td>
+        </tr>
+        <tr>
+          <td>1.5 Ton AC (3-star)</td>
+          <td>1,600W</td>
+          <td>8 hr</td>
+          <td>12.8</td>
+          <td>384</td>
+        </tr>
+        <tr>
+          <td>1.5 Ton AC (5-star Inverter)</td>
+          <td>1,000W</td>
+          <td>8 hr</td>
+          <td>8.0</td>
+          <td>240</td>
+        </tr>
+        <tr>
+          <td>2 Ton AC (3-star)</td>
+          <td>2,000W</td>
+          <td>8 hr</td>
+          <td>16.0</td>
+          <td>480</td>
+        </tr>
+        <tr>
+          <td>Refrigerator (250L)</td>
+          <td>200W avg</td>
+          <td>24 hr</td>
+          <td>4.8</td>
+          <td>144</td>
+        </tr>
+        <tr>
+          <td>TV (40" LED)</td>
+          <td>90W</td>
+          <td>5 hr</td>
+          <td>0.45</td>
+          <td>13.5</td>
+        </tr>
+        <tr>
+          <td>Washing Machine</td>
+          <td>500W</td>
+          <td>1 hr</td>
+          <td>0.5</td>
+          <td>15</td>
+        </tr>
+        <tr>
+          <td>Electric Geyser (25L)</td>
+          <td>2,000W</td>
+          <td>0.5 hr</td>
+          <td>1.0</td>
+          <td>30</td>
+        </tr>
+        <tr>
+          <td>Microwave Oven</td>
+          <td>1,000W</td>
+          <td>0.5 hr</td>
+          <td>0.5</td>
+          <td>15</td>
+        </tr>
+        <tr>
+          <td>Laptop</td>
+          <td>60W</td>
+          <td>6 hr</td>
+          <td>0.36</td>
+          <td>10.8</td>
+        </tr>
+        <tr>
+          <td>Desktop PC</td>
+          <td>200W</td>
+          <td>6 hr</td>
+          <td>1.2</td>
+          <td>36</td>
+        </tr>
+        <tr>
+          <td>Mixer / Grinder</td>
+          <td>600W</td>
+          <td>0.25 hr</td>
+          <td>0.15</td>
+          <td>4.5</td>
+        </tr>
+        <tr>
+          <td>Iron (Electric)</td>
+          <td>1,200W</td>
+          <td>0.5 hr</td>
+          <td>0.6</td>
+          <td>18</td>
+        </tr>
+        <tr>
+          <td>WiFi Router</td>
+          <td>10W</td>
+          <td>24 hr</td>
+          <td>0.24</td>
+          <td>7.2</td>
+        </tr>
+        <tr>
+          <td>Set-Top Box</td>
+          <td>15W</td>
+          <td>24 hr (standby)</td>
+          <td>0.36</td>
+          <td>10.8</td>
+        </tr>
+        <tr>
+          <td>Water Pump (0.5 HP)</td>
+          <td>375W</td>
+          <td>1 hr</td>
+          <td>0.375</td>
+          <td>11.25</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── Common Mistakes ─── -->
+  <h2 id="common-mistakes">Common Mistakes When Estimating Electricity Usage</h2>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Not accounting for AC usage variation by season</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        An AC running 8 hours/day in May adds ~384 units/month. The same AC in December might add
+        only 20–30 units. If you calculate an annual average without considering seasonal variation,
+        your summer bills will be a shock. Always model your consumption season by season, especially
+        for cities like Delhi, Chennai, or Hyderabad with extreme summer temperatures.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Forgetting standby and phantom loads</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Devices left on standby — set-top box, smart TV, phone chargers left plugged in, WiFi router,
+        microwave with a clock display — can collectively consume 100–200W continuously. Over 30 days,
+        that's 72–144 kWh you're paying for without getting much benefit. Use smart power strips or
+        turn off devices at the switch when not in use.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Using peak watts instead of average watts for cycling appliances</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        A refrigerator's compressor might peak at 350W but averages only 150–200W because it cycles
+        on and off. Similarly, an inverter AC's variable compressor means actual power draw fluctuates
+        constantly. Using peak power for 24-hour appliances wildly overestimates consumption. Check
+        the appliance's energy label for Annual Energy Consumption (kWh/year) — this is the most
+        accurate number.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Ignoring star rating differences between appliances</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        A 5-star rated 1.5 Ton inverter AC (ISEER 5+) uses roughly 40% less electricity than a
+        1-star non-inverter model for the same cooling output. Over 5 years of use, the 5-star model
+        saves ₹15,000–20,000 in electricity bills — easily offsetting its higher purchase price.
+        Always check the BEE star label when buying high-consumption appliances.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Comparing bills without normalising for days in the billing cycle</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Some DISCOM billing cycles are 30 days, others 60 days. Comparing a 60-day bill of 500 units
+        to a 30-day bill of 300 units might seem like consumption dropped — but it actually increased
+        per day. Always calculate units-per-day (units ÷ days-in-cycle) for apples-to-apples comparisons.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── CTA ─── -->
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <!-- ─── FAQs ─── -->
+  <h2 id="faqs">Frequently Asked Questions</h2>
+
+  <div class="kh-faq">
+    <details>
+      <summary>
+        How many units does a 1.5 Ton AC use per month?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        A 3-star 1.5 Ton AC (approximately 1,600W) running 8 hours per day uses about 12.8 kWh per day,
+        which equals roughly 384 units per month. A 5-star inverter 1.5 Ton AC typically uses 30–40%
+        less — around 240–280 units per month under the same conditions. If your AC runs only 6 hours
+        per day, divide proportionally: 1,600 × 6 × 30 ÷ 1,000 = 288 units/month.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Is 200 units of electricity per month a lot for a home?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        200 units per month is considered moderate consumption for an Indian home. It's typical for
+        a 2 BHK household without AC, or a 1 BHK with light AC usage. In most Indian states, this falls
+        within the first two slabs of the tariff structure, so you'll pay a relatively low per-unit rate.
+        Above 300–500 units/month (varies by state), you typically enter higher slab rates of ₹7–10/unit.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        How can I reduce my electricity consumption at home?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        The highest-impact changes, in order: (1) Set AC to 24–26°C instead of 18–20°C — each degree
+        lower increases consumption by ~6%. (2) Use ceiling fans with AC — allows setting AC 2°C higher
+        while maintaining comfort. (3) Switch to 5-star inverter AC when replacing old units.
+        (4) Replace old CFL/tube lights with LEDs. (5) Eliminate standby loads with smart switches
+        or power strips. (6) Use a solar rooftop system — covered in our Solar & Inverter sizing guide.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        What is the difference between kW and units (kWh) on my bill?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        kW (kilowatt) measures power — how fast electricity is being consumed at any instant, like
+        a speedometer reading. kWh (kilowatt-hour) measures energy — the total electricity consumed
+        over time, like an odometer. Your electricity bill charges you for kWh (units).
+        A 2 kW load running for 3 hours = 6 kWh = 6 units billed. See our detailed
+        <a href="/knowledge-hub/load-calculation/kw-vs-kva-vs-kwh-explained" data-astro-prefetch="hover">kW vs kVA vs kWh guide</a> for a full explanation.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        How do I read my electricity meter to track daily usage?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        Your electricity meter (whether analog dial-type or digital) shows a cumulative reading in kWh.
+        Read it at the same time each day (e.g., 8:00 PM). Subtract yesterday's reading from today's
+        reading to get your daily consumption in units (kWh). Most modern smart meters also display
+        instant power draw (in kW) and have a data port that your DISCOM can query remotely. If your
+        meter has an LED that blinks, each blink typically represents 1 Wh — 1,000 blinks = 1 unit.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Does a refrigerator really run 24 hours a day?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        A refrigerator is plugged in 24/7, but its compressor cycles on and off automatically to maintain
+        the set temperature. A typical 250L refrigerator has a compressor duty cycle of about 30–50% —
+        meaning the compressor runs for roughly 8–12 hours per day and rests for the other 12–16 hours.
+        The energy label's "Annual Consumption" figure already accounts for this cycling. Avoid placing
+        the fridge near heat sources (oven, direct sunlight) as this increases compressor run-time and
+        electricity consumption by 10–20%.
+      </div>
+    </details>
+  </div>
+
+  <!-- ─── Sidebar nav ─── -->
+  <Fragment slot="sidebar-nav">
+    <ol class="space-y-1">
+      <li>
+        <a href="/knowledge-hub/load-calculation/how-to-calculate-electrical-load-for-a-house" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          How to Calculate Electrical Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          Appliance Load Chart
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/connected-load-vs-demand-load" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          Connected vs Demand Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/single-phase-vs-three-phase-load" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          Single vs Three Phase Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/how-many-units-of-electricity-does-a-home-use" class="flex items-start gap-2 text-sm text-accent transition-colors py-1.5 leading-snug font-medium" data-astro-prefetch="hover" aria-current="page">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></span>
+          How Many Units Does a Home Use?
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/kw-vs-kva-vs-kwh-explained" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          kW vs kVA vs kWh Explained
+        </a>
+      </li>
+    </ol>
+  </Fragment>
+
+</KnowledgeHubLayout>

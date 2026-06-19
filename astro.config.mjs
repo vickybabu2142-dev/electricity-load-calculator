@@ -23,7 +23,9 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: (page) => page !== `${SITE_URL}/404` && page !== `${SITE_URL}/assessment`,
+      filter: (page) =>
+        page !== `${SITE_URL}/404` &&
+        page !== `${SITE_URL}/assessment`,
     }),
   ],
 

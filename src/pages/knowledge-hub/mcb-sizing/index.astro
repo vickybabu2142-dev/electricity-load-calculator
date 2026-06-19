@@ -1,0 +1,225 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { MCB_SIZING_ARTICLES, CLUSTERS } from '@/data/knowledgeHub';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+const cluster = CLUSTERS.find(c => c.slug === 'mcb-sizing')!;
+const pillar = MCB_SIZING_ARTICLES.find(a => a.isPillar)!;
+
+const comingTopics = [
+  {
+    icon: '🔲',
+    title: 'MCB Types: B, C & D Curve Explained',
+    desc: 'Understand the tripping characteristics of Type B, C, and D MCBs and which to use for home wiring vs. industrial circuits.',
+  },
+  {
+    icon: '❄️',
+    title: 'Which MCB for Air Conditioners?',
+    desc: 'AC units draw heavy startup current. Learn how to select the correct MCB rating and type for 1 Ton, 1.5 Ton, and 2 Ton ACs.',
+  },
+  {
+    icon: '🔍',
+    title: 'Why Does My MCB Keep Tripping?',
+    desc: 'The definitive troubleshooting guide — overload, short circuit, loose connections, nuisance tripping, and how to fix each cause.',
+  },
+  {
+    icon: '🏠',
+    title: 'MCB Board Layout for a 2 BHK Home',
+    desc: 'A practical worked example of an MCB distribution board for a standard 2 BHK flat with AC, geyser, and kitchen circuits.',
+  },
+  {
+    icon: '🔌',
+    title: 'RCCB vs MCB vs RCBO — What You Need',
+    desc: "Understand the difference between MCBs (overload protection), RCCBs (earth fault protection), and RCBOs (combined) — and when you need each.",
+  },
+];
+
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+    { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+    { "@type": "ListItem", "position": 3, "name": "MCB Sizing" },
+  ],
+};
+
+const schemaGraph = [
+  {
+    "@type": "CollectionPage",
+    "name": "MCB Sizing & Selection Guides",
+    "description": "Learn how to select the right MCB rating, curves, and curves troubleshooting for home circuits.",
+    "url": `${SITE}/knowledge-hub/mcb-sizing`,
+    "breadcrumb": breadcrumbSchema,
+    "hasPart": MCB_SIZING_ARTICLES.map(a => ({
+      "@type": "Article",
+      "name": a.title,
+      "url": `${SITE}/knowledge-hub/mcb-sizing/${a.slug}`,
+      "description": a.description,
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title="MCB Sizing & Selection Guides — Electrical Knowledge Hub"
+  description="Learn how to choose the right MCB rating, understand types (Type B, C, D curves), size AC circuit breakers, and troubleshoot MCB tripping problems."
+  keywords="MCB sizing, MCB rating selection, MCB types, MCB for AC, why MCB trips, distribution board, RCCB vs MCB"
+  schemaGraph={schemaGraph}
+  breadcrumbSchema={breadcrumbSchema}
+>
+  <Breadcrumb items={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'MCB Sizing' },
+  ]} />
+
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-6 pb-20">
+
+    <!-- Cluster Hero -->
+    <div class="max-w-4xl mb-12">
+      <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted mb-2 flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true">
+          <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 0-2-2V9m0 0h18" />
+        </svg>
+        Knowledge Hub / MCB Sizing
+      </p>
+      <h1 class="font-display font-bold text-4xl sm:text-5xl text-text-primary leading-tight tracking-tight mb-4">
+        MCB Sizing &amp; <span class="text-accent">Selection</span> Guides
+      </h1>
+      <p class="text-text-muted text-base sm:text-lg leading-relaxed max-w-2xl mb-6">
+        Practical, plain-language guides on selecting the right miniature circuit breaker for your home, office, and specific appliances. Size your safety systems based on your actual load.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href={`/knowledge-hub/mcb-sizing/${pillar.slug}`} class="btn-primary px-5 py-2.5 text-sm">
+          Read the Pillar Guide
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+        </a>
+        <a href="/" class="btn-secondary px-5 py-2.5 text-sm">Use MCB Sizing Tool</a>
+      </div>
+    </div>
+
+    <div class="flex gap-8 xl:gap-12 items-start">
+      <!-- Main Content -->
+      <div class="min-w-0 flex-1">
+
+        <!-- Pillar Article (featured) -->
+        <section class="mb-10" aria-labelledby="pillar-heading">
+          <h2 id="pillar-heading" class="font-mono text-[10px] uppercase tracking-[0.2em] text-accent mb-4 flex items-center gap-2">
+            <span class="w-4 h-px bg-accent" aria-hidden="true"></span>
+            Featured Guide
+          </h2>
+          <a
+            href={`/knowledge-hub/mcb-sizing/${pillar.slug}`}
+            class="group block rounded-xl border border-border bg-card p-6 sm:p-8 hover:border-accent/40 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            style="box-shadow: 0 4px 32px -8px color-mix(in srgb, var(--accent), transparent 85%);"
+            data-astro-prefetch="hover"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-[9px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true">
+                  <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+                Pillar Guide
+              </span>
+              <span class="text-[10px] font-mono text-text-faint">{pillar.readingTime} min read</span>
+            </div>
+            <h3 class="font-display font-bold text-2xl text-text-primary group-hover:text-accent transition-colors mb-3 leading-tight">
+              {pillar.title}
+            </h3>
+            <p class="text-text-muted leading-relaxed mb-5">{pillar.description}</p>
+            <div class="flex items-center gap-2 text-sm text-accent font-medium">
+              Read complete guide
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+            </div>
+          </a>
+        </section>
+ 
+        <!-- Upcoming Guides -->
+        <section aria-labelledby="guides-heading">
+          <h2 id="guides-heading" class="font-display font-bold text-2xl text-text-primary mb-5 flex items-center gap-3">
+            <span class="w-1 h-6 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            Upcoming MCB Sizing Guides
+          </h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {comingTopics.map((topic, i) => (
+              <div
+                class="group block rounded-xl border border-border bg-card/60 p-5 overflow-hidden hover:border-accent/20 transition-all duration-200"
+              >
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-[10px] font-mono text-text-faint flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-text-faint" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    Upcoming
+                  </span>
+                  <span class="text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border border-border text-text-faint bg-base/40">Soon</span>
+                </div>
+                <h3 class="font-display font-semibold text-base text-text-primary mb-2 leading-snug">
+                  {topic.title}
+                </h3>
+                <p class="text-xs text-text-muted leading-relaxed line-clamp-2">{topic.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Calculator CTA -->
+        <KnowledgeHubCTA />
+
+        <!-- Other Clusters -->
+        <section class="mt-12 pt-8 border-t border-border" aria-labelledby="other-clusters-heading">
+          <h2 id="other-clusters-heading" class="font-display font-bold text-lg text-text-primary mb-4">Explore Other Topics</h2>
+          <div class="flex flex-wrap gap-3">
+            {[
+              { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+              { label: 'Wire Sizing', href: '/knowledge-hub/wire-sizing' },
+              { label: 'Solar & Inverter', href: '/knowledge-hub/solar-inverter' },
+              { label: 'All Topics', href: '/knowledge-hub' },
+            ].map(link => (
+              <a href={link.href} class="btn-secondary text-sm px-4 py-2" data-astro-prefetch="hover">{link.label} →</a>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="hidden xl:block w-72 flex-shrink-0 sticky top-24">
+        <div class="rounded-xl border border-border bg-card p-5 mb-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+            </div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</p>
+          </div>
+          <p class="font-display font-bold text-base text-text-primary mb-1.5">MCB Sizing Calculator</p>
+          <p class="text-xs text-text-muted leading-relaxed mb-4">Determine standard wire gauge and MCB ampere ratings for your home load.</p>
+          <a href="/" class="btn-primary w-full text-sm py-2.5 justify-center" data-astro-prefetch="hover">
+            Start Sizing →
+          </a>
+        </div>
+        <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted mb-3">
+            Cluster Articles
+          </p>
+          <nav aria-label="MCB Sizing Guides">
+            {MCB_SIZING_ARTICLES.map(a => (
+              <a
+                href={`/knowledge-hub/mcb-sizing/${a.slug}`}
+                class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.isPillar ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+                data-astro-prefetch="hover"
+              >
+                <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.isPillar ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+                {a.title}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </aside>
+    </div>
+  </main>
+</BaseLayout>

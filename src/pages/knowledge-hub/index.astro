@@ -1,0 +1,258 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ClusterCard from '@/components/ClusterCard.astro';
+import { CLUSTERS, LOAD_CALC_ARTICLES, MCB_SIZING_ARTICLES } from '@/data/knowledgeHub';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+    { "@type": "ListItem", "position": 2, "name": "Knowledge Hub" },
+  ],
+};
+
+const schemaGraph = [
+  {
+    "@type": "CollectionPage",
+    "name": "Electrical Knowledge Hub — ElectricityLoadCalculator.com",
+    "description": "A comprehensive electrical knowledge hub covering load calculation, MCB sizing, wire sizing, and solar & inverter planning.",
+    "url": `${SITE}/knowledge-hub`,
+    "breadcrumb": breadcrumbSchema,
+  },
+];
+
+const hubFaqs = [
+  {
+    q: "What is an electrical load calculation?",
+    a: "An electrical load calculation adds up the wattage of every appliance and device in your home to find the total power demand. It's used to size circuit breakers, cables, inverters, and solar panels correctly.",
+  },
+  {
+    q: "How do I calculate my home's electrical load?",
+    a: "List all your appliances, note the wattage of each, multiply by quantity, and add them together. Divide the total watts by 1,000 to get kilowatts (kW). Our free calculator does this instantly.",
+  },
+  {
+    q: "What is the difference between kW and kWh?",
+    a: "kW (kilowatt) measures power — how much energy a device uses at any moment. kWh (kilowatt-hour) measures energy consumed over time. If a 1 kW heater runs for 2 hours, it uses 2 kWh.",
+  },
+  {
+    q: "What MCB size do I need for my home?",
+    a: "For most Indian homes with a load of 3–5 kW, a 32A MCB is standard. Larger loads (6–10 kW) may need a 40A or 63A MCB. Use our calculator to get a precise recommendation based on your actual load.",
+  },
+  {
+    q: "What wire size should I use for my home wiring?",
+    a: "Common wire gauges for Indian homes: 1.5 sq mm for lighting circuits, 2.5 sq mm for general sockets, 4 sq mm for ACs and heavy appliances. Always size based on the circuit load and current.",
+  },
+  {
+    q: "How do I size a solar inverter for my home?",
+    a: "Calculate your total load in kW, add a 25% safety margin, and choose the next standard inverter size. For example, a 3 kW home load needs at least a 3.75 kW inverter — so a 4 kW or 5 kW unit.",
+  },
+];
+
+const featuredArticles = [
+  {
+    ...LOAD_CALC_ARTICLES.find(a => a.isPillar)!,
+    clusterSlug: 'load-calculation'
+  },
+  {
+    ...MCB_SIZING_ARTICLES.find(a => a.isPillar)!,
+    clusterSlug: 'mcb-sizing'
+  },
+  {
+    ...LOAD_CALC_ARTICLES.find(a => a.slug === 'electrical-load-chart-for-home-appliances')!,
+    clusterSlug: 'load-calculation'
+  }
+];
+---
+
+<BaseLayout
+  title="Electrical Knowledge Hub | ElectricityLoadCalculator.com"
+  description="Free electrical guides for homeowners, electricians, and solar installers. Learn load calculation, MCB sizing, wire sizing, and solar planning — practical and jargon-free."
+  keywords="electrical knowledge hub, electrical load calculation guide, MCB sizing guide, wire sizing guide, solar inverter sizing, home electrical planning, kW kVA kWh explained"
+  schemaGraph={schemaGraph}
+  breadcrumbSchema={breadcrumbSchema}
+>
+  <main>
+    <!-- ── Hero ─────────────────────────────────────────── -->
+  <section class="relative pt-10 pb-12 px-4 sm:px-6 overflow-hidden">
+    <!-- Dot grid -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.12]" style="background-image: radial-gradient(circle, var(--text-muted) 1px, transparent 1px); background-size: 24px 24px; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 40%, transparent 100%);" aria-hidden="true"></div>
+
+    <div class="relative max-w-4xl mx-auto text-center">
+      <p class="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] text-text-muted uppercase mb-3 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+        ElectricityLoadCalculator.com
+      </p>
+      <h1 class="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-text-primary leading-none tracking-tight mb-4 animate-slide-up" style="animation-delay:0.05s">
+        Electrical <span class="text-accent">Knowledge Hub</span>
+      </h1>
+      <p class="max-w-2xl mx-auto text-text-muted text-base sm:text-lg leading-relaxed mb-8 animate-slide-up" style="animation-delay:0.1s">
+        Practical electrical guides for homeowners, electricians, solar installers, and students. No textbook jargon — just clear answers to real electrical questions.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-3 animate-slide-up" style="animation-delay:0.15s">
+        <a href="/" class="btn-primary px-6 py-3 text-sm">
+          Try Load Calculator
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+        </a>
+        <a href="#topics" class="btn-secondary px-6 py-3 text-sm">Browse Topics</a>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex flex-wrap justify-center gap-4 mt-8 text-xs animate-slide-up" style="animation-delay:0.2s">
+        {[
+          { label: '7 Guides', sub: 'Load Calculation' },
+          { label: '4 Topic Clusters', sub: 'Coming Soon' },
+          { label: 'Free', sub: 'Always' },
+        ].map(s => (
+          <div class="stat-badge flex flex-col items-center px-4 py-2.5 rounded-xl">
+            <span class="font-display font-bold text-sm text-text-primary">{s.label}</span>
+            <span class="font-mono text-[10px] text-text-faint uppercase tracking-wider">{s.sub}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Topic Clusters ─────────────────────────────── -->
+  <section id="topics" class="max-w-[1400px] mx-auto px-4 sm:px-6 py-12">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted mb-1">Knowledge Areas</p>
+        <h2 class="font-display font-bold text-3xl text-text-primary">Topic Clusters</h2>
+      </div>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {CLUSTERS.map(cluster => (
+        <ClusterCard
+          slug={cluster.slug}
+          title={cluster.title}
+          shortTitle={cluster.shortTitle}
+          description={cluster.description}
+          iconPath={cluster.iconPath}
+          articleCount={cluster.articles.length}
+          comingSoon={cluster.comingSoon}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- ── Featured Tool ─────────────────────────────── -->
+  <section class="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
+    <div class="rounded-2xl border border-border bg-card p-6 sm:p-10 relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none opacity-[0.06]" style="background-image: radial-gradient(circle, var(--accent) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+      <div class="relative flex flex-col lg:flex-row items-start lg:items-center gap-8">
+        <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-accent/10 border border-accent/30">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+        </div>
+        <div class="flex-1">
+          <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-accent mb-1">Featured Tool</p>
+          <h2 class="font-display font-bold text-2xl sm:text-3xl text-text-primary mb-2">Electricity Load Calculator</h2>
+          <p class="text-text-muted text-sm leading-relaxed max-w-xl">
+            Don't calculate by hand. Add your appliances and get your total load in kW, daily energy use in kWh, a full electrical health score, and smart MCB, cable, inverter, and solar recommendations — instantly.
+          </p>
+          <div class="flex flex-wrap gap-3 mt-4">
+            {['Real-time load in kW', 'kWh/day & monthly', 'MCB & Cable sizing', 'Inverter & Solar sizing', 'Health Score', 'PDF Report'].map(f => (
+              <span class="flex items-center gap-1.5 text-xs text-text-muted bg-base border border-border px-3 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+                {f}
+              </span>
+            ))}
+          </div>
+        </div>
+        <a href="/" class="btn-primary flex-shrink-0 px-6 py-3 text-sm self-start lg:self-center">
+          Open Calculator
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Featured Guides ────────────────────────────── -->
+  <section class="max-w-[1400px] mx-auto px-4 sm:px-6 py-12">
+    <div class="mb-8">
+      <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted mb-1">Start Here</p>
+      <h2 class="font-display font-bold text-3xl text-text-primary">Featured Guides</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {featuredArticles.map((article, i) => (
+        <a
+          href={`/knowledge-hub/${article.clusterSlug}/${article.slug}`}
+          class="group block rounded-xl border border-border bg-card p-6 hover:border-accent/40 hover:-translate-y-1 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          data-astro-prefetch="hover"
+        >
+          <div class="flex items-center gap-2 mb-3">
+            {article.isPillar && (
+              <span class="text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-accent/10 border border-accent/30 text-accent">
+                Pillar Guide
+              </span>
+            )}
+            <span class="text-[10px] font-mono text-text-faint">{article.readingTime} min read</span>
+          </div>
+          <h3 class="font-display font-bold text-base text-text-primary group-hover:text-accent transition-colors mb-2 leading-snug">
+            {article.title}
+          </h3>
+          <p class="text-sm text-text-muted leading-relaxed line-clamp-2">{article.description}</p>
+          <p class="mt-4 text-xs text-accent font-medium flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            Read guide
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="currentColor" class="w-3 h-3" aria-hidden="true"><path fill-rule="evenodd" d="M3.22 8.53a.75.75 0 0 1 0-1.06l2.22-2.22-2.22-2.22a.75.75 0 1 1 1.06-1.06l2.75 2.75a.75.75 0 0 1 0 1.06l-2.75 2.75a.75.75 0 0 1-1.06 0Z" clip-rule="evenodd"/></svg>
+          </p>
+        </a>
+      ))}
+    </div>
+    <div class="mt-6 flex flex-wrap justify-center gap-3">
+      <a href="/knowledge-hub/load-calculation" class="btn-secondary px-6 py-2.5 text-sm">
+        View Load Calculation Guides →
+      </a>
+      <a href="/knowledge-hub/mcb-sizing" class="btn-secondary px-6 py-2.5 text-sm">
+        View MCB Sizing Guides →
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FAQs ──────────────────────────────────────── -->
+  <section class="max-w-[1400px] mx-auto px-4 sm:px-6 py-12" aria-labelledby="hub-faq-heading">
+    <div class="max-w-4xl mx-auto">
+      <h2 id="hub-faq-heading" class="font-display font-bold text-3xl text-text-primary mb-8 uppercase tracking-wider border-l-4 border-accent pl-4">
+        Frequently Asked <span class="text-accent">Questions</span>
+      </h2>
+      <div class="grid gap-3">
+        {hubFaqs.map(faq => (
+          <details class="bg-card border border-border rounded-xl group transition-all duration-300">
+            <summary class="flex items-center justify-between p-5 cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-xl">
+              <span class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors pr-8">
+                {faq.q}
+              </span>
+              <span class="flex-shrink-0 text-text-muted group-open:rotate-180 transition-transform duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </summary>
+            <div class="px-5 pb-5 pt-0 border-t border-border/50 mt-1">
+              <p class="text-sm text-text-muted leading-relaxed mt-4">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Bottom CTA ─────────────────────────────────── -->
+  <section class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-20">
+    <div class="max-w-4xl mx-auto text-center rounded-2xl border border-border bg-card p-8 sm:p-12">
+      <h2 class="font-display font-bold text-3xl text-text-primary mb-3">
+        Ready to Calculate Your <span class="text-accent">Electrical Load?</span>
+      </h2>
+      <p class="text-text-muted text-sm leading-relaxed mb-6 max-w-lg mx-auto">
+        Our free tool does all the math for you. Add your appliances, get your load in kW, and receive smart recommendations — in seconds.
+      </p>
+      <a href="/" class="btn-primary px-8 py-3 text-sm">
+        Open Free Calculator
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+      </a>
+    </div>
+  </section>
+  </main>
+</BaseLayout>

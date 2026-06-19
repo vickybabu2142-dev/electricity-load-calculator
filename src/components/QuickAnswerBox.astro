@@ -1,0 +1,37 @@
+---
+/**
+ * QuickAnswerBox — Featured-snippet-optimised callout.
+ * Usage: <QuickAnswerBox>Your direct answer here.</QuickAnswerBox>
+ */
+interface Props {
+  /** Optional heading override. Defaults to "Quick Answer" */
+  heading?: string;
+  /** Optional id for TOC anchor targeting */
+  id?: string;
+}
+const { heading = 'Quick Answer', id } = Astro.props;
+---
+
+<div
+  id={id}
+  class="my-8 rounded-xl border-l-4 border-accent bg-card p-5 sm:p-6 scroll-mt-24"
+  style="box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 80%), 0 4px 24px -6px color-mix(in srgb, var(--accent), transparent 70%);"
+  role="note"
+  aria-label={heading}
+>
+  <p class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-accent mb-3">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      class="w-3.5 h-3.5 flex-shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
+    </svg>
+    {heading}
+  </p>
+  <div class="text-text-secondary text-sm sm:text-base leading-relaxed prose-answer">
+    <slot />
+  </div>
+</div>

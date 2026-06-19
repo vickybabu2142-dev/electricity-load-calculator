@@ -221,7 +221,7 @@ const schemaGraph = [
     <!-- SECTION 1: Cover Page -->
     <div class="print-page flex flex-col justify-center min-h-[1050px]" style="page-break-after: always;">
       <div class="text-center">
-        <h1 class="text-5xl font-display font-bold text-accent mb-6">Electrical Assessment Report</h1>
+        <div class="text-5xl font-display font-bold text-accent mb-6">Electrical Assessment Report</div>
         <p class="text-xl text-text-muted mb-12">Electrical Load Analysis, Safety Recommendations, Energy Assessment and Planning Report</p>
         
         <div class="mt-24 space-y-4">
@@ -560,7 +560,14 @@ const schemaGraph = [
         <!-- Section 1: Intro -->
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">🔌</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <path d="M9 17v-4" />
+                <path d="M12 17V10" />
+                <path d="M15 17v-2" />
+              </svg>
+            </span>
             <span>Mastering Household Energy: The Role of an Electricity Load Calculator</span>
           </h3>
           <p class="text-sm text-text-muted leading-relaxed">
@@ -571,7 +578,14 @@ const schemaGraph = [
         <!-- Section 2: Connected vs Sanctioned -->
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">📊</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M3 3v18h18" />
+                <rect x="7" y="7" width="3" height="14" rx="1" />
+                <rect x="14" y="12" width="3" height="9" rx="1" />
+                <path d="M6 12h14" stroke-dasharray="3 3" />
+              </svg>
+            </span>
             <span>Connected Load vs. Sanctioned Load: Avoiding Utility Overload Penalties</span>
           </h3>
           <div class="space-y-4">
@@ -588,7 +602,12 @@ const schemaGraph = [
         <!-- Section 3: MCB & Wire Sizing -->
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">⚡</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="m12 7-3 5h6l-3 5" />
+              </svg>
+            </span>
             <span>Safe Sizing: Determining the Correct MCB Rating and Cable Size</span>
           </h3>
           <div class="space-y-4">
@@ -604,7 +623,16 @@ const schemaGraph = [
         <!-- Section 4: Solar & Inverter Sizing -->
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-accent/40 transition-colors">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">🌱</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M1 22h6" />
+                <path d="M2 22l4-4" />
+                <path d="M6 18c0-8 8-16 16-16-1 9-9 17-16 16Z" />
+                <path d="M15 6l-4.5 5h5L11 16" />
+                <path d="M6 18l5-2" />
+                <path d="M15 6l7-4" />
+              </svg>
+            </span>
             <span>Renewable Energy & Backups: Inverter Sizing and Solar Panel Capacity</span>
           </h3>
           <div class="space-y-4">
@@ -620,7 +648,15 @@ const schemaGraph = [
         <!-- Section 5: Cost & Tariff -->
         <div class="bg-accent/5 border border-accent/20 rounded-2xl p-6 sm:p-8">
           <h3 class="font-display font-bold text-text-primary text-xl mb-4 flex items-center gap-3">
-            <span class="p-2 rounded-xl bg-accent/10 text-accent text-lg flex items-center justify-center">💡</span>
+            <span class="p-2 rounded-xl bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .6 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                <path d="M9 18h6" />
+                <path d="M10 22h4" />
+                <path d="M12 6v8" />
+                <path d="M10 8h3.5a1.2 1.2 0 0 1 0 2.4H10.5a1.2 1.2 0 0 0 0 2.4H14" />
+              </svg>
+            </span>
             <span>Tariff Transparency and Cost Optimization</span>
           </h3>
           <p class="text-sm text-text-muted leading-relaxed">
@@ -629,10 +665,126 @@ const schemaGraph = [
         </div>
 
         <!-- Section 6: PDF Export Summary -->
-        <div class="text-center bg-card border border-border rounded-2xl p-6">
-          <h3 class="font-display font-bold text-text-primary text-base mb-1">Generate & Share Professional PDF Reports</h3>
-          <p class="text-xs text-text-muted mb-4">You can export your completed appliance audits, calculations, and safety recommendations into print-ready PDF files for electricians, solar installers, or utility applications.</p>
-        </div>
+        <a
+          href="#"
+          class="grid grid-cols-1 md:grid-cols-12 gap-5 bg-card border border-border rounded-2xl p-5 sm:p-6 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5 transition-all duration-300 group cursor-pointer block text-left no-underline select-none"
+          aria-label="Scroll to top to generate load assessment and export PDF report"
+        >
+          <div class="md:col-span-7 flex flex-col items-start justify-center">
+            <h3 class="font-display font-bold text-text-primary text-xl sm:text-2xl mb-2 leading-tight flex items-center gap-2.5">
+              <span class="p-1.5 rounded-lg bg-accent/10 text-accent flex items-center justify-center" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+              </span>
+              <span>Generate & Share Professional PDF Reports</span>
+            </h3>
+            <p class="text-sm text-text-muted mb-4 leading-relaxed">
+              Export your customized electrical assessment report with absolute precision. Perfect for sharing with electricians, solar installers, or utility boards to verify your home's load requirements.
+            </p>
+            <ul class="space-y-2 text-sm text-text-secondary">
+              <li class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>Comprehensive connected vs. sanctioned load audit</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>Tailored safety recommendations for cables & circuit breakers</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>Custom inverter specifications & solar panel array recommendations</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>Sleek, ink-efficient print layout for professional physical copies</span>
+              </li>
+            </ul>
+            <div class="mt-4 flex items-center gap-2 text-accent font-display font-semibold text-sm group-hover:text-accent-dim transition-colors">
+              <span>Start calculating to export report</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 transition-transform duration-300 group-hover:-translate-y-1" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L6.03 8.84a.75.75 0 1 1-1.06-1.06l4.5-4.5a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 1 1-1.06 1.06l-3.22-3.228V16.25A.75.75 0 0 1 10 17Z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="md:col-span-5 relative flex items-center justify-center p-4 bg-gradient-to-br from-accent/5 via-transparent to-accent/10 rounded-2xl border border-border/60 overflow-hidden min-h-[210px]">
+            <!-- Grid pattern decoration -->
+            <div class="absolute inset-0 bg-[radial-gradient(var(--grid-color)_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
+            
+            <!-- Mock Report Preview -->
+            <div class="relative w-full max-w-[200px] bg-card border border-border rounded-xl p-3 shadow-2xl transition-transform duration-500 hover:scale-105 flex flex-col justify-between h-[180px]">
+              <!-- Badge -->
+              <div class="absolute -top-2.5 -right-2.5 bg-accent text-accent-text text-[8px] font-mono font-bold px-1.5 py-0.5 rounded shadow-md uppercase tracking-wider rotate-12">
+                PDF Ready
+              </div>
+              
+              <div>
+                <!-- Header -->
+                <div class="flex items-center justify-between pb-2 border-b border-border mb-2.5">
+                  <div class="space-y-1">
+                    <div class="w-12 h-1.5 bg-text-primary/40 rounded"></div>
+                    <div class="w-18 h-1 bg-text-muted/20 rounded"></div>
+                  </div>
+                  <svg class="w-3.5 h-3.5 text-accent opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
+                  </svg>
+                </div>
+
+                <!-- Metric rows -->
+                <div class="space-y-1.5 mb-2.5">
+                  <div class="flex justify-between items-center">
+                    <div class="w-10 h-1.5 bg-text-muted/30 rounded"></div>
+                    <div class="w-6 h-1.5 bg-accent/40 rounded"></div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="w-14 h-1.5 bg-text-muted/30 rounded"></div>
+                    <div class="w-8 h-1.5 bg-accent/40 rounded"></div>
+                  </div>
+                </div>
+
+                <!-- Visual Bar Chart -->
+                <div class="bg-base border border-border/60 rounded p-1.5 mb-2.5 flex items-end justify-between gap-1 h-9">
+                  <div class="w-2.5 bg-accent/30 rounded-t h-[60%]"></div>
+                  <div class="w-2.5 bg-accent/50 rounded-t h-[80%]"></div>
+                  <div class="w-2.5 bg-accent rounded-t h-[95%]"></div>
+                  <div class="w-2.5 bg-accent/20 rounded-t h-[40%]"></div>
+                  <div class="w-2.5 bg-accent/40 rounded-t h-[70%]"></div>
+                </div>
+              </div>
+
+              <!-- Seal / Verification signature -->
+              <div class="flex justify-between items-center pt-2 border-t border-border/60">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-3.5 h-3.5 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center">
+                    <svg class="w-1.5 h-1.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                  </div>
+                  <div class="w-10 h-1 bg-text-muted/20 rounded"></div>
+                </div>
+                <div class="w-5 h-5 rounded bg-text-muted/5 border border-border/80 flex items-center justify-center">
+                  <svg class="w-2.5 h-2.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
 
       </div>
 

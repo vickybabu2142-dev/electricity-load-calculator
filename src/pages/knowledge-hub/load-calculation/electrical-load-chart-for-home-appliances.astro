@@ -1,0 +1,339 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { LOAD_CALC_ARTICLES } from '@/data/knowledgeHub';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 as const },
+  { id: 'how-to-read', label: 'How to Read This Chart', depth: 2 as const },
+  { id: 'lighting', label: 'Lighting & Fans', depth: 3 as const },
+  { id: 'cooling', label: 'Cooling & Heating', depth: 3 as const },
+  { id: 'kitchen', label: 'Kitchen Appliances', depth: 3 as const },
+  { id: 'entertainment', label: 'Entertainment & Office', depth: 3 as const },
+  { id: 'laundry-water', label: 'Laundry & Water', depth: 3 as const },
+  { id: 'high-consumption', label: 'High-Consumption Alert', depth: 2 as const },
+  { id: 'energy-tips', label: 'Energy Saving Tips', depth: 2 as const },
+  { id: 'common-mistakes', label: 'Common Mistakes', depth: 2 as const },
+  { id: 'faqs', label: 'FAQs', depth: 2 as const },
+];
+
+const relatedArticles = LOAD_CALC_ARTICLES.filter(a =>
+  ['how-to-calculate-electrical-load-for-a-house', 'how-many-units-of-electricity-does-a-home-use', 'connected-load-vs-demand-load'].includes(a.slug)
+);
+
+const schemaGraph = [
+  {
+    "@type": "Article",
+    "headline": "Electrical Load Chart for Home Appliances",
+    "description": "A complete wattage reference chart for every common home appliance — from ceiling fans to air conditioners.",
+    "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
+    "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
+    "datePublished": "2026-06-18",
+    "dateModified": "2026-06-18",
+    "url": `${SITE}/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances`,
+  },
+  {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+      { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Load Calculation",
+        "item": `${SITE}/knowledge-hub/load-calculation`,
+      },
+      { "@type": "ListItem", "position": 4, "name": "Appliance Load Chart" },
+    ],
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "How many watts does a 1.5 ton AC use?", "acceptedAnswer": { "@type": "Answer", "text": "A 1.5 ton air conditioner typically consumes 1,400–1,800 watts (1.4–1.8 kW) depending on its star rating and technology. Inverter ACs consume less on average." }},
+      { "@type": "Question", "name": "How many watts does a refrigerator use?", "acceptedAnswer": { "@type": "Answer", "text": "A standard 250L refrigerator uses 150–300 watts, with an average of about 200W. The compressor cycles on and off, so average consumption is lower than peak." }},
+      { "@type": "Question", "name": "How many watts does an electric geyser use?", "acceptedAnswer": { "@type": "Answer", "text": "Electric geysers (water heaters) typically consume 1,500–3,000 watts. A common 2,000W geyser running for 30 minutes uses about 1 kWh (1 unit) of electricity." }},
+    ],
+  },
+];
+---
+
+<KnowledgeHubLayout
+  title="Electrical Load Chart for Home Appliances | Electrical Knowledge Hub"
+  description="Complete wattage chart for all common home appliances. Find the power consumption of fans, ACs, refrigerators, geysers, and 30+ more appliances in one reference table."
+  keywords="electrical load chart home appliances, appliance wattage chart India, home appliance power consumption, AC wattage, refrigerator wattage, geyser wattage, fan wattage"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+    { label: 'Appliance Load Chart' },
+  ]}
+  toc={toc}
+  readingTime={5}
+  datePublished="2026-06-18"
+  dateModified="2026-06-18"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="load-calculation"
+  clusterTitle="Load Calculation"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'load-calculation', slug: 'connected-load-vs-demand-load', caption: 'Core Concept' }}
+>
+
+  <QuickAnswerBox id="quick-answer">
+    <p>The wattage of common home appliances ranges from <strong>7W (LED bulb)</strong> to <strong>3,000W (electric geyser)</strong>. Air conditioners are the biggest load: a 1.5-ton AC draws ~1,600W. This chart covers 30+ appliances with typical wattage values for quick load estimation.</p>
+  </QuickAnswerBox>
+
+  <h2 id="how-to-read">How to Read and Use This Chart</h2>
+  <p>This chart gives you <strong>typical wattage values</strong> for common home appliances. Use these values to quickly estimate your total electrical load when the exact nameplate wattage isn't available.</p>
+  <ul>
+    <li><strong>Minimum:</strong> Best-case (energy-efficient, new models)</li>
+    <li><strong>Maximum:</strong> Worst-case (older models, high usage mode)</li>
+    <li><strong>Typical:</strong> What most households have — use this for calculations</li>
+  </ul>
+  <p>For an exact calculation using your actual appliance ratings, use our <a href="/">Electricity Load Calculator</a>.</p>
+
+  <!-- LIGHTING & FANS -->
+  <h3 id="lighting">Lighting &amp; Fans</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th>Min (W)</th>
+          <th>Max (W)</th>
+          <th>Typical (W)</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>LED Bulb</td><td>5</td><td>15</td><td><code>9W</code></td><td>Replaces 60W incandescent</td></tr>
+        <tr><td>CFL Bulb</td><td>9</td><td>23</td><td><code>15W</code></td><td>Being phased out</td></tr>
+        <tr><td>Incandescent Bulb</td><td>40</td><td>100</td><td><code>60W</code></td><td>Very inefficient</td></tr>
+        <tr><td>LED Tube Light (4ft)</td><td>18</td><td>22</td><td><code>20W</code></td><td>Replaces 40W fluorescent</td></tr>
+        <tr><td>Ceiling Fan</td><td>50</td><td>80</td><td><code>75W</code></td><td>BLDC fans use 25–35W</td></tr>
+        <tr><td>Table Fan</td><td>30</td><td>60</td><td><code>45W</code></td><td>—</td></tr>
+        <tr><td>Exhaust Fan</td><td>30</td><td>55</td><td><code>40W</code></td><td>—</td></tr>
+        <tr><td>Pedestal Fan</td><td>50</td><td>90</td><td><code>70W</code></td><td>—</td></tr>
+        <tr><td>LED Downlight (spot)</td><td>5</td><td>10</td><td><code>7W</code></td><td>Per fixture</td></tr>
+        <tr><td>Emergency Light</td><td>8</td><td>15</td><td><code>10W</code></td><td>On battery backup</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- COOLING & HEATING -->
+  <h3 id="cooling">Cooling &amp; Heating</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th>Min (W)</th>
+          <th>Max (W)</th>
+          <th>Typical (W)</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1 Ton AC (Split)</td><td>900</td><td>1,200</td><td><code>1,100W</code></td><td>5-star inverter ~900W</td></tr>
+        <tr><td>1.5 Ton AC (Split)</td><td>1,400</td><td>1,800</td><td><code>1,600W</code></td><td>Most common size</td></tr>
+        <tr><td>2 Ton AC (Split)</td><td>1,800</td><td>2,400</td><td><code>2,000W</code></td><td>Large rooms</td></tr>
+        <tr><td>Window AC (1.5 Ton)</td><td>1,500</td><td>2,000</td><td><code>1,700W</code></td><td>Less efficient than split</td></tr>
+        <tr><td>Desert Cooler (Air Cooler)</td><td>100</td><td>200</td><td><code>150W</code></td><td>No compressor</td></tr>
+        <tr><td>Electric Room Heater</td><td>750</td><td>2,000</td><td><code>1,500W</code></td><td>High seasonal load</td></tr>
+        <tr><td>Electric Geyser (Water Heater)</td><td>1,500</td><td>3,000</td><td><code>2,000W</code></td><td>Biggest heating load</td></tr>
+        <tr><td>Instant Water Heater (3L)</td><td>3,000</td><td>4,500</td><td><code>3,000W</code></td><td>Short burst usage</td></tr>
+        <tr><td>Heat Pump Water Heater</td><td>400</td><td>700</td><td><code>500W</code></td><td>Very efficient</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- KITCHEN -->
+  <h3 id="kitchen">Kitchen Appliances</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th>Min (W)</th>
+          <th>Max (W)</th>
+          <th>Typical (W)</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Refrigerator (200–250L)</td><td>150</td><td>300</td><td><code>200W</code></td><td>Runs 24/7, cycles on/off</td></tr>
+        <tr><td>Refrigerator (400–500L)</td><td>250</td><td>500</td><td><code>350W</code></td><td>Double door / side-by-side</td></tr>
+        <tr><td>Microwave (solo)</td><td>700</td><td>1,100</td><td><code>900W</code></td><td>Short bursts</td></tr>
+        <tr><td>Microwave (convection/grill)</td><td>900</td><td>1,400</td><td><code>1,200W</code></td><td>—</td></tr>
+        <tr><td>Induction Cooktop</td><td>1,200</td><td>2,000</td><td><code>1,400W</code></td><td>Per coil</td></tr>
+        <tr><td>Electric Cooktop</td><td>1,000</td><td>2,000</td><td><code>1,500W</code></td><td>Per burner</td></tr>
+        <tr><td>OTG (Oven Toaster Grill)</td><td>800</td><td>1,500</td><td><code>1,200W</code></td><td>Baking load</td></tr>
+        <tr><td>Mixer/Grinder</td><td>500</td><td>750</td><td><code>600W</code></td><td>Short daily use</td></tr>
+        <tr><td>Juicer</td><td>300</td><td>600</td><td><code>400W</code></td><td>—</td></tr>
+        <tr><td>Toaster</td><td>700</td><td>1,000</td><td><code>800W</code></td><td>Short usage</td></tr>
+        <tr><td>Electric Kettle</td><td>1,000</td><td>1,500</td><td><code>1,200W</code></td><td>Fast but short use</td></tr>
+        <tr><td>Dishwasher</td><td>1,200</td><td>1,800</td><td><code>1,500W</code></td><td>Less common in India</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ENTERTAINMENT & OFFICE -->
+  <h3 id="entertainment">Entertainment &amp; Office</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th>Min (W)</th>
+          <th>Max (W)</th>
+          <th>Typical (W)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>LED TV (32")</td><td>30</td><td>60</td><td><code>45W</code></td></tr>
+        <tr><td>LED TV (43")</td><td>60</td><td>100</td><td><code>80W</code></td></tr>
+        <tr><td>LED TV (55")</td><td>80</td><td>140</td><td><code>110W</code></td></tr>
+        <tr><td>Laptop</td><td>30</td><td>80</td><td><code>55W</code></td></tr>
+        <tr><td>Desktop Computer</td><td>150</td><td>400</td><td><code>250W</code></td></tr>
+        <tr><td>Gaming Console</td><td>100</td><td>200</td><td><code>150W</code></td></tr>
+        <tr><td>WiFi Router</td><td>5</td><td>20</td><td><code>10W</code></td></tr>
+        <tr><td>Set-Top Box / DTH</td><td>10</td><td>25</td><td><code>15W</code></td></tr>
+        <tr><td>Printer (idle)</td><td>5</td><td>20</td><td><code>8W</code></td></tr>
+        <tr><td>Printer (printing)</td><td>300</td><td>600</td><td><code>400W</code></td></tr>
+        <tr><td>Phone Charger</td><td>5</td><td>65</td><td><code>20W</code></td></tr>
+        <tr><td>Music System/Speakers</td><td>10</td><td>200</td><td><code>50W</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- LAUNDRY & WATER -->
+  <h3 id="laundry-water">Laundry &amp; Water</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Appliance</th>
+          <th>Min (W)</th>
+          <th>Max (W)</th>
+          <th>Typical (W)</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Washing Machine (front load)</td><td>400</td><td>800</td><td><code>600W</code></td><td>Hot wash cycle higher</td></tr>
+        <tr><td>Washing Machine (top load)</td><td>300</td><td>600</td><td><code>450W</code></td><td>—</td></tr>
+        <tr><td>Clothes Dryer</td><td>2,000</td><td>5,000</td><td><code>3,000W</code></td><td>Rare in India</td></tr>
+        <tr><td>Iron (electric)</td><td>1,000</td><td>2,000</td><td><code>1,200W</code></td><td>Short spikes</td></tr>
+        <tr><td>Water Pump (0.5 HP)</td><td>375</td><td>500</td><td><code>450W</code></td><td>Common domestic pump</td></tr>
+        <tr><td>Water Pump (1 HP)</td><td>750</td><td>1,000</td><td><code>900W</code></td><td>Larger tank/pressure</td></tr>
+        <tr><td>Submersible Pump (1 HP)</td><td>750</td><td>1,200</td><td><code>1,000W</code></td><td>Borewell pumps</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HIGH CONSUMPTION ALERT -->
+  <h2 id="high-consumption">High-Consumption Appliances — Handle With Care</h2>
+  <p>These appliances have the biggest impact on your electrical load and electricity bill. Give them special attention when planning your load:</p>
+
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>High-Impact Appliances</p>
+    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+      {[
+        { name: 'Air Conditioner (1.5T)', watt: '1,600W', note: 'Biggest residential load' },
+        { name: 'Electric Geyser', watt: '2,000W', note: '~1 unit per 30 min' },
+        { name: 'Induction Cooktop', watt: '1,400W', note: 'Replaces gas cooking' },
+        { name: 'Iron Box', watt: '1,200W', note: 'Short but sharp spikes' },
+        { name: 'Electric Kettle', watt: '1,200W', note: 'Fast, brief use' },
+        { name: 'Water Pump (1HP)', watt: '900W', note: 'Starting surge is 3–5×' },
+      ].map(item => (
+        <div style="background: color-mix(in srgb, var(--danger), transparent 94%); border: 1px solid color-mix(in srgb, var(--danger), transparent 70%); border-radius: 0.5rem; padding: 0.75rem;">
+          <p style="font-family: var(--font-display); font-weight: 600; color: var(--text-primary); margin: 0 0 0.25rem 0; font-size: 0.875rem;">{item.name}</p>
+          <p style="font-family: var(--font-mono); color: var(--accent); font-size: 0.875rem; margin: 0 0 0.25rem 0; font-weight: 700;">{item.watt}</p>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">{item.note}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- ENERGY TIPS -->
+  <h2 id="energy-tips">Energy Saving Tips Based on Wattage</h2>
+  <ul>
+    <li><strong>Switch to BLDC fans</strong> — they use 25–35W vs 75W for standard fans, saving up to 67% on fan energy</li>
+    <li><strong>Replace old CFLs with LED bulbs</strong> — LED uses 40–60% less power with the same light output</li>
+    <li><strong>Use 5-star inverter AC</strong> — can use 30–40% less power than a 3-star non-inverter model</li>
+    <li><strong>Use a timer on the geyser</strong> — a 2,000W geyser running 1 extra hour uses 2 kWh (₹10–14 extra per day)</li>
+    <li><strong>Use the induction cooktop only when needed</strong> — 1,400W is significant; pressure cooking reduces usage time</li>
+    <li><strong>Unplug standby devices</strong> — routers, set-top boxes, and chargers on standby can add 50–100W of phantom load</li>
+  </ul>
+
+  <!-- COMMON MISTAKES -->
+  <h2 id="common-mistakes">Common Mistakes When Using a Wattage Chart</h2>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Using generic values instead of your actual appliance rating</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">Chart values are averages. Your old 1.5T AC from 2012 might use 1,900W while a new 5-star inverter AC uses 1,200W. Always check the nameplate label for accurate planning.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Confusing capacity with consumption for ACs</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">1.5 ton refers to the AC's cooling capacity, not its power consumption. Input power (what it draws from the socket) is typically 1,400–1,800W. Always use input power for load calculations.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Forgetting seasonal loads</strong>
+      <p class="text-sm m-0" style="color: var(--text-muted);">Your load in summer (ACs running) vs winter (heaters/geysers) can differ dramatically. Calculate both seasonal peaks to ensure your main switch and cable can handle the worst case.</p>
+    </div>
+  </div>
+
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <h2 id="faqs">Frequently Asked Questions</h2>
+  <div class="kh-faq">
+    <details>
+      <summary>How many watts does a 1.5 ton AC use?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">A 1.5 ton air conditioner typically consumes 1,400–1,800 watts (1.4–1.8 kW) depending on star rating and whether it's an inverter model. A 5-star inverter AC might average 1,200W, while an older 3-star non-inverter model can use 1,800W+.</div>
+    </details>
+    <details>
+      <summary>How many units per day does an AC use?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">A 1.5T AC running for 8 hours uses approximately 1,600W × 8h ÷ 1,000 = 12.8 kWh (units) per day. In a month of daily AC use, that's ~384 units — a significant portion of the electricity bill.</div>
+    </details>
+    <details>
+      <summary>How many watts does a refrigerator use?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">A standard 200–250L refrigerator consumes 150–300 watts peak, but averages about 100–150W over 24 hours (because the compressor cycles on and off). Monthly consumption is approximately 75–100 kWh.</div>
+    </details>
+    <details>
+      <summary>Which appliance uses the most electricity at home?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">In most Indian homes with AC, the air conditioner accounts for 40–60% of electricity consumption in summer. Without AC, the geyser (if electric) and refrigerator are typically the largest consumers. The induction cooktop, iron, and washing machine are high in wattage but used for shorter durations.</div>
+    </details>
+    <details>
+      <summary>What is phantom load / standby power?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Phantom load (or standby power) is the electricity drawn by devices when they are switched off but still plugged in. TVs, set-top boxes, chargers, and microwave ovens all draw standby power. Across all devices, this can amount to 5–10% of your total electricity consumption.</div>
+    </details>
+  </div>
+
+  <Fragment slot="sidebar-nav">
+    {LOAD_CALC_ARTICLES.map(a => (
+      <a
+        href={`/knowledge-hub/load-calculation/${a.slug}`}
+        class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.slug === 'electrical-load-chart-for-home-appliances' ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+        data-astro-prefetch="hover"
+      >
+        <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.slug === 'electrical-load-chart-for-home-appliances' ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+        {a.title}
+      </a>
+    ))}
+  </Fragment>
+</KnowledgeHubLayout>

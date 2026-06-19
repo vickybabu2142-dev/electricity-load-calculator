@@ -1,0 +1,632 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 },
+  { id: 'visual-explanation', label: 'Visual Comparison', depth: 2 },
+  { id: 'step-by-step', label: 'Step-by-Step Calculation', depth: 2 },
+  { id: 'single-phase-steps', label: 'Single Phase Steps', depth: 3 },
+  { id: 'three-phase-steps', label: 'Three Phase Steps', depth: 3 },
+  { id: 'real-example', label: 'Real Example', depth: 2 },
+  { id: 'reference-table', label: 'Reference Table', depth: 2 },
+  { id: 'common-mistakes', label: 'Common Mistakes', depth: 2 },
+  { id: 'faqs', label: 'Frequently Asked Questions', depth: 2 },
+];
+
+const relatedArticles = [
+  {
+    title: 'How to Calculate Electrical Load for a House',
+    slug: 'how-to-calculate-electrical-load-for-a-house',
+    description: 'A complete, practical guide to calculating your home electrical load step by step.',
+  },
+  {
+    title: 'kW vs kVA vs kWh — The Simple Explanation',
+    slug: 'kw-vs-kva-vs-kwh-explained',
+    description: 'kW, kVA, and kWh confuse most people. This guide explains all three clearly.',
+  },
+  {
+    title: 'Connected Load vs Demand Load Explained',
+    slug: 'connected-load-vs-demand-load',
+    description: 'Understand the difference between connected load and demand load.',
+  },
+];
+
+const schemaGraph = [
+  {
+    '@type': 'Article',
+    headline: 'Single Phase vs Three Phase Electrical Load',
+    description:
+      'Learn the difference between single-phase and three-phase electrical load — when to use each, formulas, and practical examples for homes and businesses.',
+    url: `${SITE}/knowledge-hub/load-calculation/single-phase-vs-three-phase-load`,
+    datePublished: '2026-06-18',
+    dateModified: '2026-06-18',
+    author: { '@type': 'Organization', name: 'Electricity Load Calculator' },
+    publisher: { '@type': 'Organization', name: 'Electricity Load Calculator', url: SITE },
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Knowledge Hub', item: `${SITE}/knowledge-hub` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'Load Calculation',
+        item: `${SITE}/knowledge-hub/load-calculation`,
+      },
+      { '@type': 'ListItem', position: 4, name: 'Single Phase vs Three Phase Load' },
+    ],
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is the difference between single phase and three phase power?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Single-phase power uses one live wire (230V in India) and is suitable for loads up to ~10 kW. Three-phase uses three live wires (415V line-to-line) and is used for loads above 10 kW or industrial equipment.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'When do I need three-phase power for my home?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'You need three-phase power when your total connected load exceeds 10 kW, when you run multiple large ACs (3-ton or above), lifts, or industrial motors. Most standard Indian homes run fine on single-phase.',
+        },
+      },
+    ],
+  },
+];
+---
+
+<KnowledgeHubLayout
+  title="Single Phase vs Three Phase Electrical Load | Electrical Knowledge Hub"
+  description="Learn the difference between single-phase and three-phase electrical load — when to use each, formulas, and practical examples for homes and businesses."
+  keywords="single phase vs three phase, three phase load calculation, single phase load calculation, single phase three phase difference, three phase power for home"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+    { label: 'Single Phase vs Three Phase' },
+  ]}
+  toc={toc}
+  readingTime={6}
+  datePublished="2026-06-18"
+  dateModified="2026-06-18"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="load-calculation"
+  clusterTitle="Load Calculation"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'load-calculation', slug: 'how-many-units-of-electricity-does-a-home-use', caption: 'Consumption Guide' }}
+>
+
+  <!-- ─── Quick Answer ─── -->
+  <QuickAnswerBox id="quick-answer">
+    <p>
+      <strong>Single-phase power (230V)</strong> is used for most Indian homes with loads up to 10 kW.
+      <strong>Three-phase power (415V line-to-line)</strong> is required when your total load exceeds 10 kW,
+      or when you run heavy equipment like industrial motors, lifts, or multiple large air conditioners.
+      The key formula difference: single-phase uses <code>P = V × I × PF</code>, while three-phase uses
+      <code>P = √3 × V × I × PF</code>.
+    </p>
+  </QuickAnswerBox>
+
+  <!-- ─── Visual Explanation ─── -->
+  <h2 id="visual-explanation">Single Phase vs Three Phase — Side-by-Side Comparison</h2>
+
+  <p>
+    Think of electrical phases like lanes on a highway. A single-phase connection is a one-lane road —
+    adequate for a family car (your home's typical appliances). A three-phase connection is a three-lane
+    highway — essential when you need to move heavy machinery or large industrial loads simultaneously
+    and smoothly.
+  </p>
+
+  <p>
+    In India, the standard single-phase supply is <strong>230V between the live wire and neutral</strong>.
+    Three-phase supply delivers <strong>415V between any two live wires</strong> (line-to-line) and 230V
+    between each live wire and neutral (line-to-neutral). This is why three-phase connections can power
+    heavier loads — the voltage and the simultaneous three-wave delivery provide much higher capacity.
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Single Phase</th>
+          <th>Three Phase</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Supply Voltage</strong></td>
+          <td>230V (Line to Neutral)</td>
+          <td>415V (Line to Line) / 230V (L-N)</td>
+        </tr>
+        <tr>
+          <td><strong>Number of Phases</strong></td>
+          <td>1</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td><strong>Power Formula</strong></td>
+          <td><code>P = V × I × PF</code></td>
+          <td><code>P = √3 × V × I × PF</code></td>
+        </tr>
+        <tr>
+          <td><strong>Typical Max Load</strong></td>
+          <td>Up to 10 kW</td>
+          <td>10 kW and above (no practical limit)</td>
+        </tr>
+        <tr>
+          <td><strong>Wiring</strong></td>
+          <td>2 wires (1 Live + 1 Neutral)</td>
+          <td>4 wires (3 Live + 1 Neutral)</td>
+        </tr>
+        <tr>
+          <td><strong>Common Use Cases</strong></td>
+          <td>Homes, small shops, small offices</td>
+          <td>Industry, workshops, large buildings, malls</td>
+        </tr>
+        <tr>
+          <td><strong>MCB / Main Switch</strong></td>
+          <td>Single-pole or DP MCB</td>
+          <td>TP (3-pole) or TPN (4-pole) MCB/MCCB</td>
+        </tr>
+        <tr>
+          <td><strong>Efficiency</strong></td>
+          <td>Good for light loads</td>
+          <td>Higher efficiency for heavy loads</td>
+        </tr>
+        <tr>
+          <td><strong>Motor Starting</strong></td>
+          <td>Not suitable for large motors</td>
+          <td>Ideal for 3-phase induction motors</td>
+        </tr>
+        <tr>
+          <td><strong>Typical India Connection</strong></td>
+          <td>Standard residential</td>
+          <td>Industrial / commercial sanction</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── Step-by-Step ─── -->
+  <h2 id="step-by-step">Step-by-Step: How to Calculate Load for Each Type</h2>
+
+  <p>
+    The load calculation process is similar for both — you list all appliances, find their wattage,
+    and add them up. The key difference is which formula you use to find the current (amperes) flowing
+    through the supply cables.
+  </p>
+
+  <h3 id="single-phase-steps">Single-Phase Load Calculation</h3>
+
+  <div class="step-card">
+    <div class="step-number">1</div>
+    <div>
+      <strong>List all appliances and their wattage</strong>
+      <p>
+        Write down every appliance in your home with its rated wattage. You can find this on the product
+        label, in the user manual, or use our <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances" data-astro-prefetch="hover">appliance wattage chart</a>.
+        Example: 4 ceiling fans × 75W, 8 LED bulbs × 10W, 1 AC × 1600W, 1 fridge × 200W.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">2</div>
+    <div>
+      <strong>Sum the total watts</strong>
+      <p>
+        Add all wattages together: (4×75) + (8×10) + 1600 + 200 = 300 + 80 + 1600 + 200 = <strong>2,180 W</strong>.
+        Convert to kilowatts: 2,180 ÷ 1,000 = <strong>2.18 kW</strong> connected load.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">3</div>
+    <div>
+      <strong>Apply the single-phase current formula</strong>
+      <p>
+        Use <code>I = P ÷ (V × PF)</code> where V = 230V and PF (power factor) ≈ 0.85 for a typical home.
+        So: I = 2,180 ÷ (230 × 0.85) = 2,180 ÷ 195.5 ≈ <strong>11.1 Amperes</strong>.
+        This tells you the main MCB rating needed (round up to the next standard size — 16A).
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">4</div>
+    <div>
+      <strong>Apply a demand factor (diversity factor)</strong>
+      <p>
+        Not all appliances run simultaneously. A demand factor of 0.7–0.8 is realistic for homes.
+        Maximum demand = 2,180 × 0.75 ≈ <strong>1,635 W</strong> (1.6 kW peak load).
+        This helps you right-size your main switch and cable instead of over-specifying.
+      </p>
+    </div>
+  </div>
+
+  <h3 id="three-phase-steps">Three-Phase Load Calculation</h3>
+
+  <div class="step-card">
+    <div class="step-number">1</div>
+    <div>
+      <strong>List and sum all load watts — same as single phase</strong>
+      <p>
+        Example workshop: 5 × 1.5 Ton AC (1,600W each) + 10 × 150W industrial lights + 1 × 5 HP motor
+        (3,730W) = 8,000 + 1,500 + 3,730 = <strong>13,230 W (13.23 kW)</strong>.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">2</div>
+    <div>
+      <strong>Apply the three-phase current formula</strong>
+      <p>
+        Use <code>I = P ÷ (√3 × V_LL × PF)</code> where V_LL = 415V (line-to-line) and PF ≈ 0.85.
+        √3 ≈ 1.732. So: I = 13,230 ÷ (1.732 × 415 × 0.85) = 13,230 ÷ 611 ≈ <strong>21.6 Amperes per phase</strong>.
+        Choose a 25A TPN MCB for the main switch.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">3</div>
+    <div>
+      <strong>Balance the load across all three phases</strong>
+      <p>
+        Distribute appliances so each phase carries roughly equal load (within 10% of each other).
+        Unbalanced phases cause voltage fluctuations, neutral current overloading, and equipment damage.
+        Assign: Phase A = 3 ACs + 5 lights = 5,550W; Phase B = 2 ACs + 5 lights = 3,950W; Phase C = motor + lights = 4,480W.
+        This is close enough — adjust further if needed.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">4</div>
+    <div>
+      <strong>Verify and select cable size</strong>
+      <p>
+        For 21.6A per phase, a 4 sq.mm copper cable (rated ~27A) is appropriate. Always add a 20%
+        safety margin and check voltage drop does not exceed 5% over the cable run length.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── Real Example ─── -->
+  <h2 id="real-example">Real Example: Home vs Workshop</h2>
+
+  <div class="example-box">
+    <p class="example-label">Example A — 2 AC Home (Single Phase)</p>
+    <p>
+      A typical 2BHK home in India with 2 split ACs (1.5 Ton each), 4 ceiling fans, 8 LED bulbs,
+      1 refrigerator, 1 TV, and 1 washing machine.
+    </p>
+    <ul>
+      <li>2 × 1.5 Ton AC @ 1,600W = <strong>3,200W</strong></li>
+      <li>4 × Ceiling Fan @ 75W = <strong>300W</strong></li>
+      <li>8 × LED Bulb @ 10W = <strong>80W</strong></li>
+      <li>1 × Refrigerator @ 200W = <strong>200W</strong></li>
+      <li>1 × TV (40") @ 90W = <strong>90W</strong></li>
+      <li>1 × Washing Machine @ 500W = <strong>500W</strong></li>
+    </ul>
+    <p><strong>Total Connected Load:</strong> 4,370W = <strong>4.37 kW</strong></p>
+    <p>
+      <strong>Single-phase current:</strong> I = 4,370 ÷ (230 × 0.85) ≈ <strong>22.4A</strong>
+    </p>
+    <p>
+      <strong>Verdict:</strong> Well within single-phase range. A <strong>32A single-phase connection</strong>
+      with a 32A DP MCB is adequate. No need for three-phase.
+    </p>
+  </div>
+
+  <div class="example-box">
+    <p class="example-label">Example B — Small Workshop (Three Phase Required)</p>
+    <p>
+      A small manufacturing workshop with 3 × 2 Ton ACs, 10 × 150W industrial tube lights,
+      1 × 7.5 HP (5.6 kW) single motor, and 2 × 1 HP motors.
+    </p>
+    <ul>
+      <li>3 × 2 Ton AC @ 2,000W = <strong>6,000W</strong></li>
+      <li>10 × Industrial Light @ 150W = <strong>1,500W</strong></li>
+      <li>1 × 7.5 HP Motor @ 5,600W = <strong>5,600W</strong></li>
+      <li>2 × 1 HP Motor @ 750W = <strong>1,500W</strong></li>
+    </ul>
+    <p><strong>Total Connected Load:</strong> 14,600W = <strong>14.6 kW</strong></p>
+    <p>
+      <strong>Three-phase current:</strong> I = 14,600 ÷ (1.732 × 415 × 0.85) ≈ <strong>23.9A per phase</strong>
+    </p>
+    <p>
+      <strong>Verdict:</strong> Load exceeds 10 kW AND includes an induction motor — <strong>three-phase is mandatory</strong>.
+      Apply for a 3-phase 25A connection. Use a 32A TPN MCB for main switch.
+    </p>
+  </div>
+
+  <!-- ─── Reference Table ─── -->
+  <h2 id="reference-table">Quick Reference Table</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Single Phase</th>
+          <th>Three Phase</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Phase Voltage (L-N)</td>
+          <td>230V</td>
+          <td>230V</td>
+        </tr>
+        <tr>
+          <td>Line Voltage (L-L)</td>
+          <td>230V (only 1 phase)</td>
+          <td>415V</td>
+        </tr>
+        <tr>
+          <td>Power Formula</td>
+          <td><code>P = V × I × PF</code></td>
+          <td><code>P = √3 × VLL × I × PF</code></td>
+        </tr>
+        <tr>
+          <td>Current Formula</td>
+          <td><code>I = P ÷ (V × PF)</code></td>
+          <td><code>I = P ÷ (√3 × VLL × PF)</code></td>
+        </tr>
+        <tr>
+          <td>√3 Factor</td>
+          <td>Not applicable</td>
+          <td>1.732</td>
+        </tr>
+        <tr>
+          <td>Typical Applications</td>
+          <td>Home, small shop, office &lt;10 kW</td>
+          <td>Industry, 3-phase motors, large buildings</td>
+        </tr>
+        <tr>
+          <td>Main MCB Type</td>
+          <td>SP or DP (1 or 2 pole)</td>
+          <td>TP (3-pole) or TPN (4-pole)</td>
+        </tr>
+        <tr>
+          <td>Neutral Wire</td>
+          <td>1 neutral wire required</td>
+          <td>1 shared neutral wire</td>
+        </tr>
+        <tr>
+          <td>Phase Balancing</td>
+          <td>Not required</td>
+          <td>Required — keep within 10% per phase</td>
+        </tr>
+        <tr>
+          <td>Motor Starting</td>
+          <td>Capacitor-start motors only</td>
+          <td>3-phase induction motors directly</td>
+        </tr>
+        <tr>
+          <td>Load Limit (India sanction)</td>
+          <td>Up to 10 kW typically</td>
+          <td>Above 10 kW (industrial sanction)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── Common Mistakes ─── -->
+  <h2 id="common-mistakes">Common Mistakes to Avoid</h2>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Assuming three-phase is always better</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Three-phase is more efficient for large loads and motors, but for a regular 2–3 BHK home
+        it adds unnecessary complexity and cost. Your discom may also charge higher fixed charges
+        for commercial/three-phase connections. Stick to single-phase unless your load genuinely
+        exceeds 10 kW.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Using the wrong current formula</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Using <code>I = P ÷ V</code> without the power factor gives you an optimistic (too low) current value.
+        Always include PF (typically 0.8–0.9 for home appliances). For three-phase, forgetting the
+        √3 (1.732) multiplier is a serious error that leads to undersized cables and MCBs.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Poor phase balancing on three-phase systems</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Dumping all your heavy loads onto Phase A while Phases B and C carry almost nothing causes
+        the neutral wire to carry excess current, leads to voltage imbalance, and can damage
+        equipment with sensitive electronics. Always distribute loads as evenly as possible across
+        all three phases.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Confusing line voltage with phase voltage</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        In a three-phase system, the voltage between two live wires (line-to-line) is 415V,
+        but the voltage between a live wire and neutral (line-to-neutral) is 230V. Using 415V
+        in your formula when you mean L-N voltage — or vice versa — produces completely wrong
+        current calculations.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong>Ignoring motor starting current</strong>
+      <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--text-muted);">
+        Three-phase induction motors draw 5–7× their full-load current during startup (inrush current).
+        A 7.5 HP motor running at 15A continuously might pull 90–100A for a second or two on start.
+        Your MCB and cable must be rated to handle this — use a motor-rated MCB or a star-delta starter
+        for motors above 5 HP.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── CTA ─── -->
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <!-- ─── FAQs ─── -->
+  <h2 id="faqs">Frequently Asked Questions</h2>
+
+  <div class="kh-faq">
+    <details>
+      <summary>
+        Can I convert my home from single-phase to three-phase?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        Yes, but it requires an application to your local electricity distribution company (DISCOM)
+        for a revised sanction load. An electrician will need to upgrade your main switchboard to a
+        TPN (four-pole) board, and the DISCOM will install a three-phase energy meter. This is typically
+        done when your sanctioned load exceeds 10 kW. The internal wiring of existing single-phase
+        circuits does not need to change — you simply add new three-phase circuits for heavy loads.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Is three-phase power cheaper than single phase in India?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        Not necessarily cheaper per unit. However, for large motor loads, three-phase is more
+        <em>energy-efficient</em> because three-phase induction motors have higher power factors (0.85–0.95)
+        and better efficiency than single-phase alternatives. In India, three-phase connections may fall
+        under commercial/LT industrial tariff categories, which often have higher fixed demand charges
+        but lower per-unit costs at high consumption volumes. Check your state DISCOM's tariff order.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        What happens if I run a three-phase appliance on single-phase supply?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        A three-phase appliance (like a three-phase induction motor) will not start on single-phase
+        supply. If it manages to start (e.g., under light load with a capacitor trick), it will overheat,
+        vibrate excessively, and burn out quickly. Never run three-phase equipment on single-phase power
+        without a proper phase converter — and even then, performance is degraded significantly.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        What is meant by a "balanced three-phase load"?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        A balanced three-phase load means all three phases (R, Y, B) carry equal current and power.
+        In a perfectly balanced system, the neutral current is zero, voltage across all phases is
+        equal (230V each), and the system operates at peak efficiency. In practice, residential
+        three-phase boards are "balanced" when each phase carries within 10% of the others.
+        Most three-phase motors present a naturally balanced load.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        What is the √3 (root 3) factor in three-phase calculations?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        The √3 factor (approximately 1.732) arises from the geometry of three sine waves separated by
+        120° from each other. When you measure the voltage between two live phases (line-to-line),
+        it is √3 times the phase-to-neutral voltage. So: 230V × 1.732 = 415V line-to-line. This same
+        factor appears in the three-phase power formula: <code>P = √3 × V_LL × I × PF</code>.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Can I run my home inverter on three-phase supply?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">
+        Most residential inverters (Luminous, Microtek, Exide) are single-phase devices — they take
+        one live wire (230V) input and output single-phase 230V during a power cut. If your home has
+        a three-phase connection, the inverter simply connects to one of the three phases. For whole-home
+        backup on three-phase, you need a three-phase inverter or a separate inverter per phase, which
+        is significantly more expensive. Industrial three-phase UPS/inverters are available for
+        commercial applications.
+      </div>
+    </details>
+  </div>
+
+  <!-- ─── Sidebar nav ─── -->
+  <Fragment slot="sidebar-nav">
+    <ol class="space-y-1">
+      <li>
+        <a href="/knowledge-hub/load-calculation/how-to-calculate-electrical-load-for-a-house" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          How to Calculate Electrical Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          Appliance Load Chart
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/connected-load-vs-demand-load" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          Connected vs Demand Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/single-phase-vs-three-phase-load" class="flex items-start gap-2 text-sm text-accent transition-colors py-1.5 leading-snug font-medium" data-astro-prefetch="hover" aria-current="page">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></span>
+          Single vs Three Phase Load
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/how-many-units-of-electricity-does-a-home-use" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          How Many Units Does a Home Use?
+        </a>
+      </li>
+      <li>
+        <a href="/knowledge-hub/load-calculation/kw-vs-kva-vs-kwh-explained" class="flex items-start gap-2 text-sm text-text-muted hover:text-accent transition-colors py-1.5 leading-snug" data-astro-prefetch="hover">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-border flex-shrink-0"></span>
+          kW vs kVA vs kWh Explained
+        </a>
+      </li>
+    </ol>
+  </Fragment>
+
+</KnowledgeHubLayout>
