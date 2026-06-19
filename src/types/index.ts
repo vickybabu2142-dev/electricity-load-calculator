@@ -1,3 +1,6 @@
+/** Typed JSON-LD schema node — replaces any[] in layout schemaGraph props */
+export type SchemaNode = Record<string, unknown>;
+
 export interface Appliance {
   id: string;
   category: ApplianceCategory;

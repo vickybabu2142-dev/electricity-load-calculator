@@ -82,3 +82,40 @@ A standalone script for fast verification of calculation functions without requi
 
 ### Never Commit Sensitive Files
 Standard `.gitignore` rules apply to `.env`, `.dev.vars`, and `.wrangler`. Always verify staged changes before committing.
+
+---
+
+## Code Quality Audit — Findings & Ongoing Rules
+*Audit completed: 2026-06-19 | Overall score: 8.2 / 10*
+
+### Resolved Issues (do not re-introduce)
+- **Magic number `230` (voltage):** Always use `VOLTAGE_V` from `src/data/constants.ts`. Previously leaked in `print.ts:92`.
+- **Magic number `30` (days/month):** Always use `DAYS_PER_MONTH` from `src/data/constants.ts`. Previously leaked in the `download-report` handler in `events.ts`.
+- **`any[]` types on `schemaGraph` props:** Both `BaseLayout.astro` and `KnowledgeHubLayout.astro` now use `SchemaNode[]` (imported from `src/types/index.ts`). Do not revert to `any[]`.
+- **Inline `style="color: var(--accent)"` in `404.astro`:** Replaced with `class="text-accent"`. Apply the same pattern on all new pages.
+
+### Pending Architectural Debt
+- **`assessment.astro` is 1,863 lines** (spec limit: 600). The `#assess-print-layout` HTML block (~900 lines) should be extracted into a dedicated `AssessmentPrintLayout.astro` component. Client scripts should live in `src/scripts/assessment/` modules.
+- **Font weight audit:** Khand 500 and Hind 500 may be unused. Run grep for `font-medium` usage; drop if unneeded (~60 KB saving in CSS bundle).
+
+### Enforced Constants (never use magic numbers for these)
+All engineering constants are centralised in `src/data/constants.ts`:
+
+| Constant | Value | Usage |
+|---|---|---|
+| `VOLTAGE_V` | 230 | Single-phase residential voltage |
+| `DAYS_PER_MONTH` | 30 | Monthly kWh billing estimates |
+| `MCB_SAFETY_MARGIN` | 1.25 | IEC 60898 MCB design current |
+| `INVERTER_OVERHEAD` | 1.2 | Inverter capacity overhead |
+| `SOLAR_PEAK_SUN_HOURS` | 4 | Solar sizing peak sun hours |
+| `STABILIZER_OVERHEAD` | 1.3 | Stabilizer sizing safety factor |
+
+### TypeScript Enforcement
+- `SchemaNode = Record<string, unknown>` — defined in `src/types/index.ts`. Use for all `schemaGraph` props; never `any[]`.
+- Timer handles: always `ReturnType<typeof setTimeout> | undefined`, never `any`.
+
+### Inline Style Policy
+- **Banned:** `style="color: var(--accent)"` → use `class="text-accent"`
+- **Banned:** `style="color: var(--danger)"` → use `class="text-danger"`
+- **Banned:** `style="color: var(--success)"` → use `class="text-success"`
+- **Allowed:** Complex `color-mix()` shadows, `radial-gradient` overlays, multi-value `box-shadow` with CSS vars (no Tailwind equivalent exists)

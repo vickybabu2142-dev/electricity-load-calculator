@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import { getArticle } from '@/data/knowledgeHub';
+import type { SchemaNode } from '@/types';
 
 interface TOCItem {
   id: string;
@@ -24,7 +25,7 @@ interface Props {
   readingTime?: number;
   datePublished?: string;
   dateModified?: string;
-  schemaGraph?: any[];
+  schemaGraph?: SchemaNode[];
   relatedArticles?: RelatedArticle[];
   clusterSlug?: string;
   clusterTitle?: string;

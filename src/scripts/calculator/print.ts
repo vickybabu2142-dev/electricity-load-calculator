@@ -19,6 +19,7 @@ import { escapeHtml } from '@/utils/rowTemplate';
 import { setText } from './dom';
 import { appState } from './state';
 import { REGION_SETTINGS } from './constants';
+import { VOLTAGE_V } from '@/data/constants';
 
 // ── Report ID (stable per session — FIX audit #11) ───────
 let sessionReportId: string | null = null;
@@ -89,7 +90,7 @@ export function populatePrintAppliances(appliances: Appliance[]): void {
 }
 
 export function populatePrintInsights(result: CalculationResult, insights: InsightResult): void {
-  const operatingCurrent = result.totalWatts / 230;
+  const operatingCurrent = result.totalWatts / VOLTAGE_V;
 
   setText('print-analysis-load', result.totalKW.toFixed(2));
   setText('print-analysis-daily', result.dailyKWh.toFixed(2));

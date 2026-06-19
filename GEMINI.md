@@ -151,3 +151,41 @@ Every article includes: `Article` + `FAQPage` + `BreadcrumbList` + `HowTo` JSON-
 - `npm run preview`: Preview production build locally
 - `npx playwright test`: Run all E2E tests
 - `node scripts/verify-logic.cjs`: Run logic verification tests
+
+---
+
+## Code Quality Audit — Findings & Ongoing Rules
+*Audit completed: 2026-06-19 | Overall score: 8.2 / 10*
+
+### Resolved Issues (do not re-introduce)
+- **Magic number `230` (voltage):** Always use `VOLTAGE_V` from `src/data/constants.ts`. Previously leaked in `print.ts`.
+- **Magic number `30` (days/month):** Always use `DAYS_PER_MONTH` from `src/data/constants.ts`. Previously leaked in the `download-report` handler in `events.ts`.
+- **`any[]` types on `schemaGraph` props:** Both `BaseLayout.astro` and `KnowledgeHubLayout.astro` now use `SchemaNode[]` (imported from `src/types/index.ts`). Do not revert to `any[]`.
+- **Inline `style="color: var(--accent)"` in `404.astro`:** Replaced with `class="text-accent"`. Apply the same fix on all new pages.
+
+### Pending Architectural Debt
+- **`assessment.astro` is 1,863 lines** (spec limit: 600). The `#assess-print-layout` block (~900 lines of print HTML) should be extracted into a dedicated `AssessmentPrintLayout.astro` component, and client scripts moved to `src/scripts/assessment/` modules. This is the highest-priority refactor.
+- **Font weight audit:** Khand 500 and Hind 500 are imported in `BaseLayout.astro` but may be unused. Audit `font-medium` usage across all components and drop unneeded weight files if confirmed (~60 KB saving).
+
+### Enforced Constants (never use magic numbers for these)
+| Constant | Value | Description |
+|---|---|---|
+| `VOLTAGE_V` | 230 | Standard single-phase residential voltage (V) |
+| `DAYS_PER_MONTH` | 30 | Average days per month for billing estimates |
+| `MCB_SAFETY_MARGIN` | 1.25 | IEC 60898 breaker design current margin |
+| `INVERTER_OVERHEAD` | 1.2 | Inverter capacity overhead above connected load |
+| `SOLAR_PEAK_SUN_HOURS` | 4 | Peak sun hours/day for solar sizing |
+| `STABILIZER_OVERHEAD` | 1.3 | Mainline stabilizer sizing safety factor |
+
+All constants live in `src/data/constants.ts`.
+
+### TypeScript Types (enforce)
+- `SchemaNode = Record<string, unknown>` — use for all JSON-LD schema graph arrays (defined in `src/types/index.ts`)
+- All timeout handles must be `ReturnType<typeof setTimeout> | undefined` — never `any`
+- All layout `schemaGraph` props must be `SchemaNode[]`, never `any[]`
+
+### Inline Style Policy (enforce)
+- **Banned:** `style="color: var(--accent)"` → use `class="text-accent"`
+- **Banned:** `style="color: var(--danger)"` → use `class="text-danger"`
+- **Banned:** `style="color: var(--success)"` → use `class="text-success"`
+- **Allowed (no Tailwind equivalent):** `color-mix()` glow shadows, `radial-gradient` overlays, complex multi-value `box-shadow` expressions with CSS variables
