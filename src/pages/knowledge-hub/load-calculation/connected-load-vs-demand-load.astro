@@ -147,7 +147,7 @@ const schemaGraph = [
   <p>Let's say the 3 BHK home from our <a href="/knowledge-hub/load-calculation/how-to-calculate-electrical-load-for-a-house">load calculation guide</a> has a total connected load of 4,060W (4.06 kW).</p>
 
   <div class="example-box">
-    <p class="example-label">📋 Connected Load vs Demand Load — 3 BHK Home</p>
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M9 14h6" /><path d="M9 18h6" /><path d="M9 10h6" /></svg>Connected Load vs Demand Load — 3 BHK Home</p>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem;">
       <div style="padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border); background: var(--bg-base);">
         <p style="font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin: 0 0 0.5rem 0;">Connected Load</p>
@@ -205,7 +205,7 @@ const schemaGraph = [
 
   <h2 id="common-mistakes">Common Mistakes</h2>
   <div class="mistake-card">
-    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
     <div>
       <strong class="text-text-primary block mb-1">Sizing an inverter for connected load instead of demand load</strong>
       <p class="text-sm m-0" style="color: var(--text-muted);">If your connected load is 6 kW, you don't need a 6 kW inverter. Your actual peak demand might be 4 kW. A well-designed 5 kW inverter with startup surge capacity would be sufficient and cost less.</p>
@@ -213,7 +213,7 @@ const schemaGraph = [
   </div>
 
   <div class="mistake-card">
-    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
     <div>
       <strong class="text-text-primary block mb-1">Applying for too little sanctioned load</strong>
       <p class="text-sm m-0" style="color: var(--text-muted);">Some people understate their connected load to pay lower fixed charges. If demand regularly exceeds the sanctioned load, the MCB trips — causing inconvenience and potentially damaging sensitive electronics.</p>
@@ -221,7 +221,7 @@ const schemaGraph = [
   </div>
 
   <div class="mistake-card">
-    <div style="flex-shrink: 0; margin-top: 2px;">⚠️</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
     <div>
       <strong class="text-text-primary block mb-1">Ignoring startup (inrush) current</strong>
       <p class="text-sm m-0" style="color: var(--text-muted);">Motors (AC compressors, pumps) draw 3–7× rated current at startup. This is a very short spike — but it contributes to peak demand and must be factored into MCB and inverter sizing. This is why you add a 25–30% safety margin above calculated demand load.</p>

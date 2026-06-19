@@ -2,6 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Electricity Load Calculator', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      const style = document.createElement('style');
+      style.innerHTML = 'astro-dev-toolbar { display: none !important; }';
+      document.head.appendChild(style);
+    }).catch(() => {});
     await page.goto('/');
   });
 

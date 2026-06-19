@@ -47,6 +47,11 @@
 - **Document Integrity:** Forces a pure white background and high-contrast dark text regardless of the UI's active theme.
 - **Ink Efficiency:** Background colors are restricted to subtle accents and borders via `print-color-adjust: exact`.
 
+### Premium Iconography (SVG only)
+- **No Emoji Icons:** Do not use plain text emojis (e.g., 💡, ⚠️, 📋, ⚡, ☀️) for UI layout, headings, warnings, lists, or callouts.
+- **Strict SVG Usage:** Always use inline, high-contrast, modern SVGs designed to match the premium, professional Modern Industrial Dashboard aesthetic.
+- **Consistent Styling:** Ensure SVGs are styled using Tailwind classes (such as `text-accent`, `text-danger`, `w-4 h-4`, etc.) and are optimized for accessibility (`aria-hidden="true"` and proper viewBox).
+
 ## Code Health & Architecture Guidelines (Optimization Principles)
 
 To prevent code smell regression, adhere strictly to these architectural practices when modifying or extending this application:

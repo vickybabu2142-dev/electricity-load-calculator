@@ -6,36 +6,55 @@ export const prerender = true;
 
 const comingTopics = [
   {
-    icon: '📐',
+    icon: 'ruler',
     title: 'How to Choose the Right Wire Gauge',
     desc: 'A practical guide to selecting copper wire cross-section (sq.mm) based on current load, cable run length, and Indian wiring standards.',
   },
   {
-    icon: '❄️',
+    icon: 'snowflake',
     title: 'Cable Sizing for Air Conditioners',
     desc: 'Correct wire sizes for 1 Ton, 1.5 Ton, and 2 Ton AC units — including outdoor-to-indoor run cable, main feed, and circuit breaker requirements.',
   },
   {
-    icon: '🔶',
+    icon: 'compare',
     title: 'Copper vs Aluminium Wiring: What to Use',
     desc: 'The pros, cons, cost differences, and safety implications of copper vs aluminium conductors for Indian residential and commercial wiring.',
   },
   {
-    icon: '📏',
+    icon: 'tape',
     title: 'Voltage Drop Calculation for Long Cable Runs',
     desc: 'How to calculate voltage drop over distance and ensure your appliances at the far end of a long cable run receive adequate voltage.',
   },
   {
-    icon: '🏗️',
+    icon: 'home',
     title: 'Cable Sizing for a Full Home Wiring Plan',
     desc: 'A complete worked example of sizing cables for a 3 BHK flat — power circuits, lighting circuits, AC circuits, and the main incoming feeder.',
   },
   {
-    icon: '🌡️',
+    icon: 'temp',
     title: 'Current Ratings & Derating Factors Explained',
     desc: 'How ambient temperature, cable grouping, conduit installation, and soil temperature affect the safe current-carrying capacity of cables.',
   },
 ];
+
+function getTopicIcon(icon: string) {
+  switch (icon) {
+    case 'ruler':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><path d="M21.3 15.3a2.82 2.82 0 0 1 0 4c-1 1-2.5 1-3.5 0L2.8 4.3a2.82 2.82 0 0 1 0-4c1-1 2.5-1 3.5 0Z"/><path d="m5.6 11.1 1.4-1.4"/><path d="m7.2 12.5 1.4-1.4"/><path d="m8.8 13.9 1.4-1.4"/><path d="m10.4 15.3 1.4-1.4"/><path d="m12 16.7 1.4-1.4"/><path d="m13.6 18.1 1.4-1.4"/></svg>`;
+    case 'snowflake':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/><path d="m20 16-4-4 4-4"/><path d="m4 8 4 4-4 4"/><path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/></svg>`;
+    case 'compare':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><path d="M16 3h5v5"/><path d="M8 21H3v-5"/><path d="M12 12 3 21"/><path d="m21 3-9 9"/></svg>`;
+    case 'tape':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Z"/><path d="M3 7h9"/><path d="M3 11h5"/><path d="M3 15h9"/><path d="M3 19h5"/></svg>`;
+    case 'home':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
+    case 'temp':
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>`;
+    default:
+      return '';
+  }
+}
 
 const SITE = 'https://electricityloadcalculator.com';
 
@@ -106,7 +125,7 @@ const schemaGraph = [
             ></div>
 
             <div class="relative">
-              <div class="text-2xl mb-3" aria-hidden="true">{topic.icon}</div>
+              <div class="mb-3" aria-hidden="true" set:html={getTopicIcon(topic.icon)} />
               <span class="inline-block text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-border text-text-faint mb-2">
                 Upcoming
               </span>
@@ -149,7 +168,12 @@ const schemaGraph = [
             here as soon as they pass our editorial and technical review process.
           </p>
           <p class="text-xs text-text-faint leading-relaxed">
-            💡 <strong class="text-text-muted">In the meantime:</strong> Our free calculator already
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-middle -translate-y-[1px]" aria-hidden="true">
+              <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .6 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+              <path d="M9 18h6" />
+              <path d="M10 22h4" />
+            </svg>
+            <strong class="text-text-muted">In the meantime:</strong> Our free calculator already
             recommends the correct cable size for your specific load — try it now.
           </p>
         </div>

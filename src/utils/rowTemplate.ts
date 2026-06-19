@@ -62,12 +62,12 @@ export function buildRowHTML(a: Appliance): string {
           class="font-mono text-xs sm:text-sm font-semibold tabular-nums text-accent"
           data-kwh-display="${a.id}"
         >${kwh}</span>
-        <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5">kWh</span>
+        <span class="text-[10px] sm:text-[11px] text-text-secondary font-medium ml-0.5">kWh</span>
       </div>
 
       <!-- Watts (Col 2) -->
       <div class="flex flex-col items-center lg:items-stretch gap-1 col-span-1 lg:col-span-1 justify-center lg:justify-start">
-        <span class="lg:hidden text-[9px] font-mono uppercase tracking-wider text-text-muted">Watts</span>
+        <span class="lg:hidden text-[10px] font-mono uppercase tracking-wider text-text-secondary font-medium">Watts</span>
         <div class="flex items-center gap-1 w-full justify-center">
           <label class="sr-only" for="watts-${a.id}">Watts for ${safeName}</label>
           <input
@@ -77,13 +77,13 @@ export function buildRowHTML(a: Appliance): string {
             data-action="update-watts" data-id="${a.id}"
             aria-label="Watts for ${safeName}"
           />
-          <span class="hidden lg:block text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-3 text-center flex-shrink-0">W</span>
+          <span class="hidden lg:block text-[10px] sm:text-[11px] text-text-secondary font-mono uppercase w-3 text-center flex-shrink-0">W</span>
         </div>
       </div>
 
       <!-- Qty stepper (Col 3) -->
       <div class="flex flex-col items-center gap-1 col-span-1 lg:col-span-1 justify-center">
-        <span class="lg:hidden text-[9px] font-mono uppercase tracking-wider text-text-muted">Qty</span>
+        <span class="lg:hidden text-[10px] font-mono uppercase tracking-wider text-text-secondary font-medium">Qty</span>
         <div class="flex items-center w-full justify-center" role="group" aria-label="Quantity for ${safeName}">
           <button type="button"
             class="stepper-btn flex-1 lg:flex-none max-w-[32px] !h-9 sm:max-w-none sm:!h-8"
@@ -101,7 +101,7 @@ export function buildRowHTML(a: Appliance): string {
 
       <!-- Hours (Col 4) -->
       <div class="flex flex-col items-center gap-1 col-span-1 lg:col-span-1 justify-center relative">
-        <span class="lg:hidden text-[9px] font-mono uppercase tracking-wider text-text-muted">Hrs/Day</span>
+        <span class="lg:hidden text-[10px] font-mono uppercase tracking-wider text-text-secondary font-medium">Hrs/Day</span>
         <div class="flex items-center gap-1 w-full justify-center">
           <label class="sr-only" for="hours-${a.id}">Hours per day for ${safeName}</label>
           <input
@@ -111,7 +111,7 @@ export function buildRowHTML(a: Appliance): string {
             data-action="update-hours" data-id="${a.id}"
             aria-label="Hours per day for ${safeName}"
           />
-          <span class="hidden lg:block text-[9px] sm:text-[11px] text-text-muted font-mono uppercase w-5 text-center flex-shrink-0">h/d</span>
+          <span class="hidden lg:block text-[10px] sm:text-[11px] text-text-secondary font-mono uppercase w-5 text-center flex-shrink-0">h/d</span>
         </div>
         <span class="hours-error hidden text-[8px] sm:text-[9px] text-danger font-mono font-bold uppercase absolute mt-6" data-error-id="${a.id}">Max 24h</span>
       </div>
@@ -122,7 +122,7 @@ export function buildRowHTML(a: Appliance): string {
           class="font-mono text-xs sm:text-sm font-semibold tabular-nums text-accent"
           data-kwh-display="${a.id}"
         >${kwh}</span>
-        <span class="text-[9px] sm:text-[10px] text-text-muted ml-0.5 block">kWh</span>
+        <span class="text-[10px] sm:text-[11px] text-text-secondary font-medium ml-0.5 block">kWh</span>
       </div>
 
       <!-- Delete action (custom appliances only) (Col 6) -->

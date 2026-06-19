@@ -83,6 +83,21 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
   },
 ];
 
+// ─── MCB Sizing Articles ───────────────────────────────────
+
+export const MCB_SIZING_ARTICLES: KHArticle[] = [
+  {
+    slug: 'how-to-choose-the-right-mcb-rating',
+    title: 'How to Choose the Right MCB Rating',
+    description:
+      'A complete, step-by-step guide to calculating load current and selecting the correct MCB ampere rating for your home circuits and appliances.',
+    readingTime: 6,
+    isPillar: true,
+    datePublished: '2026-06-19',
+    dateModified: '2026-06-19',
+  },
+];
+
 // ─── All Clusters ─────────────────────────────────────────
 
 export const CLUSTERS: KHCluster[] = [
@@ -103,8 +118,7 @@ export const CLUSTERS: KHCluster[] = [
       'Learn how to select the right MCB rating for your home, circuits, and specific appliances. Avoid common breaker tripping problems.',
     iconPath:
       'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 0-2-2V9m0 0h18',
-    articles: [],
-    comingSoon: true,
+    articles: MCB_SIZING_ARTICLES,
   },
   {
     slug: 'wire-sizing',

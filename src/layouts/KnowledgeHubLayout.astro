@@ -434,6 +434,15 @@ const {
     font-weight: 600;
     font-size: 0.9375rem;
     color: var(--text-primary);
+    transition: color 0.2s ease;
+  }
+
+  .kh-prose :global(.kh-faq details:hover) {
+    border-color: color-mix(in srgb, var(--accent), transparent 60%);
+  }
+
+  .kh-prose :global(.kh-faq details:hover summary) {
+    color: var(--accent);
   }
 
   .kh-prose :global(.kh-faq summary::-webkit-details-marker) { display: none; }

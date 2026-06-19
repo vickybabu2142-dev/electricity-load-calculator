@@ -1,15 +1,16 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { MCB_SIZING_ARTICLES, CLUSTERS } from '@/data/knowledgeHub';
 
 export const prerender = true;
 
+const SITE = 'https://electricityloadcalculator.com';
+const cluster = CLUSTERS.find(c => c.slug === 'mcb-sizing')!;
+const pillar = MCB_SIZING_ARTICLES.find(a => a.isPillar)!;
+
 const comingTopics = [
-  {
-    icon: '⚡',
-    title: 'How to Choose the Right MCB Rating',
-    desc: 'Step-by-step guide to selecting the correct ampere rating for main MCBs, sub-circuit MCBs, and appliance-specific breakers.',
-  },
   {
     icon: '🔲',
     title: 'MCB Types: B, C & D Curve Explained',
@@ -37,25 +38,38 @@ const comingTopics = [
   },
 ];
 
-const SITE = 'https://electricityloadcalculator.com';
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+    { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+    { "@type": "ListItem", "position": 3, "name": "MCB Sizing" },
+  ],
+};
 
 const schemaGraph = [
   {
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
-      { '@type': 'ListItem', position: 2, name: 'Knowledge Hub', item: `${SITE}/knowledge-hub` },
-      { '@type': 'ListItem', position: 3, name: 'MCB Sizing' },
-    ],
+    "@type": "CollectionPage",
+    "name": "MCB Sizing & Selection Guides",
+    "description": "Learn how to select the right MCB rating, curves, and curves troubleshooting for home circuits.",
+    "url": `${SITE}/knowledge-hub/mcb-sizing`,
+    "breadcrumb": breadcrumbSchema,
+    "hasPart": MCB_SIZING_ARTICLES.map(a => ({
+      "@type": "Article",
+      "name": a.title,
+      "url": `${SITE}/knowledge-hub/mcb-sizing/${a.slug}`,
+      "description": a.description,
+    })),
   },
 ];
 ---
 
 <BaseLayout
-  title="MCB Sizing Guides — Coming Soon | Electrical Knowledge Hub"
-  description="In-depth guides on MCB rating selection, MCB types (B, C, D curve), MCB for AC units, tripping causes, and distribution board layout. Coming soon to Electrical Knowledge Hub."
+  title="MCB Sizing & Selection Guides — Electrical Knowledge Hub"
+  description="Learn how to choose the right MCB rating, understand types (Type B, C, D curves), size AC circuit breakers, and troubleshoot MCB tripping problems."
   keywords="MCB sizing, MCB rating selection, MCB types, MCB for AC, why MCB trips, distribution board, RCCB vs MCB"
   schemaGraph={schemaGraph}
+  breadcrumbSchema={breadcrumbSchema}
 >
   <Breadcrumb items={[
     { label: 'Home', href: '/' },
@@ -63,182 +77,149 @@ const schemaGraph = [
     { label: 'MCB Sizing' },
   ]} />
 
-  <main class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-8 pb-24">
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-6 pb-20">
 
-    <!-- Hero -->
-    <div class="text-center mb-16 relative">
-      <!-- Background glow -->
-      <div
-        class="absolute inset-0 -z-10 pointer-events-none"
-        aria-hidden="true"
-        style="background: radial-gradient(ellipse 60% 40% at 50% 30%, color-mix(in srgb, var(--accent), transparent 88%), transparent);"
-      ></div>
-
-      <!-- Badge -->
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent/10 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
-        <span class="text-[11px] font-mono uppercase tracking-widest text-accent">Coming Soon</span>
-      </div>
-
-      <h1 class="font-display font-bold text-4xl sm:text-5xl text-text-primary mb-4 leading-tight">
-        MCB Sizing &amp; Selection
-      </h1>
-      <p class="text-text-secondary text-lg max-w-2xl mx-auto leading-relaxed">
-        Practical, plain-language guides on selecting the right miniature circuit breaker for your home,
-        office, and specific appliances. Written for Indian homes and electrical standards.
+    <!-- Cluster Hero -->
+    <div class="max-w-4xl mb-12">
+      <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted mb-2 flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true">
+          <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 0-2-2V9m0 0h18" />
+        </svg>
+        Knowledge Hub / MCB Sizing
       </p>
+      <h1 class="font-display font-bold text-4xl sm:text-5xl text-text-primary leading-tight tracking-tight mb-4">
+        MCB Sizing &amp; <span class="text-accent">Selection</span> Guides
+      </h1>
+      <p class="text-text-muted text-base sm:text-lg leading-relaxed max-w-2xl mb-6">
+        Practical, plain-language guides on selecting the right miniature circuit breaker for your home, office, and specific appliances. Size your safety systems based on your actual load.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href={`/knowledge-hub/mcb-sizing/${pillar.slug}`} class="btn-primary px-5 py-2.5 text-sm">
+          Read the Pillar Guide
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+        </a>
+        <a href="/" class="btn-secondary px-5 py-2.5 text-sm">Use MCB Sizing Tool</a>
+      </div>
     </div>
 
-    <!-- Topics preview grid -->
-    <section aria-labelledby="topics-heading" class="mb-16">
-      <h2 id="topics-heading" class="font-display font-bold text-2xl text-text-primary mb-2 text-center">
-        What's Coming
-      </h2>
-      <p class="text-text-muted text-sm text-center mb-8">
-        These guides are being written and reviewed by electrical engineers. Bookmark this page to be among the first to read them.
-      </p>
+    <div class="flex gap-8 xl:gap-12 items-start">
+      <!-- Main Content -->
+      <div class="min-w-0 flex-1">
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {comingTopics.map((topic) => (
-          <div class="group relative rounded-2xl border border-border bg-card p-5 overflow-hidden hover:border-accent/30 transition-all duration-300 hover:-translate-y-0.5">
-            <!-- Subtle hover glow -->
-            <div
-              class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
-              style="background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent), transparent 94%), transparent 70%);"
-              aria-hidden="true"
-            ></div>
-
-            <div class="relative">
-              <!-- Icon -->
-              <div class="text-2xl mb-3" aria-hidden="true">{topic.icon}</div>
-
-              <!-- Coming soon pill -->
-              <span class="inline-block text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-border text-text-faint mb-2">
-                Upcoming
+        <!-- Pillar Article (featured) -->
+        <section class="mb-10" aria-labelledby="pillar-heading">
+          <h2 id="pillar-heading" class="font-mono text-[10px] uppercase tracking-[0.2em] text-accent mb-4 flex items-center gap-2">
+            <span class="w-4 h-px bg-accent" aria-hidden="true"></span>
+            Featured Guide
+          </h2>
+          <a
+            href={`/knowledge-hub/mcb-sizing/${pillar.slug}`}
+            class="group block rounded-xl border border-border bg-card p-6 sm:p-8 hover:border-accent/40 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            style="box-shadow: 0 4px 32px -8px color-mix(in srgb, var(--accent), transparent 85%);"
+            data-astro-prefetch="hover"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-[9px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true">
+                  <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+                Pillar Guide
               </span>
-
-              <h3 class="font-display font-semibold text-base text-text-primary mb-1.5 leading-snug">
-                {topic.title}
-              </h3>
-              <p class="text-xs text-text-muted leading-relaxed">{topic.desc}</p>
+              <span class="text-[10px] font-mono text-text-faint">{pillar.readingTime} min read</span>
             </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="grid md:grid-cols-2 gap-6 mb-16">
-
-      <!-- Notify notice -->
-      <div
-        class="rounded-2xl border border-accent/30 bg-card p-6 relative overflow-hidden"
-        style="box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 85%), 0 4px 24px -6px color-mix(in srgb, var(--accent), transparent 80%);"
-      >
-        <div
-          class="absolute top-0 right-0 w-32 h-32 pointer-events-none"
-          aria-hidden="true"
-          style="background: radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--accent), transparent 80%), transparent 60%);"
-        ></div>
-        <div class="relative">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30" aria-hidden="true">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent">
-                <path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Z" clip-rule="evenodd" />
-              </svg>
+            <h3 class="font-display font-bold text-2xl text-text-primary group-hover:text-accent transition-colors mb-3 leading-tight">
+              {pillar.title}
+            </h3>
+            <p class="text-text-muted leading-relaxed mb-5">{pillar.description}</p>
+            <div class="flex items-center gap-2 text-sm text-accent font-medium">
+              Read complete guide
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
             </div>
-            <span class="text-[10px] font-mono uppercase tracking-widest text-accent">Stay Updated</span>
-          </div>
-          <h2 class="font-display font-bold text-lg text-text-primary mb-2">
-            Want to know when it's ready?
+          </a>
+        </section>
+ 
+        <!-- Upcoming Guides -->
+        <section aria-labelledby="guides-heading">
+          <h2 id="guides-heading" class="font-display font-bold text-2xl text-text-primary mb-5 flex items-center gap-3">
+            <span class="w-1 h-6 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            Upcoming MCB Sizing Guides
           </h2>
-          <p class="text-sm text-text-muted leading-relaxed mb-4">
-            Bookmark this page or follow our site updates. New guides in the MCB Sizing cluster will
-            appear here as they are published — typically 2–3 new articles per week.
-          </p>
-          <p class="text-xs text-text-faint leading-relaxed">
-            💡 <strong class="text-text-muted">Pro tip:</strong> You can use our free calculator right now
-            to get instant MCB recommendations based on your actual load — no waiting needed.
-          </p>
-        </div>
-      </div>
-
-      <!-- Calculator CTA -->
-      <div class="rounded-2xl border border-border bg-card p-6 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-3">
-            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30" aria-hidden="true">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true">
-                <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
-              </svg>
-            </div>
-            <span class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</span>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {comingTopics.map((topic, i) => (
+              <div
+                class="group block rounded-xl border border-border bg-card/60 p-5 overflow-hidden hover:border-accent/20 transition-all duration-200"
+              >
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-[10px] font-mono text-text-faint flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-text-faint" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    Upcoming
+                  </span>
+                  <span class="text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border border-border text-text-faint bg-base/40">Soon</span>
+                </div>
+                <h3 class="font-display font-semibold text-base text-text-primary mb-2 leading-snug">
+                  {topic.title}
+                </h3>
+                <p class="text-xs text-text-muted leading-relaxed line-clamp-2">{topic.desc}</p>
+              </div>
+            ))}
           </div>
-          <h2 class="font-display font-bold text-lg text-text-primary mb-2">
-            Get Instant MCB Recommendations Now
-          </h2>
-          <p class="text-sm text-text-muted leading-relaxed mb-4">
-            Don't wait for the guides. Our Electricity Load Calculator already recommends the correct
-            MCB rating for your specific load — just enter your appliances and get results instantly.
-          </p>
-          <ul class="text-xs text-text-muted space-y-1 mb-5">
-            <li class="flex items-center gap-2">
-              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
-              Main MCB ampere rating based on your total load
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
-              Individual circuit breaker sizing
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
-              Cable size and inverter/solar recommendations
-            </li>
-          </ul>
+        </section>
+
+        <!-- Calculator CTA -->
+        <KnowledgeHubCTA />
+
+        <!-- Other Clusters -->
+        <section class="mt-12 pt-8 border-t border-border" aria-labelledby="other-clusters-heading">
+          <h2 id="other-clusters-heading" class="font-display font-bold text-lg text-text-primary mb-4">Explore Other Topics</h2>
+          <div class="flex flex-wrap gap-3">
+            {[
+              { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+              { label: 'Wire Sizing', href: '/knowledge-hub/wire-sizing' },
+              { label: 'Solar & Inverter', href: '/knowledge-hub/solar-inverter' },
+              { label: 'All Topics', href: '/knowledge-hub' },
+            ].map(link => (
+              <a href={link.href} class="btn-secondary text-sm px-4 py-2" data-astro-prefetch="hover">{link.label} →</a>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="hidden xl:block w-72 flex-shrink-0 sticky top-24">
+        <div class="rounded-xl border border-border bg-card p-5 mb-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
+            </div>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</p>
+          </div>
+          <p class="font-display font-bold text-base text-text-primary mb-1.5">MCB Sizing Calculator</p>
+          <p class="text-xs text-text-muted leading-relaxed mb-4">Determine standard wire gauge and MCB ampere ratings for your home load.</p>
+          <a href="/" class="btn-primary w-full text-sm py-2.5 justify-center" data-astro-prefetch="hover">
+            Start Sizing →
+          </a>
         </div>
-        <a
-          href="/"
-          class="btn-primary w-full text-sm py-3 justify-center"
-          data-astro-prefetch="hover"
-        >
-          Try Free Calculator
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true">
-            <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd" />
-          </svg>
-        </a>
-      </div>
-    </section>
-
-    <!-- Other clusters -->
-    <section aria-labelledby="other-clusters-heading">
-      <h2 id="other-clusters-heading" class="font-display font-semibold text-lg text-text-primary mb-4">
-        Explore Published Guides
-      </h2>
-      <div class="flex flex-wrap gap-3">
-        <a
-          href="/knowledge-hub/load-calculation"
-          class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:text-accent transition-all text-sm text-text-secondary font-medium"
-          data-astro-prefetch="hover"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true">
-            <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
-          </svg>
-          Load Calculation Guides
-          <span class="text-[10px] font-mono text-text-faint ml-1">6 articles</span>
-        </a>
-        <a
-          href="/knowledge-hub"
-          class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:text-accent transition-all text-sm text-text-secondary font-medium"
-          data-astro-prefetch="hover"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true">
-            <path fill-rule="evenodd" d="M8.914 6.025a.75.75 0 0 1 1.06 0 3.5 3.5 0 0 1 0 4.95l-2 2a3.5 3.5 0 0 1-5.396-4.402.75.75 0 0 1 1.251.827 2 2 0 0 0 3.085 2.514l2-2a2 2 0 0 0 0-2.828.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-            <path fill-rule="evenodd" d="M7.086 9.975a.75.75 0 0 1-1.06 0 3.5 3.5 0 0 1 0-4.95l2-2a3.5 3.5 0 0 1 5.396 4.402.75.75 0 0 1-1.251-.827 2 2 0 0 0-3.085-2.514l-2 2a2 2 0 0 0 0 2.828.75.75 0 0 1 0 1.06Z" clip-rule="evenodd" />
-          </svg>
-          All Knowledge Hubs
-        </a>
-      </div>
-    </section>
-
+        <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted mb-3">
+            Cluster Articles
+          </p>
+          <nav aria-label="MCB Sizing Guides">
+            {MCB_SIZING_ARTICLES.map(a => (
+              <a
+                href={`/knowledge-hub/mcb-sizing/${a.slug}`}
+                class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.isPillar ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+                data-astro-prefetch="hover"
+              >
+                <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.isPillar ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+                {a.title}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </aside>
+    </div>
   </main>
 </BaseLayout>
