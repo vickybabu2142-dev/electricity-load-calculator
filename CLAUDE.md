@@ -62,6 +62,125 @@ A Phase 1-complete SEO content cluster. URL hierarchy:
   - In `FAQSection.astro` and `/recommendations/*.astro` pages: standard `<p class="text-sm text-text-muted leading-relaxed">` elements.
   - In Knowledge Hub articles: `<div class="faq-body">` elements containing description copy (styled via layout rules).
 
+---
+
+## Knowledge Hub — Article Writing Style Guide
+
+> **Canonical reference article:** `src/pages/knowledge-hub/load-calculation/connected-load-vs-demand-load.astro`
+> Read this file before writing any new article. It is the gold standard for tone, structure, and component use.
+
+### Core Principle: Scannable, Not Encyclopaedic
+
+If a concept can be said in one sentence, never use two. If it can be a bullet, never use a paragraph.
+
+| Element | Max Length |
+|---|---|
+| Intro `<p>` after QuickAnswerBox | 2 sentences |
+| Section opening `<p>` | 2 sentences |
+| Step card body text | 1 sentence + optional formula |
+| Mistake card body (`text-sm text-text-muted`) | 2 sentences |
+| FAQ answer (`<div class="faq-body">`) | 2–3 sentences |
+| Any `<p>` tag in the article body | 3 sentences max |
+
+### Article Structure (in order)
+
+1. **Frontmatter** — `KnowledgeHubLayout` props: `title`, `description`, `pubDate`, `cluster`, `slug`, `readingTime`, `tableOfContents[]`, `schemaGraph: SchemaNode[]` (never `any[]`).
+2. **QuickAnswerBox** — TL;DR. 1-sentence direct answer + 3–5 short bullets.
+3. **Intro paragraph** — 1–2 sentences. Hook on the core tension. No "In this guide we will…".
+4. **Sections** — `<h2 id="...">` per concept. 1–2 sentence `<p>` opener, then a visual component.
+5. **KnowledgeHubCTA** — One per article, after main content, before reference tables and FAQs.
+6. **Common Mistakes** — `mistake-card` blocks. 5 max. 2 sentences per body.
+7. **FAQ accordion** — `<details>`/`<summary>`. 6–8 questions. 2–3 sentence answers.
+8. **Sidebar TOC** — auto-generated from `tableOfContents` frontmatter array.
+
+### Visual Hierarchy Rule
+
+```
+1. ONE short paragraph (key insight in plain language)
+2. A visual component that proves or demonstrates it
+```
+
+Lead with the fact. Show the proof. Never write explanation paragraphs before the visual.
+
+### Component Patterns
+
+**`example-box`** — comparisons, before/after, formulas, key rules. Never prose.
+
+```html
+<!-- SVG bullet list inside example-box -->
+<ul class="space-y-3 mt-2 list-none text-sm text-text-secondary">
+  <li class="flex items-start gap-2.5">
+    <svg class="w-4 h-4 text-danger mt-0.5 flex-shrink-0" aria-hidden="true">...</svg>
+    <span><strong>Label:</strong> One sentence.</span>
+  </li>
+</ul>
+```
+
+**`mistake-card`** — 2 sentences max per body:
+```html
+<div class="mistake-card">
+  <svg class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true">...</svg>
+  <div>
+    <strong class="text-text-primary block mb-1">Short title</strong>
+    <p class="text-sm text-text-muted">What goes wrong. How to fix it.</p>
+  </div>
+</div>
+```
+
+**`step-card`** — 1 sentence + formula:
+```html
+<div class="step-card">
+  <div class="step-number">1</div>
+  <div>
+    <strong class="text-text-primary block mb-1">Step title</strong>
+    <p class="text-text-muted text-sm">One sentence.</p>
+    <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Formula = here</p>
+  </div>
+</div>
+```
+
+**Tables:** Always wrap in `<div class="table-wrap">`. No naked `<table>` in article body.
+
+### SVG Icon Colours
+
+| Class / Style | Meaning |
+|---|---|
+| `text-danger` | Warning, error, what goes wrong |
+| `text-success` | Correct outcome, what goes right |
+| `text-accent` | Informational, neutral tip |
+| `text-text-muted` | Secondary / minor point |
+| `style="color: #d97706;"` | Amber / caution — `text-amber-500` does NOT exist in this theme |
+
+### Prose Rules
+
+- No IEC standard numbers ("the 1.25 safety margin" — not "IEC 60898 requires…").
+- Active voice: "The MCB trips" — not "The trip is triggered by the MCB".
+- Numbers as digits: "5–8×" — not "five to eight times".
+- Specifics beat generalities: "₹120–250" not "affordable"; "16A Type C on 2.5 mm²" not "the right breaker".
+- No "This is because…" sentence starts — lead with the fact.
+- No "In this article…" / "This guide will…" openers.
+
+### FAQ Rules
+
+- Question: phrased exactly as a user would type into Google.
+- Answer: 2–3 sentences. Direct answer first, then reason, then optional qualification.
+- Show calculations inline: `(1,600W ÷ 230V × 1.25 = 8.7A)`.
+- Link to related articles: `<a href="/knowledge-hub/..." class="text-accent hover:underline">text</a>`.
+
+### Anti-Patterns (never do these)
+
+- ❌ 3+ paragraph section intros
+- ❌ Repeating the same point in consecutive paragraphs
+- ❌ "In this article…" openers
+- ❌ Analogies exceeding one `example-box`
+- ❌ `text-amber-500` (class does not exist — use `style="color: #d97706;"`)
+- ❌ Emoji in headings or bullets (SVG only)
+- ❌ FAQ answers longer than 3 sentences
+- ❌ Naked `<table>` without `.table-wrap`
+- ❌ `any[]` for `schemaGraph` — always `SchemaNode[]`
+
+---
+
 ## Testing
 
 ### End-to-End Tests (`tests/e2e/`)
@@ -119,3 +238,4 @@ All engineering constants are centralised in `src/data/constants.ts`:
 - **Banned:** `style="color: var(--danger)"` → use `class="text-danger"`
 - **Banned:** `style="color: var(--success)"` → use `class="text-success"`
 - **Allowed:** Complex `color-mix()` shadows, `radial-gradient` overlays, multi-value `box-shadow` with CSS vars (no Tailwind equivalent exists)
+- **Allowed (amber/caution):** `style="color: #d97706;"` — Tailwind `text-amber-500` does not exist in this theme's config

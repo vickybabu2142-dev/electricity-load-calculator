@@ -157,7 +157,7 @@ const diagnosticSteps = [
     </p>
     <ul class="mt-3 space-y-2.5 list-none text-sm leading-relaxed text-text-muted">
       <li class="flex items-start gap-2.5">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color: #d97706;" aria-hidden="true"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
         <span><strong class="text-text-primary">Thermal trip (slow):</strong> A bimetallic strip inside the MCB bends and trips after minutes of sustained overload. This is gentle — your wiring got warm but not dangerous.</span>
       </li>
       <li class="flex items-start gap-2.5">
@@ -171,15 +171,12 @@ const diagnosticSteps = [
     </p>
   </QuickAnswerBox>
 
-  <p class="mt-6">Every home's electrical panel is a silent, unglamorous thing — you ignore it until it trips. But the moment that switch snaps down, it has just saved your wiring, possibly your home, and possibly your life. Understanding its language is one of the most practical things a homeowner can learn.</p>
+  <p class="mt-6">When a breaker trips it has done its job perfectly — it has stopped your wiring from overheating. The real question is always <em>why</em> it tripped. Here's how to find out.</p>
 
   <!-- ② THE BOUNCER ANALOGY -->
   <h2 id="the-bouncer">The Bouncer Analogy — How an MCB Really Works</h2>
 
-  <p>
-    The clearest way to understand why an MCB trips — and why it trips in five completely different ways —
-    is to picture your circuit breaker as the <strong>bouncer at a nightclub</strong>.
-  </p>
+  <p>Picture your circuit breaker as the <strong>bouncer at a nightclub</strong> with a 16-person (16A) capacity limit. Each trip type is a different scenario at the door:</p>
 
   <div class="example-box">
     <p class="example-label">The Bouncer Analogy</p>
@@ -189,7 +186,7 @@ const diagnosticSteps = [
     </p>
     <ul class="space-y-4 mt-4 list-none">
       <li class="flex items-start gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-amber-500 mt-1 flex-shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mt-1 flex-shrink-0" style="color: #d97706;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         <span class="text-sm text-text-secondary leading-relaxed">
           <strong>Overload:</strong> Guests keep trickling in all evening. By 1 AM, 18 people are inside.
           The bouncer counts heads, gets uncomfortable, and at 2 AM finally steps in and clears the venue.
@@ -238,18 +235,7 @@ const diagnosticSteps = [
   <!-- ③ REASON 1: OVERLOAD -->
   <h2 id="reason-overload">1. Overloaded Circuits — The Slow Boil</h2>
 
-  <p>
-    This is the cause behind roughly <strong>80% of domestic MCB trips</strong>. Every circuit in your
-    home is a channel with a defined capacity — measured in Amps (A). A standard home wall-socket circuit
-    in India runs through a 16 A MCB, which at 230 V can safely carry about <strong>3,680 W of load</strong>.
-  </p>
-  <p>
-    An overload doesn't happen in a flash. Think of it like boiling a pot of water — the MCB's internal
-    bimetallic strip absorbs heat gradually as current exceeds the rating. At 120% of rated load, the MCB
-    might take over an hour to trip. At 200% load, it trips in minutes. This is why overloads feel
-    unpredictable — the trip time depends on exactly how overloaded the circuit is and how warm the room is
-    (ambient temperature affects the strip's starting point).
-  </p>
+  <p>This is behind roughly <strong>80% of domestic MCB trips</strong>. A 16A circuit at 230V carries about <strong>3,680W safely</strong>. Exceed that and the MCB's internal bimetallic strip heats up gradually and trips — the more overloaded, the faster the trip.</p>
 
   <div class="mistake-card mt-4">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -279,24 +265,7 @@ const diagnosticSteps = [
   <!-- ④ REASON 2: INRUSH SURGE -->
   <h2 id="reason-surge">2. Inrush Current & Motor Surge — The False Alarm</h2>
 
-  <p>
-    This is the most <em>misdiagnosed</em> trip type in homes — because the symptom (breaker trips the
-    instant you turn on a device) looks exactly like a short circuit. But the cause is completely different,
-    and so is the fix.
-  </p>
-  <p>
-    Motor-driven appliances — air conditioners, water pumps, refrigerators, washing machines, treadmills —
-    contain induction motors. When a motor is stationary, it has almost no resistance. The moment you flip
-    the switch, it tries to go from 0 RPM to full speed instantly. That acceleration requires an enormous
-    burst of current — typically <strong>5–8× the running current</strong>, lasting 0.05 to 0.3 seconds.
-    This burst is called <strong>inrush current</strong>.
-  </p>
-  <p>
-    A <strong>Type B MCB</strong> (the most common type installed in Indian homes) has a magnetic trip
-    threshold of 3–5× rated current. Your 1.5 Ton AC running current is about 7–8 A. Its inrush surge
-    can briefly hit 35–50 A on a 6 A MCB — which looks like a short circuit to a Type B breaker.
-    It trips instantly. The AC is completely fine. The breaker just doesn't know the difference.
-  </p>
+  <p>This is the most <em>misdiagnosed</em> trip type — the symptom (trips the instant a device starts) looks identical to a short circuit. The cause is motor inrush: when a stationary motor starts, it briefly draws <strong>5–8× its running current</strong> for 0.05–0.3 seconds. A Type B MCB's magnetic trip fires at 3–5× rated current — so it sees the normal startup surge as a fault and trips. The motor is fine; the breaker just doesn't know the difference.</p>
 
   <div class="mistake-card mt-4">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -327,19 +296,7 @@ const diagnosticSteps = [
   <!-- ⑤ REASON 3: SHORT CIRCUIT -->
   <h2 id="reason-short">3. Short Circuits — The Emergency Stop</h2>
 
-  <p>
-    A short circuit is electricity taking a shortcut it was never meant to take. In normal operation,
-    current flows from the live wire, through an appliance (which provides resistance and does useful work),
-    and back through the neutral wire. The appliance's resistance is what limits current to safe levels.
-  </p>
-  <p>
-    In a short circuit, the live wire connects directly to neutral — bypassing any resistance. Ohm's Law
-    tells you what happens: with near-zero resistance, current becomes almost infinite. Hundreds of Amperes
-    surge through wiring designed for 16 A. In fractions of a second, the copper conductor would glow
-    red-hot and ignite insulation — if the MCB didn't react. The MCB's magnetic mechanism responds in
-    under 10 milliseconds and yanks the circuit open. You hear a loud pop. The lights go out.
-    That pop saved your home.
-  </p>
+  <p>In a short circuit, live wire connects directly to neutral — bypassing all resistance. Current surges to hundreds of Amps in milliseconds. The MCB's magnetic mechanism reacts in under 10ms and cuts the circuit. You hear a loud pop. That pop saved your home.</p>
 
   <div class="mistake-card mt-4">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -370,20 +327,7 @@ const diagnosticSteps = [
   <!-- ⑥ REASON 4: GROUND FAULTS -->
   <h2 id="reason-ground">4. Ground Faults & Water Intrusion — The Hidden Leak</h2>
 
-  <p>
-    A ground fault is a cousin of the short circuit — but instead of live touching neutral, live current
-    finds an unintended path to the earth. This could be through a wet wall, a flooded junction box,
-    corroded wiring, or the metal chassis of a washing machine whose internal grounding has failed.
-  </p>
-  <p>
-    The danger with ground faults is subtle but severe: the earth path often has higher resistance than
-    a dead short, so the current leaking to ground can be 30–200 mA — not nearly enough to trip a
-    standard MCB (which trips at thousands of milliamperes). But <strong>30 mA through a human body
-    can stop the heart</strong>. This is why ground faults are the primary cause of fatal electrocution
-    in homes — not short circuits. A dedicated RCCB (Residual Current Circuit Breaker) detects leakage
-    as small as 30 mA and trips in under 30 milliseconds — faster than cardiac fibrillation can begin.
-    If your home's panel doesn't have an RCCB, it should.
-  </p>
+  <p>A ground fault is live current finding an unintended path to earth — through a wet wall, a flooded junction box, or a corroded cable. The leaked current can be just 30–200 mA — not enough to trip an MCB, but <strong>30 mA through a human body can stop the heart</strong>. A 30 mA RCCB trips in under 30ms and is the only device that catches this. If your panel has no RCCB, install one.</p>
 
   <div class="mistake-card mt-4">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -475,9 +419,9 @@ const diagnosticSteps = [
             <td class="p-3 font-medium text-text-primary">{step.behavior}</td>
             <td class="p-3">
               <span class={`px-2 py-0.5 rounded text-xs font-mono font-semibold ${
-                step.urgency === 'amber'  ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
-                step.urgency === 'muted'  ? 'bg-text-muted/10 text-text-muted border border-border' :
-                                            'bg-danger/10 text-danger border border-danger/20'
+                step.urgency === 'amber' ? 'bg-base text-text-primary border border-border' :
+                step.urgency === 'muted' ? 'bg-text-muted/10 text-text-muted border border-border' :
+                                           'bg-danger/10 text-danger border border-danger/20'
               }`}>{step.type}</span>
             </td>
             <td class="p-3 text-xs text-text-muted leading-relaxed">{step.action}</td>

@@ -66,6 +66,10 @@ const featuredArticles = [
     clusterSlug: 'load-calculation'
   }
 ];
+
+// Dynamic hero stats — update automatically when articles/clusters are added
+const totalGuides = CLUSTERS.reduce((sum, c) => sum + c.articles.length, 0);
+const totalClusters = CLUSTERS.length;
 ---
 
 <BaseLayout
@@ -100,11 +104,11 @@ const featuredArticles = [
         <a href="#topics" class="btn-secondary px-6 py-3 text-sm">Browse Topics</a>
       </div>
 
-      <!-- Stats -->
+      <!-- Stats — driven by CLUSTERS data, no manual updates needed -->
       <div class="flex flex-wrap justify-center gap-4 mt-8 text-xs animate-slide-up" style="animation-delay:0.2s">
         {[
-          { label: '7 Guides', sub: 'Load Calculation' },
-          { label: '4 Topic Clusters', sub: 'Coming Soon' },
+          { label: `${totalGuides} Guides`, sub: 'Published' },
+          { label: `${totalClusters} Topic Clusters`, sub: 'Knowledge Areas' },
           { label: 'Free', sub: 'Always' },
         ].map(s => (
           <div class="stat-badge flex flex-col items-center px-4 py-2.5 rounded-xl">
