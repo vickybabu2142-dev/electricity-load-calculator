@@ -81,6 +81,24 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
     datePublished: '2026-06-18',
     dateModified: '2026-06-18',
   },
+  {
+    slug: 'ac-power-consumption-and-load-explained',
+    title: 'Air Conditioner (AC) Power Consumption & Load Explained',
+    description:
+      'Understand AC tonnage, power consumption, ISEER ratings, and startup surge currents — explained simply for homeowners.',
+    readingTime: 6,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
+  },
+  {
+    slug: 'electrical-mistakes-home-builders-regret',
+    title: 'Electrical Planning Mistakes People Regret After Building Their House',
+    description:
+      'Learn the most common electrical load-planning mistakes homeowners make during construction—and how to avoid them.',
+    readingTime: 7,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
+  },
 ];
 
 // ─── MCB Sizing Articles ───────────────────────────────────
@@ -90,11 +108,20 @@ export const MCB_SIZING_ARTICLES: KHArticle[] = [
     slug: 'how-to-choose-the-right-mcb-rating',
     title: 'How to Choose the Right MCB Rating',
     description:
-      'A complete, step-by-step guide to calculating load current and selecting the correct MCB ampere rating for your home circuits and appliances.',
-    readingTime: 6,
+      'The definitive guide to MCB sizing — covering the 4-step formula, B/C/D curve types, wire-gauge pairing, and real worked examples for every common home circuit.',
+    readingTime: 9,
     isPillar: true,
     datePublished: '2026-06-19',
-    dateModified: '2026-06-19',
+    dateModified: '2026-06-20',
+  },
+  {
+    slug: 'why-does-my-mcb-keep-tripping',
+    title: 'Why Does My MCB Keep Tripping?',
+    description:
+      'An expert diagnostic deep-dive into the five real reasons your breaker trips — with the Bouncer analogy, a trip-behaviour chart, Common Mistakes section, and a safe 4-step reset checklist.',
+    readingTime: 8,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
   },
 ];
 

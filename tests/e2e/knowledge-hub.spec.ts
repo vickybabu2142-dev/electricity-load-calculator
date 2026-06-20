@@ -81,7 +81,10 @@ test.describe('Knowledge Hub E2E Tests', () => {
     { cluster: 'load-calculation', slug: 'single-phase-vs-three-phase-load', title: 'Load Calculation' },
     { cluster: 'load-calculation', slug: 'how-many-units-of-electricity-does-a-home-use', title: 'Load Calculation' },
     { cluster: 'load-calculation', slug: 'kw-vs-kva-vs-kwh-explained', title: 'Load Calculation' },
-    { cluster: 'mcb-sizing', slug: 'how-to-choose-the-right-mcb-rating', title: 'MCB Sizing' }
+    { cluster: 'load-calculation', slug: 'ac-power-consumption-and-load-explained', title: 'Load Calculation' },
+    { cluster: 'load-calculation', slug: 'electrical-mistakes-home-builders-regret', title: 'Load Calculation' },
+    { cluster: 'mcb-sizing', slug: 'how-to-choose-the-right-mcb-rating', title: 'MCB Sizing' },
+    { cluster: 'mcb-sizing', slug: 'why-does-my-mcb-keep-tripping', title: 'MCB Sizing' }
   ];
 
   for (const article of articles) {
