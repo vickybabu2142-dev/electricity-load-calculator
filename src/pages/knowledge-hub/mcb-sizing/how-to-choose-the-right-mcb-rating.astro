@@ -3,33 +3,35 @@ import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
 import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
 import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
 import { MCB_SIZING_ARTICLES } from '@/data/knowledgeHub';
+import type { SchemaNode } from '@/types';
 
 export const prerender = true;
 
 const SITE = 'https://electricityloadcalculator.com';
 
 const toc = [
-  { id: 'quick-answer', label: 'Quick Answer', depth: 2 as const },
-  { id: 'why-mcb', label: 'What Does an MCB Actually Do?', depth: 2 as const },
-  { id: 'step-by-step', label: 'Step-by-Step Selection Process', depth: 2 as const },
-  { id: 'real-examples', label: 'Real Examples: Kitchen & AC Circuits', depth: 2 as const },
-  { id: 'reference-chart', label: 'Standard MCB Rating Chart', depth: 2 as const },
-  { id: 'common-mistakes', label: 'Common MCB Sizing Mistakes', depth: 2 as const },
-  { id: 'use-the-calculator', label: 'Use the Calculator', depth: 2 as const },
-  { id: 'faqs', label: 'FAQs', depth: 2 as const },
+  { id: 'quick-answer',   label: 'Quick Answer',                    depth: 2 as const },
+  { id: 'why-mcb',        label: 'What an MCB Actually Protects',   depth: 2 as const },
+  { id: 'step-by-step',   label: 'The 4-Step Sizing Formula',       depth: 2 as const },
+  { id: 'curve-types',    label: 'B, C & D Curve Types Explained',  depth: 2 as const },
+  { id: 'wire-pairing',   label: 'MCB ↔ Wire Gauge Pairing',        depth: 2 as const },
+  { id: 'real-examples',  label: 'Real Sizing Examples',            depth: 2 as const },
+  { id: 'reference-chart',label: 'Standard MCB Reference Table',    depth: 2 as const },
+  { id: 'common-mistakes',label: 'Common Sizing Mistakes',          depth: 2 as const },
+  { id: 'faqs',           label: 'FAQs',                            depth: 2 as const },
 ];
 
 const relatedArticles = MCB_SIZING_ARTICLES.filter(a => a.slug !== 'how-to-choose-the-right-mcb-rating');
 
-const schemaGraph = [
+const schemaGraph: SchemaNode[] = [
   {
     "@type": "Article",
     "headline": "How to Choose the Right MCB Rating for Home Circuits",
-    "description": "Learn the step-by-step formula to calculate current and select the correct MCB ampere rating for appliances and distribution boards.",
+    "description": "The definitive guide to selecting the correct MCB ampere rating and curve type — covering the 4-step formula, B/C/D curve types, wire-gauge pairing, and real worked examples for every common home circuit.",
     "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
     "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
     "datePublished": "2026-06-19",
-    "dateModified": "2026-06-19",
+    "dateModified": "2026-06-20",
     "url": `${SITE}/knowledge-hub/mcb-sizing/how-to-choose-the-right-mcb-rating`,
   },
   {
@@ -37,195 +39,397 @@ const schemaGraph = [
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
       { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "MCB Sizing",
-        "item": `${SITE}/knowledge-hub/mcb-sizing`,
-      },
-      { "@type": "ListItem", "position": 4, "name": "How to Choose the Right MCB Rating" },
-    ],
+      { "@type": "ListItem", "position": 3, "name": "MCB Sizing", "item": `${SITE}/knowledge-hub/mcb-sizing` },
+      { "@type": "ListItem", "position": 4, "name": "How to Choose the Right MCB Rating" }
+    ]
   },
   {
     "@type": "HowTo",
     "name": "How to Choose the Right MCB Rating",
-    "description": "Step-by-step method to calculate circuit current and select the appropriate MCB rating.",
+    "description": "Step-by-step method to calculate circuit current and select the appropriate MCB ampere rating and curve type.",
     "step": [
-      { "@type": "HowToStep", "position": 1, "name": "Calculate total watts", "text": "Sum the wattages of all appliances connected to the circuit." },
-      { "@type": "HowToStep", "position": 2, "name": "Find the load current", "text": "Divide the total watts by circuit voltage (usually 230V for single-phase circuits) to find current in Amperes." },
-      { "@type": "HowToStep", "position": 3, "name": "Add a safety margin", "text": "Multiply the calculated current by 1.25 (125%) to provide headroom for continuous loads." },
-      { "@type": "HowToStep", "position": 4, "name": "Select standard MCB rating", "text": "Choose the next standard MCB rating (e.g. 6A, 10A, 16A, 20A, 25A, 32A) immediately above your safety-adjusted current." },
-    ],
+      { "@type": "HowToStep", "position": 1, "name": "Sum total watts", "text": "Add the peak running wattage of all appliances connected to the circuit simultaneously." },
+      { "@type": "HowToStep", "position": 2, "name": "Calculate load current", "text": "Divide total watts by supply voltage (230V for single-phase India/Europe) to get current in Amps." },
+      { "@type": "HowToStep", "position": 3, "name": "Apply 1.25 safety margin", "text": "Multiply load current by 1.25 (IEC 60898 continuous-load rule) to get the design current." },
+      { "@type": "HowToStep", "position": 4, "name": "Select the next standard rating", "text": "Round up to the next standard MCB size: 6A, 10A, 16A, 20A, 25A, 32A, 40A, 50A, or 63A. Then select the correct curve type: B for resistive loads, C for motor loads." },
+    ]
   },
   {
     "@type": "FAQPage",
     "mainEntity": [
-      { "@type": "Question", "name": "How do I choose the correct MCB rating?", "acceptedAnswer": { "@type": "Answer", "text": "Calculate your total load current in Amps (Watts ÷ 230V), multiply by 1.25 for safety, and choose the next standard rating (e.g., 6A, 10A, 16A, 20A, 25A, 32A, 40A)." }},
-      { "@type": "Question", "name": "What MCB rating do I need for a 1.5 Ton AC?", "acceptedAnswer": { "@type": "Answer", "text": "A typical 1.5 Ton AC draws around 7–8 Amps during continuous running. Factoring in the 1.25 safety margin and startup current surge, a 16A Type C MCB is standard and highly recommended." }},
-      { "@type": "Question", "name": "Can I replace a 16A MCB with a 32A MCB?", "acceptedAnswer": { "@type": "Answer", "text": "No. Never size an MCB larger than the current carrying capacity of the circuit wires. Doing so will cause the wires to melt or catch fire during an overload before the MCB trips." }},
-      { "@type": "Question", "name": "What is the difference between B curve and C curve MCBs?", "acceptedAnswer": { "@type": "Answer", "text": "Type B MCBs trip when current exceeds 3 to 5 times their rated load and are used for resistive loads (lighting, heaters). Type C MCBs trip at 5 to 10 times the rated load and handle inductive surges (ACs, pumps, refrigerators)." }},
-    ],
-  },
+      { "@type": "Question", "name": "How do I choose the correct MCB rating?", "acceptedAnswer": { "@type": "Answer", "text": "Calculate load current (Watts ÷ 230V), apply a 1.25 safety margin, and round up to the next standard MCB rating: 6A, 10A, 16A, 20A, 25A, 32A, 40A, 50A, or 63A. For motor loads (AC, pump, fridge), use a Type C curve MCB. For lights and pure resistive loads, use Type B." }},
+      { "@type": "Question", "name": "What MCB rating do I need for a 1.5 Ton AC?", "acceptedAnswer": { "@type": "Answer", "text": "A 1.5 Ton split AC draws about 6.5–8A continuously. With the 1.25 safety margin the design current is ~10A, but because AC compressors have a high inrush surge, a 16A Type C MCB on a dedicated circuit is the industry standard recommendation." }},
+      { "@type": "Question", "name": "What is the difference between a B curve and C curve MCB?", "acceptedAnswer": { "@type": "Answer", "text": "Type B MCBs have a magnetic trip threshold of 3–5× rated current and are used for resistive loads (lighting, heaters). Type C MCBs trip at 5–10× rated current and are designed for inductive/motor loads (ACs, pumps, refrigerators) that produce starting current surges." }},
+      { "@type": "Question", "name": "Can I replace a 16A MCB with a 32A MCB?", "acceptedAnswer": { "@type": "Answer", "text": "No. The MCB rating must match the current-carrying capacity of the cable it protects. Standard 2.5 mm² cable is rated for 16–20A. A 32A MCB on 2.5 mm² wiring is a fire hazard — the cable will overheat and burn before the 32A breaker trips." }},
+    ]
+  }
 ];
 
+// Main reference table
 const mcbChartData = [
-  { circuit: 'Lighting (LED / Fans)', typicalLoad: 'Under 1000W', currentCalc: '4.3A', recMcb: '6A or 10A (Type B)' },
-  { circuit: 'General Sockets (TV, PC)', typicalLoad: '1000W–1800W', currentCalc: '4A–8A', recMcb: '10A or 16A (Type B)' },
-  { circuit: 'Air Conditioner (1.5 Ton)', typicalLoad: '1600W (Surge)', currentCalc: '7A (continuous)', recMcb: '16A (Type C)' },
-  { circuit: 'Electric Geyser / Water Heater', typicalLoad: '2000W–3000W', currentCalc: '8.7A–13A', recMcb: '16A or 20A (Type C)' },
-  { circuit: 'Kitchen Heavy Sockets', typicalLoad: '2500W–3500W', currentCalc: '11A–15A', recMcb: '20A or 25A (Type C)' },
-  { circuit: 'Sub-Main Feeder (2 BHK)', typicalLoad: '4000W–6000W', currentCalc: '17A–26A', recMcb: '32A or 40A (Type C/D)' },
+  { circuit: 'Lighting circuit (LEDs, fans)',  typicalLoad: '< 800W',       currentCalc: '3.5A',     wireGauge: '1.5 mm²', recMcb: '6A (Type B)',          note: '' },
+  { circuit: 'General power sockets',          typicalLoad: '1,000–1,800W', currentCalc: '4–8A',     wireGauge: '2.5 mm²', recMcb: '10A or 16A (Type B)',  note: '' },
+  { circuit: 'AC — 1 Ton',                     typicalLoad: '900W',         currentCalc: '3.9A',     wireGauge: '2.5 mm²', recMcb: '10A or 16A (Type C)',  note: 'Dedicated circuit' },
+  { circuit: 'AC — 1.5 Ton',                   typicalLoad: '1,600W',       currentCalc: '7A',       wireGauge: '2.5 mm²', recMcb: '16A (Type C)',         note: 'Dedicated circuit' },
+  { circuit: 'AC — 2 Ton',                     typicalLoad: '2,200W',       currentCalc: '9.6A',     wireGauge: '4 mm²',   recMcb: '20A (Type C)',         note: 'Dedicated circuit' },
+  { circuit: 'Electric geyser / water heater', typicalLoad: '2,000–3,000W', currentCalc: '8.7–13A',  wireGauge: '4 mm²',   recMcb: '16A or 20A (Type B)', note: 'Resistive load' },
+  { circuit: 'Water pump — 0.5 HP',            typicalLoad: '370W',         currentCalc: '1.6A',     wireGauge: '1.5 mm²', recMcb: '6A (Type C)',          note: '' },
+  { circuit: 'Water pump — 1.5 HP',            typicalLoad: '1,100W',       currentCalc: '4.8A',     wireGauge: '2.5 mm²', recMcb: '16A (Type C)',         note: 'High inrush' },
+  { circuit: 'Kitchen heavy sockets',          typicalLoad: '2,500–3,500W', currentCalc: '11–15A',   wireGauge: '4 mm²',   recMcb: '20A or 25A (Type B)', note: 'Kettle + microwave' },
+  { circuit: 'Sub-DB feeder — 2 BHK',          typicalLoad: '5,000–8,000W', currentCalc: '22–35A',   wireGauge: '6–10 mm²',recMcb: '32A or 40A (Type C)', note: '' },
+  { circuit: 'Main incomer — 3 BHK',           typicalLoad: '8,000–12,000W','currentCalc': '35–52A', wireGauge: '10–16 mm²',recMcb: '40A or 63A (Type C)', note: 'Ask utility for sanction' },
+];
+
+// Curve type comparison
+const curveData = [
+  { type: 'B', threshold: '3–5×', loads: 'Lighting, heaters, resistive sockets, home office', avoid: 'ACs, pumps, refrigerators, washing machines' },
+  { type: 'C', threshold: '5–10×', loads: 'ACs, water pumps, refrigerators, washing machines, motors', avoid: 'Pure lighting circuits (wasteful oversizing)' },
+  { type: 'D', threshold: '10–20×', loads: 'Very large motors, transformers, X-ray machines, welding equipment', avoid: 'Any domestic home circuit — D curves provide inadequate protection for household wiring' },
 ];
 ---
 
 <KnowledgeHubLayout
-  title="How to Choose the Right MCB Rating | Electrical Knowledge Hub"
-  description="Learn the standard formula and simple step-by-step process to choose the correct MCB ampere rating for any home circuit, appliance, or main board."
-  keywords="how to choose mcb rating, MCB size selection, MCB calculator, circuit breaker rating home, 16A MCB load capacity"
+  title="How to Choose the Right MCB Rating — The Definitive Guide"
+  description="Master the 4-step formula for MCB sizing. Covers ampere calculation, B/C/D curve types, wire-gauge pairing, and worked examples for every circuit in your home — ACs, geysers, pumps, and main incomers."
+  keywords="how to choose mcb rating, mcb size selection, b curve vs c curve mcb, wire gauge mcb pairing, circuit breaker sizing india, 16a mcb load capacity"
   breadcrumb={[
-    { label: 'Home', href: '/' },
+    { label: 'Home',          href: '/' },
     { label: 'Knowledge Hub', href: '/knowledge-hub' },
-    { label: 'MCB Sizing', href: '/knowledge-hub/mcb-sizing' },
+    { label: 'MCB Sizing',    href: '/knowledge-hub/mcb-sizing' },
     { label: 'How to Choose the Right MCB Rating' },
   ]}
   toc={toc}
-  readingTime={6}
+  readingTime={9}
   datePublished="2026-06-19"
-  dateModified="2026-06-19"
+  dateModified="2026-06-20"
   schemaGraph={schemaGraph}
   relatedArticles={relatedArticles}
   clusterSlug="mcb-sizing"
   clusterTitle="MCB Sizing"
   showProgressBar={true}
+  nextStep={{ clusterSlug: 'mcb-sizing', slug: 'why-does-my-mcb-keep-tripping', caption: 'Troubleshooting' }}
 >
 
   <!-- ① QUICK ANSWER -->
-  <QuickAnswerBox id="quick-answer" heading="Quick Answer">
-    <p>To choose the correct MCB rating: <strong>Calculate the load current in Amps</strong> (Total Watts ÷ Voltage), multiply it by a <strong>1.25 safety margin</strong>, and select the next standard rating immediately above that number.</p>
-    <p class="mt-2">Example: A 2,300W geyser on a 230V supply draws 10A. Adding a 25% safety margin: 10A × 1.25 = 12.5A. The next standard size is a <strong>16A MCB</strong>.</p>
+  <QuickAnswerBox id="quick-answer" heading="The One Thing Most People Get Wrong">
+    <p>
+      Choosing an MCB is <em>not</em> just about amps. Most homeowners pick the right ampere rating
+      and then install the wrong <strong>curve type</strong> — causing either nuisance trips every time
+      the AC starts, or dangerously slow protection on a circuit that needs fast response.
+    </p>
+    <p class="mt-3">
+      Every MCB has <strong>two numbers</strong> that matter: the <strong>ampere rating</strong>
+      (how much continuous current it allows) and the <strong>curve type</strong> (how fast it reacts
+      to a sudden surge). Both must be correct. Here's the quick formula:
+    </p>
+    <ol class="mt-3 space-y-1.5 text-sm text-text-muted leading-relaxed list-none">
+      <li class="flex items-start gap-2.5">
+        <span class="font-mono font-bold text-accent flex-shrink-0">①</span>
+        <span><strong>Design current</strong> = (Total Watts ÷ 230V) × 1.25</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <span class="font-mono font-bold text-accent flex-shrink-0">②</span>
+        <span><strong>Round up</strong> to the next standard rating: 6 / 10 / 16 / 20 / 25 / 32 / 40 / 63A</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <span class="font-mono font-bold text-accent flex-shrink-0">③</span>
+        <span><strong>Curve:</strong> Type B for lights & heaters — Type C for motors, ACs & pumps</span>
+      </li>
+    </ol>
+    <p class="mt-4 text-sm">
+      Example: 2,300W geyser → 2300 ÷ 230 = 10A → 10 × 1.25 = 12.5A → next size up = <strong>16A Type B</strong>
+      (geysers are purely resistive, so Type B is correct here). Read on for the full explanation and every common circuit worked out.
+    </p>
   </QuickAnswerBox>
 
-  <!-- ② WHAT DOES AN MCB ACTUALLY DO -->
-  <h2 id="why-mcb">What Does an MCB Actually Do?</h2>
-  <p>Most homeowners believe an MCB (Miniature Circuit Breaker) exists to protect their expensive appliances from breaking. While it does provide some protection, its primary job is much more critical: <strong>it protects your home's wiring from melting and catching fire.</strong></p>
+  <p class="mt-6">Get MCB sizing right and you have invisible, reliable protection for decades. Get it wrong and you face either constant nuisance trips — or worse, a silent fire hazard hiding inside your walls.</p>
+
+  <!-- ② WHAT AN MCB ACTUALLY PROTECTS -->
+  <h2 id="why-mcb">What an MCB Actually Protects</h2>
+
+  <p>An MCB protects your <strong>copper wiring</strong> — not your appliances. Exceed a wire's safe current rating and it heats up, its insulation melts, and a fire can start inside your wall — completely hidden until it breaks out.</p>
 
   <div class="example-box">
-    <p class="example-label">The Pressure Cooker Safety Valve Analogy</p>
-    <p>Think of an MCB as the <strong>safety valve on a pressure cooker</strong>:</p>
-    <ul class="space-y-3 my-4">
+    <p class="example-label">MCB Rating vs. Outcome</p>
+    <ul class="space-y-3 mt-2 list-none text-sm text-text-secondary">
       <li class="flex items-start gap-2.5">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-accent mt-1.5 flex-shrink-0" aria-hidden="true">
-          <path d="M12.8 18a2.2 2.2 0 0 0 2.2-2.2c0-1.2-1-2.2-2.2-2.2H2" />
-          <path d="M20 12a2.5 2.5 0 0 0 0-5H2" />
-          <path d="M16 21a1.5 1.5 0 0 0 0-3H2" />
-        </svg>
-        <span class="text-sm text-text-secondary leading-relaxed"><strong>Steam Pressure</strong> = <strong>Electrical Current (Amperes)</strong> flowing through your circuit wires.</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-danger mt-0.5 flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span><strong>Rated too high:</strong> Wire overheats and may ignite before the MCB ever trips.</span>
       </li>
       <li class="flex items-start gap-2.5">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-danger mt-1.5 flex-shrink-0" aria-hidden="true">
-          <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
-        </svg>
-        <span class="text-sm text-text-secondary leading-relaxed"><strong>The Cooker Exploding</strong> = <strong>Wiring Overheating</strong>, melting its plastic insulation and starting a house fire.</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-success mt-0.5 flex-shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        <span><strong>Rated correctly:</strong> MCB trips before wire temperature reaches the danger point.</span>
       </li>
       <li class="flex items-start gap-2.5">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-success mt-1.5 flex-shrink-0" aria-hidden="true">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </svg>
-        <span class="text-sm text-text-secondary leading-relaxed"><strong>The Safety Valve</strong> = <strong>The MCB</strong>. If pressure (current) rises above a safe threshold, the valve pops (the MCB trips) to let out steam and avert a catastrophe.</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>Rated too low:</strong> Nuisance trips during normal use even though nothing is wrong.</span>
       </li>
     </ul>
-    <p>
-      If the safety valve is too heavy (<strong>MCB rating is too high</strong>), it won't open when the pressure becomes dangerously high, causing the cooker to explode. If it is too light (<strong>MCB rating is too low</strong>), it will pop constantly during normal cooking, ruining your meal.
-    </p>
   </div>
 
-  <p>If you size your MCB too high, the electrical wires behind your walls will melt and catch fire before the breaker ever trips. If you size it too low, it will trip continuously during normal usage. Finding the perfect middle ground is the goal of proper sizing.</p>
-
-  <!-- ③ STEP BY STEP -->
-  <h2 id="step-by-step">Step-by-Step: Selecting the Correct MCB Rating</h2>
-  <p>Follow these 4 simple steps to calculate the required ampere (A) rating for any circuit breaker.</p>
+  <!-- ③ THE 4-STEP FORMULA -->
+  <h2 id="step-by-step">The 4-Step Sizing Formula</h2>
+  <p>
+    This is the method used by professional electricians. It takes under 2 minutes once you know
+    your appliance wattage.
+  </p>
 
   <div class="step-card">
     <div class="step-number">1</div>
     <div>
       <strong class="text-text-primary block mb-1">Sum the wattage of the circuit</strong>
-      <p class="text-text-muted text-sm m-0">Add up the peak running wattages of all devices that will be turned on at the same time on this circuit. If you are sizing a dedicated breaker for a single appliance (like an AC or geyser), just use that appliance's wattage.</p>
+      <p class="text-text-muted text-sm">Add up peak running wattages of every device that could run simultaneously. For a dedicated appliance (AC, geyser, pump), it's just that one device's wattage from its rating label. Label shows Amps? <code class="text-xs">Watts = Amps × 230</code></p>
     </div>
   </div>
 
   <div class="step-card">
     <div class="step-number">2</div>
     <div>
-      <strong class="text-text-primary block mb-1">Calculate the current (Amperes)</strong>
-      <p class="text-text-muted text-sm m-0">Divide the total wattage by your utility voltage (standard single-phase voltage is <strong>230V</strong> in India and Europe, and <strong>120V</strong> in the United States).</p>
-      <p class="text-text-muted text-sm mt-2 font-mono">Current (Amps) = Watts ÷ Voltage</p>
+      <strong class="text-text-primary block mb-1">Calculate the load current (Amps)</strong>
+      <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-1 text-accent">Load Current (A) = Total Watts ÷ 230V</p>
     </div>
   </div>
 
   <div class="step-card">
     <div class="step-number">3</div>
     <div>
-      <strong class="text-text-primary block mb-1">Add the 25% safety margin</strong>
-      <p class="text-text-muted text-sm m-0">Continuous electrical loads generate heat. To prevent nuisance tripping from heat buildup inside your panel, international codes require sizing the breaker to handle only 80% of its rated capacity continuously. We calculate this by multiplying our current by 1.25.</p>
-      <p class="text-text-muted text-sm mt-2 font-mono">Design Current = Load Current × 1.25</p>
+      <strong class="text-text-primary block mb-1">Apply the 1.25 safety margin</strong>
+      <p class="text-text-muted text-sm">Continuous loads (geysers, ACs, heaters) build heat inside the panel over time. Running at 80% of MCB capacity prevents thermal nuisance trips — so size the MCB for 125% of your calculated load.</p>
+      <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Design Current (A) = Load Current × 1.25</p>
     </div>
   </div>
 
   <div class="step-card">
     <div class="step-number">4</div>
     <div>
-      <strong class="text-text-primary block mb-1">Select the standard MCB rating</strong>
-      <p class="text-text-muted text-sm m-0">Circuit breakers are manufactured in standard sizes: <strong>6A, 10A, 16A, 20A, 25A, 32A, 40A, 50A, 63A</strong>. Round up your Design Current to the nearest standard rating. This is the MCB size you need.</p>
+      <strong class="text-text-primary block mb-1">Select the next standard MCB rating</strong>
+      <p class="text-text-muted text-sm">Round your design current <em>up</em> to the nearest standard size — never down. Then choose the curve type (next section). Both are printed on the breaker face, e.g. <code>C16</code> = Type C, 16A.</p>
+      <div class="flex flex-wrap gap-2 mt-3">
+        {['6A', '10A', '16A', '20A', '25A', '32A', '40A', '50A', '63A'].map(r => (
+          <span class="px-2.5 py-1 rounded-md text-xs font-mono font-semibold bg-accent/10 text-accent border border-accent/20">{r}</span>
+        ))}
+      </div>
     </div>
   </div>
 
-  <!-- ④ REAL EXAMPLES -->
-  <h2 id="real-examples">Real Sizing Examples</h2>
-  <p>Let's look at how electricians calculate breaker sizing for two common household scenarios.</p>
+  <!-- ④ CURVE TYPES -->
+  <h2 id="curve-types">B, C & D Curve Types — The Half of MCB Sizing Nobody Talks About</h2>
 
-  <div class="example-box">
-    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-middle -translate-y-[1px]" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M9 14h6" /><path d="M9 18h6" /><path d="M9 10h6" /></svg>Scenario 1: Sizing an MCB for a Dedicated 1.5 Ton AC Circuit</p>
-    <ul>
-      <li><strong>Step 1 (Watts):</strong> Typical 1.5 Ton AC draws <strong>1,600 Watts</strong> of continuous power.</li>
-      <li><strong>Step 2 (Current):</strong> 1,600W ÷ 230V = <strong>6.96 Amps</strong>.</li>
-      <li><strong>Step 3 (Safety):</strong> 6.96A × 1.25 = <strong>8.70 Amps</strong>.</li>
-      <li><strong>Step 4 (Rating):</strong> The nearest standard rating above 8.70A is <strong>10A</strong>. However, because AC compressors draw a massive surge current to start, a <strong>16A Type C</strong> MCB is standard practice to prevent the starter surge from tripping the breaker.</li>
-    </ul>
-  </div>
-
-  <div class="example-box">
-    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-middle -translate-y-[1px]" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M9 14h6" /><path d="M9 18h6" /><path d="M9 10h6" /></svg>Scenario 2: Sizing an MCB for a Kitchen Circuit</p>
-    <p>You run a microwave (1000W) and an electric kettle (1200W) on the same kitchen sub-circuit board.</p>
-    <ul>
-      <li><strong>Step 1 (Watts):</strong> 1,000W + 1,200W = <strong>2,200 Watts</strong> total.</li>
-      <li><strong>Step 2 (Current):</strong> 2,200W ÷ 230V = <strong>9.56 Amps</strong>.</li>
-      <li><strong>Step 3 (Safety):</strong> 9.56A × 1.25 = <strong>11.95 Amps</strong>.</li>
-      <li><strong>Step 4 (Rating):</strong> Rounding up to the nearest standard breaker size gives you a <strong>16A MCB</strong>.</li>
-    </ul>
-  </div>
-
-  <KnowledgeHubCTA variant="inline" />
-
-  <!-- ⑤ REFERENCE CHART -->
-  <h2 id="reference-chart">Standard MCB Rating Reference Table</h2>
-  <p>Use this reference table to find standard MCB sizing guidelines for typical single-phase domestic circuits.</p>
+  <p>The ampere rating controls sustained-overload protection. The curve type controls how fast the breaker reacts to a sudden current spike. Getting the curve wrong is the #1 preventable mistake — motor inrush current (5–8× running amps) triggers a Type B breaker every time a motor starts, because the breaker cannot tell the difference between inrush and a short circuit.</p>
 
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Circuit Type / Appliance</th>
-          <th>Typical Load</th>
-          <th>Calculated Load Current</th>
-          <th>Recommended MCB Size &amp; Type</th>
+          <th>Curve</th>
+          <th>Magnetic Trip At</th>
+          <th>Use For</th>
+          <th class="text-danger">Do NOT Use For</th>
         </tr>
       </thead>
       <tbody>
-        {mcbChartData.map((row, i) => (
+        <tr>
+          <td>
+            <span class="px-2.5 py-1 rounded font-mono font-bold text-sm text-accent" style="background: color-mix(in srgb, var(--accent), transparent 88%); border: 1px solid color-mix(in srgb, var(--accent), transparent 70%);">Type B</span>
+          </td>
+          <td class="font-mono text-xs font-semibold">3–5× rated current</td>
+          <td class="text-xs leading-relaxed">Lighting, heaters, resistive sockets, home office</td>
+          <td class="text-xs text-danger leading-relaxed">ACs, pumps, refrigerators, washing machines</td>
+        </tr>
+        <tr>
+          <td>
+            <span class="px-2.5 py-1 rounded font-mono font-bold text-sm" style="color: #d97706; background: color-mix(in srgb, #f59e0b, transparent 88%); border: 1px solid color-mix(in srgb, #f59e0b, transparent 70%);">Type C</span>
+          </td>
+          <td class="font-mono text-xs font-semibold">5–10× rated current</td>
+          <td class="text-xs leading-relaxed">ACs, water pumps, refrigerators, washing machines, motors</td>
+          <td class="text-xs text-danger leading-relaxed">Pure lighting circuits (wasteful oversizing)</td>
+        </tr>
+        <tr>
+          <td>
+            <span class="px-2.5 py-1 rounded font-mono font-bold text-sm text-danger" style="background: color-mix(in srgb, var(--danger), transparent 88%); border: 1px solid color-mix(in srgb, var(--danger), transparent 70%);">Type D</span>
+          </td>
+          <td class="font-mono text-xs font-semibold">10–20× rated current</td>
+          <td class="text-xs leading-relaxed">Very large motors, transformers, X-ray machines, welding equipment</td>
+          <td class="text-xs text-danger leading-relaxed">Any domestic home circuit — D curves give inadequate protection for household wiring</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-box">
+    <p class="example-label">Reading the label on your MCB</p>
+    <p class="text-sm text-text-secondary">
+      The label on the front face of every MCB shows the curve letter followed immediately by the
+      ampere rating. Examples:
+    </p>
+    <ul class="mt-3 space-y-2 list-none text-sm text-text-secondary">
+      <li class="flex items-start gap-2.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        <span><code class="text-sm font-mono font-bold">B16</code> — Type B curve, 16 Amps. Correct for a general lighting or socket circuit.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        <span><code class="text-sm font-mono font-bold">C16</code> — Type C curve, 16 Amps. Correct for a 1.5 Ton AC or water pump circuit.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-danger mt-0.5 flex-shrink-0" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span><code class="text-sm font-mono font-bold">B16 on an AC circuit</code> — Wrong curve type. Will trip every time the compressor starts, even though the wiring and appliance are both fine.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ⑤ WIRE GAUGE PAIRING -->
+  <h2 id="wire-pairing">MCB ↔ Wire Gauge Pairing — The Rule You Cannot Break</h2>
+
+  <p>The MCB and its cable are a matched pair — the breaker's ampere rating must <strong>never exceed the cable's current-carrying capacity</strong>. If it does, the wire overheats before the breaker trips.</p>
+  <p>This is why swapping a tripping 16A breaker for a 32A is so dangerous — the 2.5 mm² wire behind it was only designed for 18–20A.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Copper Wire Gauge</th>
+          <th>Safe Current Capacity</th>
+          <th>Maximum MCB Rating</th>
+          <th>Typical Application</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>1.0 mm²</code></td>
+          <td>10–12A</td>
+          <td><strong>6A</strong></td>
+          <td>Light fittings, very small loads</td>
+        </tr>
+        <tr>
+          <td><code>1.5 mm²</code></td>
+          <td>13–15A</td>
+          <td><strong>6A or 10A</strong></td>
+          <td>Lighting circuits, small fan circuits</td>
+        </tr>
+        <tr>
+          <td><code>2.5 mm²</code></td>
+          <td>18–20A</td>
+          <td><strong>16A or 20A</strong></td>
+          <td>General power sockets, ACs up to 1.5 Ton, small pumps</td>
+        </tr>
+        <tr>
+          <td><code>4 mm²</code></td>
+          <td>25–27A</td>
+          <td><strong>25A or 32A</strong></td>
+          <td>Geysers, 2 Ton ACs, kitchen heavy circuits</td>
+        </tr>
+        <tr>
+          <td><code>6 mm²</code></td>
+          <td>32–35A</td>
+          <td><strong>32A or 40A</strong></td>
+          <td>Sub-distribution board feeders</td>
+        </tr>
+        <tr>
+          <td><code>10 mm²</code></td>
+          <td>44–50A</td>
+          <td><strong>40A or 50A</strong></td>
+          <td>Main incomer feeder for apartments</td>
+        </tr>
+        <tr>
+          <td><code>16 mm²</code></td>
+          <td>60–65A</td>
+          <td><strong>63A</strong></td>
+          <td>Main incomer feeder for large homes / commercial</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="text-sm text-text-muted mt-4">
+    <strong>Note:</strong> Current-carrying capacities above assume PVC-insulated copper conductors
+    in conduit at 30°C ambient temperature. Values derate in high-temperature environments such
+    as roof spaces — consult IS 1646 for full derating tables.
+  </p>
+
+  <!-- ⑥ REAL EXAMPLES -->
+  <h2 id="real-examples">Real Sizing Examples — Every Common Home Circuit</h2>
+  <p>
+    Here is the 4-step formula applied to the three most common circuits in Indian homes — a lighting circuit, a dedicated AC circuit, and a geyser. These three cover the vast majority of residential sizing decisions.
+  </p>
+
+  <div class="example-box">
+    <p class="example-label">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-middle -translate-y-[1px]" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/></svg>
+      Example 1 — Lighting Circuit (LEDs + Fans)
+    </p>
+    <p>You have one circuit feeding 8 LED bulbs (9W each) and 3 ceiling fans (75W each).</p>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><strong>Step 1 (Watts):</strong> (8 × 9) + (3 × 75) = 72 + 225 = <strong>297W</strong></li>
+      <li><strong>Step 2 (Current):</strong> 297 ÷ 230 = <strong>1.29A</strong></li>
+      <li><strong>Step 3 (Safety):</strong> 1.29 × 1.25 = <strong>1.61A</strong></li>
+      <li><strong>Step 4 (Rating):</strong> Next standard size above 1.61A = <strong>6A Type B</strong></li>
+    </ul>
+    <p class="mt-2 text-xs text-text-muted">Wire: 1.5 mm² is adequate and standard for lighting circuits.</p>
+  </div>
+
+  <div class="example-box">
+    <p class="example-label">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-middle -translate-y-[1px]" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/></svg>
+      Example 2 — Dedicated 1.5 Ton AC Circuit
+    </p>
+    <p>A 1.5 Ton inverter split AC is rated at 1,600W continuous running power.</p>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><strong>Step 1 (Watts):</strong> <strong>1,600W</strong></li>
+      <li><strong>Step 2 (Current):</strong> 1,600 ÷ 230 = <strong>6.96A</strong></li>
+      <li><strong>Step 3 (Safety):</strong> 6.96 × 1.25 = <strong>8.70A</strong></li>
+      <li><strong>Step 4 (Rating):</strong> Next size above 8.70A = 10A. But AC compressors have inrush surges of 30–40A, so the industry standard is <strong>16A Type C</strong> on a dedicated circuit.</li>
+    </ul>
+    <p class="mt-2 text-xs text-text-muted">Wire: 2.5 mm² on a dedicated circuit. Do not share this circuit with other sockets.</p>
+  </div>
+
+  <div class="example-box">
+    <p class="example-label">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-middle -translate-y-[1px]" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/></svg>
+      Example 3 — Electric Geyser (Water Heater)
+    </p>
+    <p>A 2,000W instant geyser on a dedicated circuit.</p>
+    <ul class="mt-2 space-y-1 text-sm">
+      <li><strong>Step 1 (Watts):</strong> <strong>2,000W</strong></li>
+      <li><strong>Step 2 (Current):</strong> 2,000 ÷ 230 = <strong>8.70A</strong></li>
+      <li><strong>Step 3 (Safety):</strong> 8.70 × 1.25 = <strong>10.87A</strong></li>
+      <li><strong>Step 4 (Rating):</strong> Next size above 10.87A = <strong>16A Type B</strong>. Geysers are purely resistive — no motor, no inrush surge — so Type B is correct and provides tighter, faster protection.</li>
+    </ul>
+    <p class="mt-2 text-xs text-text-muted">Wire: 2.5 mm² minimum. For 3,000W geysers, use 4 mm² cable and a 20A breaker.</p>
+  </div>
+
+
+  <KnowledgeHubCTA
+    variant="inline"
+    id="use-the-calculator"
+  />
+
+  <!-- ⑦ REFERENCE TABLE -->
+
+  <h2 id="reference-chart">Standard MCB Rating Reference Table</h2>
+  <p>
+    Use this comprehensive table as a quick-reference for the most common circuits in Indian homes.
+    All values assume 230V single-phase supply and PVC-insulated copper conductors in conduit.
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Circuit / Appliance</th>
+          <th>Typical Load</th>
+          <th>Load Current</th>
+          <th>Wire Gauge</th>
+          <th>Recommended MCB</th>
+        </tr>
+      </thead>
+      <tbody>
+        {mcbChartData.map(row => (
           <tr>
-            <td>{row.circuit}</td>
-            <td class="text-text-muted">{row.typicalLoad}</td>
+            <td class="font-medium">{row.circuit}{row.note ? <span class="block text-xs text-text-muted font-normal">{row.note}</span> : ''}</td>
+            <td class="text-text-muted text-sm">{row.typicalLoad}</td>
             <td class="font-mono text-xs">{row.currentCalc}</td>
+            <td><code>{row.wireGauge}</code></td>
             <td><code>{row.recMcb}</code></td>
           </tr>
         ))}
@@ -233,71 +437,145 @@ const mcbChartData = [
     </table>
   </div>
 
-  <!-- ⑥ COMMON MISTAKES -->
+  <!-- ⑧ COMMON MISTAKES -->
   <h2 id="common-mistakes">Common MCB Sizing Mistakes to Avoid</h2>
-  <p>Breaker sizing has a slim margin for error. Sizing mistakes can lead to nuisance power cuts or, worse, safety hazards:</p>
+  <p>These are the five most expensive and most dangerous errors made during MCB selection:</p>
 
   <div class="mistake-card">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     <div>
-      <strong class="text-text-primary block mb-1">Upgrading the MCB size without upgrading the wires</strong>
-      <p class="text-sm m-0" style="color: var(--text-muted);">If your 16A breaker trips, do not simply swap it for a 32A breaker. The 16A breaker was likely protecting thin 1.5 sq mm wiring. A 32A breaker will allow too much current to flow, causing the thin wires to overheat and melt behind the wall before the breaker trips.</p>
+      <strong class="text-text-primary block mb-1">Upsizing the MCB without upgrading the wire</strong>
+      <p class="text-sm text-text-muted">A tripping 16A breaker protects 2.5 mm² cable rated for 18–20A. Swapping for a 32A means the wire can overheat invisibly inside your wall before the breaker reacts. Fix the cause of tripping — never override the protection.</p>
     </div>
   </div>
 
-  <div class="mistake-card">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+  <div class="mistake-card mt-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     <div>
-      <strong class="text-text-primary block mb-1">Ignoring the starting surge of motors</strong>
-      <p class="text-sm m-0" style="color: var(--text-muted);">Appliances with electric motors (refrigerators, ACs, water pumps) draw 3 to 7 times their rated current for a split second when starting up. If you use a fast-tripping Type B MCB, it may trip instantly on startup. Always use a slower-tripping <strong>Type C</strong> MCB for motor loads.</p>
+      <strong class="text-text-primary block mb-1">Using Type B on all motor circuits</strong>
+      <p class="text-sm text-text-muted">Motor inrush current (5–8× running amps) triggers a Type B breaker's magnetic trip every time the motor starts — every single time. Specifying Type C for AC, pump, and fridge circuits costs nothing extra in planning.</p>
     </div>
   </div>
 
-  <div class="mistake-card">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+  <div class="mistake-card mt-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     <div>
-      <strong class="text-text-primary block mb-1">Forgetting to group continuous loads together</strong>
-      <p class="text-sm m-0" style="color: var(--text-muted);">Continuous loads are those running for 3 hours or more (e.g. office lights, server equipment, space heaters). Breakers heat up when run continuously. If you don't apply the 1.25 safety headroom rule to continuous loads, the breaker will trip on thermal load even when drawing less than its rated current limit.</p>
+      <strong class="text-text-primary block mb-1">Skipping the 1.25 safety margin on continuous loads</strong>
+      <p class="text-sm text-text-muted">MCBs accumulate internal heat during sustained current — a geyser or heater running for hours can drift into trip territory even without a fault. The 1.25× margin (design to 80% capacity) gives the thermal headroom to stay stable.</p>
     </div>
   </div>
 
-  <!-- ⑦ CALCULATOR CTA -->
+  <div class="mistake-card mt-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Running multiple heavy appliances on a single shared socket circuit</strong>
+      <p class="text-sm text-text-muted">A general socket circuit is typically sized for 1,000–2,000W of light loads (TV, chargers, laptops). Geysers, ACs, washing machines, and water heaters each need their own dedicated circuit and MCB.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card mt-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Buying no-brand MCBs to save ₹50</strong>
+      <p class="text-sm text-text-muted">No-brand MCBs can be mis-calibrated — failing to trip during a short circuit or tripping at the wrong current. A quality Schneider, Legrand, Siemens, ABB, or Hager MCB costs ₹120–250. Don't optimise a life-safety device for price.</p>
+    </div>
+  </div>
+
+  <!-- ⑨ FAQS -->
   <KnowledgeHubCTA id="use-the-calculator" />
 
-  <!-- ⑧ FAQs -->
   <h2 id="faqs">Frequently Asked Questions</h2>
+
   <div class="kh-faq">
     <details>
       <summary>
         What is the standard MCB rating for a 1.5 Ton AC?
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
       </summary>
-      <div class="faq-body">A standard 1.5 Ton split AC draws around 1,500W to 1,800W of electrical power. At 230V, this is roughly 6.5A to 8A. With safety margins and starting current spikes taken into account, a 16A MCB with a Type C curve is the recommended choice for a 1.5 Ton AC.</div>
+      <div class="faq-body">
+        The maths (1,600W ÷ 230V × 1.25 = 8.7A) points to 10A, but a 1.5T compressor's startup inrush can hit 30–40A for a fraction of a second — enough to trip even a 10A Type C. The industry standard is a <strong>16A Type C MCB on a dedicated 2.5 mm² circuit</strong>.
+      </div>
     </details>
+
+    <details>
+      <summary>
+        Can one MCB protect two rooms?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        For lighting, yes — one 6A MCB can serve multiple rooms as long as total wattage stays below 1,380W. For power sockets, it is poor practice: a fault or overload in one room cuts power to both, and heavy-appliance loads frequently exceed the circuit rating.
+      </div>
+    </details>
+
     <details>
       <summary>
         Can I use a 32A MCB to run my 1.5 HP water pump?
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
       </summary>
-      <div class="faq-body">No, a 32A MCB is too large for a 1.5 HP water pump (which draws roughly 1,100W or ~5A continuous running). A 32A breaker will not provide sufficient protection against overload for the pump windings or standard 2.5 sq mm cabling. A 16A Type C MCB is the correct rating for a 1.5 HP pump.</div>
+      <div class="faq-body">
+        No — a 32A MCB on a pump drawing only ~5A provides almost no meaningful protection. The wiring and pump windings can overheat well before the 32A breaker reacts. Use a <strong>16A Type C MCB</strong> on 2.5 mm² cable.
+      </div>
     </details>
+
     <details>
       <summary>
-        Why does my MCB trip when I turn on a geyser?
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+        Does MCB rating affect my electricity bill?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
       </summary>
-      <div class="faq-body">A geyser typically consumes 2000W to 3000W. If it trips your MCB immediately, it is usually caused by: (1) Overloaded circuit (running other high-power devices like washing machines or heaters on the same breaker), (2) A short circuit inside the geyser heating element, or (3) An undersized breaker (e.g. trying to run a 3000W geyser on a 10A breaker).</div>
+      <div class="faq-body">
+        No — an MCB is a switch that draws zero power itself. Your meter measures energy consumed by appliances, not the capacity of your breakers. A 63A main breaker does not "use" more electricity than a 32A one.
+      </div>
     </details>
+
     <details>
       <summary>
-        What is the difference between B curve and C curve MCB?
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+        What is the difference between a B curve and C curve MCB?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
       </summary>
-      <div class="faq-body">The curve type determines how fast the breaker trips during a current spike. Type B curve breakers trip quickly at 3–5 times their rated load and are perfect for resistive circuits (lights, fans, standard outlets). Type C curve breakers trip slower at 5–10 times their rated load, allowing motor startup current spikes (ACs, pumps) to pass without tripping.</div>
+      <div class="faq-body">
+        Type B trips at 3–5× rated current — fast and sensitive, ideal for lighting and resistive loads. Type C trips at 5–10× — giving motor inrush surges (ACs, pumps, fridges) room to pass without triggering a trip. Same ampere rating, very different behaviour during a surge event.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Why does my MCB trip when I turn on the geyser?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        Three possibilities, in order of likelihood:
+        <ol class="mt-2 space-y-1 text-sm list-decimal list-inside">
+          <li><strong>Overloaded circuit:</strong> The geyser is sharing a circuit with other heavy loads (washing machine, heater). Run the geyser on a dedicated circuit.</li>
+          <li><strong>Undersized MCB:</strong> A 3,000W geyser at 230V draws 13A. With the safety margin that's 16.25A — a 16A MCB will trip. You need a 20A MCB and 4 mm² cable.</li>
+          <li><strong>Faulty heating element:</strong> An internal short in the element causes the breaker to trip instantly. The element must be tested and replaced by a plumber/electrician.</li>
+        </ol>
+        For a deeper diagnostic guide, see our article on
+        <a href="/knowledge-hub/mcb-sizing/why-does-my-mcb-keep-tripping" class="text-accent hover:underline">why MCBs keep tripping</a>.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        How do I know what gauge wire is currently in my walls?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        Check the distribution panel — cables to each MCB should have their size printed on the outer jacket (e.g., <code>2.5 mm² FR PVC</code>). A rule of thumb for Indian homes built after 1990: sockets use 2.5 mm², lighting uses 1.5 mm², sub-DB feeders use 6 mm² or larger. If unsure, have a licensed electrician inspect before changing any MCB ratings.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Is it safe to install an MCB myself without an electrician?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        Working inside a distribution panel is risky — the incoming supply is always live even when all MCBs are off, and touching live busbars can be fatal. For a like-for-like MCB swap on an isolated circuit a careful DIYer can manage; for rewiring, adding circuits, or main board work, use a licensed electrician.
+      </div>
     </details>
   </div>
 
-  <!-- Sidebar nav slot -->
+  <!-- Sidebar navigation -->
   <Fragment slot="sidebar-nav">
     {MCB_SIZING_ARTICLES.map(a => (
       <a

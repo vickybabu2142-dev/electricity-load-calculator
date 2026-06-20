@@ -114,6 +114,129 @@ Every article includes: `Article` + `FAQPage` + `BreadcrumbList` + `HowTo` JSON-
 
 ---
 
+## Knowledge Hub — Article Writing Style Guide
+
+> **Canonical reference article:** `src/pages/knowledge-hub/load-calculation/connected-load-vs-demand-load.astro`
+> Read this file before writing any new article. It is the gold standard for tone, structure, and component use.
+
+### Core Principle: Scannable, Not Encyclopaedic
+
+Every article must respect the reader's patience. The moment a user sees a wall of text they stop reading. **The rule:** if a concept can be said in one sentence, never use two. If it can be a bullet, never use a paragraph.
+
+| Element | Max Length |
+|---|---|
+| Intro `<p>` after QuickAnswerBox | 2 sentences |
+| Section opening `<p>` | 2 sentences |
+| Step card body text | 1 sentence + optional formula |
+| Mistake card body (`text-sm text-text-muted`) | 2 sentences |
+| FAQ answer (`<div class="faq-body">`) | 2–3 sentences |
+| Any `<p>` tag in the article body | 3 sentences max |
+
+### Article Structure (in order)
+
+1. **Frontmatter** — `KnowledgeHubLayout` with `title`, `description`, `pubDate`, `cluster`, `slug`, `readingTime`, `tableOfContents[]`, `schemaGraph[]` (use `SchemaNode[]` type — never `any[]`).
+2. **QuickAnswerBox** — The TL;DR. 1-sentence direct answer + 3–5 short bullets. A reader who only reads this must still leave knowing the core point.
+3. **Intro paragraph** — 1–2 sentences. Hook on the core tension or problem. No background waffle. No "In this guide we will…".
+4. **Sections** — `<h2 id="...">` per concept, numbered with circled glyphs in the comment (①②③…). Each section leads with 1–2 sentence `<p>`, then a visual component (table, example-box, step-cards).
+5. **KnowledgeHubCTA** — One per article. Place after the main educational content, before reference tables and FAQs.
+6. **Common Mistakes** — `mistake-card` blocks. 5 items max. 2 sentences per body.
+7. **FAQ accordion** — `<details>`/`<summary>`. 6–8 questions. 2–3 sentence answers.
+8. **Sidebar TOC** — auto-generated from `tableOfContents` array in frontmatter.
+
+### Visual Hierarchy Rule
+
+Every section follows this pattern — without exception:
+```
+1. ONE short paragraph (the key insight in plain language)
+2. A visual element that proves or demonstrates it (table, example-box, step-cards, etc.)
+```
+
+Never write 3 paragraphs of explanation then show an example. **Lead with the fact. Show the proof.**
+
+### Component Patterns
+
+**`example-box`** — Use for: comparisons, before/after, formulas, key rules. Never for prose paragraphs.
+
+SVG bullet list inside an `example-box`:
+```html
+<ul class="space-y-3 mt-2 list-none text-sm text-text-secondary">
+  <li class="flex items-start gap-2.5">
+    <svg class="w-4 h-4 text-danger mt-0.5 flex-shrink-0" aria-hidden="true">...</svg>
+    <span><strong>Label:</strong> One sentence.</span>
+  </li>
+</ul>
+```
+
+**`mistake-card`** — Common errors only. 2 sentences max per body:
+```html
+<div class="mistake-card">
+  <svg class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true">...</svg>
+  <div>
+    <strong class="text-text-primary block mb-1">Short mistake title</strong>
+    <p class="text-sm text-text-muted">What goes wrong. How to fix it. Two sentences.</p>
+  </div>
+</div>
+```
+
+**`step-card`** — Sequential how-to steps. 1 sentence + formula:
+```html
+<div class="step-card">
+  <div class="step-number">1</div>
+  <div>
+    <strong class="text-text-primary block mb-1">Step title</strong>
+    <p class="text-text-muted text-sm">One sentence of explanation.</p>
+    <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Formula = here</p>
+  </div>
+</div>
+```
+
+**`table-wrap`** — Always wrap `<table>` in `<div class="table-wrap">`. No naked tables.
+
+**`QuickAnswerBox`** — One per article, always first. Contains the article's single most important answer.
+
+**`KnowledgeHubCTA`** — One per article. Place after main educational content, before reference tables and FAQs.
+
+### SVG Icon Colour Convention
+
+| Colour | When to use |
+|---|---|
+| `text-danger` | Warning, error, what goes wrong |
+| `text-success` | Correct outcome, what goes right |
+| `text-accent` | Informational, neutral tip |
+| `text-text-muted` | Secondary / minor point |
+| `style="color: #d97706;"` | Amber / caution — **use inline style only**. `text-amber-500` does NOT exist in this theme's Tailwind config. |
+
+### Prose Rules
+
+- **No IEC standard numbers in prose.** Say "the 1.25 safety margin", not "IEC 60898 requires…".
+- **No analogies longer than one `example-box`.** 3–5 SVG-icon bullets max. Cut everything else.
+- **Active voice always.** "The MCB trips" — not "The trip is triggered by the MCB".
+- **Numbers before words.** Write "5–8×" — not "five to eight times".
+- **Specifics beat generalities.** "₹120–250" beats "affordable". "16A Type C on 2.5 mm²" beats "the appropriately sized breaker".
+- **No sentences starting with "This is because…"** — lead with the fact instead.
+- **No openers like "In this article…" or "This guide will…"** — start with the core insight directly.
+
+### FAQ Writing Rules
+
+- **Question:** Phrased exactly as a user would type it into Google.
+- **Answer:** 2–3 sentences. Lead with the direct answer (number / yes / no), then the reason, then a qualification if needed.
+- **Show calculations inline:** e.g. `(1,600W ÷ 230V × 1.25 = 8.7A)`.
+- **Link to related articles:** `<a href="/knowledge-hub/..." class="text-accent hover:underline">anchor text</a>`.
+
+### What NOT To Do
+
+- ❌ 3+ paragraph section intros — compress to 1–2 sentences
+- ❌ Repeating the same point in consecutive paragraphs
+- ❌ "This guide will show you…" / "In this article, we will…" openers
+- ❌ Analogies that exceed one `example-box`
+- ❌ `text-amber-500` — class does not exist in this project's theme (use `style="color: #d97706;"`)
+- ❌ Emoji in headings, bullets, or callouts — SVG icons only
+- ❌ FAQ answers longer than 3 sentences
+- ❌ Naked `<table>` without `.table-wrap` wrapper
+- ❌ `any[]` for `schemaGraph` — always `SchemaNode[]`
+
+---
+
 ## Typography & Readability
 
 ### Base Font Scale
@@ -132,7 +255,6 @@ Every article includes: `Article` + `FAQPage` + `BreadcrumbList` + `HowTo` JSON-
 - FAQ answers are styled standardly across pages:
   - In `FAQSection.astro` and `/recommendations/*.astro` pages: standard `<p class="text-sm text-text-muted leading-relaxed">` elements.
   - In Knowledge Hub articles: `<div class="faq-body">` elements containing description copy (styled via layout rules).
-
 
 ---
 
@@ -189,3 +311,4 @@ All constants live in `src/data/constants.ts`.
 - **Banned:** `style="color: var(--danger)"` → use `class="text-danger"`
 - **Banned:** `style="color: var(--success)"` → use `class="text-success"`
 - **Allowed (no Tailwind equivalent):** `color-mix()` glow shadows, `radial-gradient` overlays, complex multi-value `box-shadow` expressions with CSS variables
+- **Allowed (amber/caution):** `style="color: #d97706;"` — Tailwind `text-amber-500` does not exist in this theme's config

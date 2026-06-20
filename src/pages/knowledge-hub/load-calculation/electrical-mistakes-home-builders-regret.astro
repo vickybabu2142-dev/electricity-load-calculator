@@ -1,0 +1,471 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { LOAD_CALC_ARTICLES } from '@/data/knowledgeHub';
+import type { SchemaNode } from '@/types';
+import { VOLTAGE_V, DAYS_PER_MONTH } from '@/data/constants';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 as const },
+  { id: 'mistake-kitchen', label: '1. The Kitchen Load Trap', depth: 2 as const },
+  { id: 'mistake-sanctioned', label: '2. Underestimating Sanctioned Load', depth: 2 as const },
+  { id: 'mistake-surge', label: '3. Sizing for Run Watts, Ignoring Surge', depth: 2 as const },
+  { id: 'mistake-expandability', label: '4. Zero Expansion Headroom (Solar/EV)', depth: 2 as const },
+  { id: 'mistake-phase', label: '5. Phase Imbalance & Looping ACs', depth: 2 as const },
+  { id: 'mistake-voltagedrop', label: '6. Ignoring Voltage Drop over Long Runs', depth: 2 as const },
+  { id: 'mistake-stabilizer', label: '7. Under-sizing Mainline Stabilizers', depth: 2 as const },
+  { id: 'interactive-risk-quiz', label: 'Test Your House Planning Risk', depth: 2 as const },
+  { id: 'faqs', label: 'Frequently Asked Questions', depth: 2 as const },
+];
+
+const relatedArticles = LOAD_CALC_ARTICLES.filter(a => a.slug !== 'electrical-mistakes-home-builders-regret').slice(0, 4);
+
+const schemaGraph: SchemaNode[] = [
+  {
+    "@type": "Article",
+    "headline": "Electrical Planning Mistakes People Regret After Building Their House",
+    "description": "Discover the top electrical load planning and sizing mistakes homeowners regret after construction—and how to fix them during design.",
+    "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
+    "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
+    "datePublished": "2026-06-20",
+    "dateModified": "2026-06-20",
+    "url": `${SITE}/knowledge-hub/load-calculation/electrical-mistakes-home-builders-regret`,
+  },
+  {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+      { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Load Calculation",
+        "item": `${SITE}/knowledge-hub/load-calculation`,
+      },
+      { "@type": "ListItem", "position": 4, "name": "Regretted Electrical Mistakes" },
+    ],
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why do kitchen breakers trip so frequently?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Kitchen appliances (microwave, toaster, electric kettle) have high heating loads, drawing 1,000W to 2,000W each. If multiple high-load devices are wired to a single shared circuit or breaker, the combined current exceeds the safe threshold and trips the MCB. Sizing separate 16A circuits for each heavy appliance avoids this."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if my sanctioned load is lower than my actual load?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If your actual power demand regularly exceeds the utility sanctioned load, the utility meter can record over-load events, leading to high penalties on your monthly bill. In severe cases, the main pole breaker can trip or drop voltage. Always calculate connected load properly to apply for correct sanctioned capacity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I run an AC on standard 1.5 sq mm copper wire?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is highly discouraged. A 1.5 sq mm copper wire is rated for light loads. Air conditioners draw high continuous currents, which will cause a thin 1.5 sq mm wire to run hot, melt over time, and pose a severe fire hazard. A 1.5 Ton AC needs at least 2.5 sq mm wiring, and a 2.0 Ton AC requires 4.0 sq mm."
+        }
+      }
+    ]
+  }
+];
+---
+
+<KnowledgeHubLayout
+  title="7 Electrical Planning Mistakes Home Builders Regret | Knowledge Hub"
+  description="Discover the top electrical load planning and wiring mistakes people regret after building a house—and the exact formulas to prevent them during planning."
+  keywords="electrical mistakes home building regrets, kitchen breaker tripping, utility sanctioned load planning, EV charger load sizing, wire gauge calculation mistakes"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+    { label: 'Home Sizing Mistakes' },
+  ]}
+  toc={toc}
+  readingTime={7}
+  datePublished="2026-06-20"
+  dateModified="2026-06-20"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="load-calculation"
+  clusterTitle="Load Calculation"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'load-calculation', slug: 'kw-vs-kva-vs-kwh-explained', caption: 'Technical Explanation' }}
+>
+
+  <!-- ① QUICK ANSWER -->
+  <QuickAnswerBox id="quick-answer" heading="Quick Answer">
+    <p>Most electrical regrets after home construction boil down to <strong>underestimating load demands</strong> and <strong>cutting corners on cable sizes and circuit division</strong>. Once plaster is painted and drywalls are closed, retrofitting wires is up to <strong>5× more expensive</strong> than doing it right during construction. Sizing your electrical panel with at least a <strong>20% expansion headroom</strong> and running dedicated circuits for heavy appliances are the easiest ways to secure your home.</p>
+  </QuickAnswerBox>
+
+  <p>Building or renovating a house is an exciting journey, but behind the beautiful tiles and modern lights lies the nervous system of your home—the electrical wiring. While it is easy to spend weeks picking out paint colors and light fixtures, home builders rarely audit their electrical layouts. Years later, they find themselves dealing with constant breaker trips, flickering lights, or breaking open finished walls to run new cables because of planning mistakes.</p>
+  <p>Here are the 7 most common load-planning and sizing mistakes people regret after construction—and exactly what you should do in the real world to prevent them.</p>
+
+  <!-- ② MISTAKE 1 -->
+  <h2 id="mistake-kitchen">1. The Kitchen Load Trap — Shared Appliance Circuits</h2>
+  <p>Think of your kitchen as a high-power zone. Appliances like microwaves (1,200W), electric kettles (1,500W), toasters (1,000W), and induction plates (2,000W) all pull heavy power to generate heat. If they share the same circuit, they will trip your breakers constantly.</p>
+  
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">The Mistake: Looping kitchen plug points together</strong>
+      <p class="text-sm m-0 text-text-muted">Electricians often wire all kitchen outlets in a single line back to one breaker. If you run your toaster and microwave simultaneously at breakfast, they draw over 3,200W (approx. 14 Amps). Since a typical household circuit breaker is rated for 16A max, adding even a chimney or refrigerator will overload it instantly.</p>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-danger/10 border border-danger/30 text-danger font-semibold">Regret Rating: 9/10</span>
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-500 font-semibold">Retrofit Cost: High</span>
+    </div>
+    <strong class="text-text-primary block mb-1 text-sm">What should I do in the real world?</strong>
+    <p class="text-xs text-text-muted m-0">Tell your contractor to run at least <strong>two separate, dedicated 16A circuits</strong> using 4 sq mm copper wiring for heavy heating appliances, plus a separate 10A/16A line for lighter devices like your chimney and refrigerator. Never let them loop high-draw kitchen plugs onto a single line.</p>
+  </div>
+
+  <!-- ③ MISTAKE 2 -->
+  <h2 id="mistake-sanctioned">2. Underestimating Sanctioned Meter Load</h2>
+  <p>When you apply for a new electrical connection, you must declare your "sanctioned load" (maximum demand) in kW. This determines the size of your service wire, meter capacity, and your monthly utility fees.</p>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">The Mistake: Understating load to save on fixed charges</strong>
+      <p class="text-sm m-0 text-text-muted">Builders often suggest applying for a small 2 kW or 3 kW meter connection to save on initial service fees. However, once you install 3 ACs, a water heater, and a pump, your peak demand will hit 6 kW. Modern smart meters record maximum load usage automatically, and utility companies charge heavy penalties for exceeding your contract limit.</p>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-danger/10 border border-danger/30 text-danger font-semibold">Regret Rating: 8/10</span>
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-500 font-semibold">Retrofit Cost: Medium (Bureaucratic)</span>
+    </div>
+    <strong class="text-text-primary block mb-1 text-sm">What should I do in the real world?</strong>
+    <p class="text-xs text-text-muted m-0">Sum up the wattage of all simultaneous appliances and multiply by a diversity factor of 0.6 to 0.7. For a standard 3 BHK house with 2 ACs, apply for at least a <strong>5 kW to 7 kW sanctioned load</strong> to bypass utility penalties and future-proof your meter.</p>
+  </div>
+
+  <!-- ④ MISTAKE 3 -->
+  <h2 id="mistake-surge">3. Sizing MCBs & Backup Power for Run Watts, Ignoring Startup Surge</h2>
+  <p>Motor-driven appliances like ACs, water pumps, and refrigerators behave differently than simple lights. When they first turn on, they draw a massive, split-second surge of power just to get their motors spinning.</p>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">The Mistake: Sizing backup inverters strictly by running Watts</strong>
+      <p class="text-sm m-0 text-text-muted">If your active appliances draw 2.2 kW under normal running load, you might buy a 3 kVA inverter. But the second your refrigerator or 1.5 Ton AC compressor turns on, its starting surge spikes to 4× its running current for a fraction of a second. This instantly trips the inverter's safety overload shut-off, cutting all power.</p>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-danger/10 border border-danger/30 text-danger font-semibold">Regret Rating: 8.5/10</span>
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-500 font-semibold">Retrofit Cost: High (Requires new equipment)</span>
+    </div>
+    <strong class="text-text-primary block mb-1 text-sm">What should I do in the real world?</strong>
+    <p class="text-xs text-text-muted m-0">When buying an inverter or generator, find the single largest motor (usually your AC). Take its <strong>startup surge wattage (Running Watts × 3)</strong> and add it to the running wattages of all other active appliances. Also, ensure your distribution panel uses <strong>C-curve MCBs</strong> to absorb starting surges without tripping.</p>
+  </div>
+
+  <!-- ⑤ MISTAKE 4 -->
+  <h2 id="mistake-expandability">4. Zero Expansion Headroom for Solar & EV Chargers</h2>
+  <p>In the next 5 to 10 years, you will likely buy an electric vehicle (EV) or install rooftop solar panels. EV chargers (7.2 kW) and solar arrays are high-load, high-output installations that need direct paths back to your main breaker panel.</p>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">The Mistake: Running conduits tightly with zero empty space</strong>
+      <p class="text-sm m-0 text-text-muted">Electricians lay conduit pipes inside brick walls that fit only the wire count needed today. Years later, when you buy an EV, you need to run thick 6 sq mm cables. Because the existing pipes are full, you are forced to break finished walls or run ugly open pipes along your outer facade.</p>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-danger/10 border border-danger/30 text-danger font-semibold">Regret Rating: 9.5/10</span>
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-red-600/10 border border-red-600/30 text-red-600 font-semibold">Retrofit Cost: Extreme</span>
+    </div>
+    <strong class="text-text-primary block mb-1 text-sm">What should I do in the real world?</strong>
+    <p class="text-xs text-text-muted m-0">Instruct your contractor to lay <strong>two empty 1.5-inch conduit pipes</strong> from the main distribution panel—one running to the roof (for solar) and one running to your garage/parking spot (for an EV). Also, buy a Main Distribution Board (MDB) with at least <strong>6 to 8 empty slots</strong> for future breakers.</p>
+  </div>
+
+  <!-- ⑥ MISTAKE 5 -->
+  <h2 id="mistake-phase">5. Phase Imbalance & Looping Multiple ACs together</h2>
+  <p>In larger homes with a three-phase connection, grid electricity is divided into three separate incoming lines (Red, Yellow, Blue phases). Sizing your system involves balanced distribution.</p>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">The Mistake: Wiring all heavy loads onto a single phase</strong>
+      <p class="text-sm m-0 text-text-muted">To save labor, electricians connect all high-wattage air conditioners and geysers onto a single phase, leaving only bulbs and fans on the other two. When you run multiple ACs, that single phase overloads and trips the main breaker or drops line voltage, causing compressors to stall, while the rest of the house remains dark despite the other two phases having zero load.</p>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-danger/10 border border-danger/30 text-danger font-semibold">Regret Rating: 8.5/10</span>
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-500 font-semibold">Retrofit Cost: Medium-High</span>
+    </div>
+    <strong class="text-text-primary block mb-1 text-sm">What should I do in the real world?</strong>
+    <p class="text-xs text-text-muted m-0">Ask your contractor for a phase balance layout. Make sure your ACs, water heaters, and pumps are distributed evenly across R, Y, and B phases. Additionally, <strong>never loop AC sockets together</strong>. Each AC unit must have its own dedicated cable run directly from the distribution board.</p>
+  </div>
+
+  <!-- ⑦ MISTAKE 6 -->
+  <h2 id="mistake-voltagedrop">6. Sizing Wire Strictly by Ampacity, Ignoring Voltage Drop over Long Runs</h2>
+  <p>Cables are rated by how much current (Amps) they can carry without overheating. However, electricity traveling over a long distance faces resistance, causing a loss of pressure called voltage drop.</p>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">The Mistake: Sizing distant motors with thin wires</strong>
+      <p class="text-sm m-0 text-text-muted">Wiring a water pump on the roof (40 meters away from your panel) with standard 1.0 sq mm copper wire because the pump only draws 4A. Due to the long distance, the voltage drops from 230V to 195V under load. The motor has to work twice as hard to draw the same power, causing it to run hot and burn out its starting windings every few months.</p>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-danger/10 border border-danger/30 text-danger font-semibold">Regret Rating: 8/10</span>
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-500 font-semibold">Retrofit Cost: Medium-High</span>
+    </div>
+    <strong class="text-text-primary block mb-1 text-sm">What should I do in the real world?</strong>
+    <p class="text-xs text-text-muted m-0">If a cable run to a motor or heavy load exceeds <strong>30 meters (approx. 100 feet)</strong>, increase the copper wire size by one step (e.g. from 1.5 sq mm to 2.5 sq mm, or 2.5 sq mm to 4 sq mm). This limits voltage drop and protects your motors.</p>
+  </div>
+
+  <!-- ⑧ MISTAKE 7 -->
+  <h2 id="mistake-stabilizer">7. Sizing Mainline Voltage Stabilizers without Safety Factors</h2>
+  <p>If you live in an area with low or fluctuating voltage, you will need a mainline stabilizer to protect your home. Sizing stabilizers correctly is critical for stability under low voltage dips.</p>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">The Mistake: Sizing stabilizers exactly matching connected load</strong>
+      <p class="text-sm m-0 text-text-muted">If your house demand load is 6 kW (approx. 6.6 kVA), you might buy a 7.5 kVA stabilizer. However, a stabilizer's efficiency drops as input voltage falls. If the input voltage drops to 160V, the stabilizer has to draw more current to supply the same output voltage, reducing its capacity by 30%. The stabilizer heats up and trips constantly under load.</p>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-danger/10 border border-danger/30 text-danger font-semibold">Regret Rating: 8/10</span>
+      <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-500 font-semibold">Retrofit Cost: High</span>
+    </div>
+    <strong class="text-text-primary block mb-1 text-sm">What should I do in the real world?</strong>
+    <p class="text-xs text-text-muted m-0">Always apply a safety overhead factor of <strong>1.3</strong> to your mainline stabilizer calculations. If your demand load is 7 kVA, choose a stabilizer rating of: <strong>7 × 1.3 = 9.1 kVA → A 10 kVA mainline stabilizer</strong> is required. This safety overhead allows the stabilizer to operate reliably even during deep voltage dips.</p>
+  </div>
+
+  <KnowledgeHubCTA variant="inline" />
+
+  <!-- ⑨ INTERACTIVE QUIZ -->
+  <h2 id="interactive-risk-quiz">Test Your House: Electrical Sizing & Planning Risk Assessment</h2>
+  <p>Are you about to make these mistakes in your house layout? Check the items below that match your current electrical plans to calculate your house's risk score instantly.</p>
+
+  <div class="rounded-xl border border-border bg-card p-6 my-6" id="assessment-quiz-container">
+    <form id="risk-assessment-form" class="space-y-4">
+      <label class="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:bg-accent/5 cursor-pointer transition-colors">
+        <input type="checkbox" name="kitchen" value="25" class="mt-1 w-4 h-4 rounded text-accent focus:ring-accent border-border" data-risk-item />
+        <div>
+          <strong class="text-sm text-text-primary block">Multiple kitchen heating appliances will share one breaker/circuit</strong>
+          <span class="text-xs text-text-muted">Microwave, toaster, air fryer, etc.</span>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:bg-accent/5 cursor-pointer transition-colors">
+        <input type="checkbox" name="sanctioned" value="20" class="mt-1 w-4 h-4 rounded text-accent focus:ring-accent border-border" data-risk-item />
+        <div>
+          <strong class="text-sm text-text-primary block">Sanctioned load applied for is exactly equal to running loads (no buffer)</strong>
+          <span class="text-xs text-text-muted">Risks government penalties and smart meter over-load trips.</span>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:bg-accent/5 cursor-pointer transition-colors">
+        <input type="checkbox" name="surge" value="15" class="mt-1 w-4 h-4 rounded text-accent focus:ring-accent border-border" data-risk-item />
+        <div>
+          <strong class="text-sm text-text-primary block">Inverter/generator sized exactly matching running Watts (ignored startup surge)</strong>
+          <span class="text-xs text-text-muted">Compressor start could crash the backup system.</span>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:bg-accent/5 cursor-pointer transition-colors">
+        <input type="checkbox" name="expandability" value="20" class="mt-1 w-4 h-4 rounded text-accent focus:ring-accent border-border" data-risk-item />
+        <div>
+          <strong class="text-sm text-text-primary block">No empty conduits run to roof (for solar) or garage (for EV charger)</strong>
+          <span class="text-xs text-text-muted">Will require breaking finished plaster walls later.</span>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:bg-accent/5 cursor-pointer transition-colors">
+        <input type="checkbox" name="phase" value="10" class="mt-1 w-4 h-4 rounded text-accent focus:ring-accent border-border" data-risk-item />
+        <div>
+          <strong class="text-sm text-text-primary block">Heavy loads (ACs/geysers) are not balanced across phases</strong>
+          <span class="text-xs text-text-muted">Causes phase over-loads and breaker tripping.</span>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:bg-accent/5 cursor-pointer transition-colors">
+        <input type="checkbox" name="distance" value="10" class="mt-1 w-4 h-4 rounded text-accent focus:ring-accent border-border" data-risk-item />
+        <div>
+          <strong class="text-sm text-text-primary block">Distant motor/pumps wired without increasing wire gauge for distance</strong>
+          <span class="text-xs text-text-muted">Risks low-voltage motor burnout over long cable runs.</span>
+        </div>
+      </label>
+    </form>
+
+    <!-- Quiz Result Block -->
+    <div class="mt-8 p-6 rounded-xl border border-border bg-base flex flex-col gap-5 relative overflow-hidden" id="assessment-result-card" style="box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.15);">
+      <!-- Subtle industrial gradient overlay -->
+      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-accent/5 to-transparent pointer-events-none" aria-hidden="true"></div>
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 z-10">
+        <div class="space-y-2.5 flex-1">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" id="risk-ping"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-success" id="risk-pulse-dot"></span>
+            </span>
+            <span class="text-[10px] font-mono uppercase tracking-[0.1em] text-text-muted">Assessment Status:</span>
+            <span class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded border border-success/30 bg-success/5 text-success" id="risk-badge">Safe</span>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-display font-bold text-text-primary m-0" id="risk-status">Your planning is clean and safe!</h3>
+            <p class="text-sm text-text-muted mt-1.5 m-0 leading-relaxed" id="risk-advice">Continue mapping out your appliance loads to ensure a perfect installation.</p>
+          </div>
+        </div>
+
+        <div class="flex-shrink-0 flex flex-col items-center md:items-end gap-1.5">
+          <a href="/" class="btn-primary w-full md:w-auto text-xs py-2.5 px-5 justify-center group" data-astro-prefetch="hover">
+            Calculate House Load
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+          </a>
+          <span class="text-[10px] text-text-muted font-mono leading-none">Size MCBs & wire sizes the quick way</span>
+        </div>
+      </div>
+
+      <!-- Risk Meter (Visual Progress Bar) -->
+      <div class="space-y-2 border-t border-border/50 pt-4 z-10">
+        <div class="flex justify-between items-center text-xs font-mono">
+          <span class="text-text-muted font-medium">Estimated Sizing Risk Score</span>
+          <span class="text-text-primary font-bold text-sm" id="risk-percentage-label">0%</span>
+        </div>
+        <div class="w-full bg-border/40 rounded-full h-2 overflow-hidden border border-border/20">
+          <div id="risk-progress-bar" class="bg-accent h-full transition-all duration-300 ease-out" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-side script for Risk Calculator -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('risk-assessment-form');
+      const checkboxes = document.querySelectorAll('[data-risk-item]');
+      const badge = document.getElementById('risk-badge');
+      const ping = document.getElementById('risk-ping');
+      const pulseDot = document.getElementById('risk-pulse-dot');
+      const statusText = document.getElementById('risk-status');
+      const adviceText = document.getElementById('risk-advice');
+      const percentageLabel = document.getElementById('risk-percentage-label');
+      const progressBar = document.getElementById('risk-progress-bar');
+      const resultCard = document.getElementById('assessment-result-card');
+
+      if (!form || !badge || !ping || !pulseDot || !statusText || !adviceText || !percentageLabel || !progressBar || !resultCard) return;
+
+      const calculateRisk = () => {
+        let score = 0;
+        checkboxes.forEach((cb) => {
+          if ((cb as HTMLInputElement).checked) {
+            score += parseInt((cb as HTMLInputElement).value || '0', 10);
+          }
+        });
+
+        // Set width and percentage text
+        progressBar.style.width = `${score}%`;
+        percentageLabel.textContent = `${score}%`;
+
+        // Clear all variable classes first
+        badge.className = 'text-[11px] font-mono font-bold px-2.5 py-0.5 rounded border transition-colors';
+        ping.className = 'animate-ping absolute inline-flex h-full w-full rounded-full opacity-75';
+        pulseDot.className = 'relative inline-flex rounded-full h-2.5 w-2.5';
+        progressBar.className = 'h-full transition-all duration-300 ease-out bg-accent';
+
+        if (score === 0) {
+          badge.classList.add('bg-success/5', 'text-success', 'border-success/30');
+          badge.textContent = 'Safe';
+          ping.classList.add('bg-success');
+          pulseDot.classList.add('bg-success');
+          statusText.textContent = 'Sizing Blueprint: Approved!';
+          adviceText.textContent = 'Excellent! Your layout is safe. Settle your final connected numbers on the load calculator to generate a print-ready PDF installation guide.';
+        } else if (score <= 35) {
+          badge.classList.add('bg-success/5', 'text-success', 'border-success/30');
+          badge.textContent = 'Low Sizing Risk';
+          ping.classList.add('bg-success');
+          pulseDot.classList.add('bg-success');
+          statusText.textContent = 'Minor Planning Bottleneck';
+          adviceText.textContent = 'Minor risks detected. Run a quick connected load audit to optimize your circuit layouts and prevent appliance starting current tripping.';
+        } else if (score <= 65) {
+          badge.classList.add('bg-amber-500/5', 'text-amber-500', 'border-amber-500/30');
+          badge.textContent = 'Moderate Risk';
+          ping.classList.add('bg-amber-500');
+          pulseDot.classList.add('bg-amber-500');
+          statusText.textContent = 'Warning: Nuisance Tripping Likely';
+          adviceText.textContent = 'Shared kitchen loops and appliance startup surge overlaps will cause frequent blackouts. Tap below to balance your phase distribution.';
+        } else {
+          badge.classList.add('bg-danger/5', 'text-danger', 'border-danger/30');
+          badge.textContent = 'Hazardous Sizing';
+          ping.classList.add('bg-danger');
+          pulseDot.classList.add('bg-danger');
+          statusText.textContent = 'Wall-Breaker Alert: Hazardous Sizing!';
+          adviceText.textContent = 'Undersized wiring runs and zero expandability headroom mean melted cables and expensive wall re-works are ahead. Settle your math now.';
+        }
+      };
+
+      form.addEventListener('change', calculateRisk);
+      calculateRisk(); // Initial load
+    });
+  </script>
+
+  <!-- ⑩ FAQs -->
+  <div class="kh-faq">
+    <details>
+      <summary>
+        Why do kitchen breakers trip so frequently?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">Kitchen appliances (microwave, toaster, electric kettle) have high heating loads, drawing 1,000W to 2,000W each. If multiple high-load devices are wired to a single shared circuit or breaker, the combined current exceeds the safe threshold and trips the MCB. Sizing separate 16A circuits for each heavy appliance avoids this.</div>
+    </details>
+    <details>
+      <summary>
+        What happens if my sanctioned load is lower than my actual load?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">If your actual power demand regularly exceeds the utility sanctioned load, the utility meter can record over-load events, leading to high penalties on your monthly bill. In severe cases, the main pole breaker can trip or drop voltage. Always calculate connected load properly to apply for correct sanctioned capacity.</div>
+    </details>
+    <details>
+      <summary>
+        Can I run an AC on standard 1.5 sq mm copper wire?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">It is highly discouraged. A 1.5 sq mm copper wire is rated for light loads. Air conditioners draw high continuous currents, which will cause a thin 1.5 sq mm wire to run hot, melt over time, and pose a severe fire hazard. A 1.5 Ton AC needs at least 2.5 sq mm wiring, and a 2.0 Ton AC requires 4.0 sq mm.</div>
+    </details>
+  </div>
+
+  <!-- Sidebar nav slot -->
+  <Fragment slot="sidebar-nav">
+    {LOAD_CALC_ARTICLES.map(a => (
+      <a
+        href={`/knowledge-hub/load-calculation/${a.slug}`}
+        class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.slug === 'electrical-mistakes-home-builders-regret' ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+        data-astro-prefetch="hover"
+      >
+        <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.slug === 'electrical-mistakes-home-builders-regret' ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+        {a.title}
+      </a>
+    ))}
+  </Fragment>
+</KnowledgeHubLayout>

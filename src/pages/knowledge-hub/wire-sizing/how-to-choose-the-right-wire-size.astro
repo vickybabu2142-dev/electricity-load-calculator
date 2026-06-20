@@ -1,0 +1,384 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { WIRE_SIZING_ARTICLES } from '@/data/knowledgeHub';
+import type { SchemaNode } from '@/types';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 as const },
+  { id: 'why-it-matters', label: 'Why Wire Sizing Matters', depth: 2 as const },
+  { id: 'understanding-sq-mm', label: 'Understanding Square Millimeters', depth: 2 as const },
+  { id: 'standard-sizing-chart', label: 'Standard Wire Sizing Chart', depth: 2 as const },
+  { id: 'sizing-formula', label: 'Step-by-Step Sizing Formula', depth: 2 as const },
+  { id: 'voltage-drop-rule', label: 'Voltage Drop: The 20-Meter Rule', depth: 2 as const },
+  { id: 'worked-example', label: 'Worked Example: 2 Ton AC', depth: 2 as const },
+  { id: 'common-mistakes', label: 'Common Sizing Mistakes', depth: 2 as const },
+  { id: 'use-the-calculator', label: 'Use the Calculator', depth: 2 as const },
+  { id: 'faqs', label: 'FAQs', depth: 2 as const },
+];
+
+const relatedArticles = WIRE_SIZING_ARTICLES.filter(a => a.slug !== 'how-to-choose-the-right-wire-size');
+
+const schemaGraph: SchemaNode[] = [
+  {
+    "@type": "Article",
+    "headline": "How to Choose the Right Wire Size for Home Sockets and Appliances",
+    "description": "A complete, practical guide to selecting the correct copper wire size in square millimeters (sq.mm) for lights, sockets, ACs, and main meters.",
+    "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
+    "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
+    "datePublished": "2026-06-20",
+    "dateModified": "2026-06-20",
+    "url": `${SITE}/knowledge-hub/wire-sizing/how-to-choose-the-right-wire-size`,
+  },
+  {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+      { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Wire Sizing",
+        "item": `${SITE}/knowledge-hub/wire-sizing`,
+      },
+      { "@type": "ListItem", "position": 4, "name": "How to Choose the Right Wire Size" },
+    ],
+  },
+  {
+    "@type": "HowTo",
+    "name": "How to Select the Correct Copper Wire Size",
+    "description": "Step-by-step instructions to select standard copper wire cross-sections in sq.mm for residential circuits.",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Calculate continuous load current", "text": "Find current in Amps by dividing total circuit watts by voltage (230V)." },
+      { "@type": "HowToStep", "position": 2, "name": "Apply safety margin", "text": "Multiply load current by 1.25 to prevent sustained wire heating." },
+      { "@type": "HowToStep", "position": 3, "name": "Select matching cross-section", "text": "Choose standard copper size (1.5, 2.5, 4, or 6 sq.mm) capable of carrying that current." },
+      { "@type": "HowToStep", "position": 4, "name": "Factor in voltage drop", "text": "Upgrade to the next wire size if the distance between panel and appliance exceeds 20 meters." },
+    ],
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What size wire do I need for a 1.5 Ton AC?", "acceptedAnswer": { "@type": "Answer", "text": "You need a 4 sq.mm copper wire. An AC compressor draws high current and runs continuously, so 4 sq.mm wire paired with a 16A or 20A MCB is required for safety." }},
+      { "@type": "Question", "name": "Can I use 1.5 sq mm wire for power sockets?", "acceptedAnswer": { "@type": "Answer", "text": "No, 1.5 sq.mm copper wire is rated only for lighting and fans (up to 10A). Power sockets require 2.5 sq.mm wire for general appliances, or 4 sq.mm wire for heavy loads." }},
+      { "@type": "Question", "name": "Why is wire sized in sq.mm instead of AWG gauge?", "acceptedAnswer": { "@type": "Answer", "text": "Indian and European standards use metric square millimeters (sq.mm or mm²) to measure cross-sectional area directly. AWG is an American standard; larger AWG numbers mean thinner wires, whereas larger sq.mm numbers mean thicker wires." }},
+    ],
+  },
+];
+---
+
+<KnowledgeHubLayout
+  title="How to Choose the Right Wire Size for Home Sockets and Appliances"
+  description="Learn how to select the correct copper wire size (sq.mm) for lighting, general power outlets, ACs, and main service meters safely."
+  keywords="wire size selection, home electrical wire sizing, cable size for AC, copper wire sq.mm chart, residential wire sizing formula, voltage drop home wiring"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Wire Sizing', href: '/knowledge-hub/wire-sizing' },
+    { label: 'How to Choose the Right Wire Size' },
+  ]}
+  toc={toc}
+  readingTime={8}
+  datePublished="2026-06-20"
+  dateModified="2026-06-20"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="wire-sizing"
+  clusterTitle="Wire Sizing"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'solar-inverter', slug: 'how-to-size-a-solar-panel-system-for-home', caption: 'Solar Sizing' }}
+>
+
+  <QuickAnswerBox id="quick-answer">
+    <div class="mb-4">
+      <p class="text-xs font-mono uppercase tracking-widest text-accent mb-1.5">Quick Wire Reference Matrix</p>
+      <p class="text-sm text-text-secondary leading-relaxed">Standard copper wire thickness (cross-sectional area in sq.mm) and typical circuit breaker (MCB) pairings for residential wiring:</p>
+    </div>
+
+    <!-- Visual Dashboard Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <!-- 1.5 sq.mm -->
+      <div class="group flex flex-col items-center p-4 rounded-xl border border-border bg-base/50 hover:border-accent/40 hover:bg-card hover:-translate-y-1 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center mb-3 relative group-hover:border-accent/30 transition-colors" aria-hidden="true">
+          <!-- Copper wire cross section core representation (1.5 sq.mm core: w-3 h-3) -->
+          <div class="rounded-full bg-[linear-gradient(135deg,#e07a5f,#ea580c)] shadow-[0_0_8px_rgba(234,88,12,0.2)] group-hover:shadow-[0_0_12px_rgba(234,88,12,0.5)] group-hover:scale-110 transition-all duration-300 w-3 h-3"></div>
+        </div>
+        <span class="font-display font-bold text-xl text-text-primary mb-1">1.5 sq.mm</span>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-accent mb-2">10A MCB</span>
+        <p class="text-xs text-text-muted text-center leading-normal">Lights, Fans & lighting circuits</p>
+      </div>
+
+      <!-- 2.5 sq.mm -->
+      <div class="group flex flex-col items-center p-4 rounded-xl border border-border bg-base/50 hover:border-accent/40 hover:bg-card hover:-translate-y-1 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center mb-3 relative group-hover:border-accent/30 transition-colors" aria-hidden="true">
+          <!-- Copper wire cross section core representation (2.5 sq.mm core: w-4.5 h-4.5) -->
+          <div class="rounded-full bg-[linear-gradient(135deg,#e07a5f,#ea580c)] shadow-[0_0_8px_rgba(234,88,12,0.2)] group-hover:shadow-[0_0_12px_rgba(234,88,12,0.5)] group-hover:scale-110 transition-all duration-300 w-4.5 h-4.5"></div>
+        </div>
+        <span class="font-display font-bold text-xl text-text-primary mb-1">2.5 sq.mm</span>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-accent mb-2">16A MCB</span>
+        <p class="text-xs text-text-muted text-center leading-normal">Fridges, TVs & general power plugs</p>
+      </div>
+
+      <!-- 4.0 sq.mm -->
+      <div class="group flex flex-col items-center p-4 rounded-xl border border-border bg-base/50 hover:border-accent/40 hover:bg-card hover:-translate-y-1 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center mb-3 relative group-hover:border-accent/30 transition-colors" aria-hidden="true">
+          <!-- Copper wire cross section core representation (4.0 sq.mm core: w-6.5 h-6.5) -->
+          <div class="rounded-full bg-[linear-gradient(135deg,#e07a5f,#ea580c)] shadow-[0_0_8px_rgba(234,88,12,0.2)] group-hover:shadow-[0_0_12px_rgba(234,88,12,0.5)] group-hover:scale-110 transition-all duration-300 w-6.5 h-6.5"></div>
+        </div>
+        <span class="font-display font-bold text-xl text-text-primary mb-1">4.0 sq.mm</span>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-accent mb-2">20A MCB</span>
+        <p class="text-xs text-text-muted text-center leading-normal">1.5 Ton ACs & water geysers</p>
+      </div>
+
+      <!-- 6.0 sq.mm -->
+      <div class="group flex flex-col items-center p-4 rounded-xl border border-border bg-base/50 hover:border-accent/40 hover:bg-card hover:-translate-y-1 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center mb-3 relative group-hover:border-accent/30 transition-colors" aria-hidden="true">
+          <!-- Copper wire cross section core representation (6.0 sq.mm core: w-8.5 h-8.5) -->
+          <div class="rounded-full bg-[linear-gradient(135deg,#e07a5f,#ea580c)] shadow-[0_0_8px_rgba(234,88,12,0.2)] group-hover:shadow-[0_0_12px_rgba(234,88,12,0.5)] group-hover:scale-110 transition-all duration-300 w-8.5 h-8.5"></div>
+        </div>
+        <span class="font-display font-bold text-xl text-text-primary mb-1">6.0 sq.mm</span>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-accent mb-2">32A MCB</span>
+        <p class="text-xs text-text-muted text-center leading-normal">2 Ton ACs & main DB feeders</p>
+      </div>
+    </div>
+  </QuickAnswerBox>
+
+  <!-- ② WHY IT MATTERS -->
+  <h2 id="why-it-matters">Why Wire Sizing Matters for Safety</h2>
+  <p>Choosing the correct wire thickness prevents cables from overheating, melting their insulation, and causing electrical fires.</p>
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>Consequences of Wire Size Decisions</p>
+    <ul class="space-y-3 mt-2 list-none text-sm text-text-secondary">
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-danger mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        <span><strong>Undersized Wires:</strong> High resistance converts electricity into heat, melting insulation and creating fire hazards.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-danger mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        <span><strong>Excessive Voltage Drop:</strong> Thin wires cause voltage to drop over distance, starving appliances of proper voltage.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-success mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+        <span><strong>Correct Sizing:</strong> Wires carry current coolly, trip circuit breakers safely under fault, and deliver full voltage.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ③ UNDERSTANDING SQ.MM -->
+  <h2 id="understanding-sq-mm">Understanding Square Millimeters (sq.mm)</h2>
+  <p>Residential wiring outside North America uses square millimeters (sq.mm) to measure the actual cross-sectional area of copper conductor cores, rather than US gauge numbers.</p>
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>sq.mm vs AWG (American Wire Gauge)</p>
+    <ul class="space-y-3 mt-2 list-none text-sm text-text-secondary">
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4"/></svg>
+        <span><strong>Linear Scaling:</strong> A larger sq.mm number always means a thicker wire (e.g. 4 sq.mm is thicker than 2.5 sq.mm).</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4"/></svg>
+        <span><strong>AWG Inverse Rule:</strong> US gauge scales inversely, meaning larger AWG numbers represent thinner cables (e.g. 14 AWG is thinner than 12 AWG).</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4"/></svg>
+        <span><strong>Standard Conversions:</strong> 1.5 sq.mm ≈ 16 AWG | 2.5 sq.mm ≈ 14 AWG | 4.0 sq.mm ≈ 12 AWG | 6.0 sq.mm ≈ 10 AWG.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ④ STANDARD SIZING CHART -->
+  <h2 id="standard-sizing-chart">Standard Home Wire Sizing Reference Chart</h2>
+  <p>Different circuits in a residential home are divided by load demands, and choosing the standard metric cable size for each group ensures safety and compliance.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Wire Size (Copper)</th>
+          <th>Safe Current Rating</th>
+          <th>Standard Applications</th>
+          <th>Recommended MCB Sizing</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1.5 sq.mm</strong></td>
+          <td><code>10A – 15A</code></td>
+          <td>Lighting circuits, ceiling fans, general exhaust fans</td>
+          <td>10A or 6A MCB</td>
+        </tr>
+        <tr>
+          <td><strong>2.5 sq.mm</strong></td>
+          <td><code>16A – 20A</code></td>
+          <td>General sockets (5A/6A), refrigerators, laptops, TVs</td>
+          <td>16A or 20A MCB</td>
+        </tr>
+        <tr>
+          <td><strong>4.0 sq.mm</strong></td>
+          <td><code>22A – 28A</code></td>
+          <td>Power sockets (15A/16A), 1.5 Ton AC, geysers, microwaves</td>
+          <td>20A or 25A MCB</td>
+        </tr>
+        <tr>
+          <td><strong>6.0 sq.mm</strong></td>
+          <td><code>32A – 40A</code></td>
+          <td>2 Ton ACs, induction hobs, main sub-feeders to DB boards</td>
+          <td>32A or 40A MCB</td>
+        </tr>
+        <tr>
+          <td><strong>10.0 sq.mm</strong></td>
+          <td><code>45A – 60A</code></td>
+          <td>Main incoming feeder from electricity meter (up to 8 kW)</td>
+          <td>50A or 63A MCB</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ⑤ SIZING FORMULA -->
+  <h2 id="sizing-formula">Step-by-Step Sizing Formula</h2>
+  <p>You can determine the exact wire size needed for any appliance or circuit by calculating its current draw and applying standard design margins.</p>
+
+  <div class="step-card">
+    <div class="step-number">1</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Calculate load current in Amps</strong>
+      <p class="text-text-muted text-sm m-0">Find the appliance wattage on its nameplate label and divide it by the voltage (230V).</p>
+      <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Current (A) = Watts ÷ 230</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">2</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Apply safety design margin</strong>
+      <p class="text-text-muted text-sm m-0">Multiply your calculated current by the safety margin factor of 1.25 to prevent sustained wire heating.</p>
+      <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Design Current (A) = Current × 1.25</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">3</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Select the wire cross-section</strong>
+      <p class="text-text-muted text-sm m-0">Match the design current to the nearest wire size in our reference chart that exceeds it.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">4</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Apply distance adjustment</strong>
+      <p class="text-text-muted text-sm m-0">If the cable path distance exceeds 20 meters, size up the cable by one rating level to counteract voltage drop.</p>
+    </div>
+  </div>
+
+  <!-- ⑥ VOLTAGE DROP RULE -->
+  <h2 id="voltage-drop-rule">Voltage Drop: The 20-Meter Rule</h2>
+  <p>When electricity travels through a long wire, the wire's natural resistance causes a drop in voltage, meaning long cable runs require a larger wire size to deliver 230V.</p>
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>The 20-Meter Distance Adjustment Rule</p>
+    <ul class="space-y-3 mt-2 list-none text-sm text-text-secondary">
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span><strong>Under 20 Meters:</strong> Use the standard sizing chart recommendations directly without modifications.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span><strong>Over 20 Meters:</strong> Upgrade the wire by one level (e.g. use 4 sq.mm instead of 2.5 sq.mm) to keep voltage drop under 3%.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span><strong>Motor Sizing Rule:</strong> Inductive loads like water pumps and AC compressors suffer startup failures if voltage drop is excessive.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ⑦ WORKED EXAMPLE -->
+  <h2 id="worked-example">Worked Example: Dedicated Line for a 2 Ton Split AC</h2>
+  <p>Let's run a calculation for a heavy 2 Ton AC drawing 2,200W of electrical power to size its dedicated wiring correctly.</p>
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M9 14h6" /><path d="M9 18h6" /><path d="M9 10h6" /></svg>2 Ton Split AC Sizing Calculation</p>
+    <div class="space-y-2 mt-2 text-sm text-text-secondary">
+      <p><strong>Step 1: Calculate Load Current</strong></p>
+      <p class="font-mono text-accent">2,200W ÷ 230V = 9.57 Amperes</p>
+      
+      <p class="mt-3"><strong>Step 2: Add Design Safety Factor</strong></p>
+      <p class="font-mono text-accent">9.57A × 1.25 = 11.96 Amperes</p>
+      
+      <p class="mt-3"><strong>Step 3: Select Wire Size</strong></p>
+      <p>A 2.5 sq.mm copper wire carries 16A, which is theoretically higher than 11.96A. However, split ACs draw a heavy inrush startup current surge. Therefore, we size up to <strong>4.0 sq.mm copper wire</strong> paired with a 20A Type C MCB for motor safety.</p>
+    </div>
+  </div>
+
+  <KnowledgeHubCTA variant="inline" />
+
+  <!-- ⑧ COMMON MISTAKES -->
+  <h2 id="common-mistakes">Common Sizing Mistakes</h2>
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Using 1.5 sq.mm copper wire for power outlets</strong>
+      <p class="text-sm m-0 text-text-muted">General sockets power appliances like electric irons and microwaves which exceed 10A. Wiring them with 1.5 sq.mm wire causes rapid degradation and fire risks over time.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Connecting copper and aluminium wires directly</strong>
+      <p class="text-sm m-0 text-text-muted">Direct contact between copper and aluminium wires causes galvanic corrosion, which creates a loose, high-resistance joint. Always use bimetallic connectors if joining copper and aluminium feeders.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Forgetting that conduit installation reduces wire capacity</strong>
+      <p class="text-sm m-0 text-text-muted">Cables packed tightly inside wall conduits trap heat and lose their ability to dissipate current. Reduce the rated current capacity by 20% if packing more than 4 wires inside a single conduit.</p>
+    </div>
+  </div>
+
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <h2 id="faqs">Frequently Asked Questions</h2>
+  <div class="kh-faq">
+    <details>
+      <summary>What wire size is used for general house wiring in India?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">For Indian homes, 1.5 sq.mm copper wire is standard for lights and ceiling fans. Power points and general plug boards require 2.5 sq.mm, while heavier loads like ACs require 4 sq.mm.</div>
+    </details>
+    <details>
+      <summary>What happens if a wire is too thin for the load?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">If the wire is too thin, it cannot dissipate the heat generated by electrical current. This melts the plastic insulation, leading to short circuits, destroyed appliances, and potentially house fires.</div>
+    </details>
+    <details>
+      <summary>Can I use aluminium wire for residential house circuits?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Aluminium is not recommended for thin branch circuits due to high oxidation, lower current carrying capacity, and brittleness. It is acceptable for main feeder service cables (16 sq.mm or larger) if installed with correct bimetallic joints.</div>
+    </details>
+    <details>
+      <summary>Does long wire length increase voltage drop?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Yes. As wire length increases, cumulative resistance rises, dropping output voltage. Upgrade to a thicker wire cross-section if your cable run exceeds 20 meters.</div>
+    </details>
+    <details>
+      <summary>How is wire cross-section measured in mm² related to wire diameter?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Wire sq.mm refers to the area, calculated by the circle area formula: `Area = π × r²`. A 1.5 sq.mm single-strand wire has a conductor diameter of approximately 1.38 mm, not 1.5 mm.</div>
+    </details>
+  </div>
+
+  <!-- Sidebar nav slot -->
+  <Fragment slot="sidebar-nav">
+    {WIRE_SIZING_ARTICLES.map(a => (
+      <a
+        href={`/knowledge-hub/wire-sizing/${a.slug}`}
+        class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.isPillar ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+        data-astro-prefetch="hover"
+      >
+        <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.isPillar ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+        {a.title}
+      </a>
+    ))}
+  </Fragment>
+
+</KnowledgeHubLayout>

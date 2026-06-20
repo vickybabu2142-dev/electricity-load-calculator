@@ -1,0 +1,408 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { SOLAR_INVERTER_ARTICLES } from '@/data/knowledgeHub';
+import { INVERTER_OVERHEAD } from '@/data/constants';
+import type { SchemaNode } from '@/types';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 as const },
+  { id: 'why-it-matters', label: 'Why Sizing Matters', depth: 2 as const },
+  { id: 'inverter-sizing-chart', label: 'Inverter Sizing Chart', depth: 2 as const },
+  { id: 'sizing-formula', label: 'Step-by-Step Sizing Formula', depth: 2 as const },
+  { id: 'sine-wave-types', label: 'Pure Sine vs Modified Wave', depth: 2 as const },
+  { id: 'worked-example', label: 'Worked Example: 2 BHK', depth: 2 as const },
+  { id: 'common-mistakes', label: 'Common Sizing Mistakes', depth: 2 as const },
+  { id: 'use-the-calculator', label: 'Use the Calculator', depth: 2 as const },
+  { id: 'faqs', label: 'FAQs', depth: 2 as const },
+];
+
+const relatedArticles = SOLAR_INVERTER_ARTICLES.filter(a => a.slug !== 'how-to-choose-the-right-inverter-capacity');
+
+const schemaGraph: SchemaNode[] = [
+  {
+    "@type": "Article",
+    "headline": "Inverter Selection: Which Capacity is Right?",
+    "description": "Learn how to choose the correct VA/kVA inverter rating for your home backup needs, covering power factor, startup surge currents, and sine wave types.",
+    "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
+    "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
+    "datePublished": "2026-06-20",
+    "dateModified": "2026-06-20",
+    "url": `${SITE}/knowledge-hub/solar-inverter/how-to-choose-the-right-inverter-capacity`,
+  },
+  {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+      { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Solar & Inverter",
+        "item": `${SITE}/knowledge-hub/solar-inverter`,
+      },
+      { "@type": "ListItem", "position": 4, "name": "Inverter Sizing Guide" },
+    ],
+  },
+  {
+    "@type": "HowTo",
+    "name": "How to Size a Home Backup Inverter",
+    "description": "Step-by-step guide to calculating required Volt-Ampere (VA) rating of a home backup power inverter.",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Calculate backup power load", "text": "Add up the wattage (W) of all appliances you want to run concurrently during a power outage." },
+      { "@type": "HowToStep", "position": 2, "name": "Convert Watts to Volt-Amperes (VA)", "text": "Divide the total calculated Watts by the appliance average power factor (0.8)." },
+      { "@type": "HowToStep", "position": 3, "name": "Apply safety overhead factor", "text": "Multiply the Volt-Amperes by 1.2 to provide a 20% safety buffer for appliance startup surge currents." },
+      { "@type": "HowToStep", "position": 4, "name": "Select standard market rating", "text": "Choose the nearest higher standard inverter capacity available (e.g., 900 VA, 1100 VA, 1500 VA)." },
+    ],
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is the difference between Watts and VA in an inverter?", "acceptedAnswer": { "@type": "Answer", "text": "Watts (W) measures active power consumed by appliances. Volt-Amperes (VA) measures apparent power supplied by the inverter. Since electrical systems are not 100% efficient, inverters are rated in VA, which accounts for the power factor." }},
+      { "@type": "Question", "name": "Can a 900 VA inverter run a double-door refrigerator?", "acceptedAnswer": { "@type": "Answer", "text": "A standard 900 VA inverter can handle a modern single-door refrigerator. However, a double-door refrigerator has a high startup surge current and generally requires an 1100 VA inverter or higher to avoid overloading." }},
+      { "@type": "Question", "name": "Which type of inverter is best for home appliances?", "acceptedAnswer": { "@type": "Answer", "text": "A Pure Sine Wave inverter is the best choice. It delivers clean electrical power identical to grid power, protecting sensitive electronics like TVs, laptops, and refrigerators from noise and damage." }},
+    ],
+  },
+];
+---
+
+<KnowledgeHubLayout
+  title="Inverter Selection: Which Capacity is Right? | Knowledge Hub"
+  description="Master home inverter sizing. Learn how to calculate the correct VA rating, understand power factor conversions, and choose between sine wave types."
+  keywords="inverter selection, home inverter capacity, calculate VA rating, pure sine wave vs modified sine wave, inverter safety factor, battery backup load"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Solar & Inverter', href: '/knowledge-hub/solar-inverter' },
+    { label: 'Inverter Selection' },
+  ]}
+  toc={toc}
+  readingTime={7}
+  datePublished="2026-06-20"
+  dateModified="2026-06-20"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="solar-inverter"
+  clusterTitle="Solar & Inverter"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'load-calculation', slug: 'how-to-calculate-electrical-load-for-a-house', caption: 'Load Calculation' }}
+>
+
+  <!-- ① QUICK ANSWER -->
+  <QuickAnswerBox id="quick-answer">
+    <div class="mb-4">
+      <p class="text-xs font-mono uppercase tracking-widest text-accent mb-1.5 font-bold">Quick Inverter Sizing Reference Matrix</p>
+      <p class="text-sm text-text-secondary leading-relaxed">Typical home inverter ratings, maximum simultaneous load support, and recommended battery sizes:</p>
+    </div>
+
+    <!-- Visual Dashboard Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <!-- 900 VA Inverter -->
+      <div class="group flex flex-col items-center p-4 rounded-xl border border-border bg-base/50 hover:border-accent/40 hover:bg-card hover:-translate-y-1 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center mb-3 relative group-hover:border-accent/30 transition-colors" aria-hidden="true">
+          <!-- Inverter/Battery battery visual -->
+          <div class="rounded bg-[linear-gradient(135deg,#3b82f6,#1d4ed8)] shadow-[0_0_8px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_12px_rgba(59,130,246,0.5)] group-hover:scale-110 transition-all duration-300 w-6.5 h-4.5 flex items-center justify-between p-0.5">
+            <div class="w-1.5 h-3 bg-white/20 rounded-sm"></div>
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+          </div>
+        </div>
+        <span class="font-display font-bold text-xl text-text-primary mb-1">900 VA</span>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-accent mb-2">Up to 500W Load</span>
+        <p class="text-xs text-text-muted text-center leading-normal">3 Fans | 4 LEDs | TV | 1 BHK</p>
+      </div>
+
+      <!-- 1100 VA Inverter -->
+      <div class="group flex flex-col items-center p-4 rounded-xl border border-border bg-base/50 hover:border-accent/40 hover:bg-card hover:-translate-y-1 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center mb-3 relative group-hover:border-accent/30 transition-colors" aria-hidden="true">
+          <!-- Inverter/Battery battery visual -->
+          <div class="rounded bg-[linear-gradient(135deg,#3b82f6,#1d4ed8)] shadow-[0_0_8px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_12px_rgba(59,130,246,0.5)] group-hover:scale-110 transition-all duration-300 w-8 h-4.5 flex items-center justify-between p-0.5">
+            <div class="w-1.5 h-3 bg-white/20 rounded-sm"></div>
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+          </div>
+        </div>
+        <span class="font-display font-bold text-xl text-text-primary mb-1">1100 VA</span>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-accent mb-2">Up to 700W Load</span>
+        <p class="text-xs text-text-muted text-center leading-normal">4 Fans | 6 LEDs | TV | Fridge</p>
+      </div>
+
+      <!-- 1500 VA Inverter -->
+      <div class="group flex flex-col items-center p-4 rounded-xl border border-border bg-base/50 hover:border-accent/40 hover:bg-card hover:-translate-y-1 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center mb-3 relative group-hover:border-accent/30 transition-colors" aria-hidden="true">
+          <!-- Inverter/Battery battery visual -->
+          <div class="rounded bg-[linear-gradient(135deg,#3b82f6,#1d4ed8)] shadow-[0_0_8px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_12px_rgba(59,130,246,0.5)] group-hover:scale-110 transition-all duration-300 w-9.5 h-4.5 flex items-center justify-between p-0.5">
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+          </div>
+        </div>
+        <span class="font-display font-bold text-xl text-text-primary mb-1">1500 VA</span>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-accent mb-2">Up to 1000W Load</span>
+        <p class="text-xs text-text-muted text-center leading-normal">5 Fans | 8 LEDs | 2 TVs | Fridge</p>
+      </div>
+
+      <!-- 2 kVA (2000 VA) Inverter -->
+      <div class="group flex flex-col items-center p-4 rounded-xl border border-border bg-base/50 hover:border-accent/40 hover:bg-card hover:-translate-y-1 transition-all duration-300">
+        <div class="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center mb-3 relative group-hover:border-accent/30 transition-colors" aria-hidden="true">
+          <!-- Inverter/Battery battery visual -->
+          <div class="rounded bg-[linear-gradient(135deg,#3b82f6,#1d4ed8)] shadow-[0_0_8px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_12px_rgba(59,130,246,0.5)] group-hover:scale-110 transition-all duration-300 w-11 h-4.5 flex items-center justify-between p-0.5">
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+            <div class="w-1.5 h-3 bg-white rounded-sm"></div>
+          </div>
+        </div>
+        <span class="font-display font-bold text-xl text-text-primary mb-1">2 kVA</span>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-accent mb-2">Up to 1400W Load</span>
+        <p class="text-xs text-text-muted text-center leading-normal">Runs 0.5 HP Water Pump</p>
+      </div>
+    </div>
+  </QuickAnswerBox>
+
+  <!-- ② WHY IT MATTERS -->
+  <h2 id="why-it-matters">Why Inverter Sizing Matters</h2>
+  <p>Selecting the correct inverter capacity protects your home appliances and prevents sudden power supply failures during grid outages.</p>
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>Key Inverter Sizing Benefits</p>
+    <ul class="space-y-3 mt-2 list-none text-sm text-text-secondary">
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-success mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+        <span><strong>Prevents Overloads:</strong> Sizing correctly stops the inverter from tripping when appliances start up together.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-success mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+        <span><strong>Protects Sensitive Gear:</strong> Standard inverters must match the power output characteristics to prevent appliance heating.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-success mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+        <span><strong>Optimized Battery Usage:</strong> An appropriately loaded inverter matches the discharge capacity, extending your overall backup duration.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ③ INVERTER SIZING CHART -->
+  <h2 id="inverter-sizing-chart">Inverter Sizing Reference Table</h2>
+  <p>Standard home inverter capacities run specific appliance loads depending on the collective power needs of your household.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Inverter Capacity (VA / kVA)</th>
+          <th>Max Continuous Load (Watts)</th>
+          <th>Supported Household Size</th>
+          <th>Typical Backup Setup</th>
+          <th>Recommended Battery Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>675 VA – 700 VA</strong></td>
+          <td><code>380 W – 400 W</code></td>
+          <td>Small Studio / Shop</td>
+          <td>2 Fans, 3 LEDs, 1 Router</td>
+          <td>100 Ah – 120 Ah (12V)</td>
+        </tr>
+        <tr>
+          <td><strong>900 VA</strong></td>
+          <td><code>500 W – 540 W</code></td>
+          <td>1 BHK Apartment</td>
+          <td>3 Fans, 5 LEDs, 1 TV, Laptop</td>
+          <td>135 Ah – 150 Ah (12V)</td>
+        </tr>
+        <tr>
+          <td><strong>1100 VA (1.1 kVA)</strong></td>
+          <td><code>680 W – 720 W</code></td>
+          <td>2 BHK Apartment</td>
+          <td>4 Fans, 7 LEDs, TV, 1 Fridge</td>
+          <td>150 Ah – 200 Ah (12V)</td>
+        </tr>
+        <tr>
+          <td><strong>1500 VA (1.5 kVA)</strong></td>
+          <td><code>950 W – 1000 W</code></td>
+          <td>3 BHK Home</td>
+          <td>5 Fans, 10 LEDs, TV, Fridge, Mixer</td>
+          <td>150 Ah – 200 Ah (24V Setup)</td>
+        </tr>
+        <tr>
+          <td><strong>2 kVA (2000 VA)</strong></td>
+          <td><code>1350 W – 1450 W</code></td>
+          <td>Large House / Office</td>
+          <td>6 Fans, TV, Fridge, 0.5 HP Water Pump</td>
+          <td>150 Ah – 220 Ah (24V Setup)</td>
+        </tr>
+        <tr>
+          <td><strong>3 kVA (3000 VA)</strong></td>
+          <td><code>2100 W – 2200 W</code></td>
+          <td>Villa / High Load Home</td>
+          <td>Runs 1.0 Ton Inverter AC (Sunny Hours)</td>
+          <td>150 Ah – 200 Ah (36V/48V Setup)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ④ SIZING FORMULA -->
+  <h2 id="sizing-formula">Step-by-Step Sizing Formula</h2>
+  <p>Calculate the required inverter rating by adding the Watt values of your devices, converting to apparent power (VA), and applying the safety factor.</p>
+
+  <div class="step-card">
+    <div class="step-number">1</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Determine total simultaneous load (W)</strong>
+      <p class="text-text-muted text-sm m-0">Write down all appliances that must run concurrently during a power cut, and add their Watt values.</p>
+      <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Total Load (W) = Sum of all appliance Wattages</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">2</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Convert Watts to Volt-Amperes (VA)</strong>
+      <p class="text-text-muted text-sm m-0">Convert active power (Watts) to apparent power (Volt-Amperes) by dividing by the residential power factor (0.80).</p>
+      <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Apparent Power (VA) = Total Load (W) ÷ 0.80</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">3</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Apply inverter safety factor</strong>
+      <p class="text-text-muted text-sm m-0">Inverters operate best with overhead safety margins, so multiply the VA requirement by {INVERTER_OVERHEAD} to allow a 20% cushion.</p>
+      <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Target Inverter Rating (VA) = Apparent Power (VA) × {INVERTER_OVERHEAD}</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-number">4</div>
+    <div>
+      <strong class="text-text-primary block mb-1">Choose the nearest standard capacity</strong>
+      <p class="text-text-muted text-sm m-0">Find the nearest standard inverter size in the commercial market that is equal to or higher than your target calculation.</p>
+      <p class="font-mono text-sm bg-base border border-border rounded-lg px-4 py-2.5 mt-2 text-accent">Commercial Inverter = Next standard rating available (e.g. 900 VA, 1100 VA)</p>
+    </div>
+  </div>
+
+  <!-- ⑤ SINE WAVE TYPES -->
+  <h2 id="sine-wave-types">Pure Sine Wave vs. Modified Sine Wave</h2>
+  <p>The type of electrical wave generated by your inverter directly determines what appliances it can safely operate.</p>
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>Comparison Breakdown</p>
+    <ul class="space-y-3 mt-2 list-none text-sm text-text-secondary">
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span><strong>Pure Sine Wave:</strong> Delivers clean, smooth power identical to main grids. Highly recommended for laptops, LED TVs, refrigerators, and fans (avoids humming noise).</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span><strong>Modified Sine Wave:</strong> Produces square-shaped electricity steps. Cheaper, but can cause induction motors to hum, run hot, or burn out over time.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span><strong>Recommendation:</strong> Always purchase a Pure Sine Wave inverter for modern homes to protect control circuit boards in appliances.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ⑥ WORKED EXAMPLE -->
+  <h2 id="worked-example">Worked Sizing Example: A 2 BHK Home</h2>
+  <p>Let's run a practical sizing calculation for a standard 2 BHK apartment requiring simultaneous backup power during load shedding.</p>
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M9 14h6" /><path d="M9 18h6" /><path d="M9 10h6" /></svg>2 BHK Inverter Sizing Calculation</p>
+    <div class="space-y-2 mt-2 text-sm text-text-secondary">
+      <p><strong>Step 1: Sum the Active Power Load</strong></p>
+      <ul class="list-disc list-inside space-y-1 mb-2">
+        <li>3 Fans × 75W = 225W</li>
+        <li>5 LED Bulbs × 9W = 45W</li>
+        <li>1 LED TV = 120W</li>
+        <li>1 Wi-Fi Router = 15W</li>
+      </ul>
+      <p class="font-mono text-accent">Total Load = 225W + 45W + 120W + 15W = 405 Watts</p>
+      
+      <p class="mt-3"><strong>Step 2: Convert to Volt-Amperes (VA)</strong></p>
+      <p class="font-mono text-accent">405W ÷ 0.80 power factor = 506.25 VA</p>
+      
+      <p class="mt-3"><strong>Step 3: Apply the Inverter Safety Margin</strong></p>
+      <p class="font-mono text-accent">506.25 VA × {INVERTER_OVERHEAD} = 607.5 VA Target Size</p>
+      
+      <p class="mt-3"><strong>Step 4: Select Commercial Capacity</strong></p>
+      <p>The target size is 607.5 VA. Since 700 VA or 900 VA are standard commercial units, choosing a <strong>900 VA inverter</strong> provides room for growth and handles starting surges comfortably.</p>
+    </div>
+  </div>
+
+  <KnowledgeHubCTA variant="inline" />
+
+  <!-- ⑦ COMMON MISTAKES -->
+  <h2 id="common-mistakes">Common Inverter Sizing Mistakes</h2>
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Confusing Watts (W) with Volt-Amperes (VA)</strong>
+      <p class="text-sm m-0 text-text-muted">Buying an inverter rated at 900 VA expecting it to run 900W of load is a common mistake. Since 900 VA supports only about 720W of actual continuous load, overloading will trigger a shut-down.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Ignoring startup surge load of motor appliances</strong>
+      <p class="text-sm m-0 text-text-muted">Appliances with motors, such as refrigerators or water pumps, draw 3–5 times their normal running power when starting up. Omitting this surge when sizing will instantly overload the inverter.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Believing a larger inverter extends backup hours</strong>
+      <p class="text-sm m-0 text-text-muted">Inverter capacity (VA) determines which loads can run, while battery capacity (Ah) dictates how long they will run. Pairing a huge 2 kVA inverter with a small 100 Ah battery will still yield short backup periods.</p>
+    </div>
+  </div>
+
+  <!-- ⑧ USE THE CALCULATOR -->
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <!-- ⑨ FAQS -->
+  <h2 id="faqs">Frequently Asked Questions</h2>
+  <div class="kh-faq">
+    <details>
+      <summary>What is the difference between VA and Watts in an inverter?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Watts (W) represents the active electrical power consumed by appliances. Volt-Amperes (VA) represents the apparent electrical power delivered by the inverter, which accounts for the system power factor (apparent power = Watts ÷ 0.8).</div>
+    </details>
+    <details>
+      <summary>How do I calculate the inverter size I need for my home?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Add up the total Watts of the appliances you plan to run simultaneously, divide the result by 0.8 to convert to VA, and then multiply by 1.2 to add a safety buffer. Choose the nearest higher commercial rating available in stores.</div>
+    </details>
+    <details>
+      <summary>Can I run a refrigerator on a 900 VA inverter?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">Yes. Modern single-door energy-efficient refrigerators (typically consuming 100–150W running load) can run on a 900 VA inverter. Double-door models draw high starting currents and require an 1100 VA or larger inverter.</div>
+    </details>
+    <details>
+      <summary>What happens if I overload my home inverter?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">When the load exceeds the rated capacity, the inverter will beep continuously and shut down output automatically to protect its circuitry. You must reduce the load and reset the power switch to restore backup power.</div>
+    </details>
+    <details>
+      <summary>Which is better: pure sine wave or modified sine wave inverter?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg></summary>
+      <div class="faq-body">A Pure Sine Wave inverter is significantly better because it supplies stable, clean current that matches electrical grid quality. Modified sine waves can cause buzzes in fans and damage sensitive microprocessors in appliances.</div>
+    </details>
+  </div>
+
+  <!-- Sidebar nav slot -->
+  <Fragment slot="sidebar-nav">
+    {SOLAR_INVERTER_ARTICLES.map(a => {
+      const isActive = a.slug === 'how-to-choose-the-right-inverter-capacity';
+      return (
+        <a
+          href={`/knowledge-hub/solar-inverter/${a.slug}`}
+          class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${isActive ? 'text-accent font-medium font-display' : 'text-text-muted hover:text-accent'}`}
+          data-astro-prefetch="hover"
+        >
+          <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isActive ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+          {a.title}
+        </a>
+      );
+    })}
+  </Fragment>
+</KnowledgeHubLayout>

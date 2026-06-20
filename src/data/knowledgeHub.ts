@@ -81,6 +81,24 @@ export const LOAD_CALC_ARTICLES: KHArticle[] = [
     datePublished: '2026-06-18',
     dateModified: '2026-06-18',
   },
+  {
+    slug: 'ac-power-consumption-and-load-explained',
+    title: 'Air Conditioner (AC) Power Consumption & Load Explained',
+    description:
+      'Understand AC tonnage, power consumption, ISEER ratings, and startup surge currents — explained simply for homeowners.',
+    readingTime: 6,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
+  },
+  {
+    slug: 'electrical-mistakes-home-builders-regret',
+    title: 'Electrical Planning Mistakes People Regret After Building Their House',
+    description:
+      'Learn the most common electrical load-planning mistakes homeowners make during construction—and how to avoid them.',
+    readingTime: 7,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
+  },
 ];
 
 // ─── MCB Sizing Articles ───────────────────────────────────
@@ -90,11 +108,59 @@ export const MCB_SIZING_ARTICLES: KHArticle[] = [
     slug: 'how-to-choose-the-right-mcb-rating',
     title: 'How to Choose the Right MCB Rating',
     description:
-      'A complete, step-by-step guide to calculating load current and selecting the correct MCB ampere rating for your home circuits and appliances.',
-    readingTime: 6,
+      'The definitive guide to MCB sizing — covering the 4-step formula, B/C/D curve types, wire-gauge pairing, and real worked examples for every common home circuit.',
+    readingTime: 9,
     isPillar: true,
     datePublished: '2026-06-19',
-    dateModified: '2026-06-19',
+    dateModified: '2026-06-20',
+  },
+  {
+    slug: 'why-does-my-mcb-keep-tripping',
+    title: 'Why Does My MCB Keep Tripping?',
+    description:
+      'An expert diagnostic deep-dive into the five real reasons your breaker trips — with the Bouncer analogy, a trip-behaviour chart, Common Mistakes section, and a safe 4-step reset checklist.',
+    readingTime: 8,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
+  },
+];
+
+// ─── Wire Sizing Articles ──────────────────────────────────
+
+export const WIRE_SIZING_ARTICLES: KHArticle[] = [
+  {
+    slug: 'how-to-choose-the-right-wire-size',
+    title: 'How to Choose the Right Wire Size for Home Sockets and Appliances',
+    description:
+      'The definitive guide to home wire sizing — covering current load math, wire cross-sections (sq.mm), circuit types, voltage drop, and safety margins.',
+    readingTime: 8,
+    isPillar: true,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
+  },
+];
+
+// ─── Solar & Inverter Articles ─────────────────────────────
+
+export const SOLAR_INVERTER_ARTICLES: KHArticle[] = [
+  {
+    slug: 'how-to-size-a-solar-panel-system-for-home',
+    title: 'How to Size a Solar Panel System for Your Home',
+    description:
+      'The complete rooftop solar guide — learn how to calculate required kW capacity, panel count, roof area, and expected daily generation based on your daily electricity consumption.',
+    readingTime: 8,
+    isPillar: true,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
+  },
+  {
+    slug: 'how-to-choose-the-right-inverter-capacity',
+    title: 'Inverter Selection: Which Capacity is Right?',
+    description:
+      'Choose the correct VA/kVA inverter rating for your backup needs — covering pure sine wave vs modified sine wave, battery compatibility, and load types.',
+    readingTime: 7,
+    datePublished: '2026-06-20',
+    dateModified: '2026-06-20',
   },
 ];
 
@@ -127,8 +193,7 @@ export const CLUSTERS: KHCluster[] = [
     description:
       'Understand how to choose the right wire gauge and cable size for your home wiring, circuits, and appliances safely.',
     iconPath: 'M4 12h16M4 6h16M4 18h16',
-    articles: [],
-    comingSoon: true,
+    articles: WIRE_SIZING_ARTICLES,
   },
   {
     slug: 'solar-inverter',
@@ -138,8 +203,7 @@ export const CLUSTERS: KHCluster[] = [
       'Plan your solar panel system and inverter selection the right way. Size your system based on your actual electrical load.',
     iconPath:
       'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364-.707-.707M6.343 6.343l-.707-.707m12.728 0-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',
-    articles: [],
-    comingSoon: true,
+    articles: SOLAR_INVERTER_ARTICLES,
   },
 ];
 

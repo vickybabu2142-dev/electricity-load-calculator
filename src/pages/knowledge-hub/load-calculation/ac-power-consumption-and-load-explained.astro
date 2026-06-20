@@ -1,0 +1,363 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { LOAD_CALC_ARTICLES } from '@/data/knowledgeHub';
+import type { SchemaNode } from '@/types';
+import { VOLTAGE_V, DAYS_PER_MONTH } from '@/data/constants';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer', label: 'Quick Answer', depth: 2 as const },
+  { id: 'cooling-vs-power', label: 'Cooling Capacity vs. Electrical Load', depth: 2 as const },
+  { id: 'iseer-ratings', label: 'ISEER Star Ratings & Efficiency', depth: 2 as const },
+  { id: 'inverter-vs-noninverter', label: 'Inverter vs. Non-Inverter AC Load', depth: 2 as const },
+  { id: 'startup-surge', label: 'The Startup Surge (Starting Current)', depth: 2 as const },
+  { id: 'reference-table', label: 'AC Tonnage & Watts Reference', depth: 2 as const },
+  { id: 'calculate-running-cost', label: 'How to Calculate AC Running Costs', depth: 2 as const },
+  { id: 'common-mistakes', label: 'Common AC Load Mistakes', depth: 2 as const },
+  { id: 'faqs', label: 'Frequently Asked Questions', depth: 2 as const },
+];
+
+const relatedArticles = LOAD_CALC_ARTICLES.filter(a => a.slug !== 'ac-power-consumption-and-load-explained').slice(0, 4);
+
+const schemaGraph: SchemaNode[] = [
+  {
+    "@type": "Article",
+    "headline": "Air Conditioner (AC) Power Consumption & Load Explained",
+    "description": "Understand AC tonnage, electrical load, ISEER star ratings, inverter savings, and startup surge currents in simple terms.",
+    "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
+    "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
+    "datePublished": "2026-06-20",
+    "dateModified": "2026-06-20",
+    "url": `${SITE}/knowledge-hub/load-calculation/ac-power-consumption-and-load-explained`,
+  },
+  {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+      { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Load Calculation",
+        "item": `${SITE}/knowledge-hub/load-calculation`,
+      },
+      { "@type": "ListItem", "position": 4, "name": "AC Load Explained" },
+    ],
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many watts does a 1.5 Ton AC consume?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A typical 1.5 Ton AC consumes between 1,000 Watts (for a 5-star inverter model) and 1,800 Watts (for older or 3-star non-inverter models) under full load. The average hourly consumption of an inverter AC is lower (approx. 600-900W) once the room is cooled."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between cooling capacity and power draw?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cooling capacity (measured in Tons or BTU/hr) is the amount of heat the AC can remove from a room. Power draw (measured in Watts) is the electrical energy the AC consumes from your power supply to do that cooling. Due to energy efficiency, the electrical load is always much lower than the cooling power (e.g., 5,200W of cooling uses only 1,400W of electricity)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is ISEER rating in AC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ISEER stands for Indian Seasonal Energy Efficiency Ratio. It is the ratio of annual cooling heat load removed to annual total electrical energy consumed. A higher ISEER number means a more efficient AC, drawing fewer watts for the same cooling performance."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is starting current or startup surge for an AC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When a non-inverter AC compressor turns on, it draws a massive amount of starting current (surge) for a split second, which can be 3 to 5 times its normal running current. Inverter ACs start slowly and gradually increase speed, avoiding this startup surge."
+        }
+      }
+    ]
+  }
+];
+
+const acData = [
+  { tonnage: '0.8 Ton', cooling: 'approx. 2,800 W', running: '700–900 W', mcb: '10A', cable: '1.5 sq mm' },
+  { tonnage: '1.0 Ton', cooling: 'approx. 3,500 W', running: '900–1,200 W', mcb: '16A', cable: '2.5 sq mm' },
+  { tonnage: '1.5 Ton', cooling: 'approx. 5,200 W', running: '1,200–1,600 W', mcb: '16A or 20A', cable: '2.5 sq mm' },
+  { tonnage: '2.0 Ton', cooling: 'approx. 7,000 W', running: '1,800–2,200 W', mcb: '25A', cable: '4.0 sq mm' }
+];
+---
+
+<KnowledgeHubLayout
+  title="AC Power Consumption & Electrical Load Explained | Knowledge Hub"
+  description="Understand AC tonnage, power input vs cooling capacity, ISEER star ratings, inverter savings, and starting current surges in simple terms."
+  keywords="ac power consumption, ac electrical load, ac tonnage vs watts, 1.5 ton ac load, inverter ac power draw, iseer rating explained"
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+    { label: 'AC Load Explained' },
+  ]}
+  toc={toc}
+  readingTime={6}
+  datePublished="2026-06-20"
+  dateModified="2026-06-20"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="load-calculation"
+  clusterTitle="Load Calculation"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'load-calculation', slug: 'electrical-load-chart-for-home-appliances', caption: 'Reference Chart' }}
+>
+
+  <!-- ① QUICK ANSWER -->
+  <QuickAnswerBox id="quick-answer" heading="Quick Answer">
+    <p>An Air Conditioner's <strong>cooling capacity (Tons)</strong> is not the same as its <strong>electrical load (Watts)</strong>. A 1.5 Ton AC does not draw 1.5 kW of power. Instead, due to thermodynamic efficiency:</p>
+    <ul class="space-y-1.5 mt-2 text-sm text-text-secondary pl-4 list-disc">
+      <li>A <strong>1.5 Ton AC</strong> has about <strong>5,200 Watts of cooling power</strong>.</li>
+      <li>But it only consumes about <strong>1,000 to 1,600 Watts of actual electricity</strong> under full load.</li>
+      <li>Once the room is cool, an <strong>inverter AC</strong> drops its power draw to just <strong>300 to 600 Watts</strong> to maintain temperature.</li>
+    </ul>
+  </QuickAnswerBox>
+
+  <!-- ② COOLING VS POWER -->
+  <h2 id="cooling-vs-power">Cooling Capacity vs. Electrical Power Draw</h2>
+  <p>The single biggest source of confusion for homeowners is confusing <strong>thermal cooling capacity</strong> with <strong>electrical input power</strong>. When you buy an AC, its capacity is rated in "Tons" (or BTUs per hour):</p>
+  
+  <div class="step-card">
+    <div class="step-number">T</div>
+    <div>
+      <strong class="text-text-primary block mb-1">What is a Ton?</strong>
+      <p class="text-text-muted text-sm m-0">A "Ton" is a historical unit of heat transfer. It represents the rate of heat extraction needed to melt <strong>1 ton (2,000 lbs) of ice</strong> over a 24-hour period. In modern metrics, 1 Ton of cooling capacity is equivalent to removing <strong>12,000 BTUs of heat per hour</strong>, or roughly <strong>3,517 Watts of thermal energy</strong>.</p>
+    </div>
+  </div>
+
+  <p>So, a 1.5 Ton AC has a cooling capacity of <strong>5,275 thermal Watts</strong>. If it drew that much electrical power from your plug, it would trip your house circuit breaker instantly! Fortunately, ACs are highly efficient heat pumps. Instead of creating cold air, they simply pump heat from inside your room to outside.</p>
+
+  <p>Because they just move heat rather than creating it, the electrical power input is always <strong>3 to 4 times lower</strong> than the cooling output. Therefore:</p>
+  <ul class="space-y-1 mt-2 text-sm text-text-secondary pl-5 list-disc">
+    <li><strong>1.0 Ton AC</strong> = ~3,500W Cooling capacity = draws <strong>900–1,200W</strong> of electricity.</li>
+    <li><strong>1.5 Ton AC</strong> = ~5,200W Cooling capacity = draws <strong>1,200–1,600W</strong> of electricity.</li>
+    <li><strong>2.0 Ton AC</strong> = ~7,000W Cooling capacity = draws <strong>1,800–2,200W</strong> of electricity.</li>
+  </ul>
+
+  <!-- ③ Sample details -->
+  <h2 id="iseer-ratings">ISEER Star Ratings — Understanding Energy Efficiency</h2>
+  <p>To measure exactly how much electricity an AC consumes relative to its cooling power, regulatory bodies use efficiency ratios. In India, this is the <strong>ISEER (Indian Seasonal Energy Efficiency Ratio)</strong>.</p>
+  
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>The Efficiency Formula</p>
+    <p class="font-mono text-sm text-text-primary m-0">ISEER = Cooling Capacity (Watt-hours) ÷ Electrical Input (Watt-hours)</p>
+    <p class="text-xs text-text-muted mt-2">The higher the ISEER rating, the more cooling you get per watt of electricity consumed. Star labels are directly mapped to ISEER limits. For example, a 3-Star AC typically has an ISEER of 3.8 to 4.3, while a 5-Star AC has an ISEER of 5.0 or higher.</p>
+  </div>
+
+  <p>Choosing a 5-star AC over a 3-star AC of the same capacity typically reduces your electricity bills by <strong>20% to 25%</strong> for that appliance. While 5-star ACs have a higher upfront cost, they pay for themselves in electricity savings within 2 to 3 years if you run your AC for more than 4 hours a day.</p>
+
+  <!-- ④ INVERTER VS NONINVERTER -->
+  <h2 id="inverter-vs-noninverter">Inverter vs. Non-Inverter AC Load</h2>
+  <p>The type of compressor technology inside your AC determines how its electrical load behaves over time:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Non-Inverter AC</th>
+          <th>Inverter AC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Compressor Speed</strong></td>
+          <td>Fixed (100% speed or Off)</td>
+          <td>Variable (adjusts dynamically)</td>
+        </tr>
+        <tr>
+          <td><strong>Power Draw Curve</strong></td>
+          <td>Sharp square waves (cycles between peak and zero)</td>
+          <td>Smooth wave (gradually declines and stabilizes)</td>
+        </tr>
+        <tr>
+          <td><strong>Average Power Draw</strong></td>
+          <td>Always draws rated max power when running</td>
+          <td>Drops to 30%–40% of peak rated power after cooling</td>
+        </tr>
+        <tr>
+          <td><strong>Room Temperature</strong></td>
+          <td>Fluctuates by ±1.5°C</td>
+          <td>Extremely stable (±0.2°C)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Think of a <strong>non-inverter AC</strong> as driving a car in stop-and-go bumper-to-bumper traffic — slamming on the accelerator to hit 60 mph, then braking to a complete halt, and repeating. It is highly inefficient.</p>
+  <p>An <strong>inverter AC</strong> is like cruising on a highway at a steady 40 mph. It starts slowly, cools the room to the set temperature, and then throttles down its compressor speed, maintaining a steady temperature while drawing just <strong>300W to 500W</strong> of power.</p>
+
+  <!-- ⑤ STARTUP SURGE -->
+  <h2 id="startup-surge">The Startup Surge — Why Sizing Matters</h2>
+  <p>When an electric motor starts from a dead stop, it has to overcome inertia. During the first split second, it draws a massive spike in current known as the <strong>startup surge</strong> or <strong>Locked Rotor Amps (LRA)</strong>.</p>
+  
+  <p>For a fixed-speed (non-inverter) 1.5 Ton AC:</p>
+  <ul class="space-y-1.5 text-sm text-text-secondary pl-5 list-disc">
+    <li>Its normal running current is about <strong>6.5 Amps (approx. 1,500 Watts)</strong>.</li>
+    <li>But its starting surge can spike to <strong>20 to 30 Amps (over 4,500 Watts)</strong> for a few milliseconds.</li>
+  </ul>
+
+  <p>This massive spike is why older ACs make the room lights flicker for a fraction of a second when they turn on. It is also why you must size your main circuit breaker (MCB) and backup generator/inverter to handle this surge, rather than just the running load. Sizing your MCB at 10A for a 1.5 Ton AC will lead to frequent tripping during compressor startup. You need at least a <strong>16A or 20A C-Curve MCB</strong> to absorb this brief surge.</p>
+
+  <p>In contrast, inverter ACs use a "soft start" mechanism. They start drawing electricity at 100 Watts and gradually ramp up to full power, <strong>completely eliminating the starting current surge</strong>.</p>
+
+  <!-- ⑥ REFERENCE TABLE -->
+  <h2 id="reference-table">AC Tonnage & Electrical Load Reference Table</h2>
+  <p>Here is a general engineering reference for single-phase residential air conditioners operating at a standard voltage of {VOLTAGE_V}V:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tonnage</th>
+          <th>Cooling Capacity</th>
+          <th>Typical Running Watts</th>
+          <th>Recommended MCB</th>
+          <th>Copper Wire Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        {acData.map((row) => (
+          <tr>
+            <td><strong>{row.tonnage}</strong></td>
+            <td class="text-text-muted">{row.cooling}</td>
+            <td><code>{row.running}</code></td>
+            <td>{row.mcb}</td>
+            <td><code>{row.cable}</code></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-xs text-text-muted">*Note: These values are averages. Check the specific nameplate label on your unit for exact ratings. Use a C-Curve MCB for inductive motor loads like air conditioners to avoid nuisance tripping.*</p>
+
+  <!-- ⑦ CALCULATE RUNNING COST -->
+  <h2 id="calculate-running-cost">How to Calculate Your AC's Monthly Power Bill</h2>
+  <p>Let's calculate the monthly units (kWh) consumed and the operating cost for a typical 1.5 Ton AC running for 8 hours a day over {DAYS_PER_MONTH} days. We will compare a standard 3-star non-inverter AC with a modern 5-star inverter AC.</p>
+
+  <div class="example-box">
+    <p class="example-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-text-bottom" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Running Cost Comparison (Assuming ₹8.00 per Unit)</p>
+    
+    <strong class="text-text-primary block mb-1 text-sm">Scenario A: 1.5 Ton 3-Star Non-Inverter AC</strong>
+    <ul class="space-y-1 text-xs text-text-muted pl-4 list-disc mb-3">
+      <li>Typical running draw: <strong>1,500 Watts (1.5 kW)</strong> constant while running.</li>
+      <li>Cycles on/off, meaning it runs approx. 80% of the time to maintain temperature = <strong>6.4 hours</strong> of full draw per day.</li>
+      <li>Daily consumption: 1.5 kW × 6.4 hours = <strong>9.6 Units (kWh) per day</strong>.</li>
+      <li>Monthly consumption: 9.6 Units × {DAYS_PER_MONTH} days = <strong>288 Units per month</strong>.</li>
+      <li><strong>Monthly Cost:</strong> 288 Units × ₹8.00 = <strong class="text-danger">₹2,304</strong>.</li>
+    </ul>
+
+    <strong class="text-text-primary block mb-1 text-sm">Scenario B: 1.5 Ton 5-Star Inverter AC</strong>
+    <ul class="space-y-1 text-xs text-text-muted pl-4 list-disc">
+      <li>Peak draw: 1,300 Watts. But after cooling the room (takes ~30 mins), it throttles down to 350 Watts.</li>
+      <li>Average power draw over an 8-hour period: <strong>approx. 650 Watts (0.65 kW)</strong>.</li>
+      <li>Daily consumption: 0.65 kW × 8 hours = <strong>5.2 Units (kWh) per day</strong>.</li>
+      <li>Monthly consumption: 5.2 Units × {DAYS_PER_MONTH} days = <strong>156 Units per month</strong>.</li>
+      <li><strong>Monthly Cost:</strong> 156 Units × ₹8.00 = <strong class="text-success">₹1,248</strong>.</li>
+    </ul>
+    
+    <div class="mt-4 p-3 rounded bg-base border border-border">
+      <p class="text-sm font-semibold text-text-primary m-0">The Verdict: The Inverter AC saves <strong class="text-accent">₹1,056 per month</strong> (over 45% savings) and reduces your household maximum demand load significantly!</p>
+    </div>
+  </div>
+
+  <KnowledgeHubCTA variant="inline" />
+
+  <!-- ⑧ COMMON MISTAKES -->
+  <h2 id="common-mistakes">Common AC Load & Sizing Mistakes</h2>
+  <p>When selecting and installing air conditioners, avoid these common mistakes that lead to electrical issues, breaker tripping, or inflated energy bills:</p>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Ignoring the compressor starting surge when sizing backup systems</strong>
+      <p class="text-sm m-0 text-text-muted">Sizing a home backup generator, inverter, or solar system based strictly on the AC's average running load (e.g. 1.5 kW) is a recipe for system overload. Standard fixed-speed compressors draw 3–5× their running current during startup. Ensure your backup source has enough peak surge rating (VA) or switch to a soft-start inverter AC.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Using undersized cables or standard plug sockets</strong>
+      <p class="text-sm m-0 text-text-muted">Running a 1.5 Ton or 2.0 Ton AC on standard 1.5 sq mm wire or plugging it into a standard 5A socket is a severe fire hazard. Continuous high load causes thin cables to overheat. Always run a dedicated circuit using at least 2.5 sq mm (for 1.5 Ton) or 4 sq mm (for 2 Ton) copper cables wired to a 16A/25A power socket.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Confusing cooling output with electrical power input</strong>
+      <p class="text-sm m-0 text-text-muted">Never size your home electrical panels or utility contract demand based on the thermal cooling capacity listed in Watts (e.g. 5,200W for a 1.5 Ton AC). This represents cooling capability, not power consumption. Sizing your electrical system for cooling capacity leads to expensive and unnecessary over-engineering of meters, breakers, and cabling.</p>
+    </div>
+  </div>
+
+  <div class="mistake-card">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Setting the temperature to 16°C for "faster" cooling</strong>
+      <p class="text-sm m-0 text-text-muted">Air conditioners blow cold air at the exact same temperature (~18°C from the grill) regardless of the setting on the remote. Setting it to 16°C does not speed up cooling; it only forces the compressor to run at maximum speed continuously, inflating power consumption by up to 40%.</p>
+    </div>
+  </div>
+
+  <!-- ⑨ FAQs -->
+  <h2 id="faqs">Frequently Asked Questions</h2>
+  <div class="kh-faq">
+    <details>
+      <summary>
+        Can I run a 1.5 Ton AC on a normal 5A socket?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">No. A standard 5A socket at {VOLTAGE_V}V is only rated for loads up to 1,150 Watts. A 1.5 Ton AC draws between 1,200W and 1,600W continuously, and non-inverters draw even higher during startup. Always use a dedicated <strong>16A power socket and switch</strong> with appropriate wiring.</div>
+    </details>
+    <details>
+      <summary>
+        How do I find the actual wattage of my air conditioner?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">Do not look at the cooling capacity (e.g. 5,200W or 18,000 BTU) on the specifications sheet. Look for <strong>"Rated Power Input"</strong>, <strong>"Electrical Input"</strong>, or <strong>"Cooling Power Input"</strong> on the nameplate sticker located on the side of the indoor or outdoor unit. This value is measured in Watts (W) or Kilowatts (kW).</div>
+    </details>
+    <details>
+      <summary>
+        Will a 1.5 Ton AC run on a 1.5 kVA inverter?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">Usually no. A 1.5 kVA inverter can supply about 1,200 Watts of continuous power. Even a 5-star inverter AC will exceed this capacity during its initial ramp-up. Furthermore, a non-inverter AC startup surge will overload a 1.5 kVA inverter instantly. You need at least a <strong>2.5 kVA to 3 kVA inverter</strong> to run a 1.5 Ton AC safely, provided no other heavy loads are active.</div>
+    </details>
+    <details>
+      <summary>
+        Does running the AC at 16°C consume more electricity than at 24°C?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="faq-body">Yes, significantly more. Setting the temperature to 16°C forces the compressor to run at maximum speed continuously because it is almost impossible for a standard residential AC to cool a room to 16°C in warm climates. Setting the AC to <strong>24°C or 25°C</strong> keeps the compressor running in its low-frequency energy-efficient state, saving up to <strong>30% to 40%</strong> in energy bills.</div>
+    </details>
+  </div>
+
+  <!-- Sidebar nav slot -->
+  <Fragment slot="sidebar-nav">
+    {LOAD_CALC_ARTICLES.map(a => (
+      <a
+        href={`/knowledge-hub/load-calculation/${a.slug}`}
+        class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.slug === 'ac-power-consumption-and-load-explained' ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+        data-astro-prefetch="hover"
+      >
+        <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.slug === 'ac-power-consumption-and-load-explained' ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+        {a.title}
+      </a>
+    ))}
+  </Fragment>
+</KnowledgeHubLayout>

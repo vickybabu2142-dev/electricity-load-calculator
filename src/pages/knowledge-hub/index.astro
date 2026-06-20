@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ClusterCard from '@/components/ClusterCard.astro';
-import { CLUSTERS, LOAD_CALC_ARTICLES, MCB_SIZING_ARTICLES } from '@/data/knowledgeHub';
+import { CLUSTERS, LOAD_CALC_ARTICLES, MCB_SIZING_ARTICLES, WIRE_SIZING_ARTICLES, SOLAR_INVERTER_ARTICLES, getPillarArticle } from '@/data/knowledgeHub';
 
 export const prerender = true;
 
@@ -62,10 +62,18 @@ const featuredArticles = [
     clusterSlug: 'mcb-sizing'
   },
   {
-    ...LOAD_CALC_ARTICLES.find(a => a.slug === 'electrical-load-chart-for-home-appliances')!,
-    clusterSlug: 'load-calculation'
+    ...WIRE_SIZING_ARTICLES.find(a => a.isPillar)!,
+    clusterSlug: 'wire-sizing'
+  },
+  {
+    ...SOLAR_INVERTER_ARTICLES.find(a => a.isPillar)!,
+    clusterSlug: 'solar-inverter'
   }
 ];
+
+// Dynamic hero stats — update automatically when articles/clusters are added
+const totalGuides = CLUSTERS.reduce((sum, c) => sum + c.articles.length, 0);
+const totalClusters = CLUSTERS.length;
 ---
 
 <BaseLayout
@@ -100,11 +108,11 @@ const featuredArticles = [
         <a href="#topics" class="btn-secondary px-6 py-3 text-sm">Browse Topics</a>
       </div>
 
-      <!-- Stats -->
+      <!-- Stats — driven by CLUSTERS data, no manual updates needed -->
       <div class="flex flex-wrap justify-center gap-4 mt-8 text-xs animate-slide-up" style="animation-delay:0.2s">
         {[
-          { label: '7 Guides', sub: 'Load Calculation' },
-          { label: '4 Topic Clusters', sub: 'Coming Soon' },
+          { label: `${totalGuides} Guides`, sub: 'Published' },
+          { label: `${totalClusters} Topic Clusters`, sub: 'Knowledge Areas' },
           { label: 'Free', sub: 'Always' },
         ].map(s => (
           <div class="stat-badge flex flex-col items-center px-4 py-2.5 rounded-xl">
@@ -125,17 +133,25 @@ const featuredArticles = [
       </div>
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      {CLUSTERS.map(cluster => (
-        <ClusterCard
-          slug={cluster.slug}
-          title={cluster.title}
-          shortTitle={cluster.shortTitle}
-          description={cluster.description}
-          iconPath={cluster.iconPath}
-          articleCount={cluster.articles.length}
-          comingSoon={cluster.comingSoon}
-        />
-      ))}
+      {CLUSTERS.map(cluster => {
+        const pillarArticle = getPillarArticle(cluster.slug);
+        const targetHref = pillarArticle
+          ? `/knowledge-hub/${cluster.slug}/${pillarArticle.slug}`
+          : `/knowledge-hub/${cluster.slug}`;
+
+        return (
+          <ClusterCard
+            slug={cluster.slug}
+            title={cluster.title}
+            shortTitle={cluster.shortTitle}
+            description={cluster.description}
+            iconPath={cluster.iconPath}
+            articleCount={cluster.articles.length}
+            comingSoon={cluster.comingSoon}
+            href={targetHref}
+          />
+        );
+      })}
     </div>
   </section>
 
@@ -177,7 +193,7 @@ const featuredArticles = [
       <h2 class="font-display font-bold text-3xl text-text-primary">Featured Guides</h2>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
       {featuredArticles.map((article, i) => (
         <a
           href={`/knowledge-hub/${article.clusterSlug}/${article.slug}`}
@@ -209,6 +225,12 @@ const featuredArticles = [
       </a>
       <a href="/knowledge-hub/mcb-sizing" class="btn-secondary px-6 py-2.5 text-sm">
         View MCB Sizing Guides →
+      </a>
+      <a href="/knowledge-hub/wire-sizing" class="btn-secondary px-6 py-2.5 text-sm">
+        View Wire Sizing Guides →
+      </a>
+      <a href="/knowledge-hub/solar-inverter" class="btn-secondary px-6 py-2.5 text-sm">
+        View Solar &amp; Inverter Guides →
       </a>
     </div>
   </section>

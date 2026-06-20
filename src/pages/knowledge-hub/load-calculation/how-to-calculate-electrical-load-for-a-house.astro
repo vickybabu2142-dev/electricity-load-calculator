@@ -146,7 +146,7 @@ const applianceData = [
     <div class="step-number">2</div>
     <div>
       <strong class="text-text-primary block mb-1">Find the wattage of each appliance</strong>
-      <p class="text-text-muted text-sm m-0">Check the <strong>nameplate label</strong> on the appliance — it will show the wattage in watts (W) or you can calculate it from voltage × current (V × A). For ACs: 1 ton = ~1,200W, 1.5 ton = ~1,600W. Use our <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances">Appliance Wattage Chart</a> if you can't find the label.</p>
+      <p class="text-text-muted text-sm m-0">Check the <strong>nameplate label</strong> on the appliance — it will show the wattage in watts (W) or you can calculate it from voltage × current (V × A). For ACs: 1 ton = ~1,200W, 1.5 ton = ~1,600W. Use our <a href="/knowledge-hub/load-calculation/electrical-load-chart-for-home-appliances">Appliance Wattage Chart</a> if you can't find the label. AC wattage can be confusing — our <a href="/knowledge-hub/load-calculation/ac-power-consumption-and-load-explained">AC Power Consumption guide</a> explains tonnage, ISEER ratings, and startup surges in detail.</p>
     </div>
   </div>
 
@@ -202,7 +202,7 @@ const applianceData = [
           <tr><td>Water Pump (0.5 HP)</td><td>1</td><td>450W</td><td><strong>450W</strong></td></tr>
           <tr><td>Laptop</td><td>2</td><td>60W</td><td><strong>120W</strong></td></tr>
           <tr><td>Mixer/Grinder</td><td>1</td><td>600W</td><td><strong>600W</strong></td></tr>
-          <tr style="background: color-mix(in srgb, var(--accent), transparent 92%);"><td colspan="3"><strong>Total Connected Load</strong></td><td><strong style="color: var(--accent); font-size: 1.1em;">4,060W</strong></td></tr>
+          <tr style="background: color-mix(in srgb, var(--accent), transparent 92%);"><td colspan="3"><strong>Total Connected Load</strong></td><td><strong class="text-accent text-[1.1em]">4,060W</strong></td></tr>
         </tbody>
       </table>
     </div>
@@ -241,13 +241,13 @@ const applianceData = [
 
   <!-- ⑥ COMMON MISTAKES -->
   <h2 id="common-mistakes">Common Load Calculation Mistakes</h2>
-  <p>Avoid these errors that lead to wrong MCB sizing, cable selection, and inverter planning:</p>
+  <p>Avoid these errors that lead to wrong MCB sizing, cable selection, and inverter planning. For a broader look at wiring decisions made during construction, see <a href="/knowledge-hub/load-calculation/electrical-mistakes-home-builders-regret">Electrical Planning Mistakes People Regret After Building Their House</a>.</p>
 
   <div class="mistake-card">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
     <div>
       <strong class="text-text-primary block mb-1">Forgetting the starting current surge</strong>
-      <p class="text-sm m-0" style="color: var(--text-muted);">Motors (ACs, pumps, refrigerators) draw 3–7× their rated current at startup. This doesn't affect connected load calculation but matters when sizing MCBs. Always add a 25–30% safety margin to your total load when selecting an MCB.</p>
+      <p class="text-sm m-0 text-text-muted">Motors (ACs, pumps, refrigerators) draw 3–7× their rated current at startup. This doesn't affect connected load calculation but matters when sizing MCBs. Always add a 25–30% safety margin to your total load when selecting an MCB.</p>
     </div>
   </div>
 
@@ -255,7 +255,7 @@ const applianceData = [
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
     <div>
       <strong class="text-text-primary block mb-1">Using wrong wattage for ACs</strong>
-      <p class="text-sm m-0" style="color: var(--text-muted);">Air conditioner capacity is listed in tons or BTU/hr, not watts. 1 ton ≠ 1,000 watts. 1 ton of AC = approximately 1,100–1,200W of electrical consumption. Check the actual input power on the AC's nameplate or manual.</p>
+      <p class="text-sm m-0 text-text-muted">Air conditioner capacity is listed in tons or BTU/hr, not watts. 1 ton ≠ 1,000 watts. 1 ton of AC = approximately 1,100–1,200W of electrical consumption. Check the actual input power on the AC's nameplate or manual. See our <a href="/knowledge-hub/load-calculation/ac-power-consumption-and-load-explained">AC Power Consumption guide</a> for a full breakdown.</p>
     </div>
   </div>
 
@@ -263,7 +263,7 @@ const applianceData = [
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
     <div>
       <strong class="text-text-primary block mb-1">Ignoring future appliances</strong>
-      <p class="text-sm m-0" style="color: var(--text-muted);">If you plan to add an AC, geyser, or EV charger in the next year, include their load now. Undersizing your main connection today means applying for a load enhancement later — which takes time and costs money.</p>
+      <p class="text-sm m-0 text-text-muted">If you plan to add an AC, geyser, or EV charger in the next year, include their load now. Undersizing your main connection today means applying for a load enhancement later — which takes time and costs money.</p>
     </div>
   </div>
 
@@ -271,7 +271,7 @@ const applianceData = [
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
     <div>
       <strong class="text-text-primary block mb-1">Confusing connected load with demand load</strong>
-      <p class="text-sm m-0" style="color: var(--text-muted);">Connected load assumes everything runs simultaneously — which never actually happens. Demand load accounts for diversity (not all devices run at once). Learn more in our <a href="/knowledge-hub/load-calculation/connected-load-vs-demand-load">Connected Load vs Demand Load guide</a>.</p>
+      <p class="text-sm m-0 text-text-muted">Connected load assumes everything runs simultaneously — which never actually happens. Demand load accounts for diversity (not all devices run at once). Learn more in our <a href="/knowledge-hub/load-calculation/connected-load-vs-demand-load">Connected Load vs Demand Load guide</a>.</p>
     </div>
   </div>
 
@@ -279,7 +279,7 @@ const applianceData = [
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
     <div>
       <strong class="text-text-primary block mb-1">Not accounting for old, inefficient appliances</strong>
-      <p class="text-sm m-0" style="color: var(--text-muted);">An old 5-star refrigerator from 2010 might consume 350W, while a new one consumes 150W. Old appliances can significantly inflate your load. When calculating, use the actual wattage from the label — not generic values from the internet.</p>
+      <p class="text-sm m-0 text-text-muted">An old 5-star refrigerator from 2010 might consume 350W, while a new one consumes 150W. Old appliances can significantly inflate your load. When calculating, use the actual wattage from the label — not generic values from the internet.</p>
     </div>
   </div>
 

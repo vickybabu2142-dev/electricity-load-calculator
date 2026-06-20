@@ -10,9 +10,10 @@ interface Props {
   iconPath: string;
   articleCount: number;
   comingSoon?: boolean;
+  href?: string;
 }
-const { slug, title, shortTitle, description, iconPath, articleCount, comingSoon = false } = Astro.props;
-const href = `/knowledge-hub/${slug}`;
+const { slug, title, shortTitle, description, iconPath, articleCount, comingSoon = false, href: customHref } = Astro.props;
+const href = customHref || `/knowledge-hub/${slug}`;
 ---
 
 <a

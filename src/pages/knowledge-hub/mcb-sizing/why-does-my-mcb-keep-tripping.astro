@@ -1,0 +1,685 @@
+---
+import KnowledgeHubLayout from '@/layouts/KnowledgeHubLayout.astro';
+import QuickAnswerBox from '@/components/QuickAnswerBox.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { MCB_SIZING_ARTICLES } from '@/data/knowledgeHub';
+import type { SchemaNode } from '@/types';
+
+export const prerender = true;
+
+const SITE = 'https://electricityloadcalculator.com';
+
+const toc = [
+  { id: 'quick-answer',    label: 'Quick Answer',                   depth: 2 as const },
+  { id: 'the-bouncer',     label: 'The Bouncer Analogy',            depth: 2 as const },
+  { id: 'reason-overload', label: '1. Overloaded Circuits',         depth: 2 as const },
+  { id: 'reason-surge',    label: '2. Inrush Current & Motor Surge',depth: 2 as const },
+  { id: 'reason-short',    label: '3. Short Circuits',              depth: 2 as const },
+  { id: 'reason-ground',   label: '4. Ground Faults & Water',       depth: 2 as const },
+  { id: 'reason-faulty',   label: '5. Aging or Weak Breaker',       depth: 2 as const },
+  { id: 'diagnostics',     label: 'Trip Behaviour Chart',           depth: 2 as const },
+  { id: 'safely-reset',    label: 'How to Reset Safely',            depth: 2 as const },
+  { id: 'mistakes',        label: 'Common Mistakes to Avoid',       depth: 2 as const },
+  { id: 'faqs',            label: 'FAQs',                           depth: 2 as const },
+];
+
+const relatedArticles = MCB_SIZING_ARTICLES.filter(a => a.slug !== 'why-does-my-mcb-keep-tripping');
+
+const schemaGraph: SchemaNode[] = [
+  {
+    "@type": "Article",
+    "headline": "Why Does My MCB Keep Tripping? The Expert Diagnosis Guide",
+    "description": "An electrician-approved deep-dive into the five real reasons your MCB keeps tripping, complete with a diagnostic chart, the Bouncer analogy, Common Mistakes, and a safe reset checklist.",
+    "author": { "@type": "Organization", "name": "ElectricityLoadCalculator.com" },
+    "publisher": { "@type": "Organization", "name": "ElectricityLoadCalculator.com", "url": SITE },
+    "datePublished": "2026-06-20",
+    "dateModified": "2026-06-20",
+    "url": `${SITE}/knowledge-hub/mcb-sizing/why-does-my-mcb-keep-tripping`,
+  },
+  {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+      { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+      { "@type": "ListItem", "position": 3, "name": "MCB Sizing", "item": `${SITE}/knowledge-hub/mcb-sizing` },
+      { "@type": "ListItem", "position": 4, "name": "Why Does My MCB Keep Tripping?" }
+    ]
+  },
+  {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I replace a tripping 16A MCB with a 32A MCB to solve the problem?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Never. Upsizing the breaker without upgrading the wiring is one of the most dangerous DIY mistakes. The wire will overheat long before the 32A breaker reacts — the breaker is protecting the wire, not the appliances." }
+      },
+      {
+        "@type": "Question",
+        "name": "How many times can an MCB trip before it needs replacing?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A quality MCB (Schneider, Legrand, Siemens) is rated for 10,000 mechanical operations and 6,000 electrical operations under normal conditions. In practice, frequent short-circuit trips (which involve an arc flash inside the breaker) degrade it faster. If your MCB has tripped more than 20–30 times due to short circuits or severe overloads, it is worth having an electrician test it with a clamp meter." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does my AC only trip the breaker after 10–15 minutes?",
+        "acceptedAnswer": { "@type": "Answer", "text": "This is a classic slow thermal overload. The MCB's internal bimetallic strip heats up gradually as the circuit slightly exceeds its rating. Causes include: other appliances sharing the same AC circuit, low line voltage forcing the compressor to draw more amps, dirty condenser coils overworking the motor, or a slightly undersized MCB." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between an MCB and an RCCB/ELCB tripping?",
+        "acceptedAnswer": { "@type": "Answer", "text": "An MCB (Miniature Circuit Breaker) protects copper wiring from overloads and short circuits — it reacts to too much current. An RCCB (Residual Current Circuit Breaker) or ELCB detects even a tiny current leak to ground (as small as 30 mA) to protect human beings from electric shock — not wiring damage." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can a tripping MCB damage my appliances?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A thermal trip (overload) is gentle enough that most appliances are unaffected — the MCB simply cuts power before wires get hot. A magnetic trip (short circuit) is violent and can sometimes damage sensitive electronics connected to that circuit. Computers, TVs, and smart devices are at mild risk during a hard short-circuit trip. Using a surge protector on sensitive electronics is always advisable." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it safe to reset an MCB in the dark or without dry hands?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Never reset an MCB with wet hands, standing on a wet floor, or if the panel is in an area that has been exposed to water. The panel box itself might be energised from the incoming supply. Always use dry hands, stand on a dry surface, and use a torch — never your phone camera flash — to illuminate the panel. If in doubt, call an electrician." }
+      }
+    ]
+  }
+];
+
+const diagnosticSteps = [
+  {
+    behavior: 'Trips after 2–10 min of running',
+    type: 'Overload',
+    urgency: 'amber',
+    action: 'Unplug heavy secondary devices. Spread high-wattage appliances across different circuits.'
+  },
+  {
+    behavior: 'Trips instantly the moment a motor-driven device starts',
+    type: 'Inrush Surge',
+    urgency: 'amber',
+    action: 'Check if the MCB is Type B — swap it for a Type C of the same amperage. No change to wire needed.'
+  },
+  {
+    behavior: 'Trips instantly with a loud pop or a flash of light',
+    type: 'Short Circuit',
+    urgency: 'danger',
+    action: 'Unplug every device. Reset. Plug in one at a time to find the faulty appliance.'
+  },
+  {
+    behavior: 'Trips even when nothing is plugged in',
+    type: 'Wiring Fault',
+    urgency: 'danger',
+    action: 'Call an electrician immediately. Do not reset. There may be chewed wires or a loose terminal inside the wall.'
+  },
+  {
+    behavior: 'Trips during heavy rain or near damp / wet areas',
+    type: 'Ground / Water Fault',
+    urgency: 'danger',
+    action: 'Keep the circuit off until the area is completely dry. Inspect for moisture in junction boxes.'
+  },
+  {
+    behavior: 'Trips randomly under very light loads that worked fine before',
+    type: 'Worn-out MCB',
+    urgency: 'muted',
+    action: 'Have an electrician check current with a clamp meter when it trips. Replace if the reading is far below rating.'
+  },
+];
+---
+
+<KnowledgeHubLayout
+  title="Why Does My MCB Keep Tripping? The Expert Diagnosis Guide"
+  description="A homeowner's deep-dive into why circuit breakers trip. Covers overloads, short circuits, motor surges, ground faults, and aging breakers — with a trip-behaviour chart, Common Mistakes section, and a safe 4-step reset checklist."
+  keywords="why does my mcb keep tripping, circuit breaker keeps tripping, mcb trip diagnosis, overload short circuit ground fault, how to reset mcb safely"
+  breadcrumb={[
+    { label: 'Home',          href: '/' },
+    { label: 'Knowledge Hub', href: '/knowledge-hub' },
+    { label: 'MCB Sizing',    href: '/knowledge-hub/mcb-sizing' },
+    { label: 'Why MCB Keeps Tripping' },
+  ]}
+  toc={toc}
+  readingTime={8}
+  datePublished="2026-06-20"
+  dateModified="2026-06-20"
+  schemaGraph={schemaGraph}
+  relatedArticles={relatedArticles}
+  clusterSlug="mcb-sizing"
+  clusterTitle="MCB Sizing"
+  showProgressBar={true}
+  nextStep={{ clusterSlug: 'wire-sizing', slug: 'how-to-choose-the-right-wire-size', caption: 'Wire Sizing' }}
+>
+
+  <!-- ① QUICK ANSWER -->
+  <QuickAnswerBox id="quick-answer" heading="The Surprising Truth">
+    <p>
+      <strong>Your MCB isn't the problem. It's the messenger.</strong> When a breaker trips, it has
+      done its job perfectly — it has stopped your wiring from reaching a temperature that starts fires.
+      The problem is always <em>upstream</em> of the breaker.
+    </p>
+    <p class="mt-3">
+      Here's the one insight most people never learn: an MCB trips in two completely different ways,
+      and they mean entirely different things:
+    </p>
+    <ul class="mt-3 space-y-2.5 list-none text-sm leading-relaxed text-text-muted">
+      <li class="flex items-start gap-2.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color: #d97706;" aria-hidden="true"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
+        <span><strong class="text-text-primary">Thermal trip (slow):</strong> A bimetallic strip inside the MCB bends and trips after minutes of sustained overload. This is gentle — your wiring got warm but not dangerous.</span>
+      </li>
+      <li class="flex items-start gap-2.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-danger flex-shrink-0 mt-0.5" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span><strong class="text-text-primary">Magnetic trip (instant):</strong> An electromagnet triggers within milliseconds of a massive current spike. This is violent — something has short-circuited and current surged to dangerous levels instantly.</span>
+      </li>
+    </ul>
+    <p class="mt-4 text-sm">
+      Knowing <em>which</em> type triggered — and matching it to the five causes below — lets you
+      diagnose and fix the problem yourself in under 10 minutes. Read on.
+    </p>
+  </QuickAnswerBox>
+
+  <p class="mt-6">When a breaker trips it has done its job perfectly — it has stopped your wiring from overheating. The real question is always <em>why</em> it tripped. Here's how to find out.</p>
+
+  <!-- ② THE BOUNCER ANALOGY -->
+  <h2 id="the-bouncer">The Bouncer Analogy — How an MCB Really Works</h2>
+
+  <p>Picture your circuit breaker as the <strong>bouncer at a nightclub</strong> with a 16-person (16A) capacity limit. Each trip type is a different scenario at the door:</p>
+
+  <div class="example-box">
+    <p class="example-label">The Bouncer Analogy</p>
+    <p>
+      Your bouncer (the MCB) is guarding the entrance to your wiring. The club has a strict capacity
+      limit — let's say 16 people (16 Amps). Here's what happens in each scenario:
+    </p>
+    <ul class="space-y-4 mt-4 list-none">
+      <li class="flex items-start gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mt-1 flex-shrink-0" style="color: #d97706;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <span class="text-sm text-text-secondary leading-relaxed">
+          <strong>Overload:</strong> Guests keep trickling in all evening. By 1 AM, 18 people are inside.
+          The bouncer counts heads, gets uncomfortable, and at 2 AM finally steps in and clears the venue.
+          This is the <strong>thermal trip</strong> — slow, deliberate, based on accumulated heat.
+        </span>
+      </li>
+      <li class="flex items-start gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-danger mt-1 flex-shrink-0" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span class="text-sm text-text-secondary leading-relaxed">
+          <strong>Short circuit:</strong> A brawl breaks out. 200 people try to force through the door
+          at once. The bouncer reacts in milliseconds — complete shutdown, no negotiations.
+          This is the <strong>magnetic trip</strong> — violent, instant, non-negotiable.
+        </span>
+      </li>
+      <li class="flex items-start gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-accent mt-1 flex-shrink-0" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="text-sm text-text-secondary leading-relaxed">
+          <strong>Motor inrush (Type B MCB problem):</strong> A VIP group of 40 rushes the door
+          all at once on arrival but will thin out to 5 people inside. A well-trained bouncer (Type C MCB)
+          knows this is normal VIP behaviour and lets them pass after a half-second check. An over-eager
+          trainee bouncer (Type B MCB) panics and shuts the door — even though no real threat exists.
+        </span>
+      </li>
+      <li class="flex items-start gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-danger mt-1 flex-shrink-0" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span class="text-sm text-text-secondary leading-relaxed">
+          <strong>Ground fault (water/leakage):</strong> Someone sneaks in through a side window.
+          Your RCCB/ELCB (a specialist ground-fault bouncer) detects the intruder even if the MCB
+          didn't notice — because the person bypassed the front door count entirely.
+        </span>
+      </li>
+      <li class="flex items-start gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-text-muted mt-1 flex-shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+        <span class="text-sm text-text-secondary leading-relaxed">
+          <strong>Worn-out MCB:</strong> The bouncer is 15 years old, exhausted, and anxious. He starts
+          turning away guests at 9 people even though the limit is 16. His judgment has failed — not the club's rules.
+        </span>
+      </li>
+    </ul>
+    <p class="mt-4 text-sm text-text-secondary">
+      This analogy maps perfectly onto every cause below. Keep it in mind — it makes every
+      diagnosis instantly logical.
+    </p>
+  </div>
+
+  <!-- ③ REASON 1: OVERLOAD -->
+  <h2 id="reason-overload">1. Overloaded Circuits — The Slow Boil</h2>
+
+  <p>This is behind roughly <strong>80% of domestic MCB trips</strong>. A 16A circuit at 230V carries about <strong>3,680W safely</strong>. Exceed that and the MCB's internal bimetallic strip heats up gradually and trips — the more overloaded, the faster the trip.</p>
+
+  <div class="mistake-card mt-4">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Real-World Overload Scenario</strong>
+      <p class="text-sm text-text-muted">
+        Your living room has one 16 A circuit feeding the TV (100 W), a small speaker (50 W), and
+        a fan (75 W) — all perfectly fine. On a cold December evening, you plug in a room heater
+        (2,000 W). Everything still works. Then your partner runs a hair dryer (1,600 W) from the
+        same socket strip. The total is now 3,825 W — over the 3,680 W limit. Within 4–6 minutes,
+        the breaker's strip heats past threshold and trips. No sparks. No drama. Just a blackout.
+      </p>
+    </div>
+  </div>
+
+  <div class="example-box mt-4">
+    <strong class="text-text-primary block mb-1 text-sm">The Real Fix</strong>
+    <p class="text-xs text-text-muted">
+      The golden rule: <strong>heating appliances must never share a circuit</strong>. Room heaters,
+      hair dryers, kettles, irons, and microwaves all draw 1,000–2,500 W on their own. Plug them
+      into different circuit outlets in different rooms. Use our <strong>Electricity Load Calculator</strong>
+      to map out which of your appliances draw the most, and audit whether any single circuit is being
+      overloaded invisibly.
+    </p>
+  </div>
+
+  <!-- ④ REASON 2: INRUSH SURGE -->
+  <h2 id="reason-surge">2. Inrush Current & Motor Surge — The False Alarm</h2>
+
+  <p>This is the most <em>misdiagnosed</em> trip type — the symptom (trips the instant a device starts) looks identical to a short circuit. The cause is motor inrush: when a stationary motor starts, it briefly draws <strong>5–8× its running current</strong> for 0.05–0.3 seconds. A Type B MCB's magnetic trip fires at 3–5× rated current — so it sees the normal startup surge as a fault and trips. The motor is fine; the breaker just doesn't know the difference.</p>
+
+  <div class="mistake-card mt-4">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Real-World Inrush Scenario</strong>
+      <p class="text-sm text-text-muted">
+        A homeowner installs a new submersible water pump (1,100 W, 5 A running). The moment the
+        switch is flipped, the 16 A Type B MCB trips with a snap. The pump is new. The wiring is
+        new. An electrician is called — he checks for faults and finds none. He replaces the Type B
+        MCB with a <strong>Type C 16 A MCB</strong> (magnetic threshold: 5–10× rated current, built
+        to tolerate motor surges). The pump starts perfectly from that day forward. Total cost:
+        ₹80 and 15 minutes. Without this knowledge, homeowners spend weeks chasing ghost faults.
+      </p>
+    </div>
+  </div>
+
+  <div class="example-box mt-4">
+    <strong class="text-text-primary block mb-1 text-sm">The Real Fix</strong>
+    <p class="text-xs text-text-muted">
+      Look at the label printed on the face of your MCB. If it says <strong>B16</strong>, the "B"
+      is the curve type. Swap it for a <strong>C16</strong>. The Ampere rating stays the same —
+      so your wiring protection is unchanged. Only the magnetic trip threshold is wider, which is
+      exactly what motors need. For very large motors or compressors, a Type D MCB may be appropriate —
+      but always confirm with an electrician for industrial-scale equipment.
+    </p>
+  </div>
+
+  <!-- ⑤ REASON 3: SHORT CIRCUIT -->
+  <h2 id="reason-short">3. Short Circuits — The Emergency Stop</h2>
+
+  <p>In a short circuit, live wire connects directly to neutral — bypassing all resistance. Current surges to hundreds of Amps in milliseconds. The MCB's magnetic mechanism reacts in under 10ms and cuts the circuit. You hear a loud pop. That pop saved your home.</p>
+
+  <div class="mistake-card mt-4">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Real-World Short Circuit Scenario</strong>
+      <p class="text-sm text-text-muted">
+        A family's three-year-old electric iron has developed a hairline crack in the internal insulation
+        of its heating element. The live and neutral connections are 0.5 mm apart inside the press. The
+        moment the iron is switched on and the element heats up, the insulation gap closes — live touches
+        neutral. An arc flash happens inside the iron. The MCB trips with a sharp pop. The iron's plug
+        shows scorch marks. The MCB has saved the situation — but the iron must never be used again.
+      </p>
+    </div>
+  </div>
+
+  <div class="example-box mt-4">
+    <strong class="text-text-primary block mb-1 text-sm">The Real Fix — Isolation Test</strong>
+    <p class="text-xs text-text-muted">
+      After a short-circuit trip: <strong>1)</strong> Unplug every device on that circuit.
+      <strong>2)</strong> Reset the breaker. If it holds, the fault is in an appliance — not the wiring.
+      <strong>3)</strong> Plug devices back in one at a time, switching each on.
+      The device that trips the breaker the instant it's switched on has an internal short circuit.
+      Discard or have it professionally repaired — do not use it again. If the breaker trips even with
+      nothing plugged in, you have a wiring fault and need an electrician urgently.
+    </p>
+  </div>
+
+  <!-- ⑥ REASON 4: GROUND FAULTS -->
+  <h2 id="reason-ground">4. Ground Faults & Water Intrusion — The Hidden Leak</h2>
+
+  <p>A ground fault is live current finding an unintended path to earth — through a wet wall, a flooded junction box, or a corroded cable. The leaked current can be just 30–200 mA — not enough to trip an MCB, but <strong>30 mA through a human body can stop the heart</strong>. A 30 mA RCCB trips in under 30ms and is the only device that catches this. If your panel has no RCCB, install one.</p>
+
+  <div class="mistake-card mt-4">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Real-World Ground Fault Scenario</strong>
+      <p class="text-sm text-text-muted">
+        During monsoon season, a family's bathroom geyser circuit trips every time it's switched on.
+        Investigation reveals that rainwater has seeped into the outdoor cable conduit and pooled
+        inside the geyser's terminal box. The water has created a low-resistance path from the live
+        terminal to the metal geyser body. Anyone touching the geyser's tap is completing the
+        circuit. The RCCB trips — saving whoever would have touched it next. The fix: drain the
+        conduit, reseal the cable entry, and replace any corroded terminals.
+      </p>
+    </div>
+  </div>
+
+  <div class="example-box mt-4">
+    <strong class="text-text-primary block mb-1 text-sm">The Real Fix</strong>
+    <p class="text-xs text-text-muted">
+      <strong>Never reset a breaker that trips in wet conditions without fully drying and inspecting
+      the area first.</strong> Water and electricity sharing the same space is an emergency, not an
+      inconvenience. Ensure all outdoor, kitchen, and bathroom sockets have IP-rated weather-proof covers.
+      Verify your panel has a working 30 mA RCCB — test it monthly using the TEST button on the unit.
+      If your panel has no RCCB, have one installed — it's the single most important safety upgrade
+      a home can have.
+    </p>
+  </div>
+
+  <!-- ⑦ REASON 5: FAULTY MCB -->
+  <h2 id="reason-faulty">5. Aging or Weak Breakers — When the Guardian Gets Tired</h2>
+
+  <p>
+    Inside every MCB is a bimetallic strip — two metals bonded together that expand at different rates
+    when heated. When current exceeds the rated load, the strip bends and triggers the trip mechanism.
+    It's a beautifully simple design. But like any mechanical component under repeated thermal stress,
+    this strip ages. It loses its calibrated tension. A 16 A breaker that has tripped 50 times over
+    15 years may now trip reliably at 10 A — or at 8 A — without any fault in your wiring or appliances.
+  </p>
+  <p>
+    What makes this hard to diagnose is that the symptom — random trips under light load — looks
+    identical to an intermittent wiring fault. The key difference: <strong>a worn MCB trips across
+    sessions with no pattern, no pop, and no smell</strong>. The wiring is cool when you check it.
+    There are no scorch marks anywhere. Everything <em>looks</em> fine — because everything except
+    the breaker itself <em>is</em> fine.
+  </p>
+
+  <div class="mistake-card mt-4">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Real-World Weak Breaker Scenario</strong>
+      <p class="text-sm text-text-muted">
+        A 16 A breaker in a study room has been tripping every 3–4 days for two months. The room
+        runs only a laptop (90 W) and an LED desk lamp (12 W) — a total of 102 W, less than 0.5 A.
+        The wiring was replaced a year ago after renovation. An electrician clamps a current meter
+        on the circuit — it reads 0.44 A when the breaker trips. At 0.44 A on a 16 A breaker, the
+        breaker should never trip. The strip has failed. A replacement MCB of the same brand and
+        rating costs ₹120 and solves it permanently.
+      </p>
+    </div>
+  </div>
+
+  <div class="example-box mt-4">
+    <strong class="text-text-primary block mb-1 text-sm">The Real Fix</strong>
+    <p class="text-xs text-text-muted">
+      The clamp-meter test is the definitive diagnostic: measure actual current flowing when the breaker
+      trips. If the measured current is significantly below the MCB's amp rating, the breaker is
+      mis-calibrated and must be replaced. Always replace with the <strong>exact same ampere rating</strong>
+      from a reputable brand (Schneider Electric, Legrand, Siemens, Hager, or ABB). Do not upsize the rating —
+      the breaker rating must always match the wire's rated capacity, not your convenience.
+    </p>
+  </div>
+
+  <!-- ⑧ DIAGNOSTIC CHART -->
+  <h2 id="diagnostics">Trip Behaviour Chart — Your 60-Second Diagnosis</h2>
+  <p>Match the exact behaviour you observed to the most likely cause and first action:</p>
+
+  <div class="overflow-x-auto my-6 border border-border rounded-xl bg-card">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-base border-b border-border">
+          <th class="p-3 text-xs font-mono uppercase text-text-muted">What You Observed</th>
+          <th class="p-3 text-xs font-mono uppercase text-text-muted">Likely Cause</th>
+          <th class="p-3 text-xs font-mono uppercase text-accent font-bold">First Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border/50 text-sm">
+        {diagnosticSteps.map(step => (
+          <tr>
+            <td class="p-3 font-medium text-text-primary">{step.behavior}</td>
+            <td class="p-3">
+              <span class={`px-2 py-0.5 rounded text-xs font-mono font-semibold ${
+                step.urgency === 'amber' ? 'bg-base text-text-primary border border-border' :
+                step.urgency === 'muted' ? 'bg-text-muted/10 text-text-muted border border-border' :
+                                           'bg-danger/10 text-danger border border-danger/20'
+              }`}>{step.type}</span>
+            </td>
+            <td class="p-3 text-xs text-text-muted leading-relaxed">{step.action}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ⑨ SAFE RESET PROCEDURE -->
+  <h2 id="safely-reset">How to Safely Reset & Diagnose a Tripping MCB</h2>
+  <p>Follow this procedure every time a breaker trips — don't just flip it back up and hope for the best:</p>
+
+  <div class="space-y-3 my-6">
+    <div class="flex gap-4 p-4 rounded-xl border border-border bg-card">
+      <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center font-mono text-xs font-bold text-accent flex-shrink-0 mt-0.5">1</div>
+      <div>
+        <strong class="text-sm text-text-primary block mb-1">Switch Off Everything on the Affected Circuit</strong>
+        <span class="text-xs text-text-muted block leading-relaxed">
+          Go to the room that lost power. Switch off all appliances at their sockets — don't just unplug,
+          switch them off first. This ensures that when power is restored, no appliance starts drawing
+          current simultaneously (which could cause another trip from combined inrush).
+        </span>
+      </div>
+    </div>
+
+    <div class="flex gap-4 p-4 rounded-xl border border-border bg-card">
+      <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center font-mono text-xs font-bold text-accent flex-shrink-0 mt-0.5">2</div>
+      <div>
+        <strong class="text-sm text-text-primary block mb-1">Find the Tripped MCB — and Inspect It</strong>
+        <span class="text-xs text-text-muted block leading-relaxed">
+          Open the distribution board. The tripped MCB will be in the DOWN or MID position. Before
+          touching it, check for: scorch marks on the switch face, a burning smell from the panel,
+          or any sign of water inside the board. If any of these are present, <strong>do not reset</strong> —
+          call an electrician.
+        </span>
+      </div>
+    </div>
+
+    <div class="flex gap-4 p-4 rounded-xl border border-border bg-card">
+      <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center font-mono text-xs font-bold text-accent flex-shrink-0 mt-0.5">3</div>
+      <div>
+        <strong class="text-sm text-text-primary block mb-1">Reset the MCB Properly — One Move, Two Steps</strong>
+        <span class="text-xs text-text-muted block leading-relaxed">
+          MCBs have an internal spring latch that must be re-engaged before they can be switched on.
+          Push the handle firmly <strong>DOWN</strong> (to OFF) until you feel a click — even if it
+          looks like it's already off. Then push it firmly <strong>UP</strong> (to ON). If it doesn't
+          stay up, the fault is still present and resetting is futile until the cause is resolved.
+        </span>
+      </div>
+    </div>
+
+    <div class="flex gap-4 p-4 rounded-xl border border-border bg-card">
+      <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center font-mono text-xs font-bold text-accent flex-shrink-0 mt-0.5">4</div>
+      <div>
+        <strong class="text-sm text-text-primary block mb-1">Reconnect Appliances One at a Time</strong>
+        <span class="text-xs text-text-muted block leading-relaxed">
+          With the MCB reset, plug devices back in and switch them on one at a time, leaving a 30-second
+          gap between each. If a specific device trips the breaker the instant it's switched on →
+          short circuit in that device. If the breaker holds for 5–10 minutes then trips → overload
+          from cumulative draw. If it trips with nothing plugged in → wiring fault, call an electrician.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑩ COMMON MISTAKES -->
+  <h2 id="mistakes">Common Mistakes Homeowners Make After a Trip</h2>
+  <p>These are the most dangerous and most frequent errors — avoid every one of them:</p>
+
+  <div class="mistake-card mt-4">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Replacing a 16A MCB with a 32A to "stop the tripping"</strong>
+      <p class="text-sm text-text-muted">
+        This is the most dangerous mistake in home electrical DIY. The MCB's job is to protect the
+        <em>wiring</em>, not your convenience. Your 16 A circuit has 2.5 mm² copper conductors that
+        can safely carry 16 A. If you install a 32 A breaker, you've just told the guardian to allow
+        twice as many people into a club that physically holds half of them. The wire overheats inside
+        your wall — invisible, silent, and eventually igniting insulation. A wire fire inside a wall
+        is the most difficult type of house fire to detect and control.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card mt-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Resetting the breaker immediately after a short circuit without investigating</strong>
+      <p class="text-sm text-text-muted">
+        If a breaker tripped with a pop, the fault that caused the arc flash may still be present.
+        Resetting without isolating the cause is like restarting a car engine when you smell burning —
+        technically possible, practically dangerous. Always unplug everything first, inspect plugs
+        for scorch marks, check for exposed wiring in sockets, and only then reset.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card mt-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Assuming the MCB is faulty and replacing it unnecessarily</strong>
+      <p class="text-sm text-text-muted">
+        The instinct to "replace the breaker" is often the first (wrong) instinct. A properly tripping
+        MCB is doing exactly what it was designed to do. Replacing a correctly functioning breaker with
+        a higher-rated one merely moves the problem — and hides the real fault until a wire fire develops.
+        Only replace an MCB when a clamp-meter test confirms it's tripping below its rated current.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card mt-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Confusing an MCB trip with an RCCB trip and diagnosing the wrong cause</strong>
+      <p class="text-sm text-text-muted">
+        A tripped MCB means overcurrent — your load exceeded the rating. A tripped RCCB means leakage
+        current to earth — a completely different fault type. On many Indian panels, both look like
+        switches that have snapped down. Read the labels: MCBs have their amp rating printed (6A, 16A,
+        32A). The RCCB is usually a wider switch labelled "RCCB," "ELCB," or showing a sensitivity
+        figure like "30 mA." Diagnosing an RCCB trip as an MCB overload — or vice versa — wastes hours
+        and misses the actual hazard.
+      </p>
+    </div>
+  </div>
+
+  <div class="mistake-card mt-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-danger flex-shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong class="text-text-primary block mb-1">Resetting with wet hands or near water after a monsoon-related trip</strong>
+      <p class="text-sm text-text-muted">
+        The incoming supply to your panel is always live — even when every MCB is tripped. If water
+        has entered the panel, touching the internals with wet hands while the incomer is live can
+        be fatal. After a flood or heavy water ingress, the only safe action is to call your electricity
+        utility to disconnect the supply from the meter before any panel inspection is done.
+      </p>
+    </div>
+  </div>
+
+  <KnowledgeHubCTA variant="inline" />
+
+  <KnowledgeHubCTA id="use-the-calculator" />
+
+  <!-- ⑪ FAQS -->
+  <h2 id="faqs">Frequently Asked Questions</h2>
+
+  <div class="kh-faq">
+    <details>
+      <summary>
+        Can I replace a tripping 16A MCB with a 32A MCB to solve the problem?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        Never — this is one of the most dangerous electrical DIY mistakes you can make. The MCB
+        does not protect the appliances; it protects the <em>wiring</em>. The wire gauge in your
+        wall is sized to carry a specific maximum current. A 32A breaker will allow twice the rated
+        current to flow through wire designed for 16A — the wire overheats inside the wall, melts
+        its insulation, and can start a fire long before the 32A breaker even thinks about tripping.
+        The only correct fix for a regularly tripping MCB is to find and eliminate the cause.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        How many times can an MCB trip before it needs replacing?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        Quality MCBs (Schneider, Legrand, Siemens, ABB) are rated for <strong>10,000 mechanical
+        operations</strong> and <strong>6,000 electrical operations</strong> under normal conditions.
+        However, short-circuit trips are far more degrading than overload trips — each one involves
+        an arc flash inside the breaker that physically erodes the contact surfaces. If your MCB has
+        experienced more than 20–30 short-circuit trips over its lifetime, it's worth having an
+        electrician verify its calibration with a clamp-meter test. Breakers older than 15 years
+        in a home with frequent trips should be proactively replaced regardless.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Why does my AC only trip the breaker after 10–15 minutes of running?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        This is a textbook slow thermal overload. The MCB's bimetallic strip needs time to accumulate
+        enough heat before it bends to the trip point. Common causes for ACs:
+        <ul class="mt-2 space-y-1 text-sm">
+          <li>→ Other devices sharing the same AC circuit (check if a fan, charger, or TV is on the same MCB)</li>
+          <li>→ Low line voltage below 200 V forcing the compressor to draw more amps for the same cooling output</li>
+          <li>→ Dirty condenser coils (outside unit) making the compressor work harder</li>
+          <li>→ The MCB is slightly undersized for the AC model — check the AC's rated current on its spec sticker</li>
+        </ul>
+        Start by checking line voltage with a multimeter during AC operation — anything below 210 V
+        on a 230 V system is a problem worth reporting to your electricity utility.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        What's the difference between an MCB trip and an RCCB/ELCB trip?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        They protect against completely different threats. An <strong>MCB</strong> responds to
+        <em>overcurrent</em> — too many amps for the wire to handle — and prevents fires.
+        An <strong>RCCB/ELCB</strong> responds to <em>leakage current</em> — any current that leaves
+        the circuit (e.g., through a person touching a live surface) — and prevents electrocution.
+        An MCB will NOT trip on a 30 mA body shock current (it needs thousands of mA to react).
+        An RCCB trips at 30 mA in under 30 milliseconds — fast enough to prevent cardiac arrest.
+        In a well-designed panel, both are present: the RCCB protects people; the MCBs protect wiring.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Can a tripping MCB damage my appliances?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        It depends on the trip type. A <strong>thermal trip</strong> (overload) simply cuts power
+        gracefully — similar to unplugging a device. Most appliances, including computers and TVs,
+        handle this without any issue. A <strong>magnetic trip</strong> (short circuit) is violent —
+        the current spikes massively for a few milliseconds before the breaker opens. This can
+        sometimes damage sensitive electronics (particularly those without surge protection) connected
+        to the same circuit. Smart TVs, desktop computers, and audio equipment are at mild risk.
+        Using a quality surge-protected power strip for sensitive electronics is always a good
+        precaution — it provides a second line of defence between your appliances and the mains.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        Is it safe to reset an MCB with wet hands or in the dark?
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="faq-chevron w-4 h-4"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+      </summary>
+      <div class="faq-body">
+        The MCB toggle itself is safe to touch with dry hands — it's a plastic handle with no exposed
+        live parts. <strong>However, never reach inside or behind the panel</strong> with wet hands
+        or on a wet floor — the busbars behind the MCBs are always energised from the incoming supply,
+        even when every MCB is off. Use a torch (not your phone camera flash, which is too dim and
+        distracting) to properly illuminate the panel. If the trip happened because of flooding, a
+        rainstorm, or any visible water in or near the panel, <strong>do not touch anything</strong>
+        — contact your electricity utility to disconnect the incoming supply first.
+      </div>
+    </details>
+  </div>
+
+  <!-- Sidebar navigation -->
+  <Fragment slot="sidebar-nav">
+    {MCB_SIZING_ARTICLES.map(a => (
+      <a
+        href={`/knowledge-hub/mcb-sizing/${a.slug}`}
+        class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.slug === 'why-does-my-mcb-keep-tripping' ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+        data-astro-prefetch="hover"
+      >
+        <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.slug === 'why-does-my-mcb-keep-tripping' ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+        {a.title}
+      </a>
+    ))}
+  </Fragment>
+</KnowledgeHubLayout>
