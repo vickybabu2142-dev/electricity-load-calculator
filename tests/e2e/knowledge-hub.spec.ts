@@ -19,9 +19,9 @@ test.describe('Knowledge Hub E2E Tests', () => {
     const clusterCards = page.locator('a[aria-label*="Explore"], a[aria-label*="Coming Soon"]');
     await expect(clusterCards).toHaveCount(4);
     
-    // Check that 'Coming Soon' badges exist for 2 clusters
+    // Check that 'Coming Soon' badges do not exist anymore
     const comingSoonBadges = page.locator('#topics').locator('text=Coming Soon');
-    await expect(comingSoonBadges).toHaveCount(2);
+    await expect(comingSoonBadges).toHaveCount(0);
     
     // Check Featured Tool CTA presence
     await expect(page.locator('main h2:has-text("Electricity Load Calculator")')).toBeVisible();
@@ -43,7 +43,7 @@ test.describe('Knowledge Hub E2E Tests', () => {
 
     // Check that other articles list is present
     const articleLinks = page.locator('section[aria-labelledby="guides-heading"] a[href^="/knowledge-hub/load-calculation/"]');
-    await expect(articleLinks).toHaveCount(5);
+    await expect(articleLinks).toHaveCount(7);
 
     // Verify quick reference wattage table is present
     await expect(page.locator('table')).toBeVisible();
@@ -73,6 +73,42 @@ test.describe('Knowledge Hub E2E Tests', () => {
     await expect(sidebarCTA).toHaveAttribute('href', '/');
   });
 
+  test('Wire Sizing cluster index page loads and renders correctly', async ({ page }) => {
+    await page.goto('/knowledge-hub/wire-sizing');
+
+    // Check header title
+    await expect(page.locator('h1').first()).toContainText('Wire & Cable Sizing');
+
+    // Check Pillar Guide card
+    await expect(page.locator('span:has-text("Pillar Guide")')).toBeVisible();
+
+    // Check that upcoming section is present
+    await expect(page.locator('text=Upcoming Wire Sizing Guides')).toBeVisible();
+
+    // Verify sidebar "Free Tool" card is visible
+    const sidebarCTA = page.locator('aside a:has-text("Start Sizing")');
+    await expect(sidebarCTA).toBeVisible();
+    await expect(sidebarCTA).toHaveAttribute('href', '/');
+  });
+
+  test('Solar & Inverter cluster index page loads and renders correctly', async ({ page }) => {
+    await page.goto('/knowledge-hub/solar-inverter');
+
+    // Check header title
+    await expect(page.locator('h1').first()).toContainText('Solar & Inverter');
+
+    // Check Pillar Guide card
+    await expect(page.locator('span:has-text("Pillar Guide")')).toBeVisible();
+
+    // Check that upcoming section is present
+    await expect(page.locator('text=Upcoming Solar & Inverter Guides')).toBeVisible();
+
+    // Verify sidebar "Free Tool" card is visible
+    const sidebarCTA = page.locator('aside a:has-text("Start Sizing")');
+    await expect(sidebarCTA).toBeVisible();
+    await expect(sidebarCTA).toHaveAttribute('href', '/');
+  });
+
   // Array of all published articles across clusters
   const articles = [
     { cluster: 'load-calculation', slug: 'how-to-calculate-electrical-load-for-a-house', title: 'Load Calculation' },
@@ -84,7 +120,10 @@ test.describe('Knowledge Hub E2E Tests', () => {
     { cluster: 'load-calculation', slug: 'ac-power-consumption-and-load-explained', title: 'Load Calculation' },
     { cluster: 'load-calculation', slug: 'electrical-mistakes-home-builders-regret', title: 'Load Calculation' },
     { cluster: 'mcb-sizing', slug: 'how-to-choose-the-right-mcb-rating', title: 'MCB Sizing' },
-    { cluster: 'mcb-sizing', slug: 'why-does-my-mcb-keep-tripping', title: 'MCB Sizing' }
+    { cluster: 'mcb-sizing', slug: 'why-does-my-mcb-keep-tripping', title: 'MCB Sizing' },
+    { cluster: 'wire-sizing', slug: 'how-to-choose-the-right-wire-size', title: 'Wire Sizing' },
+    { cluster: 'solar-inverter', slug: 'how-to-size-a-solar-panel-system-for-home', title: 'Solar & Inverter' },
+    { cluster: 'solar-inverter', slug: 'how-to-choose-the-right-inverter-capacity', title: 'Solar & Inverter' }
   ];
 
   for (const article of articles) {
@@ -135,29 +174,4 @@ test.describe('Knowledge Hub E2E Tests', () => {
     });
   }
 
-  // Stubs for Phase 2 clusters
-  const stubs = [
-    { slug: 'wire-sizing', title: 'Wire & Cable Sizing' },
-    { slug: 'solar-inverter', title: 'Solar & Inverter Sizing' }
-  ];
-
-  for (const stub of stubs) {
-    test(`Stub Page [${stub.slug}] loads and shows Coming Soon state`, async ({ page }) => {
-      await page.goto(`/knowledge-hub/${stub.slug}`);
-
-      // Verify main heading has the correct title
-      await expect(page.locator('h1').first()).toContainText(stub.title);
-
-      // Verify "Coming Soon" badge is present
-      await expect(page.locator('main').locator('text=Coming Soon').first()).toBeVisible();
-
-      // Verify there are upcoming topics listed
-      await expect(page.locator('text=What\'s Coming')).toBeVisible();
-
-      // Verify free calculator CTA is present
-      const calcCTA = page.locator('main a.btn-primary[href="/"]');
-      await expect(calcCTA).toBeVisible();
-      await expect(calcCTA).toContainText('Try Free');
-    });
-  }
 });

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ClusterCard from '@/components/ClusterCard.astro';
-import { CLUSTERS, LOAD_CALC_ARTICLES, MCB_SIZING_ARTICLES } from '@/data/knowledgeHub';
+import { CLUSTERS, LOAD_CALC_ARTICLES, MCB_SIZING_ARTICLES, WIRE_SIZING_ARTICLES, SOLAR_INVERTER_ARTICLES, getPillarArticle } from '@/data/knowledgeHub';
 
 export const prerender = true;
 
@@ -62,8 +62,12 @@ const featuredArticles = [
     clusterSlug: 'mcb-sizing'
   },
   {
-    ...LOAD_CALC_ARTICLES.find(a => a.slug === 'electrical-load-chart-for-home-appliances')!,
-    clusterSlug: 'load-calculation'
+    ...WIRE_SIZING_ARTICLES.find(a => a.isPillar)!,
+    clusterSlug: 'wire-sizing'
+  },
+  {
+    ...SOLAR_INVERTER_ARTICLES.find(a => a.isPillar)!,
+    clusterSlug: 'solar-inverter'
   }
 ];
 
@@ -129,17 +133,25 @@ const totalClusters = CLUSTERS.length;
       </div>
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      {CLUSTERS.map(cluster => (
-        <ClusterCard
-          slug={cluster.slug}
-          title={cluster.title}
-          shortTitle={cluster.shortTitle}
-          description={cluster.description}
-          iconPath={cluster.iconPath}
-          articleCount={cluster.articles.length}
-          comingSoon={cluster.comingSoon}
-        />
-      ))}
+      {CLUSTERS.map(cluster => {
+        const pillarArticle = getPillarArticle(cluster.slug);
+        const targetHref = pillarArticle
+          ? `/knowledge-hub/${cluster.slug}/${pillarArticle.slug}`
+          : `/knowledge-hub/${cluster.slug}`;
+
+        return (
+          <ClusterCard
+            slug={cluster.slug}
+            title={cluster.title}
+            shortTitle={cluster.shortTitle}
+            description={cluster.description}
+            iconPath={cluster.iconPath}
+            articleCount={cluster.articles.length}
+            comingSoon={cluster.comingSoon}
+            href={targetHref}
+          />
+        );
+      })}
     </div>
   </section>
 
@@ -181,7 +193,7 @@ const totalClusters = CLUSTERS.length;
       <h2 class="font-display font-bold text-3xl text-text-primary">Featured Guides</h2>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
       {featuredArticles.map((article, i) => (
         <a
           href={`/knowledge-hub/${article.clusterSlug}/${article.slug}`}
@@ -213,6 +225,12 @@ const totalClusters = CLUSTERS.length;
       </a>
       <a href="/knowledge-hub/mcb-sizing" class="btn-secondary px-6 py-2.5 text-sm">
         View MCB Sizing Guides →
+      </a>
+      <a href="/knowledge-hub/wire-sizing" class="btn-secondary px-6 py-2.5 text-sm">
+        View Wire Sizing Guides →
+      </a>
+      <a href="/knowledge-hub/solar-inverter" class="btn-secondary px-6 py-2.5 text-sm">
+        View Solar &amp; Inverter Guides →
       </a>
     </div>
   </section>

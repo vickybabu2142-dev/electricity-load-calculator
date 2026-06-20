@@ -1,15 +1,17 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
+import KnowledgeHubCTA from '@/components/KnowledgeHubCTA.astro';
+import { WIRE_SIZING_ARTICLES, CLUSTERS } from '@/data/knowledgeHub';
 
 export const prerender = true;
 
+const SITE = 'https://electricityloadcalculator.com';
+const cluster = CLUSTERS.find(c => c.slug === 'wire-sizing')!;
+const pillar = WIRE_SIZING_ARTICLES.find(a => a.isPillar)!;
+const supporting = WIRE_SIZING_ARTICLES.filter(a => !a.isPillar);
+
 const comingTopics = [
-  {
-    icon: 'ruler',
-    title: 'How to Choose the Right Wire Gauge',
-    desc: 'A practical guide to selecting copper wire cross-section (sq.mm) based on current load, cable run length, and Indian wiring standards.',
-  },
   {
     icon: 'snowflake',
     title: 'Cable Sizing for Air Conditioners',
@@ -39,8 +41,6 @@ const comingTopics = [
 
 function getTopicIcon(icon: string) {
   switch (icon) {
-    case 'ruler':
-      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><path d="M21.3 15.3a2.82 2.82 0 0 1 0 4c-1 1-2.5 1-3.5 0L2.8 4.3a2.82 2.82 0 0 1 0-4c1-1 2.5-1 3.5 0Z"/><path d="m5.6 11.1 1.4-1.4"/><path d="m7.2 12.5 1.4-1.4"/><path d="m8.8 13.9 1.4-1.4"/><path d="m10.4 15.3 1.4-1.4"/><path d="m12 16.7 1.4-1.4"/><path d="m13.6 18.1 1.4-1.4"/></svg>`;
     case 'snowflake':
       return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-accent" aria-hidden="true"><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/><path d="m20 16-4-4 4-4"/><path d="m4 8 4 4-4 4"/><path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/></svg>`;
     case 'compare':
@@ -56,25 +56,38 @@ function getTopicIcon(icon: string) {
   }
 }
 
-const SITE = 'https://electricityloadcalculator.com';
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE },
+    { "@type": "ListItem", "position": 2, "name": "Knowledge Hub", "item": `${SITE}/knowledge-hub` },
+    { "@type": "ListItem", "position": 3, "name": "Wire Sizing" },
+  ],
+};
 
 const schemaGraph = [
   {
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
-      { '@type': 'ListItem', position: 2, name: 'Knowledge Hub', item: `${SITE}/knowledge-hub` },
-      { '@type': 'ListItem', position: 3, name: 'Wire Sizing' },
-    ],
+    "@type": "CollectionPage",
+    "name": "Wire & Cable Sizing Guides",
+    "description": "Learn how to choose the correct wire size (sq.mm) and cable gauge for home appliances and circuits safely.",
+    "url": `${SITE}/knowledge-hub/wire-sizing`,
+    "breadcrumb": breadcrumbSchema,
+    "hasPart": WIRE_SIZING_ARTICLES.map(a => ({
+      "@type": "Article",
+      "name": a.title,
+      "url": `${SITE}/knowledge-hub/wire-sizing/${a.slug}`,
+      "description": a.description,
+    })),
   },
 ];
 ---
 
 <BaseLayout
-  title="Wire Sizing Guides — Coming Soon | Electrical Knowledge Hub"
-  description="In-depth guides on wire gauge selection, cable sizing for AC and home wiring, copper vs aluminium conductors, voltage drop calculations, and derating factors. Coming soon."
+  title="Wire & Cable Sizing Guides — Electrical Knowledge Hub"
+  description="Master home wire sizing. Learn how to choose the correct copper wire size in sq.mm for lights, sockets, ACs, and main meters using safety standards."
   keywords="wire sizing, cable sizing, wire gauge selection, copper wire for home, cable size for AC, voltage drop calculation, wiring standards India"
   schemaGraph={schemaGraph}
+  breadcrumbSchema={breadcrumbSchema}
 >
   <Breadcrumb items={[
     { label: 'Home', href: '/' },
@@ -82,174 +95,181 @@ const schemaGraph = [
     { label: 'Wire Sizing' },
   ]} />
 
-  <main class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-8 pb-24">
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-6 pb-20">
 
-    <!-- Hero -->
-    <div class="text-center mb-16 relative">
-      <div
-        class="absolute inset-0 -z-10 pointer-events-none"
-        aria-hidden="true"
-        style="background: radial-gradient(ellipse 60% 40% at 50% 30%, color-mix(in srgb, var(--accent), transparent 88%), transparent);"
-      ></div>
-
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent/10 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
-        <span class="text-[11px] font-mono uppercase tracking-widest text-accent">Coming Soon</span>
-      </div>
-
-      <h1 class="font-display font-bold text-4xl sm:text-5xl text-text-primary mb-4 leading-tight">
-        Wire &amp; Cable Sizing
-      </h1>
-      <p class="text-text-secondary text-lg max-w-2xl mx-auto leading-relaxed">
-        Engineering-accurate, beginner-friendly guides on selecting the right cable size for every
-        circuit in your home — from lighting to air conditioners to main supply feeders.
+    <!-- Cluster Hero -->
+    <div class="max-w-4xl mb-12">
+      <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted mb-2 flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 text-accent" aria-hidden="true">
+          <path d="M4 12h16M4 6h16M4 18h16" />
+        </svg>
+        Knowledge Hub / Wire Sizing
       </p>
+      <h1 class="font-display font-bold text-4xl sm:text-5xl text-text-primary leading-tight tracking-tight mb-4">
+        Wire &amp; Cable <span class="text-accent">Sizing</span> Guides
+      </h1>
+      <p class="text-text-muted text-base sm:text-lg leading-relaxed max-w-2xl mb-6">
+        Beginner-friendly, engineering-accurate guides on selecting the correct copper wire size (sq.mm) for residential electrical circuits, air conditioners, power points, and lighting.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href={`/knowledge-hub/wire-sizing/${pillar.slug}`} class="btn-primary px-5 py-2.5 text-sm">
+          Read the Pillar Guide
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+        </a>
+        <a href="/" class="btn-secondary px-5 py-2.5 text-sm">Use Cable Sizing Calculator</a>
+      </div>
     </div>
 
-    <!-- Topics preview grid -->
-    <section aria-labelledby="topics-heading" class="mb-16">
-      <h2 id="topics-heading" class="font-display font-bold text-2xl text-text-primary mb-2 text-center">
-        What's Coming
-      </h2>
-      <p class="text-text-muted text-sm text-center mb-8">
-        These guides are being researched and written to Indian wiring standards (IS 732, IS 694). Bookmark this page to read them first.
-      </p>
+    <div class="flex gap-8 xl:gap-12 items-start">
+      <!-- Main Content -->
+      <div class="min-w-0 flex-1">
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {comingTopics.map((topic) => (
-          <div class="group relative rounded-2xl border border-border bg-card p-5 overflow-hidden hover:border-accent/30 transition-all duration-300 hover:-translate-y-0.5">
-            <div
-              class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
-              style="background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent), transparent 94%), transparent 70%);"
-              aria-hidden="true"
-            ></div>
-
-            <div class="relative">
-              <div class="mb-3" aria-hidden="true" set:html={getTopicIcon(topic.icon)} />
-              <span class="inline-block text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-border text-text-faint mb-2">
-                Upcoming
+        <!-- Pillar Article (featured) -->
+        <section class="mb-10" aria-labelledby="pillar-heading">
+          <h2 id="pillar-heading" class="font-mono text-[10px] uppercase tracking-[0.2em] text-accent mb-4 flex items-center gap-2">
+            <span class="w-4 h-px bg-accent" aria-hidden="true"></span>
+            Featured Guide
+          </h2>
+          <a
+            href={`/knowledge-hub/wire-sizing/${pillar.slug}`}
+            class="group block rounded-xl border border-border bg-card p-6 sm:p-8 hover:border-accent/40 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            style="box-shadow: 0 4px 32px -8px color-mix(in srgb, var(--accent), transparent 85%);"
+            data-astro-prefetch="hover"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-[9px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 text-accent" aria-hidden="true">
+                  <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+                Pillar Guide
               </span>
-              <h3 class="font-display font-semibold text-base text-text-primary mb-1.5 leading-snug">
-                {topic.title}
-              </h3>
-              <p class="text-xs text-text-muted leading-relaxed">{topic.desc}</p>
+              <span class="text-[10px] font-mono text-text-faint">{pillar.readingTime} min read</span>
             </div>
+            <h3 class="font-display font-bold text-2xl text-text-primary group-hover:text-accent transition-colors mb-3 leading-tight">
+              {pillar.title}
+            </h3>
+            <p class="text-text-muted leading-relaxed mb-5">{pillar.description}</p>
+            <div class="flex items-center gap-2 text-sm text-accent font-medium">
+              Read complete guide
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" aria-hidden="true"><path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/></svg>
+            </div>
+          </a>
+        </section>
+
+        <!-- All Guides (Supporting) -->
+        {supporting.length > 0 && (
+          <section aria-labelledby="all-guides-heading" class="mb-10">
+            <h2 id="all-guides-heading" class="font-display font-bold text-2xl text-text-primary mb-5 flex items-center gap-3">
+              <span class="w-1 h-6 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+              All Wire Sizing Guides
+            </h2>
+            <div class="grid sm:grid-cols-2 gap-4">
+              {supporting.map((article, i) => (
+                <a
+                  href={`/knowledge-hub/wire-sizing/${article.slug}`}
+                  class="group block rounded-xl border border-border bg-card p-5 hover:border-accent/40 hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  data-astro-prefetch="hover"
+                >
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-[10px] font-mono text-text-faint">Guide {String(i + 2).padStart(2, '0')}</span>
+                    <span class="text-[10px] font-mono text-text-faint">{article.readingTime} min</span>
+                  </div>
+                  <h3 class="font-display font-semibold text-base text-text-primary group-hover:text-accent transition-colors mb-2 leading-snug">
+                    {article.title}
+                  </h3>
+                  <p class="text-xs text-text-muted leading-relaxed line-clamp-2">{article.description}</p>
+                  <p class="mt-3 text-xs text-accent flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Read
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="currentColor" class="w-3 h-3" aria-hidden="true"><path fill-rule="evenodd" d="M3.22 8.53a.75.75 0 0 1 0-1.06l2.22-2.22-2.22-2.22a.75.75 0 1 1 1.06-1.06l2.75 2.75a.75.75 0 0 1 0 1.06l-2.75 2.75a.75.75 0 0 1-1.06 0Z" clip-rule="evenodd"/></svg>
+                  </p>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- Upcoming Guides -->
+        <section aria-labelledby="guides-heading">
+          <h2 id="guides-heading" class="font-display font-bold text-2xl text-text-primary mb-5 flex items-center gap-3">
+            <span class="w-1 h-6 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            Upcoming Wire Sizing Guides
+          </h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {comingTopics.map((topic) => (
+              <div
+                class="group block rounded-xl border border-border bg-card/60 p-5 overflow-hidden hover:border-accent/20 transition-all duration-200"
+              >
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-[10px] font-mono text-text-faint flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-text-faint" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    Upcoming
+                  </span>
+                  <span class="text-[9px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded border border-border text-text-faint bg-base/40">Soon</span>
+                </div>
+                <h3 class="font-display font-semibold text-base text-text-primary mb-2 leading-snug">
+                  {topic.title}
+                </h3>
+                <p class="text-xs text-text-muted leading-relaxed line-clamp-2">{topic.desc}</p>
+              </div>
+            ))}
           </div>
-        ))}
+        </section>
+
+        <!-- Calculator CTA -->
+        <KnowledgeHubCTA />
+
+        <!-- Other Clusters -->
+        <section class="mt-12 pt-8 border-t border-border" aria-labelledby="other-clusters-heading">
+          <h2 id="other-clusters-heading" class="font-display font-bold text-lg text-text-primary mb-4">Explore Other Topics</h2>
+          <div class="flex flex-wrap gap-3">
+            {[
+              { label: 'Load Calculation', href: '/knowledge-hub/load-calculation' },
+              { label: 'MCB Sizing', href: '/knowledge-hub/mcb-sizing' },
+              { label: 'Solar & Inverter', href: '/knowledge-hub/solar-inverter' },
+              { label: 'All Topics', href: '/knowledge-hub' },
+            ].map(link => (
+              <a href={link.href} class="btn-secondary text-sm px-4 py-2" data-astro-prefetch="hover">{link.label} →</a>
+            ))}
+          </div>
+        </section>
       </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="grid md:grid-cols-2 gap-6 mb-16">
-
-      <div
-        class="rounded-2xl border border-accent/30 bg-card p-6 relative overflow-hidden"
-        style="box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 85%), 0 4px 24px -6px color-mix(in srgb, var(--accent), transparent 80%);"
-      >
-        <div
-          class="absolute top-0 right-0 w-32 h-32 pointer-events-none"
-          aria-hidden="true"
-          style="background: radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--accent), transparent 80%), transparent 60%);"
-        ></div>
-        <div class="relative">
+      <!-- Sidebar -->
+      <aside class="hidden xl:block w-72 flex-shrink-0 sticky top-24">
+        <div class="rounded-xl border border-border bg-card p-5 mb-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
           <div class="flex items-center gap-2 mb-3">
             <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent">
-                <path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Z" clip-rule="evenodd" />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true"><path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z"/></svg>
             </div>
-            <span class="text-[10px] font-mono uppercase tracking-widest text-accent">Stay Updated</span>
+            <p class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</p>
           </div>
-          <h2 class="font-display font-bold text-lg text-text-primary mb-2">
-            Want to know when it's ready?
-          </h2>
-          <p class="text-sm text-text-muted leading-relaxed mb-4">
-            Bookmark this page or check back regularly. Wire &amp; Cable Sizing guides will be published
-            here as soon as they pass our editorial and technical review process.
-          </p>
-          <p class="text-xs text-text-faint leading-relaxed">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-accent inline-block mr-1.5 align-middle -translate-y-[1px]" aria-hidden="true">
-              <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .6 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
-              <path d="M9 18h6" />
-              <path d="M10 22h4" />
-            </svg>
-            <strong class="text-text-muted">In the meantime:</strong> Our free calculator already
-            recommends the correct cable size for your specific load — try it now.
-          </p>
+          <p class="font-display font-bold text-base text-text-primary mb-1.5">Cable Sizing Calculator</p>
+          <p class="text-xs text-text-muted leading-relaxed mb-4">Determine standard copper wire sq.mm sizes and circuit breakers for your home appliances.</p>
+          <a href="/" class="btn-primary w-full text-sm py-2.5 justify-center" data-astro-prefetch="hover">
+            Start Sizing →
+          </a>
         </div>
-      </div>
-
-      <div class="rounded-2xl border border-border bg-card p-6 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-3">
-            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 border border-accent/30">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent" aria-hidden="true">
-                <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
-              </svg>
-            </div>
-            <span class="text-[10px] font-mono uppercase tracking-widest text-accent">Free Tool</span>
-          </div>
-          <h2 class="font-display font-bold text-lg text-text-primary mb-2">
-            Get Cable Size Recommendations Now
-          </h2>
-          <p class="text-sm text-text-muted leading-relaxed mb-4">
-            Our Electricity Load Calculator gives you instant cable sizing recommendations based on
-            your actual connected load — completely free, no sign-up required.
+        <div class="rounded-xl border border-border bg-card p-5" style="box-shadow: 0 2px 16px -4px color-mix(in srgb, var(--accent), transparent 80%);">
+          <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted mb-3">
+            Cluster Articles
           </p>
-          <ul class="text-xs text-text-muted space-y-1 mb-5">
-            <li class="flex items-center gap-2">
-              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
-              Recommended cable cross-section in sq.mm
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
-              MCB rating for each circuit
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="w-1 h-1 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
-              Full electrical health assessment
-            </li>
-          </ul>
+          <nav aria-label="Wire Sizing Guides">
+            {WIRE_SIZING_ARTICLES.map(a => (
+              <a
+                href={`/knowledge-hub/wire-sizing/${a.slug}`}
+                class={`text-sm py-1.5 flex items-center gap-2 transition-colors ${a.isPillar ? 'text-accent font-medium' : 'text-text-muted hover:text-accent'}`}
+                data-astro-prefetch="hover"
+              >
+                <span class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${a.isPillar ? 'bg-accent' : 'bg-border'}`} aria-hidden="true"></span>
+                {a.title}
+              </a>
+            ))}
+          </nav>
         </div>
-        <a
-          href="/"
-          class="btn-primary w-full text-sm py-3 justify-center"
-          data-astro-prefetch="hover"
-        >
-          Try Free Calculator
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5" aria-hidden="true">
-            <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd" />
-          </svg>
-        </a>
-      </div>
-    </section>
-
-    <!-- Other clusters -->
-    <section aria-labelledby="other-clusters-wire">
-      <h2 id="other-clusters-wire" class="font-display font-semibold text-lg text-text-primary mb-4">
-        Explore Published Guides
-      </h2>
-      <div class="flex flex-wrap gap-3">
-        <a
-          href="/knowledge-hub/load-calculation"
-          class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:text-accent transition-all text-sm text-text-secondary font-medium"
-          data-astro-prefetch="hover"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true">
-            <path d="M13 2 L4.5 13 H10 L8.5 22 L19.5 11 H14 Z" />
-          </svg>
-          Load Calculation Guides
-          <span class="text-[10px] font-mono text-text-faint ml-1">6 articles</span>
-        </a>
-        <a
-          href="/knowledge-hub"
-          class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:border-accent/40 hover:text-accent transition-all text-sm text-text-secondary font-medium"
-          data-astro-prefetch="hover"
-        >
-          All Knowledge Hubs
-        </a>
-      </div>
-    </section>
-
+      </aside>
+    </div>
   </main>
 </BaseLayout>
